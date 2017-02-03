@@ -1,17 +1,17 @@
 /*
- * Media Item Library
+ * Login View
  *
  * 
  */
 
 import React from 'react';
 
-export default class MediaItemLibrary extends React.Component {
+export default class Login extends React.Component {
     
     render() {
         return (
             <div>
-                in media item library
+               in Login view
             </div>
         );
     }

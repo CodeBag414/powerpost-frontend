@@ -1,17 +1,17 @@
 /*
- * Media Item Library
+ * Posts View
  *
  * 
  */
 
 import React from 'react';
 
-export default class MediaItemLibrary extends React.Component {
+export default class Post extends React.Component {
     
     render() {
         return (
             <div>
-                in media item library
+                in Post view
             </div>
         );
     }

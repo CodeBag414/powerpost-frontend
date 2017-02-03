@@ -1,0 +1,167 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/home/ubuntu/.nvm/versions/node/v4.6.1/bin/node',
+1 verbose cli   '/home/ubuntu/.nvm/versions/node/v4.6.1/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   '--save',
+1 verbose cli   'redux-oauth2' ]
+2 info using npm@2.15.9
+3 info using node@v4.6.1
+4 verbose install initial load of /home/ubuntu/workspace/package.json
+5 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/async/package.json
+6 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/auto-prefixer/package.json
+7 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/axios/package.json
+8 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/babel-core/package.json
+9 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/babel-loader/package.json
+10 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/babel-preset-es2015/package.json
+11 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/babel-preset-react/package.json
+12 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/babel-preset-react-hmre/package.json
+13 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/babel-preset-stage-0/package.json
+14 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/babel-preset-stage-2/package.json
+15 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/bootstrap/package.json
+16 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/classnames/package.json
+17 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/css-loader/package.json
+18 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/express/package.json
+19 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/extract-text-webpack-plugin/package.json
+20 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/file-loader/package.json
+21 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/filepicker-js/package.json
+22 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/highlight.js/package.json
+23 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/history/package.json
+24 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/html-loader/package.json
+25 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/image-webpack-loader/package.json
+26 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/immutable/package.json
+27 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/invariant/package.json
+28 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/jquery/package.json
+29 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/loader-utils/package.json
+30 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/lodash/package.json
+31 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/lodash.assign/package.json
+32 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/markdown-highlight-loader/package.json
+33 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/material-ui/package.json
+34 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/moment/package.json
+35 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/node-sass/package.json
+36 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/react/package.json
+37 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/react-addons-css-transition-group/package.json
+38 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/react-confirm/package.json
+39 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/react-dom/package.json
+40 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/react-filepicker/package.json
+41 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/react-hot-loader/package.json
+42 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/react-redux/package.json
+43 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/react-redux-oauth2/package.json
+44 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/react-router/package.json
+45 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/react-router-redux/package.json
+46 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/react-router-scroll/package.json
+47 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/react-summernote/package.json
+48 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/react-tap-event-plugin/package.json
+49 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/react-toolbox/package.json
+50 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/reactjs-coverflow/package.json
+51 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/redux/package.json
+52 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/redux-immutable/package.json
+53 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/redux-logger/package.json
+54 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/redux-saga/package.json
+55 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/redux-thunk/package.json
+56 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/reselect/package.json
+57 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/resolve-url/package.json
+58 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/resolve-url-loader/package.json
+59 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/sanitize.css/package.json
+60 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/sass-loader/package.json
+61 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/socket.io/package.json
+62 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/style-loader/package.json
+63 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/warning/package.json
+64 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/webpack/package.json
+65 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/webpack-dev-middleware/package.json
+66 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/webpack-dev-server/package.json
+67 verbose installManyTop reading scoped package data from /home/ubuntu/workspace/node_modules/webpack-hot-middleware/package.json
+68 info package.json loader-utils@0.2.16 No README data
+69 info package.json react-tap-event-plugin@2.0.1 No README data
+70 info package.json react-tap-event-plugin@2.0.1 No license field.
+71 info package.json async@0.2.10 No license field.
+72 info package.json express@3.2.6 No license field.
+73 info package.json markdown-highlight-loader@0.1.2 No repository field.
+74 info package.json socket.io@0.9.17 No license field.
+75 verbose readDependencies loading dependencies from /home/ubuntu/workspace/package.json
+76 silly cache add args [ 'redux-oauth2', null ]
+77 verbose cache add spec redux-oauth2
+78 silly cache add parsed spec Result {
+78 silly cache add   raw: 'redux-oauth2',
+78 silly cache add   scope: null,
+78 silly cache add   name: 'redux-oauth2',
+78 silly cache add   rawSpec: '',
+78 silly cache add   spec: 'latest',
+78 silly cache add   type: 'tag' }
+79 silly addNamed redux-oauth2@latest
+80 verbose addNamed "latest" is being treated as a dist-tag for redux-oauth2
+81 info addNameTag [ 'redux-oauth2', 'latest' ]
+82 silly mapToRegistry name redux-oauth2
+83 silly mapToRegistry using default registry
+84 silly mapToRegistry registry https://registry.npmjs.org/
+85 silly mapToRegistry data Result {
+85 silly mapToRegistry   raw: 'redux-oauth2',
+85 silly mapToRegistry   scope: null,
+85 silly mapToRegistry   name: 'redux-oauth2',
+85 silly mapToRegistry   rawSpec: '',
+85 silly mapToRegistry   spec: 'latest',
+85 silly mapToRegistry   type: 'tag' }
+86 silly mapToRegistry uri https://registry.npmjs.org/redux-oauth2
+87 verbose addNameTag registry:https://registry.npmjs.org/redux-oauth2 not in flight; fetching
+88 verbose request uri https://registry.npmjs.org/redux-oauth2
+89 verbose request no auth needed
+90 info attempt registry request try #1 at 9:47:13 PM
+91 verbose request id bdeb057072af720d
+92 http request GET https://registry.npmjs.org/redux-oauth2
+93 http 200 https://registry.npmjs.org/redux-oauth2
+94 verbose headers { server: 'nginx/1.10.1',
+94 verbose headers   'content-type': 'application/json',
+94 verbose headers   'last-modified': 'Thu, 08 Sep 2016 09:23:08 GMT',
+94 verbose headers   etag: 'W/"57d12dfc-190"',
+94 verbose headers   'content-encoding': 'gzip',
+94 verbose headers   'cache-control': 'max-age=300',
+94 verbose headers   'content-length': '237',
+94 verbose headers   'accept-ranges': 'bytes',
+94 verbose headers   date: 'Fri, 03 Feb 2017 21:47:13 GMT',
+94 verbose headers   via: '1.1 varnish',
+94 verbose headers   age: '0',
+94 verbose headers   connection: 'keep-alive',
+94 verbose headers   'x-served-by': 'cache-ord1730-ORD',
+94 verbose headers   'x-cache': 'MISS',
+94 verbose headers   'x-cache-hits': '0',
+94 verbose headers   'x-timer': 'S1486158433.269243,VS0,VE64',
+94 verbose headers   vary: 'Accept-Encoding' }
+95 silly get cb [ 200,
+95 silly get   { server: 'nginx/1.10.1',
+95 silly get     'content-type': 'application/json',
+95 silly get     'last-modified': 'Thu, 08 Sep 2016 09:23:08 GMT',
+95 silly get     etag: 'W/"57d12dfc-190"',
+95 silly get     'content-encoding': 'gzip',
+95 silly get     'cache-control': 'max-age=300',
+95 silly get     'content-length': '237',
+95 silly get     'accept-ranges': 'bytes',
+95 silly get     date: 'Fri, 03 Feb 2017 21:47:13 GMT',
+95 silly get     via: '1.1 varnish',
+95 silly get     age: '0',
+95 silly get     connection: 'keep-alive',
+95 silly get     'x-served-by': 'cache-ord1730-ORD',
+95 silly get     'x-cache': 'MISS',
+95 silly get     'x-cache-hits': '0',
+95 silly get     'x-timer': 'S1486158433.269243,VS0,VE64',
+95 silly get     vary: 'Accept-Encoding' } ]
+96 verbose get saving redux-oauth2 to /home/ubuntu/.npm/registry.npmjs.org/redux-oauth2/.cache.json
+97 verbose correctMkdir /home/ubuntu/.npm correctMkdir not in flight; initializing
+98 silly addNameTag next cb for redux-oauth2 with tag latest
+99 verbose stack TypeError: Cannot convert undefined or null to object
+99 verbose stack     at Function.keys (native)
+99 verbose stack     at installTargetsError (/home/ubuntu/.nvm/versions/node/v4.6.1/lib/node_modules/npm/lib/cache/add-named.js:273:24)
+99 verbose stack     at next (/home/ubuntu/.nvm/versions/node/v4.6.1/lib/node_modules/npm/lib/cache/add-named.js:94:10)
+99 verbose stack     at RES (/home/ubuntu/.nvm/versions/node/v4.6.1/lib/node_modules/npm/node_modules/inflight/inflight.js:23:14)
+99 verbose stack     at f (/home/ubuntu/.nvm/versions/node/v4.6.1/lib/node_modules/npm/node_modules/once/once.js:17:25)
+99 verbose stack     at fixName (/home/ubuntu/.nvm/versions/node/v4.6.1/lib/node_modules/npm/lib/cache/add-named.js:29:5)
+99 verbose stack     at saved (/home/ubuntu/.nvm/versions/node/v4.6.1/lib/node_modules/npm/lib/cache/caching-client.js:173:7)
+99 verbose stack     at /home/ubuntu/.nvm/versions/node/v4.6.1/lib/node_modules/npm/node_modules/graceful-fs/polyfills.js:210:7
+99 verbose stack     at FSReqWrap.oncomplete (fs.js:82:15)
+100 verbose cwd /home/ubuntu/workspace
+101 error Linux 4.8.2-c9
+102 error argv "/home/ubuntu/.nvm/versions/node/v4.6.1/bin/node" "/home/ubuntu/.nvm/versions/node/v4.6.1/bin/npm" "install" "--save" "redux-oauth2"
+103 error node v4.6.1
+104 error npm  v2.15.9
+105 error Cannot convert undefined or null to object
+106 error If you need help, you may report this error at:
+106 error     <https://github.com/npm/npm/issues>
+107 verbose exit [ 1, true ]

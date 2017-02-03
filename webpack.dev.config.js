@@ -10,7 +10,7 @@ module.exports = {
   entry: [
     'webpack-dev-server/client?https://0.0.0.0:8080', // WebpackDevServer host and port
     'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
-    './src/index'
+    './src/app'
   ],
   output: { 
     path: path.join(__dirname, 'dist'),
@@ -23,10 +23,10 @@ module.exports = {
   module: {
     loaders: [
       {
-        test: /\.jsx?$/,
+        test: /\.js$/,
         exclude: /node_modules/,
         include: path.join(__dirname, 'src'),
-        loaders: ['react-hot','babel?presets[]=react,presets[]=es2015,presets[]=react-hmre']
+        loaders: ['react-hot','babel-loader?presets[]=react,presets[]=es2015']
       },
       {
         test: /\.scss$/,
@@ -60,6 +60,9 @@ module.exports = {
     root: path.resolve('./src'),
   },
   devServer: {
+    historyApiFallback: true,
+    contentBase: './',
+    hot: true,
     port: port,
     host: host
   },
