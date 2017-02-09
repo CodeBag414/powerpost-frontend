@@ -8,13 +8,21 @@
  
 import React from 'react';
 
-export function App(props) {
-    return(
-        <div>
-            <h1>App container</h1>
-            {React.Children.toArray(props.children)}
-        </div>
-    );
+class App extends React.Component{
+    
+    /*shouldComponentUpdate(nextProps) {
+        // performance workaround until react-router-redux fixes https://github.com/reactjs/react-router-redux/issues/481
+       // return nextProps.location.action === 'POP';
+    }*/
+  
+    render() {
+        return(
+            <div>
+                <h1>App container</h1>
+                {React.Children.toArray(this.props.children)}
+            </div>
+        );
+    }
 }
 
 App.propTypes = {
