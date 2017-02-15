@@ -10,7 +10,7 @@ import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
+import { applyRouterMiddleware, Router, browserHistory, createBrowserHistory } from 'react-router';
 import { useScroll } from 'react-router-scroll';
 import { syncHistoryWithStore } from 'react-router-redux';
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -31,14 +31,18 @@ import App from './App';
 
 import { createRoutes} from 'config.routes/routes';
 
+export const historyObj = browserHistory;
+
 // create redux store with history
 const initialState = {};
-const store = configureStore(initialState, browserHistory);
+const store = configureStore(initialState, historyObj);
 // sync history and store, as the react-router-redux reducer
-const history = syncHistoryWithStore(browserHistory, store, {
+const history = syncHistoryWithStore(historyObj, store, {
     selectLocationState: makeSelectLocationState(),
 });
-
+history.listen(location => {
+    console.log(location);
+});
 const rootRoute = createRoutes(store);
 
 ReactDOM.render(

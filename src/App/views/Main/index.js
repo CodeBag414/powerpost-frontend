@@ -7,20 +7,42 @@
  */
  
 import React from 'react';
-import TopNav from './components/TopNav';
+import { createStructuredSelector } from 'reselect';
 
-export function Dashboard(props) {
-    return(
+import TopNav from './components/TopNav';
+import { UserIsAuthenticated } from '../../../config.routes/UserIsAuthenticated';
+import {connect} from 'react-redux';
+import { makeSelectUser } from '../../state/selectors';
+import {checkUser} from '../../state/actions';
+
+class Dashboard extends React.Component{
+    
+    componentDidMount() {
+        this.props.checkUserObject(this.props.user);
+    }
+    
+    render() {
+        return(
         <div>
             <h1>Dash container</h1>
             <TopNav />
-            {React.Children.toArray(props.children)}
+            {React.Children.toArray(this.props.children)}
         </div>
     );
+    }
 }
 
 Dashboard.propTypes = {
     children: React.PropTypes.node,
 };
 
-export default Dashboard;
+export function mapDispatchToProps(dispatch) {
+    return {
+        checkUserObject: (user) => dispatch(checkUser(user))
+    }
+}
+const mapStateToProps = createStructuredSelector({
+    user: makeSelectUser()
+});
+
+export default UserIsAuthenticated(connect(mapStateToProps, mapDispatchToProps)(Dashboard));

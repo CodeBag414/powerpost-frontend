@@ -11,6 +11,9 @@ import {loginRequest} from '../../../../state/actions';
 
 import TextField from 'App/shared/atm.TextField';
 import Button from 'App/shared/atm.Button';
+import { Link } from 'react-router';
+
+import { push } from 'react-router-redux';
 
 class Login extends React.Component {
     constructor(props) {
@@ -37,7 +40,7 @@ class Login extends React.Component {
         return (
             <div>
                 <h4>Login</h4>
-                
+                <Link to="/signup">Register</Link>
                 <TextField type="text" hintText="your email" floatingLabelText="Email" onChange={ this.changeEmail } />
                 <TextField type="password" hintText="your secure password" floatingLabelText="Password" onChange={ this.changePassword } />
                 
@@ -55,7 +58,7 @@ export function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(state) {
     return {
-        
+        //authError: state.auth.error
     };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

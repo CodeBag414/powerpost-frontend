@@ -7,15 +7,15 @@
  */
  
 import React from 'react';
+import {connect} from 'react-redux';
 
 class App extends React.Component{
+    constructor(props) {
+        super(props);
+    }
     
-    /*shouldComponentUpdate(nextProps) {
-        // performance workaround until react-router-redux fixes https://github.com/reactjs/react-router-redux/issues/481
-       // return nextProps.location.action === 'POP';
-    }*/
-  
     render() {
+        console.log(this.props.children);
         return(
             <div>
                 <h1>App container</h1>
@@ -28,5 +28,6 @@ class App extends React.Component{
 App.propTypes = {
     children: React.PropTypes.node,
 };
+
 
 export default App;

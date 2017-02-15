@@ -5,7 +5,7 @@ import { getAsyncInjectors } from '../utils/asyncInjectors';
 import globalSagas from 'App/state/sagas';
 import globalReducer from 'App/state/reducer';
 import App from '../App';
-
+import { UserIsAuthenticated } from './UserIsAuthenticated';
 import { clearError } from '../App/state/actions';
 
 const errorLoading = (err) => {
@@ -19,40 +19,15 @@ const loadModule = (cb) => (componentModule) => {
 export function createRoutes(store) {
   // create reusable async injectors using getAsyncInjectors factory
   const { injectReducer, injectSagas } = getAsyncInjectors(store);
+
   
-  const requireAuth = (nextState, replace, callback) => {
-    console.log('require auth');
-    let loggedIn = store.getState().get('global').loggedIn;
-    
-    store.dispatch(clearError());
-    console.log('loggedIn: ' + loggedIn);
-    if(loggedIn) {
-      if(nextState.location.pathname == '/start' || nextState.location.pathname == '/signup') {
-        replace('/dashboard');
-        callback();
-      } else {
-        callback();
-      }
-    } else {
-      if(nextState.location.pathname != '/start' && nextState.location.pathname != '/signup') {
-        console.log(nextState.location.pathname);
-        replace('/start');
-        callback();
-      } else {
-        console.log('start or signup route');
-        callback();
-      }
-    }
-  };
-  
-  injectReducer('global', globalReducer);
+ // injectReducer('global', globalReducer);
   injectSagas(globalSagas);
   
   let routes = [
     {
-      path: '/dashboard',
+      path: '/',
       name: 'dashboard',
-      //onEnter: requireAuth,
       getComponent(nextState, cb) {
         const importModules = Promise.all([
           require('App/views/Main'),
@@ -61,7 +36,7 @@ export function createRoutes(store) {
         const renderRoute = loadModule(cb);
 
         importModules.then(([component]) => {
-
+          console.log(component);
           renderRoute(component);
         });
 
@@ -80,7 +55,7 @@ export function createRoutes(store) {
             importModules.then(([reducer, sagas, component]) => {
             //  injectReducer('posts', reducer.default);
             //  injectSagas(sagas.default);
-    
+              console.log(component);
               renderRoute(component);
             });
     
@@ -106,10 +81,10 @@ export function createRoutes(store) {
           },
         },
       ],
-    }, {
+    }, 
+    {
       path: '/start',
       name: 'start',
-     // onEnter: requireAuth,
       getComponent(nextState, cb) {
         const importModules = Promise.all([
           require('App/views/Start'),
@@ -172,10 +147,8 @@ export function createRoutes(store) {
   ];
   
   return {
-    path: '/',
     component: App,
-    onEnter: requireAuth,
-    indexRoute: { onEnter: (nextState, replace) => replace('/dashboard') },
+    //indexRoute: { onEnter: (nextState, replace) => replace('/dashboard') },
     childRoutes: routes
   };
 }

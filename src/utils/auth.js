@@ -12,14 +12,13 @@ let auth = {
         if(auth.loggedIn()) {
             return Promise.resolve(true);
         }
-        console.log('email: ' + email + ' password: ' + password);
+        console.log('in login');
         const data = {
             payload: {
                 email: email,
                 password: password
             }
         };
-        console.log('data: ' + data);
         const url = API_URL + '/user_api/login'; 
         // post request
         return axios.post(url, data)
@@ -27,14 +26,28 @@ let auth = {
                 console.log(response);
                 localStorage.token = response.data.roles.user_own_account.api_key;
                 // window.location.href= '/dashboard';
-                return Promise.resolve(true);
+                
+                return response.data;
             })
             .catch((error) => {
                 console.log(error.response);
             });
          
      },
-     
+     /**
+      * Get User
+      */
+     getCurrentUser() {
+         const apiKey = localStorage.getItem('token');
+         const headers = { headers: {'X-API-KEY': apiKey }};
+         return axios.get(API_URL + '/user_api/user', headers)
+            .then(response => {
+                return response.data.user;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+     },
      /**
       * Logs the user out
       */
@@ -64,8 +77,25 @@ let auth = {
       * Registers a user then logs them in
       * 
       */
-     register(email, password) {
-          
+     register(name, email, password) {
+        const data = {
+            payload: {
+                display_name: name,
+                password: password,
+                email: email
+            }
+        }
+        
+        const url = API_URL + '/account_api/create';
+        return axios.post(url, data)
+            .then(response => {
+                console.log('response:' + response);
+                auth.login(email, password);
+            })
+            .catch((error) => {
+                console.log(error.response);
+            });
+         
      }
 };
 

@@ -8,7 +8,8 @@ import {
   REGISTER_REQUEST,
   LOGOUT,
   REQUEST_ERROR,
-  CLEAR_ERROR
+  CLEAR_ERROR,
+  CHECK_USER_OBJECT
 } from './constants';
 
 /**
@@ -64,6 +65,13 @@ export function registerRequest (data) {
   return {type: REGISTER_REQUEST, data};
 }
 
+/**
+ * Checks if user object data exists in state 
+ * 
+ */
+export function checkUser(user) {
+  return {type: CHECK_USER_OBJECT, user }
+}
 /**
  * Sets the `error` state to the error received
  * @param  {object} error The error we got when trying to make the request
