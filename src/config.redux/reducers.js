@@ -24,7 +24,7 @@
       switch(action.type) {
         case LOCATION_CHANGE:
             return state.merge({
-                locationBeforeTransition: action.payload,
+                locationBeforeTransitions: action.payload,
             });
         default:
             return state;

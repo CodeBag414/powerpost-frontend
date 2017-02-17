@@ -9,10 +9,43 @@ const makeSelectAuthError = () => createSelector(
 
 const makeSelectUser = () => createSelector(
     selectAuth,
-    (auth) => { console.log(auth.get('user')); return auth.get('user') }
+    (auth) => auth.get('user')
 );
+
+const makeSelectUserAccount = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('userAccount')
+);
+
+const makeSelectSharedAccounts = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('sharedAccounts')
+);
+
+const makeSelectSubAccounts = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('subAccounts')
+);
+
+const makeSelectAllAccounts = () => createSelector(
+    makeSelectUserAccount,
+    makeSelectSharedAccounts,
+    makeSelectSubAccounts,
+    (userAccount, sharedAccounts, subAccounts) => {
+        console.log(userAccount);
+        console.log(sharedAccounts);
+        console.log(subAccounts);
+        
+       // let accounts = sharedAccounts.concat(subAccounts);
+        let accounts = [].push(userAccount);
+        return accounts;
+    });
 export {
     selectAuth,
     makeSelectAuthError,
-    makeSelectUser
+    makeSelectUser,
+    makeSelectUserAccount,
+    makeSelectSubAccounts,
+    makeSelectSharedAccounts,
+    makeSelectAllAccounts
 };

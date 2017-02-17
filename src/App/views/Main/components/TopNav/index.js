@@ -3,6 +3,8 @@ import {connect} from 'react-redux';
 
 import {logout, clearError} from 'App/state/actions';
 
+import PPIconButton from 'App/shared/atm.IconButton';
+
 class TopNav extends Component {
     constructor(props) {
         super(props);
@@ -10,8 +12,13 @@ class TopNav extends Component {
     }
     
     render() {
+        const styles = require('./styles.scss');
+        const viewStyle = this.props.isMenuCollapsed ? styles.collapsed : styles.full;
         return(
-            <button onClick={this.props.logout}>Logout</button>
+            <div className={[styles.topNav, viewStyle].join(' ')}>
+                <PPIconButton iconClassName='fa fa-bars' onClick={ this.props.handleMenuToggle } />
+                <button style={{ float: 'right' }} onClick={this.props.logout}>Logout</button>
+            </div>
         );
     }
 }
@@ -27,4 +34,6 @@ function mapStateToProps(state) {
         
     };
 }
-export default connect(mapStateToProps, mapDispatchToProps)(TopNav);
+export default connect(mapStateToProps, mapDispatchToProps, null, {
+  pure: false
+})(TopNav);

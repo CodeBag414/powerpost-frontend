@@ -4,7 +4,6 @@
 
 // Sagas help us gather all our side effects (network requests in this case) in one place
 
-import {browserHistory} from 'react-router';
 import {take, call, put, fork, race, apply} from 'redux-saga/effects';
 import auth from '../../utils/auth';
 import {historyObj} from '../../app';
@@ -105,8 +104,7 @@ export function * loginFlow (store) {
     if (winner.auth) {
       // ...we send Redux appropiate actions
       yield put({type: SET_AUTH, newAuthState: true}); // User is logged in (authorized)
-      yield put({type: SET_USER, user: winner.auth.user});
-      yield put({ type: SET_ROLES, roles: winner.auth.roles});
+      yield put({type: SET_USER, user: winner.auth });
       yield put({type: CHANGE_FORM, newFormState: {username: '', password: ''}}); // Clear form
       yield call(forwardTo, '/'); // Go to dashboard page
       // If `logout` won...
@@ -169,7 +167,7 @@ export function * userExistsFlow() {
     } else {
       console.log('user object does not exist, get it now');
       let currentUser = yield call(auth.getCurrentUser);
-      yield put({type: SET_USER, user: currentUser });
+      yield put({ type: SET_USER, user: currentUser });
       console.log('user exists now');
     }
   }

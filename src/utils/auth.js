@@ -1,5 +1,6 @@
 import axios from 'axios';
-export const API_URL = 'https://dev.powerpost.digital';
+export const API_URL = 'https://dev2.powerpost.digital';
+import cookie from 'react-cookie';
 
 const localStorage = global.window.localStorage;
 
@@ -23,9 +24,7 @@ let auth = {
         // post request
         return axios.post(url, data)
             .then(response => {
-                console.log(response);
-                localStorage.token = response.data.roles.user_own_account.api_key;
-                // window.location.href= '/dashboard';
+                cookie.save('token', response.data.api_key);
                 
                 return response.data;
             })
@@ -38,11 +37,10 @@ let auth = {
       * Get User
       */
      getCurrentUser() {
-         const apiKey = localStorage.getItem('token');
-         const headers = { headers: {'X-API-KEY': apiKey }};
-         return axios.get(API_URL + '/user_api/user', headers)
+         const headers = { headers: {'X-API-KEY': cookie.load('token') }};
+         return axios.get(API_URL + '/user_api/roles', headers)
             .then(response => {
-                return response.data.user;
+                return response.data;
             })
             .catch((error) => {
                 console.log(error);
@@ -52,12 +50,12 @@ let auth = {
       * Logs the user out
       */
      logout() {
-          const apiKey = localStorage.getItem('token');
-          const headers = { headers:{'X-API-KEY': apiKey }};
+
+          const headers = { headers:{'X-API-KEY': cookie.load('token') }};
           
           return axios.get(API_URL + '/user_api/logout', headers)
             .then(response => {
-                localStorage.removeItem('token');
+                cookie.remove('token');
                 return Promise.resolve(true);
             })
             .catch((error) => {
@@ -70,7 +68,7 @@ let auth = {
       * Checks if user is logged in
       */
      loggedIn() {
-         return !!localStorage.token;
+         return !!cookie.load('token');
      },
      
      /**

@@ -4,9 +4,9 @@ import { routerActions } from 'react-router-redux';
 import { browserHistory } from 'react-router';
 
 export const UserIsAuthenticated = UserAuthWrapper({
-    authSelector: state => { console.log(state.get('auth')); return state.get('auth') },
+    authSelector: state => state.get('auth'),
     redirectAction: routerActions.push,
-    predicate: auth => { console.log('auth: ' + auth); return auth.get('loggedIn') },
+    predicate: auth => auth.get('loggedIn'),
     failureRedirectPath: '/start',
     wrapperDisplayName: 'UserIsAuthenticated',
     allowRedirectBack: false

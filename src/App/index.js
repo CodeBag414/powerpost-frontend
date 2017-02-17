@@ -13,12 +13,12 @@ class App extends React.Component{
     constructor(props) {
         super(props);
     }
-    
+    componentWillUpdate() {
+     console.log('component will update');   
+    }
     render() {
-        console.log(this.props.children);
         return(
-            <div>
-                <h1>App container</h1>
+            <div style={{ width: '100%', height: '100%' }}>
                 {React.Children.toArray(this.props.children)}
             </div>
         );

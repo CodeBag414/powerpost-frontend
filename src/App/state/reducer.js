@@ -25,7 +25,9 @@ let initialState = fromJS({
   error: '',
   currentlySending: false,
   user: {},
-  roles: {},
+  sharedAccounts: [],
+  userAccount: {},
+  subAccounts: [],
   loggedIn: auth.loggedIn()
 });
 
@@ -37,7 +39,11 @@ function globalReducer (state = initialState, action) {
     case SET_AUTH:
       return state.set('loggedIn', action.newAuthState);
     case SET_USER:
-      return state.set('user', action.user);
+      return state
+        .set('user', action.user.user)
+        .set('sharedAccounts', action.user.shared_accounts)
+        .set('userAccount', action.user.user_own_account)
+        .set('subAccounts', action.user.subaccounts);
     case SET_ROLES:
       return state.set('roles', action.roles);
     case SENDING_REQUEST:

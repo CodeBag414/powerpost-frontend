@@ -9,6 +9,7 @@ import TextField from 'App/shared/atm.TextField';
 import Button from 'App/shared/atm.Button';
 import {connect} from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import {Link} from 'react-router';
 
 import {registerRequest} from '../../../../state/actions';
 import {makeSelectAuthError, selectAuth} from '../../../../state/selectors';
@@ -74,6 +75,7 @@ class Signup extends React.Component {
         return (
             <div>
                 in signup view
+                <Link to="/start">Back to login</Link>
                 <form onSubmit={ this.onFormSubmit } >
                     <TextField type='text' errorText={ this.state.nameError } floatingLabelText="Display Name" hintText="name" onChange={ this.onNameChange }/>
                     <TextField type="email" errorText={ this.state.emailError } floatingLabelText="Email" hintText="your email" onChange={ this.onEmailChange }/>

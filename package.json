@@ -10,7 +10,13 @@
   "author": "PowerPost, Philip Cressler <philip.cressler@powerpost.digital>",
   "license": "MIT",
   "scripts": {
-    "dev": "NODE_ENV=development webpack-dev-server --host $IP --port $PORT --config webpack.dev.config.js --progress --hot"
+    "dev": "NODE_ENV=development webpack-dev-server --host $IP --port $PORT --config internals/webpack.dev.config.js --progress --hot"
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "react"
+    ]
   },
   "dependencies": {
     "axios": "^0.13.1",
@@ -40,12 +46,13 @@
     "react-router-redux": "4.0.6",
     "react-router-scroll": "^0.4.1",
     "react-summernote": "^1.0.5",
+    "react-tap-event-plugin": "^2.0.1",
     "react-toolbox": "^1.3.4",
     "reactjs-coverflow": "^1.0.5",
     "redux": "^3.6.0",
     "redux-auth-wrapper": "^1.0.0",
-    "redux-immutable": "^3.0.11",
-    "redux-saga": "^0.14.3",
+    "redux-immutable": "^3.0.8",
+    "redux-saga": "^0.14.0",
     "redux-thunk": "^2.2.0",
     "reselect": "^2.5.4",
     "sanitize.css": "4.1.0",
@@ -53,16 +60,18 @@
   },
   "devDependencies": {
     "auto-prefixer": "^0.4.2",
-    "babel-core": "^6.6.0",
-    "babel-loader": "^6.2.4",
+    "babel-cli": "6.18.0",
+    "babel-plugin-dynamic-import-node": "1.0.0",
+    "babel-core": "6.21.0",
+    "babel-loader": "6.2.10",
     "babel-preset-es2015": "^6.6.0",
-    "babel-preset-react": "^6.5.0",
+    "babel-preset-react": "6.16.0",
     "babel-preset-react-hmre": "^1.1.1",
-    "babel-preset-stage-0": "^6.5.0",
+    "babel-preset-stage-0": "6.16.0",
     "babel-preset-stage-2": "^6.18.0",
     "classnames": "^2.2.5",
     "css-loader": "^0.23.1",
-    "extract-text-webpack-plugin": "^1.0.1",
+    "extract-text-webpack-plugin": "^2.0.0-rc.3",
     "html-loader": "^0.4.4",
     "lodash.assign": "^4.2.0",
     "node-sass": "^3.4.2",
@@ -72,7 +81,7 @@
     "resolve-url-loader": "^1.6.1",
     "sass-loader": "^3.1.2",
     "style-loader": "^0.13.0",
-    "webpack": "^1.12.14",
-    "webpack-dev-server": "^1.14.1"
+    "webpack": "2.2.1",
+    "webpack-dev-server": "^2.0.0"
   }
 }

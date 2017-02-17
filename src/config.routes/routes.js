@@ -2,8 +2,8 @@
 // 
 
 import { getAsyncInjectors } from '../utils/asyncInjectors';
-import globalSagas from 'App/state/sagas';
-import globalReducer from 'App/state/reducer';
+import globalSagas from '../App/state/sagas';
+import globalReducer from '../App/state/reducer';
 import App from '../App';
 import { UserIsAuthenticated } from './UserIsAuthenticated';
 import { clearError } from '../App/state/actions';
@@ -30,13 +30,14 @@ export function createRoutes(store) {
       name: 'dashboard',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          require('App/views/Main'),
+          System.import('../App/views/Main/state/reducer'),
+          System.import('../App/views/Main'),
         ]);
 
         const renderRoute = loadModule(cb);
 
-        importModules.then(([component]) => {
-          console.log(component);
+        importModules.then(([reducer, component]) => {
+          injectReducer('dashboard', reducer.default);
           renderRoute(component);
         });
 
@@ -45,9 +46,9 @@ export function createRoutes(store) {
       indexRoute: {
         getComponent(nextState, cb) {
             const importModules = Promise.all([
-              require('App/views/Main/views/Posts/state/reducer'),
-              require('App/views/Main/views/Posts/state/sagas'),
-              require('App/views/Main/views/Posts'),
+              System.import('../App/views/Main/views/Posts/state/reducer'),
+              System.import('../App/views/Main/views/Posts/state/sagas'),
+              System.import('../App/views/Main/views/Posts'),
             ]);
     
             const renderRoute = loadModule(cb);
@@ -55,7 +56,6 @@ export function createRoutes(store) {
             importModules.then(([reducer, sagas, component]) => {
             //  injectReducer('posts', reducer.default);
             //  injectSagas(sagas.default);
-              console.log(component);
               renderRoute(component);
             });
     
@@ -68,7 +68,7 @@ export function createRoutes(store) {
           name: 'library',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
-              require('App/views/Main/views/MediaItemLibrary'),
+              System.import('../App/views/Main/views/MediaItemLibrary'),
             ]);
     
             const renderRoute = loadModule(cb);
@@ -80,6 +80,23 @@ export function createRoutes(store) {
             importModules.catch(errorLoading);
           },
         },
+        {
+          path: 'calendar',
+          name: 'calendar',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('../App/views/Main/views/Calendar'),
+            ]);
+            
+            const renderRoute = loadModule(cb);
+            
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+          
+            importModules.catch(errorLoading);
+          },
+        }
       ],
     }, 
     {
@@ -87,7 +104,7 @@ export function createRoutes(store) {
       name: 'start',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          require('App/views/Start'),
+          System.import('../App/views/Start'),
         ]);
 
         const renderRoute = loadModule(cb);
@@ -102,9 +119,9 @@ export function createRoutes(store) {
       indexRoute: {
         getComponent(nextState, cb) {
           const importModules = Promise.all([
-            require('App/views/Start/views/Login/state/reducer'),
-            require('App/views/Start/views/Login/state/sagas'),
-            require('App/views/Start/views/Login'),
+             System.import('../App/views/Start/views/Login/state/reducer'),
+            System.import('../App/views/Start/views/Login/state/sagas'),
+            System.import('../App/views/Start/views/Login'),
           ]);
   
           const renderRoute = loadModule(cb);
@@ -125,9 +142,9 @@ export function createRoutes(store) {
           name: 'signup',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
-              require('App/views/Start/views/Signup/state/reducer'),
-              require('App/views/Start/views/Signup/state/sagas'),
-              require('App/views/Start/views/Signup'),
+              System.import('../App/views/Start/views/Signup/state/reducer'),
+             System.import('../App/views/Start/views/Signup/state/sagas'),
+              System.import('../App/views/Start/views/Signup'),
             ]);
     
             const renderRoute = loadModule(cb);
