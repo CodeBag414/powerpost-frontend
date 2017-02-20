@@ -53,7 +53,11 @@ function globalReducer (state = initialState, action) {
     case CLEAR_ERROR:
       return state.set('error','');
     case CLEAR_USER:
-      return state.set('user', {});
+      return state
+        .set('user', {})
+        .set('sharedAccounts', [])
+        .set('userAccount', {})
+        .set('subAccounts', []);
     default:
       return state;
   }

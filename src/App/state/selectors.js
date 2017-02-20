@@ -28,9 +28,9 @@ const makeSelectSubAccounts = () => createSelector(
 );
 
 const makeSelectAllAccounts = () => createSelector(
-    makeSelectUserAccount,
+    [ makeSelectUserAccount,
     makeSelectSharedAccounts,
-    makeSelectSubAccounts,
+    makeSelectSubAccounts] ,
     (userAccount, sharedAccounts, subAccounts) => {
         console.log(userAccount);
         console.log(sharedAccounts);

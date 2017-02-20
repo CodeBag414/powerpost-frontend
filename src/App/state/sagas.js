@@ -4,9 +4,10 @@
 
 // Sagas help us gather all our side effects (network requests in this case) in one place
 
-import {take, call, put, fork, race, apply} from 'redux-saga/effects';
+import {take, call, put, fork, race, apply, select} from 'redux-saga/effects';
 import auth from '../../utils/auth';
 import {historyObj} from '../../app';
+import { makeSelectUser } from './selectors';
 
 import {
   SENDING_REQUEST,
@@ -48,7 +49,9 @@ export function * authorize ({name, email, password, isRegistering}) {
     } else {
       response = yield call(auth.login, email, password);
     }
+        console.log('authorize response: ' + response);
     return response;
+    
   } catch (error) {
     console.log('hi');
     // If we get an error we send Redux the appropiate action and return
@@ -99,7 +102,8 @@ export function * loginFlow (store) {
       auth: call(authorize, {email, password, isRegistering: false}),
       logout: take(LOGOUT)
     });
-
+    console.log('winner: ');
+    console.log(winner);
     // If `authorize` was the winner...
     if (winner.auth) {
       // ...we send Redux appropiate actions
@@ -160,8 +164,8 @@ export function * registerFlow () {
 export function * userExistsFlow() {
   while(true) {
     let request = yield take(CHECK_USER_OBJECT);
-    let user = request.user;
-    
+    let user = yield select(makeSelectUser());
+    console.log('USEREXISTSFLOW: ' + user);
     if(user.user_id) {
       console.log('user object exists');
     } else {

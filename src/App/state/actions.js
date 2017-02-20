@@ -66,13 +66,6 @@ export function registerRequest (data) {
 }
 
 /**
- * Checks if user object data exists in state 
- * 
- */
-export function checkUser(user) {
-  return {type: CHECK_USER_OBJECT, user }
-}
-/**
  * Sets the `error` state to the error received
  * @param  {object} error The error we got when trying to make the request
  */

@@ -25,12 +25,11 @@ function dashboardReducer (state = initialState, action) {
         return state
             .set('isFetchingAccount', true)
             .set('fetchingError', false)
-            .set('activeBrand', {});
     case FETCH_ACCOUNT_SUCCESS:
         return state    
             .set('isFetching', false)
             .set('fetchingError', false)
-            .set('activeBrand', action.activeBrand);
+            .set('activeBrand', action.account.data.account);
     case FETCH_ACCOUNT_ERROR:
         return state
             .set('isFetching', false)

@@ -7,6 +7,12 @@ const makeSelectMenuCollapsed = () => createSelector(
     (dashboard) => dashboard.get('menuCollapsed')
 );
 
+const makeSelectCurrentAccount = () => createSelector(
+    selectDashboard,
+    (dashboard) => dashboard.get('activeBrand')
+);
+
 export {
-    makeSelectMenuCollapsed
+    makeSelectMenuCollapsed,
+    makeSelectCurrentAccount
 };

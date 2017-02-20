@@ -26,19 +26,27 @@ export function createRoutes(store) {
   
   let routes = [
     {
-      path: '/',
+      path: 'account(/:account_id)',
       name: 'dashboard',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
+          System.import('../App/views/Main/state/actions'),
           System.import('../App/views/Main/state/reducer'),
+          System.import('../App/views/Main/state/sagas'),
           System.import('../App/views/Main'),
         ]);
 
         const renderRoute = loadModule(cb);
 
-        importModules.then(([reducer, component]) => {
+        importModules.then(([actions, reducer, sagas,component]) => {
           injectReducer('dashboard', reducer.default);
+          injectSagas(sagas.default);
+          
           renderRoute(component);
+          store.dispatch(actions.checkUser());
+          console.log('nextstate:');
+          console.log(nextState);
+          store.dispatch(actions.fetchCurrentAccount(nextState.params.account_id));
         });
 
         importModules.catch(errorLoading);
@@ -64,7 +72,7 @@ export function createRoutes(store) {
       },
       childRoutes: [
         {
-          path: 'library',
+          path: '/account(/:account_id)/library',
           name: 'library',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
@@ -81,7 +89,7 @@ export function createRoutes(store) {
           },
         },
         {
-          path: 'calendar',
+          path: '/account(/:account_id)/calendar',
           name: 'calendar',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
@@ -165,7 +173,8 @@ export function createRoutes(store) {
   
   return {
     component: App,
-    //indexRoute: { onEnter: (nextState, replace) => replace('/dashboard') },
+    path: '/',
+    indexRoute: { onEnter: (nextState, replace) => replace('/account/me') },
     childRoutes: routes
   };
 }

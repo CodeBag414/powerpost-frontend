@@ -13,7 +13,7 @@ import Nav from './components/Nav';
 
 import { UserIsAuthenticated } from '../../../config.routes/UserIsAuthenticated';
 import {connect} from 'react-redux';
-import { makeSelectUser, makeSelectAllAccounts, makeSelectUserAccount } from '../../state/selectors';
+import { makeSelectUser, makeSelectUserAccount, makeSelectSharedAccounts, makeSelectSubAccounts } from '../../state/selectors';
 import {checkUser} from '../../state/actions';
 import {toggleMenu} from './state/actions';
 import { makeSelectMenuCollapsed } from './state/selectors';
@@ -30,7 +30,7 @@ class Dashboard extends React.Component{
         console.log('children: ' + React.Children.toArray(this.props.children));
     }
     componentDidMount() {
-        this.props.checkUserObject(this.props.user);
+        //this.props.checkUserObject(this.props.user);
     }
     
     handleMenuToggle() {
@@ -43,7 +43,7 @@ class Dashboard extends React.Component{
         
         return(
         <div>
-            <Nav handleMenuToggle={ this.handleMenuToggle } isMenuCollapsed = { this.props.menuCollapsed } />
+            <Nav handleMenuToggle={ this.handleMenuToggle } isMenuCollapsed = { this.props.menuCollapsed } accountId = { this.props.params.account_id } userAccount = { this.props.userAccount } sharedAccounts = { this.props.sharedAccounts } subAccounts = { this.props.subAccounts } />
             <div className={[viewContentStyle, styles.viewContent].join(' ') }>
                 <h1>Dash container</h1>
                 {React.Children.toArray(this.props.children)}
@@ -66,7 +66,8 @@ export function mapDispatchToProps(dispatch) {
 const mapStateToProps = createStructuredSelector({
     user: makeSelectUser(),
     menuCollapsed: makeSelectMenuCollapsed(),
-    allAccounts: makeSelectAllAccounts(),
+    sharedAccounts: makeSelectSharedAccounts(),
+    subAccounts: makeSelectSubAccounts(),
     userAccount: makeSelectUserAccount(),
 });
 

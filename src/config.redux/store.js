@@ -37,9 +37,6 @@
   
     const store = createStore(
         createReducer(),
-        //combineReducers({
-         //   routing: routerReducer,
-        //}),
         fromJS(initialState),
         composeEnhancers(...enhancers)
     );
