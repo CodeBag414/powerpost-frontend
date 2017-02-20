@@ -1,7 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
 
-
 import {Link} from 'react-router';
 import PPMenu from 'App/shared/atm.Menu';
 import PPMenuItem from 'App/shared/atm.MenuItem';
@@ -10,8 +9,8 @@ import PPLogo from './PP_Icon.png';
 
 class Sidebar extends React.Component {
     constructor(props) {
-        super(props);
-        
+      super(props);
+      
         this.renderFull = this.renderFull.bind(this);
         this.renderCollapsed = this.renderCollapsed.bind(this);
     }
