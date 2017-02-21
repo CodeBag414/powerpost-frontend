@@ -15,14 +15,14 @@ import { useScroll } from 'react-router-scroll';
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-
-import { createStore, combineReducers } from 'redux';
+import ReduxToastr from './lib/react-redux-toastr';
 
 //Needed for material-ui libarry
 injectTapEventPlugin();
 
 // import sanitize css
 //import 'sanitize.css/sanitize.css';
+//import 'react-redux-toastr/src/styles/index.scss';
 
 import configureStore from './config.redux/store';
 
@@ -49,14 +49,17 @@ const rootRoute = createRoutes(store,auth);
 ReactDOM.render(
         <MuiThemeProvider>
             <Provider store={store}>
-                <Router
-                        history={history}
-                        routes={rootRoute}
-                        render={
-                            // Scroll to top when going to new page, imitating default browser behavior
-                            applyRouterMiddleware(useScroll())
-                        }
-                    />
+                <div>
+                    <Router
+                            history={history}
+                            routes={rootRoute}
+                            render={
+                                // Scroll to top when going to new page, imitating default browser behavior
+                                applyRouterMiddleware(useScroll())
+                            }
+                        />
+                    <ReduxToastr />
+                </div>
             </Provider>
     </MuiThemeProvider>, document.getElementById('app')
 );

@@ -8,6 +8,7 @@ import {take, call, put, fork, race, apply, select} from 'redux-saga/effects';
 import auth from '../../utils/auth';
 import { browserHistory } from 'react-router';
 import { makeSelectUser } from './selectors';
+import { toastr } from '../../lib/react-redux-toastr';
 
 import {
   SENDING_REQUEST,
@@ -134,7 +135,9 @@ export function * logoutFlow () {
     yield call(logout);
     yield put({type: CLEAR_USER});
     
-    forwardTo('/start');
+    yield call(forwardTo, '/start');
+    
+    toastr.success('Success!', 'You are now logged out.');
   }
 }
 
@@ -191,7 +194,6 @@ export default [
 export function* forwardTo (location) {
   yield call(browserHistory.push, location);
 }
-
 //
 export function isEmpty( obj ) {
   for (var prop in obj) {
