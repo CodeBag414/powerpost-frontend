@@ -3,10 +3,7 @@
 
 import { getAsyncInjectors } from '../utils/asyncInjectors';
 import globalSagas from '../App/state/sagas';
-import globalReducer from '../App/state/reducer';
 import App from '../App';
-import { UserIsAuthenticated } from './UserIsAuthenticated';
-import { clearError } from '../App/state/actions';
 
 const errorLoading = (err) => {
   console.error('Dynamic page loading failed', err); // eslint-disable-line no-console
@@ -16,7 +13,7 @@ const loadModule = (cb) => (componentModule) => {
   cb(null, componentModule.default);
 };
 
-export function createRoutes(store) {
+export function createRoutes(store, auth) {
   // create reusable async injectors using getAsyncInjectors factory
   const { injectReducer, injectSagas } = getAsyncInjectors(store);
 
@@ -43,10 +40,10 @@ export function createRoutes(store) {
           injectSagas(sagas.default);
           
           renderRoute(component);
-          store.dispatch(actions.checkUser());
-          console.log('nextstate:');
-          console.log(nextState);
-          store.dispatch(actions.fetchCurrentAccount(nextState.params.account_id));
+          if(auth.loggedIn()) {
+            store.dispatch(actions.checkUser());
+            store.dispatch(actions.fetchCurrentAccount(nextState.params.account_id));
+          }
         });
 
         importModules.catch(errorLoading);

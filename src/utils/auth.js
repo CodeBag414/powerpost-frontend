@@ -2,8 +2,6 @@ import axios from 'axios';
 export const API_URL = 'https://dev2.powerpost.digital';
 import cookie from 'react-cookie';
 
-const localStorage = global.window.localStorage;
-
 let auth = {
     /**
      * Logs a user in returning a promise with 'true' when done
@@ -24,7 +22,7 @@ let auth = {
         // post request
         return axios.post(url, data)
             .then(response => {
-                cookie.save('token', response.data.api_key);
+                cookie.save('token', response.data.api_key, { path: '/' });
                 
                 return response.data;
             })
@@ -55,7 +53,7 @@ let auth = {
           
           return axios.get(API_URL + '/user_api/logout', headers)
             .then(response => {
-                cookie.remove('token');
+                cookie.remove('token', { path: '/' });
                 return Promise.resolve(true);
             })
             .catch((error) => {
@@ -82,7 +80,7 @@ let auth = {
                 password: password,
                 email: email
             }
-        }
+        };
         
         const url = API_URL + '/account_api/create';
         return axios.post(url, data)

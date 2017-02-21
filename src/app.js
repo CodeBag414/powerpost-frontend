@@ -28,11 +28,8 @@ import configureStore from './config.redux/store';
 
 // import selector for 'syncHistoryWithStore'
 import { makeSelectLocationState } from './config.redux/selectors';
-// root app
-import App from './App';
-import Start from './App/views/Start';
-import Login from './App/views/Start/views/Login';
-import Signup from './App/views/Start/views/Signup';
+
+import auth from 'utils/auth';
 
 import { createRoutes} from './config.routes/routes';
 
@@ -47,7 +44,7 @@ const history = syncHistoryWithStore(historyObj, store, {
 });
 
 
-const rootRoute = createRoutes(store);
+const rootRoute = createRoutes(store,auth);
 
 ReactDOM.render(
         <MuiThemeProvider>
@@ -55,10 +52,10 @@ ReactDOM.render(
                 <Router
                         history={history}
                         routes={rootRoute}
-                        //render={
+                        render={
                             // Scroll to top when going to new page, imitating default browser behavior
-                            //applyRouterMiddleware(useScroll())
-                       // }
+                            applyRouterMiddleware(useScroll())
+                        }
                     />
             </Provider>
     </MuiThemeProvider>, document.getElementById('app')

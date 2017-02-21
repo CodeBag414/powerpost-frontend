@@ -6,7 +6,7 @@
 
 import {take, call, put, fork, race, apply, select} from 'redux-saga/effects';
 import auth from '../../utils/auth';
-import {historyObj} from '../../app';
+import { browserHistory } from 'react-router';
 import { makeSelectUser } from './selectors';
 
 import {
@@ -189,8 +189,7 @@ export default [
 
 // Little helper function to abstract going to different pages
 export function* forwardTo (location) {
-  console.log('forward to ' + location);
-  yield call(historyObj.push, location);
+  yield call(browserHistory.push, location);
 }
 
 //
