@@ -51,8 +51,11 @@ class Sidebar extends React.Component {
                     </div>
                 </div>
                 <div className={ styles.mainNav }>
+                    <div>
+                        <h2 className={ styles.brandTitle }>{ this.props.activeBrand.title } </h2>
+                    </div>
                     <PPMenu>
-                        <PPMenuItem primaryText="Calendar" innerDivStyle={{ color: 'white' }} containerElement={ <Link to={ '/account/' + this.props.accountId + '/calendar' } /> } />
+                        <PPMenuItem primaryText="Calendar" innerDivStyle={{ color: 'white' }} containerElement={ <Link to={ '/account/' + this.props.accountId } /> } />
                         <PPMenuItem primaryText="Workflow" innerDivStyle={{ color: 'white' }} containerElement={ <Link to={ '/account/' + this.props.accountId + '/workflow' } /> } />
                         <PPMenuItem primaryText="List" innerDivStyle={{ color: 'white' }} containerElement={ <Link to={ '/account/' + this.props.accountId + '/list' } /> } />
                         <PPMenuItem primaryText="Explore" innerDivStyle={{ color: 'white' }} containerElement={ <Link to={ '/account/' + this.props.accountId + '/explore' } /> } />

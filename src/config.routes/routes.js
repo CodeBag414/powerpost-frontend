@@ -51,9 +51,9 @@ export function createRoutes(store, auth) {
       indexRoute: {
         getComponent(nextState, cb) {
             const importModules = Promise.all([
-              System.import('../App/views/Main/views/Posts/state/reducer'),
-              System.import('../App/views/Main/views/Posts/state/sagas'),
-              System.import('../App/views/Main/views/Posts'),
+              System.import('../App/views/Main/views/Calendar/state/reducer'),
+              System.import('../App/views/Main/views/Calendar/state/sagas'),
+              System.import('../App/views/Main/views/Calendar'),
             ]);
     
             const renderRoute = loadModule(cb);
@@ -86,11 +86,11 @@ export function createRoutes(store, auth) {
           },
         },
         {
-          path: '/account(/:account_id)/calendar',
-          name: 'calendar',
+          path: '/account(/:account_id)/workflow',
+          name: 'workflow',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
-              System.import('../App/views/Main/views/Calendar'),
+              System.import('../App/views/Main/views/Workflow'),
             ]);
             
             const renderRoute = loadModule(cb);
@@ -101,7 +101,92 @@ export function createRoutes(store, auth) {
           
             importModules.catch(errorLoading);
           },
-        }
+        },
+        {
+          path: '/account(/:account_id)/statistics',
+          name: 'statistics',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('../App/views/Main/views/Statistics'),
+            ]);
+            
+            const renderRoute = loadModule(cb);
+            
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+          
+            importModules.catch(errorLoading);
+          },
+        },
+        {
+          path: '/account(/:account_id)/explore',
+          name: 'explore',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('../App/views/Main/views/Explore'),
+            ]);
+            
+            const renderRoute = loadModule(cb);
+            
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+          
+            importModules.catch(errorLoading);
+          },
+        },
+        {
+          path: '/account(/:account_id)/list',
+          name: 'list',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('../App/views/Main/views/List'),
+            ]);
+            
+            const renderRoute = loadModule(cb);
+            
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+          
+            importModules.catch(errorLoading);
+          },
+        },
+        {
+          path: '/account(/:account_id)/settings',
+          name: 'settings',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('../App/views/Main/views/Settings'),
+            ]);
+            
+            const renderRoute = loadModule(cb);
+            
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+          
+            importModules.catch(errorLoading);
+          },
+        },
+        {
+          path: '/account(/:account_id)/user/:user_id',
+          name: 'user',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('../App/views/Main/views/User'),
+            ]);
+            
+            const renderRoute = loadModule(cb);
+            
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+          
+            importModules.catch(errorLoading);
+          },
+        },
       ],
     }, 
     {

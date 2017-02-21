@@ -29,6 +29,12 @@
     position: relative;
 }
 
+.brandTitle {
+    color: white;
+    margin-left: 16px;
+    margin-right: 50px;
+    font-size: 24px;
+}
 .activeBrand {
     composes: brandContainer;
     opacity: 1;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-
+import { Link } from 'react-router';
 import {logout, clearError} from 'App/state/actions';
 
 import PPIconButton from 'App/shared/atm.IconButton';
@@ -17,6 +17,7 @@ class TopNav extends Component {
         return(
             <div className={[styles.topNav, viewStyle].join(' ')}>
                 <PPIconButton iconClassName='fa fa-bars' onClick={ this.props.handleMenuToggle } />
+                <Link to={ '/account/' + this.props.accountId + '/user/' + this.props.userAccount.user_id }>User settings</Link>
                 <button style={{ float: 'right' }} onClick={this.props.logout}>Logout</button>
             </div>
         );

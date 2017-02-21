@@ -16,7 +16,7 @@ import {connect} from 'react-redux';
 import { makeSelectUser, makeSelectUserAccount, makeSelectSharedAccounts, makeSelectSubAccounts } from '../../state/selectors';
 import {checkUser} from '../../state/actions';
 import {toggleMenu} from './state/actions';
-import { makeSelectMenuCollapsed } from './state/selectors';
+import { makeSelectMenuCollapsed, makeSelectCurrentAccount } from './state/selectors';
 
 class Dashboard extends React.Component{
     constructor(props) {
@@ -43,7 +43,7 @@ class Dashboard extends React.Component{
         
         return(
         <div>
-            <Nav handleMenuToggle={ this.handleMenuToggle } isMenuCollapsed = { this.props.menuCollapsed } accountId = { this.props.params.account_id } userAccount = { this.props.userAccount } sharedAccounts = { this.props.sharedAccounts } subAccounts = { this.props.subAccounts } />
+            <Nav handleMenuToggle={ this.handleMenuToggle } isMenuCollapsed = { this.props.menuCollapsed } activeBrand = { this.props.activeBrand } accountId = { this.props.params.account_id } userAccount = { this.props.userAccount } sharedAccounts = { this.props.sharedAccounts } subAccounts = { this.props.subAccounts } />
             <div className={[viewContentStyle, styles.viewContent].join(' ') }>
                 <h1>Dash container</h1>
                 {React.Children.toArray(this.props.children)}
@@ -67,6 +67,7 @@ const mapStateToProps = createStructuredSelector({
     user: makeSelectUser(),
     menuCollapsed: makeSelectMenuCollapsed(),
     sharedAccounts: makeSelectSharedAccounts(),
+    activeBrand: makeSelectCurrentAccount(),
     subAccounts: makeSelectSubAccounts(),
     userAccount: makeSelectUserAccount(),
 });
