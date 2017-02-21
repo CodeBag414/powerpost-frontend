@@ -13,10 +13,11 @@ import Nav from './components/Nav';
 
 import { UserIsAuthenticated } from '../../../config.routes/UserIsAuthenticated';
 import {connect} from 'react-redux';
-import { makeSelectUser, makeSelectUserAccount, makeSelectSharedAccounts, makeSelectSubAccounts } from '../../state/selectors';
+import { makeSelectUser, makeSelectUserAccount, makeSelectSharedAccounts, makeSelectSubAccounts, makeSelectUserAvatar } from '../../state/selectors';
 import {checkUser} from '../../state/actions';
 import {toggleMenu} from './state/actions';
 import { makeSelectMenuCollapsed, makeSelectCurrentAccount } from './state/selectors';
+import {logout} from 'App/state/actions';
 
 class Dashboard extends React.Component{
     constructor(props) {
@@ -43,7 +44,7 @@ class Dashboard extends React.Component{
         
         return(
         <div>
-            <Nav handleMenuToggle={ this.handleMenuToggle } isMenuCollapsed = { this.props.menuCollapsed } activeBrand = { this.props.activeBrand } accountId = { this.props.params.account_id } userAccount = { this.props.userAccount } sharedAccounts = { this.props.sharedAccounts } subAccounts = { this.props.subAccounts } />
+            <Nav userAvatar={ this.props.userAvatar } user={ this.props.user } logout={ this.props.logout } handleMenuToggle={ this.handleMenuToggle } isMenuCollapsed = { this.props.menuCollapsed } activeBrand = { this.props.activeBrand } accountId = { this.props.params.account_id } userAccount = { this.props.userAccount } sharedAccounts = { this.props.sharedAccounts } subAccounts = { this.props.subAccounts } />
             <div className={[viewContentStyle, styles.viewContent].join(' ') }>
                 <h1>Dash container</h1>
                 {React.Children.toArray(this.props.children)}
@@ -60,7 +61,8 @@ Dashboard.propTypes = {
 export function mapDispatchToProps(dispatch) {
     return {
         checkUserObject: (user) => dispatch(checkUser(user)),
-        toggleMenuCollapse: (isCollapsed) => dispatch(toggleMenu(isCollapsed))
+        toggleMenuCollapse: (isCollapsed) => dispatch(toggleMenu(isCollapsed)),
+        logout: () => dispatch(logout())
     };
 }
 const mapStateToProps = createStructuredSelector({
@@ -70,6 +72,7 @@ const mapStateToProps = createStructuredSelector({
     activeBrand: makeSelectCurrentAccount(),
     subAccounts: makeSelectSubAccounts(),
     userAccount: makeSelectUserAccount(),
+    userAvatar: makeSelectUserAvatar()
 });
 
 export default UserIsAuthenticated(connect(mapStateToProps, mapDispatchToProps)(Dashboard));

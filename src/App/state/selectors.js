@@ -27,6 +27,11 @@ const makeSelectSubAccounts = () => createSelector(
     (auth) => auth.get('subAccounts')
 );
 
+const makeSelectUserAvatar = () => createSelector(
+    selectAuth,
+    (auth) => auth.getIn(['properties', 'thumb_url'])
+);
+
 export {
     selectAuth,
     makeSelectAuthError,
@@ -34,4 +39,5 @@ export {
     makeSelectUserAccount,
     makeSelectSubAccounts,
     makeSelectSharedAccounts,
+    makeSelectUserAvatar
 };
