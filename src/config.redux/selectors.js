@@ -1,6 +1,7 @@
 /**
  * The global state selectors
  */
+import { createSelector } from 'reselect';
 
 const makeSelectLocationState = () => {
   let prevRoutingState;
@@ -16,6 +17,14 @@ const makeSelectLocationState = () => {
   };
 };
 
+const selectLocation = (state, props) => props.location;
+
+const makeSelectLocationName = createSelector(
+    selectLocation,
+    (location) => location.name
+);
+
 export {
-    makeSelectLocationState
+    makeSelectLocationState,
+    makeSelectLocationName,
 };

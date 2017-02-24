@@ -19,7 +19,7 @@
 
   // initial routing state
   const routeInitialState = fromJS({
-      locationBeforeTransition: null,
+      locationBeforeTransitions: null,
   });
 
   // merge route into the global application state

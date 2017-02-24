@@ -32,6 +32,11 @@ const makeSelectUserAvatar = () => createSelector(
     (auth) => auth.getIn(['properties', 'thumb_url'])
 );
 
+const makeSelectFilePickerKey = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('filePickerKey')
+);
+
 export {
     selectAuth,
     makeSelectAuthError,
@@ -39,5 +44,6 @@ export {
     makeSelectUserAccount,
     makeSelectSubAccounts,
     makeSelectSharedAccounts,
-    makeSelectUserAvatar
+    makeSelectUserAvatar,
+    makeSelectFilePickerKey,
 };
