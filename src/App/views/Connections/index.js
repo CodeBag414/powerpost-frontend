@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 
 import ConnectionsControlBar from './views/ConnectionsControlBar';
+import ConnectionsList from './views/ConnectionsList';
 
 class Connections extends React.Component {
     constructor(props) {
@@ -12,6 +13,7 @@ class Connections extends React.Component {
         return (
             <div className="container">
                 <ConnectionsControlBar />
+                <ConnectionsList />
             </div>
         );
     }
