@@ -107,12 +107,14 @@ export function createRoutes(store, auth) {
           name: 'connections',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
+              System.import('../App/views/Connections/state/reducer'),
               System.import('../App/views/Connections')
             ]);
 
             const renderRoute = loadModule(cb);
 
-            importModules.then(([component]) => {
+            importModules.then(([reducer, component]) => {
+              injectReducer('connections', reducer.default);
               renderRoute(component);
             });
 
