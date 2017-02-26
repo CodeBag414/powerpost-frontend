@@ -38,7 +38,7 @@ export function createRoutes(store, auth) {
         importModules.then(([actions, reducer, sagas,component]) => {
           injectReducer('dashboard', reducer.default);
           injectSagas(sagas.default);
-          
+
           renderRoute(component);
           if(auth.loggedIn()) {
             store.dispatch(actions.checkUser());
@@ -50,22 +50,22 @@ export function createRoutes(store, auth) {
       },
       indexRoute: {
         getComponent(nextState, cb) {
-            const importModules = Promise.all([
-              System.import('../App/views/Main/views/Posts/state/reducer'),
-              System.import('../App/views/Main/views/Posts/state/sagas'),
-              System.import('../App/views/Main/views/Posts'),
-            ]);
-    
-            const renderRoute = loadModule(cb);
-    
-            importModules.then(([reducer, sagas, component]) => {
+          const importModules = Promise.all([
+            System.import('../App/views/Main/views/Posts/state/reducer'),
+            System.import('../App/views/Main/views/Posts/state/sagas'),
+            System.import('../App/views/Main/views/Posts'),
+          ]);
+
+          const renderRoute = loadModule(cb);
+
+          importModules.then(([reducer, sagas, component]) => {
             //  injectReducer('posts', reducer.default);
             //  injectSagas(sagas.default);
-              renderRoute(component);
-            });
-    
-            importModules.catch(errorLoading);
-          }
+            renderRoute(component);
+          });
+
+          importModules.catch(errorLoading);
+        }
       },
       childRoutes: [
         {
@@ -75,13 +75,13 @@ export function createRoutes(store, auth) {
             const importModules = Promise.all([
               System.import('../App/views/Main/views/MediaItemLibrary'),
             ]);
-    
+
             const renderRoute = loadModule(cb);
-    
+
             importModules.then(([component]) => {
               renderRoute(component);
             });
-    
+
             importModules.catch(errorLoading);
           },
         },
@@ -92,18 +92,37 @@ export function createRoutes(store, auth) {
             const importModules = Promise.all([
               System.import('../App/views/Main/views/Calendar'),
             ]);
-            
+
             const renderRoute = loadModule(cb);
-            
+
             importModules.then(([component]) => {
               renderRoute(component);
             });
-          
+
             importModules.catch(errorLoading);
           },
+        },
+        {
+          path: 'connections(/:account_id)',
+          name: 'connections',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('../App/views/Connections')
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+          childRoutes: [
+          ]
         }
       ],
-    }, 
+    },
     {
       path: '/start',
       name: 'start',
