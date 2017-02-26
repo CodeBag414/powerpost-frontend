@@ -19,7 +19,7 @@ class ConnectionsControlBar extends React.Component {
                 </div>
                 <div
                     className={ ['col-xs-12', 'col-sm-4', 'col-md-4', 'col-lg-3', styles.noLeftPadding].join(' ') }>
-                    <Button label="Connect a New Channel" secondary={ true }/>
+                    <Button label="Connect a New Channel" secondary={ true } onClick={ this.props.handleDialogToggle } />
                 </div>
             </div>
         );
