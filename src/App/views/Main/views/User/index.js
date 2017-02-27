@@ -173,6 +173,7 @@ class settingsUser extends Component {
                   hintText="First Name, Last Name"
                   floatingLabelText="Your Name"
                   value={this.props.display_name}
+
                   floatingLabelFixed={true}
                   /><br />
                   <PPTextField
@@ -198,14 +199,10 @@ class settingsUser extends Component {
                   floatingLabelText="Phone"
                   floatingLabelFixed={true}
                   />
-                  <PPTextField
-                  hintText="Time Zone"
-                  floatingLabelText="Time Zone"
-                  floatingLabelFixed={true}
-                  />
+                 
             </div>
             <div className="col-md-2">
-            <RaisedButton label="Update Email" primary={true} style={{marginTop:'22px'}} />
+            
             </div>
       </row>
       <row>
