@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import ToolbarGroup from 'material-ui/Toolbar';
+import {ToolbarGroup} from 'material-ui/Toolbar';
 
 const PPToolbarGroup = (props) => {
     

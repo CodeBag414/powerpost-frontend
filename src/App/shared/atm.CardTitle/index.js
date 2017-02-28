@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import CardTitle from 'material-ui/card';
+import {CardTitle} from 'material-ui/card';
 
 const PPCardTitle= (props) => {
     const { style } = props;

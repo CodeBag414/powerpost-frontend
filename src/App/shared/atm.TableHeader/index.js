@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import TableHeader from 'material-ui/Table';
+import {TableHeader} from 'material-ui/Table';
 
 const PPTableHeader = (props) => {
     

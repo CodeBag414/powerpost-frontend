@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import GridTile from 'material-ui/GridTile';
+import {GridTile} from 'material-ui/GridTile';
 
 const PPGridTile = (props) => {
     return(

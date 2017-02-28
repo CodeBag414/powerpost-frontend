@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import StepButton from 'material-ui/StepButton';
+import {StepButton} from 'material-ui/StepButton';
 
 const PPStepButton = (props) => {
     

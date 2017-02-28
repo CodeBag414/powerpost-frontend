@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import TableFooter from 'material-ui/Table';
+import {TableFooter} from 'material-ui/Table';
 
 const PPTableFooter = (props) => {
     

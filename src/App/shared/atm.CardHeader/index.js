@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import CardHeader from 'material-ui/card';
+import {CardHeader} from 'material-ui/card';
 
 const PPCardHeader= (props) => {
     const { style } = props;

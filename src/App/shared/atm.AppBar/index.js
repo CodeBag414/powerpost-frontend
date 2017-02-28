@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import IconButton from 'material-ui/AppBar';
+import AppBar from 'material-ui/AppBar';
 
 const PPAppBar= (props) => {
     const { style } = props;

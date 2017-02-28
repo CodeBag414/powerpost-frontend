@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import TableBody from 'material-ui/Table';
+import {TableBody} from 'material-ui/Table';
 
 const PPTableBody = (props) => {
     

@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import Step from 'material-ui/Stepper';
+import {Step} from 'material-ui/Stepper';
 
 const PPStep = (props) => {
     

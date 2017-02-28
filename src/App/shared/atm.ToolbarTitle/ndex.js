@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import ToolbarTitle from 'material-ui/Toolbar';
+import {ToolbarTitle} from 'material-ui/Toolbar';
 
 const PPToolbarTitle = (props) => {
     

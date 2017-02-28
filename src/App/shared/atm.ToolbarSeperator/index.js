@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import ToolbarSeperator from 'material-ui/Toolbar';
+import {ToolbarSeperator} from 'material-ui/Toolbar';
 
 const PPToolbarSeperator = (props) => {
     
