@@ -1,6 +1,14 @@
 import {
+    SET_CONNECTIONS_LIST,
     TOGGLE_ADD_CONNECTION_DIALOG
 } from './constants';
+
+export function setConnectionsList(connections) {
+    return {
+        type: SET_CONNECTIONS_LIST,
+        connections
+    };
+}
 
 export function toggleDialog(shown) {
     return {
