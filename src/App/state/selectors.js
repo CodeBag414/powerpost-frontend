@@ -27,10 +27,12 @@ const makeSelectSubAccounts = () => createSelector(
     (auth) => auth.get('subAccounts')
 );
 
+
 const makeSelectFilePickerKey = () => createSelector(
     selectAuth,
     (auth) => auth.get('filePickerKey')
-    );
+);
+
 export {
     selectAuth,
     makeSelectAuthError,
