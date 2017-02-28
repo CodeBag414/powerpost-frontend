@@ -1,10 +1,14 @@
 import React, { PropTypes, Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 
+const style = {
+  margin: 12,
+};
+
 const PPRaisedButton= (props) => {
     
     return(
-        <RaisedButton {...props} style={{marginRight: '10px'}}/>
+        <RaisedButton {...props}/>
     );
 };
 

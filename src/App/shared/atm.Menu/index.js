@@ -1,6 +1,11 @@
 import React, { PropTypes } from 'react';
 import Menu from 'material-ui/Menu';
 
+const style = {
+  display: 'inline-block',
+  margin: '16px 32px 16px 0',
+};
+
 const PPMenu= (props) => {
     return(
         <Menu {...props } />
