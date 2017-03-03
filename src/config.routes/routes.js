@@ -36,12 +36,15 @@ export function createRoutes(store, auth) {
         const renderRoute = loadModule(cb);
 
         importModules.then(([actions, reducer, sagas,component]) => {
-          injectReducer('dashboard', reducer.default);
+          injectReducer('main', reducer.default);
           injectSagas(sagas.default);
           
           renderRoute(component);
           if(auth.loggedIn()) {
             store.dispatch(actions.checkUser());
+           // if(nextState.params.account_id) {
+            //  store.dispatch(actions.fetchCurrentAccount(nextState.params.account_id));
+           // }
           }
         });
 
@@ -71,38 +74,47 @@ export function createRoutes(store, auth) {
           name: 'user settings',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
-              System.import('../App/views/Main/state/actions'),
               System.import('../App/views/Main/views/User'),
             ]);
             
             const renderRoute = loadModule(cb);
             
-            importModules.then(([actions,component]) => {
+            importModules.then(([component]) => {
               renderRoute(component);
-                          if(auth.loggedIn) {
-              store.dispatch(actions.fetchCurrentAccount(nextState.params.account_id));
-            }
             });
           
             importModules.catch(errorLoading);
           },
+        },
+        {
+          path: '/forbidden',
+          name: 'No Access',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('../App/views/Main/views/NoAccess')
+            ]);
+            
+            const renderRoute = loadModule(cb);
+            
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+            
+            importModules.catch(errorLoading);
+          }
         },
       {
         path: 'account(/:account_id)',
         name: 'Library',
         getComponent(nextState, cb) {
           const importModules = Promise.all([
-            System.import('../App/views/Main/state/actions'),
             System.import('../App/views/Main/views/MediaItemLibrary'),
           ]);
   
           const renderRoute = loadModule(cb);
   
-          importModules.then(([actions, component]) => {
+          importModules.then(([component]) => {
             renderRoute(component);
-            if(auth.loggedIn) {
-              store.dispatch(actions.fetchCurrentAccount(nextState.params.account_id));
-            }
           });
   
           importModules.catch(errorLoading);
@@ -113,7 +125,6 @@ export function createRoutes(store, auth) {
         name: 'calendar',
         getComponent(nextState, cb) {
             const importModules = Promise.all([
-              System.import('../App/views/Main/state/actions'),
               System.import('../App/views/Main/views/Calendar/state/reducer'),
               System.import('../App/views/Main/views/Calendar/state/sagas'),
               System.import('../App/views/Main/views/Calendar'),
@@ -121,13 +132,10 @@ export function createRoutes(store, auth) {
     
             const renderRoute = loadModule(cb);
     
-            importModules.then(([actions, reducer, sagas, component]) => {
+            importModules.then(([reducer, sagas, component]) => {
             //  injectReducer('posts', reducer.default);
             //  injectSagas(sagas.default);
               renderRoute(component);
-              if(auth.loggedIn) {
-                store.dispatch(actions.fetchCurrentAccount(nextState.params.account_id));
-              }
             });
     
             importModules.catch(errorLoading);
@@ -138,17 +146,13 @@ export function createRoutes(store, auth) {
         name: 'workflow',
         getComponent(nextState, cb) {
           const importModules = Promise.all([
-            System.import('../App/views/Main/state/actions'),
             System.import('../App/views/Main/views/Workflow'),
           ]);
           
           const renderRoute = loadModule(cb);
           
-          importModules.then(([actions,component]) => {
+          importModules.then(([component]) => {
             renderRoute(component);
-            if(auth.loggedIn) {
-               store.dispatch(actions.fetchCurrentAccount(nextState.params.account_id));
-            }
           });
         
           importModules.catch(errorLoading);
@@ -159,17 +163,13 @@ export function createRoutes(store, auth) {
         name: 'statistics',
         getComponent(nextState, cb) {
           const importModules = Promise.all([
-            System.import('../App/views/Main/state/actions'),
             System.import('../App/views/Main/views/Statistics'),
           ]);
           
           const renderRoute = loadModule(cb);
           
-          importModules.then(([actions, component]) => {
+          importModules.then(([component]) => {
             renderRoute(component);
-            if(auth.loggedIn) {
-              store.dispatch(actions.fetchCurrentAccount(nextState.params.account_id));
-            }
           });
         
           importModules.catch(errorLoading);
@@ -180,17 +180,13 @@ export function createRoutes(store, auth) {
         name: 'Team',
         getComponent(nextState, cb) {
           const importModules = Promise.all([
-            System.import('../App/views/Main/state/actions'),
             System.import('../App/views/Main/views/Team'),
           ]);
           
           const renderRoute = loadModule(cb);
           
-          importModules.then(([actions,component]) => {
+          importModules.then(([component]) => {
             renderRoute(component);
-            if(auth.loggedIn) {
-              store.dispatch(actions.fetchCurrentAccount(nextState.params.account_id));
-            }
           });
         
           importModules.catch(errorLoading);
@@ -201,17 +197,13 @@ export function createRoutes(store, auth) {
         name: 'list',
         getComponent(nextState, cb) {
           const importModules = Promise.all([
-            System.import('../App/views/Main/state/actions'),
             System.import('../App/views/Main/views/List'),
           ]);
           
           const renderRoute = loadModule(cb);
           
-          importModules.then(([actions, component]) => {
+          importModules.then(([component]) => {
             renderRoute(component);
-            if(auth.loggedIn) {
-              store.dispatch(actions.fetchCurrentAccount(nextState.params.account_id));
-            }
           });
         
           importModules.catch(errorLoading);
@@ -222,17 +214,14 @@ export function createRoutes(store, auth) {
         name: 'settings',
         getComponent(nextState, cb) {
           const importModules = Promise.all([
-            System.import('../App/views/Main/state/actions'),
             System.import('../App/views/Main/views/Settings'),
           ]);
           
           const renderRoute = loadModule(cb);
           
-          importModules.then(([actions, component]) => {
+          importModules.then(([component]) => {
             renderRoute(component);
-            if(auth.loggedIn) {
-              store.dispatch(actions.fetchCurrentAccount(nextState.params.account_id));
-            }
+
           });
         
           importModules.catch(errorLoading);
@@ -243,17 +232,13 @@ export function createRoutes(store, auth) {
       name: 'connections',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          System.import('../App/views/Main/state/actions'),
           System.import('../App/views/Main/views/Connections'),
         ]);
         
         const renderRoute = loadModule(cb);
         
-        importModules.then(([actions, component]) => {
+        importModules.then(([component]) => {
           renderRoute(component);
-          if(auth.loggedIn) {
-            store.dispatch(actions.fetchCurrentAccount(nextState.params.account_id));
-          }
         });
       
         importModules.catch(errorLoading);

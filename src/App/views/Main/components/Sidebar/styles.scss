@@ -58,11 +58,34 @@
     height: 32px;
     margin: 0 auto;
     line-height: 32px;
-    margin-top: 30px;
+    //margin-top: 20px;
+    margin-bottom: 20px;
     position: relative;
     color: white;
+    transition: all .3s ease;
 }
-
+.subBrandMenu {
+    width: 20px;
+    height: 20px;
+    background: #00D2AF;
+    position: absolute;
+    right: -5px;
+    border-radius: 5px;
+    bottom: -10px;
+}
+.subBrandContainer {
+    display: inline-block;
+    margin: 10px;
+    text-align: center;
+    border-radius: 5px;
+    line-height: 32px;
+    background-color: #E52466;
+    opacity: 1;
+    width: 32px;
+    height: 32px;
+    color: white;
+    transition: all .3s ease;
+}
 .brandTitle {
     margin-left: 16px;
     font-size: 14px;
@@ -74,8 +97,12 @@
     opacity: 1;
     height: 40px;
     width: 40px;
-    margin-top: 30px;
+
+    margin-bottom: 20px;
     line-height: 40px;
+}
+.powerpostLogoContainer {
+    margin-bottom: 20px;
 }
 
 .brandNav {
@@ -88,7 +115,14 @@
     a {
         &:hover {
             text-decoration: none;
-            
+            .brandContainer {
+                opacity: 1;
+                height: 40px;
+                width: 40px;
+                //margin-top: 15px;
+                margin-bottom: 12px;
+                line-height: 40px;
+            }
         }
         &:focus{
             text-decoration: none;

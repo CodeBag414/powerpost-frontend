@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-const selectDashboard = (state) => state.get('dashboard');
+const selectDashboard = (state) => state.get('main');
 
 const makeSelectMenuCollapsed = () => createSelector(
    selectDashboard,
@@ -9,10 +9,16 @@ const makeSelectMenuCollapsed = () => createSelector(
 
 const makeSelectCurrentAccount = () => createSelector(
     selectDashboard,
-    (dashboard) => dashboard.get('activeBrand')
+    (dashboard) => { if(dashboard.get('activeBrand')) { return dashboard.get('activeBrand').toJS(); } return dashboard.get('activeBrand') }
+);
+
+const makeSelectAccountPermissions = () => createSelector(
+    selectDashboard,
+    (dashboard) => dashboard.getIn(['activeBrand', 'account_access', 'permissions'])
 );
 
 export {
     makeSelectMenuCollapsed,
-    makeSelectCurrentAccount
+    makeSelectCurrentAccount,
+    makeSelectAccountPermissions
 };

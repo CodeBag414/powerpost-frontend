@@ -5,8 +5,9 @@
  */
 
 import React from 'react';
+import { UserCanStatistics } from 'config.routes/UserRoutePermissions';
 
-export default class Statistics extends React.Component {
+class Statistics extends React.Component {
     
     render() {
         return (
@@ -16,3 +17,5 @@ export default class Statistics extends React.Component {
         );
     }
 }
+
+export default UserCanStatistics(Statistics);

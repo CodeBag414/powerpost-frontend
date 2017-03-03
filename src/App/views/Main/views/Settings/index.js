@@ -1,12 +1,13 @@
 /*
- * List View
+ * Settings View
  *
  * 
  */
 
 import React from 'react';
+import { UserCanSettings } from 'config.routes/UserRoutePermissions';
 
-export default class Settings extends React.Component {
+class Settings extends React.Component {
     
     render() {
         return (
@@ -16,3 +17,5 @@ export default class Settings extends React.Component {
         );
     }
 }
+
+export default UserCanSettings(Settings);

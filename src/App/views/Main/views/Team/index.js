@@ -5,8 +5,9 @@
  */
 
 import React from 'react';
+import { UserCanTeam } from 'config.routes/UserRoutePermissions';
 
-export default class Team extends React.Component {
+class Team extends React.Component {
     
     render() {
         return (
@@ -16,3 +17,5 @@ export default class Team extends React.Component {
         );
     }
 }
+
+export default UserCanTeam(Team);

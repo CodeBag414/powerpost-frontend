@@ -5,8 +5,9 @@
  */
 
 import React from 'react';
+import { UserCanConnections } from 'config.routes/UserRoutePermissions';
 
-export default class Connections extends React.Component {
+class Connections extends React.Component {
     
     render() {
         return (
@@ -16,3 +17,5 @@ export default class Connections extends React.Component {
         );
     }
 }
+
+export default UserCanConnections(Connections);

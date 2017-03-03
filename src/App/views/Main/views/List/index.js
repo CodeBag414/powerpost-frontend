@@ -5,8 +5,9 @@
  */
 
 import React from 'react';
+import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 
-export default class List extends React.Component {
+class List extends React.Component {
     
     render() {
         return (
@@ -16,3 +17,4 @@ export default class List extends React.Component {
         );
     }
 }
+export default UserCanAccount(List);
