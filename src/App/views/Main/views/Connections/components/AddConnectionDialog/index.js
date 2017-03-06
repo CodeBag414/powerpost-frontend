@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import Button from 'App/shared/atm.Button';
+import PPRaisedButton from 'App/shared/atm.RaisedButton';
 import Dialog from 'App/shared/atm.Dialog';
 
 class AddConnectionDialog extends React.Component {
@@ -11,8 +11,8 @@ class AddConnectionDialog extends React.Component {
 
     render() {
         const actions = [
-            <Button label="Cancel" primary={true} onTouchTap={ this.props.handleDialogToggle }/>,
-            <Button label="Connect" secondary={true} keyboardFocused={true}
+            <PPRaisedButton label="Cancel" primary={true} onTouchTap={ this.props.handleDialogToggle }/>,
+            <PPRaisedButton label="Connect" secondary={true} keyboardFocused={true}
                     onTouchTap={ this.props.handleDialogToggle }/>
         ];
 

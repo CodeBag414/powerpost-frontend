@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import Button from 'App/shared/atm.Button';
+import PPRaisedButton from 'App/shared/atm.RaisedButton';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'App/shared/atm.SelectField';
 import TextField from 'App/shared/atm.TextField';
@@ -37,7 +37,7 @@ class ConnectionsControlBar extends React.Component {
                 </div>
                 <div
                     className={ ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-3', styles.noLeftPadding].join(' ') }>
-                    <Button label="Connect a New Channel" secondary={ true } onClick={ this.props.handleDialogToggle } />
+                    <PPRButton label="Connect a New Channel" secondary={ true } onClick={ this.props.handleDialogToggle } />
                 </div>
                 <div
                     className={ ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-3', styles.noLeftPadding].join(' ') }>
