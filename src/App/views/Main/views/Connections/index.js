@@ -23,7 +23,7 @@ import {
 class Connections extends React.Component {
     constructor(props) {
         super(props);
-        this.props.setConnectionsListShown(require('./connections.json').connections);
+        //this.props.setConnectionsListShown(require('./connections.json').connections);
         this.handleDialogToggle = this.handleDialogToggle.bind(this);
         this.removeConnection = this.removeConnection.bind(this);
         this.setChannelFilter = this.setChannelFilter.bind(this);

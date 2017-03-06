@@ -103,12 +103,12 @@ export function createRoutes(store, auth) {
           },
         },
         {
-          path: 'connections(/:account_id)',
+          path: '/account(/:account_id)/conenctions',
           name: 'connections',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
-              System.import('../App/views/Connections/state/reducer'),
-              System.import('../App/views/Connections')
+              System.import('../App/views/Main/views/Connections/state/reducer'),
+              System.import('../App/views/Main/views/Connections')
             ]);
 
             const renderRoute = loadModule(cb);
