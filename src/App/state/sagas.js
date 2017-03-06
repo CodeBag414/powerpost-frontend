@@ -50,7 +50,6 @@ export function * authorize ({name, email, password, isRegistering}) {
     } else {
       response = yield call(auth.login, email, password);
     }
-        console.log('authorize response: ' + response);
     return response;
     
   } catch (error) {
@@ -78,7 +77,6 @@ export function * logout () {
   try {
     let response = yield call(auth.logout);
     yield put({type: SENDING_REQUEST, sending: false});
-    console.log('response:' + response);
     return response;
   } catch (error) {
     yield put({type: REQUEST_ERROR, error: error.message});
@@ -103,8 +101,6 @@ export function * loginFlow (store) {
       auth: call(authorize, {email, password, isRegistering: false}),
       logout: take(LOGOUT)
     });
-    console.log('winner: ');
-    console.log(winner);
     // If `authorize` was the winner...
     if (winner.auth) {
       // ...we send Redux appropiate actions
@@ -168,14 +164,11 @@ export function * userExistsFlow() {
   while(true) {
     let request = yield take(CHECK_USER_OBJECT);
     let user = yield select(makeSelectUser());
-    console.log('USEREXISTSFLOW: ' + user);
     if(user.user_id) {
-      console.log('user object exists');
+
     } else {
-      console.log('user object does not exist, get it now');
       let currentUser = yield call(auth.getCurrentUser);
       yield put({ type: SET_USER, user: currentUser });
-      console.log('user exists now');
     }
   }
 }

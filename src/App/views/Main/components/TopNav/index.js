@@ -9,6 +9,11 @@ import PPMenuItem from 'App/shared/atm.MenuItem';
 import PPPopover from 'App/shared/atm.Popover';
 import PPAvatar from 'App/shared/atm.Avatar';
 
+// Replace with own Icons eventually
+import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
+import HardwareKeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
+
+
 class TopNav extends Component {
     constructor(props) {
         super(props);
@@ -19,6 +24,7 @@ class TopNav extends Component {
         
         this.handleTouchTap = this.handleTouchTap.bind(this);
         this.handleRequestClose = this.handleRequestClose.bind(this);
+        this.handleTouch = this.handleTouch.bind(this);
     }
 
     handleTouchTap(event) {
@@ -35,26 +41,40 @@ class TopNav extends Component {
             userMenuOpen: false
         });
     }
-    
+    handleTouch(event) {
+        console.log('in handleTouch');
+    }
     render() {
         const styles = require('./styles.scss');
+        let isAccountPath = this.props.location.pathname.match('/account/');
+        
         const viewStyle = this.props.isMenuCollapsed ? styles.collapsed : styles.full;
+        const accountStyle = isAccountPath ? styles.accountTopNav : styles.userTopNav;
+        
+        const avatar = this.props.user && this.props.user.properties ? this.props.user.properties.thumb_url : '';
         return(
-            <div className={[styles.topNav, viewStyle].join(' ')}>
-                <PPIconButton iconClassName='fa fa-bars' onClick={ this.props.handleMenuToggle } />
-            
+            <div className={[styles.topNav, viewStyle, accountStyle ].join(' ')}>
+                { isAccountPath &&
+                    <PPIconButton inBar={true} onClick={ this.props.handleMenuToggle } >
+                    { this.props.isMenuCollapsed ? (
+                        <NavigationMenu />
+                    ) : (
+                        <HardwareKeyboardArrowLeft />
+                    )}
+                    </PPIconButton>
+                }
                 <div className={ styles.userContainer } >
-                    <PPAvatar src={ this.props.userAvatar } onClick={ this.handleTouchTap } />
+                    <PPAvatar src={ avatar } onClick={ this.handleTouchTap } />
                     <PPPopover
                         open={ this.state.userMenuOpen }
                         anchorEl={ this.state.anchorEl }
-                        anchorOrigin={{ horizontal: 'right', vertical:'bottom' }}
+                        anchorOrigin={{ horizontal: 'left', vertical:'bottom' }}
                         targetOrigin={{horizontal: 'right', vertical: 'top' }}
                         onRequestClose={this.handleRequestClose }
                     >
-                        <PPMenu>
-                            <PPMenuItem primaryText="Settings" containerElement={  <Link to={ '/account/' + this.props.accountId + '/user/' + this.props.userAccount.user_id } /> } />
-                            <PPMenuItem primaryText="Logout" onClick={ this.props.logout } />
+                        <PPMenu onChange={ this.handleTouch }>
+                            <PPMenuItem primaryText="Settings" containerElement={  <Link to={ '/user/settings' } /> } />
+                            <PPMenuItem primaryText="Logout" onTouchTap={ this.props.logout } />
                         </PPMenu>
                         
                     </PPPopover>

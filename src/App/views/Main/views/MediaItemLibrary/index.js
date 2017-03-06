@@ -5,8 +5,9 @@
  */
 
 import React from 'react';
+import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 
-export default class MediaItemLibrary extends React.Component {
+class MediaItemLibrary extends React.Component {
     
     render() {
         return (
@@ -16,3 +17,5 @@ export default class MediaItemLibrary extends React.Component {
         );
     }
 }
+
+export default UserCanAccount(MediaItemLibrary)

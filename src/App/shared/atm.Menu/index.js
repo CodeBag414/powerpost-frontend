@@ -29,7 +29,7 @@ PPMenu.PropTypes = {
     style:	PropTypes.object, //		Override the inline-styles of the root element.
     value:	PropTypes.any, //	If multiple is true, an array of the values of the selected menu items. Otherwise, the value of the selected menu item. If provided, the menu will be a controlled component. This component also supports valueLink.
     valueLink:	PropTypes.object, //		ValueLink for the menu's value.
-    width:	PropTypes.stringOrNumber, //		The width of the menu. If not specified, the menu's width will be set according to the widths of its children, using proper keyline increments (64px for desktop, 56px otherwise).
+    width:	PropTypes.number, //		The width of the menu. If not specified, the menu's width will be set according to the widths of its children, using proper keyline increments (64px for desktop, 56px otherwise).
 };
 
 export default PPMenu;

@@ -30,7 +30,7 @@ let initialState = fromJS({
   userAccount: {},
   subAccounts: [],
   loggedIn: auth.loggedIn(),
-  filePickerKey:'A6Upb4pDFTFu9uXIjmV8Oz'
+  filePickerKey: 'A6Upb4pDFTFu9uXIjmV8Oz'
 });
 
 // Takes care of changing the application state
