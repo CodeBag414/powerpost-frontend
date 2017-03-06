@@ -11,7 +11,6 @@ import {
 } from '../../../state/constants';
 
 export function fetchCurrentAccount(account_id) {
-    console.log('in fetchCurrentAccount: ' + account_id);
     return {
         type: FETCH_ACCOUNT,
         account_id

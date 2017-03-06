@@ -3,11 +3,36 @@ import IconButton from 'material-ui/IconButton';
 
 const PPIconButton= (props) => {
     const { style } = props;
-    const additionalStyles = {
-        marginTop: '0'
+    // remove non-material UI props
+    let  {['inBar']: deleted, ...newProps} = props;
+    
+    let additionalStyles = {
+        border: 'solid 1px #CFD8DC',
+        borderRadius: '4px',
+        marginLeft: '10px',
+        marginRight: '10px',
+        height: '32px',
+        width: '32px',
+        padding: '5px'
     };
+    
+    if(props.inBar) {
+        additionalStyles = {
+            border: 'solid 1px #CFD8DC',
+            borderRadius: '4px',
+            marginLeft: '10px',
+            marginRight: '10px',
+            height: '32px',
+            width: '32px',
+            position: 'absolute',
+            transform: 'translate(0, -50%)',
+            top: '50%',
+            padding: '5px'
+        };   
+    }
+    
     return(
-        <IconButton {...props } style={{ ...style, ...additionalStyles }} iconStyle={{ fontSize: '20px' }}/>
+        <IconButton {...newProps } style={{ ...style, ...additionalStyles}} iconStyle={{ color: '#888888', width: '20px', height: '20px' }}/>
     );
 };
 
@@ -26,6 +51,7 @@ PPIconButton.PropTypes = {
     tooltipPosition: PropTypes.cornersAndCenter, //'bottom-center'	The vertical and horizontal positions, respectively, of the element's tooltip. Possible values are: "bottom-center", "top-center", "bottom-right", "top-right", "bottom-left", and "top-left".
     tooltipStyles: PropTypes.object, //Override the inline-styles of the tooltip element.
     touch: PropTypes.bool, //false	If true, increase the tooltip element's size. Useful for increasing tooltip readability on mobile devices.
+    inBar: PropTypes.bool
 };
 
 export default PPIconButton;

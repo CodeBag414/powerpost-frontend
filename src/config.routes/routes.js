@@ -23,7 +23,7 @@ export function createRoutes(store, auth) {
   
   let routes = [
     {
-      path: 'account(/:account_id)',
+      path: '/',
       name: 'dashboard',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
@@ -36,13 +36,15 @@ export function createRoutes(store, auth) {
         const renderRoute = loadModule(cb);
 
         importModules.then(([actions, reducer, sagas,component]) => {
-          injectReducer('dashboard', reducer.default);
+          injectReducer('main', reducer.default);
           injectSagas(sagas.default);
 
           renderRoute(component);
           if(auth.loggedIn()) {
             store.dispatch(actions.checkUser());
-            store.dispatch(actions.fetchCurrentAccount(nextState.params.account_id));
+           // if(nextState.params.account_id) {
+            //  store.dispatch(actions.fetchCurrentAccount(nextState.params.account_id));
+           // }
           }
         });
 
@@ -50,15 +52,15 @@ export function createRoutes(store, auth) {
       },
       indexRoute: {
         getComponent(nextState, cb) {
-          const importModules = Promise.all([
-            System.import('../App/views/Main/views/Posts/state/reducer'),
-            System.import('../App/views/Main/views/Posts/state/sagas'),
-            System.import('../App/views/Main/views/Posts'),
-          ]);
-
-          const renderRoute = loadModule(cb);
-
-          importModules.then(([reducer, sagas, component]) => {
+            const importModules = Promise.all([
+              System.import('../App/views/Main/views/Dashboard/state/reducer'),
+              System.import('../App/views/Main/views/Dashboard/state/sagas'),
+              System.import('../App/views/Main/views/Dashboard'),
+            ]);
+    
+            const renderRoute = loadModule(cb);
+    
+            importModules.then(([reducer, sagas, component]) => {
             //  injectReducer('posts', reducer.default);
             //  injectSagas(sagas.default);
             renderRoute(component);
@@ -67,13 +69,29 @@ export function createRoutes(store, auth) {
           importModules.catch(errorLoading);
         }
       },
-      childRoutes: [
-        {
-          path: '/account(/:account_id)/library',
-          name: 'library',
+      childRoutes: [{
+          path: '/user/settings',
+          name: 'user settings',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
-              System.import('../App/views/Main/views/MediaItemLibrary'),
+              System.import('../App/views/Main/views/User'),
+            ]);
+            
+            const renderRoute = loadModule(cb);
+            
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+          
+            importModules.catch(errorLoading);
+          },
+        },
+        {
+          path: '/forbidden',
+          name: 'No Access',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('../App/views/Main/views/NoAccess')
             ]);
 
             const renderRoute = loadModule(cb);
@@ -81,50 +99,153 @@ export function createRoutes(store, auth) {
             importModules.then(([component]) => {
               renderRoute(component);
             });
-
+            
             importModules.catch(errorLoading);
-          },
+          }
         },
-        {
-          path: '/account(/:account_id)/calendar',
-          name: 'calendar',
-          getComponent(nextState, cb) {
+      {
+        path: 'account(/:account_id)',
+        name: 'Library',
+        getComponent(nextState, cb) {
+          const importModules = Promise.all([
+            System.import('../App/views/Main/views/MediaItemLibrary'),
+          ]);
+  
+          const renderRoute = loadModule(cb);
+  
+          importModules.then(([component]) => {
+            renderRoute(component);
+          });
+  
+          importModules.catch(errorLoading);
+        },
+      },
+      {
+        path: '/account(/:account_id)/calendar',
+        name: 'calendar',
+        getComponent(nextState, cb) {
             const importModules = Promise.all([
+              System.import('../App/views/Main/views/Calendar/state/reducer'),
+              System.import('../App/views/Main/views/Calendar/state/sagas'),
               System.import('../App/views/Main/views/Calendar'),
             ]);
-
+    
             const renderRoute = loadModule(cb);
-
-            importModules.then(([component]) => {
+    
+            importModules.then(([reducer, sagas, component]) => {
+            //  injectReducer('posts', reducer.default);
+            //  injectSagas(sagas.default);
               renderRoute(component);
             });
-
+    
             importModules.catch(errorLoading);
-          },
         },
-        {
-          path: '/account(/:account_id)/conenctions',
-          name: 'connections',
-          getComponent(nextState, cb) {
-            const importModules = Promise.all([
-              System.import('../App/views/Main/views/Connections/state/reducer'),
-              System.import('../App/views/Main/views/Connections')
-            ]);
+      },
+      {
+        path: '/account(/:account_id)/workflow',
+        name: 'workflow',
+        getComponent(nextState, cb) {
+          const importModules = Promise.all([
+            System.import('../App/views/Main/views/Workflow'),
+          ]);
+          
+          const renderRoute = loadModule(cb);
+          
+          importModules.then(([component]) => {
+            renderRoute(component);
+          });
+        
+          importModules.catch(errorLoading);
+        },
+      },
+      {
+        path: '/account(/:account_id)/statistics',
+        name: 'statistics',
+        getComponent(nextState, cb) {
+          const importModules = Promise.all([
+            System.import('../App/views/Main/views/Statistics'),
+          ]);
+          
+          const renderRoute = loadModule(cb);
+          
+          importModules.then(([component]) => {
+            renderRoute(component);
+          });
+        
+          importModules.catch(errorLoading);
+        },
+      },
+      {
+        path: '/account(/:account_id)/team',
+        name: 'Team',
+        getComponent(nextState, cb) {
+          const importModules = Promise.all([
+            System.import('../App/views/Main/views/Team'),
+          ]);
+          
+          const renderRoute = loadModule(cb);
+          
+          importModules.then(([component]) => {
+            renderRoute(component);
+          });
+        
+          importModules.catch(errorLoading);
+        },
+      },
+      {
+        path: '/account(/:account_id)/list',
+        name: 'list',
+        getComponent(nextState, cb) {
+          const importModules = Promise.all([
+            System.import('../App/views/Main/views/List'),
+          ]);
+          
+          const renderRoute = loadModule(cb);
+          
+          importModules.then(([component]) => {
+            renderRoute(component);
+          });
+        
+          importModules.catch(errorLoading);
+        },
+      },
+      {
+        path: '/account(/:account_id)/settings',
+        name: 'settings',
+        getComponent(nextState, cb) {
+          const importModules = Promise.all([
+            System.import('../App/views/Main/views/Settings'),
+          ]);
+          
+          const renderRoute = loadModule(cb);
+          
+          importModules.then(([component]) => {
+            renderRoute(component);
 
-            const renderRoute = loadModule(cb);
-
-            importModules.then(([reducer, component]) => {
-              injectReducer('connections', reducer.default);
-              renderRoute(component);
-            });
-
-            importModules.catch(errorLoading);
-          },
-          childRoutes: [
-          ]
-        }
-      ],
+          });
+        
+          importModules.catch(errorLoading);
+        },
+      },
+      {
+      path: '/account(/:account_id)/connections',
+      name: 'connections',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          System.import('../App/views/Main/views/Connections'),
+        ]);
+        
+        const renderRoute = loadModule(cb);
+        
+        importModules.then(([component]) => {
+          renderRoute(component);
+        });
+      
+        importModules.catch(errorLoading);
+      },
     },
+    ],
+  },
     {
       path: '/start',
       name: 'start',
@@ -191,8 +312,8 @@ export function createRoutes(store, auth) {
   
   return {
     component: App,
-    path: '/',
-    indexRoute: { onEnter: (nextState, replace) => replace('/account/me') },
+   // path: '/',
+  //  indexRoute: { onEnter: (nextState, replace) => replace('/account/me') },
     childRoutes: routes
   };
 }

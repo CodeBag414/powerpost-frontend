@@ -27,19 +27,16 @@ const makeSelectSubAccounts = () => createSelector(
     (auth) => auth.get('subAccounts')
 );
 
-const makeSelectAllAccounts = () => createSelector(
-    [ makeSelectUserAccount,
-    makeSelectSharedAccounts,
-    makeSelectSubAccounts] ,
-    (userAccount, sharedAccounts, subAccounts) => {
-        console.log(userAccount);
-        console.log(sharedAccounts);
-        console.log(subAccounts);
-        
-       // let accounts = sharedAccounts.concat(subAccounts);
-        let accounts = [].push(userAccount);
-        return accounts;
-    });
+const makeSelectUserAvatar = () => createSelector(
+    selectAuth,
+    (auth) => auth.getIn(['user', 'properties'])
+);
+
+const makeSelectFilePickerKey = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('filePickerKey')
+);
+
 export {
     selectAuth,
     makeSelectAuthError,
@@ -47,5 +44,7 @@ export {
     makeSelectUserAccount,
     makeSelectSubAccounts,
     makeSelectSharedAccounts,
-    makeSelectAllAccounts
+    makeSelectUserAvatar,
+    makeSelectFilePickerKey,
+
 };

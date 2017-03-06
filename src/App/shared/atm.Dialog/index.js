@@ -32,3 +32,4 @@ PPDialog.PropTypes = {
 };
 
 export default PPDialog;
+

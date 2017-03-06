@@ -1,17 +1,17 @@
 /*
- * Posts View
+ * Dashboard
  *
  * 
  */
 
 import React from 'react';
 
-export default class Post extends React.Component {
+export default class Settings extends React.Component {
     
     render() {
         return (
             <div>
-                in Post view
+                In Dashboard view
             </div>
         );
     }

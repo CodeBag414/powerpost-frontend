@@ -118,4 +118,4 @@ const mapStateToProps = createStructuredSelector({
     dialogShown: makeSelectDialogShown()
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Connections);
+export default UserCanConnections(connect(mapStateToProps, mapDispatchToProps)(Connections));

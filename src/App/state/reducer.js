@@ -11,7 +11,8 @@ import {
   SET_ROLES,
   SET_USER,
   CHECK_USER_OBJECT,
-  CLEAR_USER
+  CLEAR_USER,
+  
 } from './constants';
 
 import auth from '../../utils/auth';
@@ -28,7 +29,8 @@ let initialState = fromJS({
   sharedAccounts: [],
   userAccount: {},
   subAccounts: [],
-  loggedIn: auth.loggedIn()
+  loggedIn: auth.loggedIn(),
+  filePickerKey: 'A6Upb4pDFTFu9uXIjmV8Oz'
 });
 
 // Takes care of changing the application state
