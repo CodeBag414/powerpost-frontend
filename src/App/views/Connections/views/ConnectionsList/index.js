@@ -15,7 +15,9 @@ class ConnectionsList extends React.Component {
             connectionsList = [];
 
             this.props.connections.map((connection, index) => {
-                connectionsList.push(<ConnectionsListItem key={index} connection={ connection } />)
+                connectionsList.push(
+                    <ConnectionsListItem key={index} connection={connection} remove={this.props.removeConnection}/>
+                );
             });
         } else {
             connectionsList = 'You currently have no connections';

@@ -19,10 +19,15 @@ $label-secondary-color: #FFFFFF;
 
 .controlBlock {
   float: right;
+  text-align: center;
+}
+
+.removeBlock {
+  margin-left: 16px;
+  cursor: pointer;
 }
 
 .disabledLabel, .disconnectedLabel, .enabledLabel {
-  text-align: center;
   border-radius: 8px;
   height: 40px;
   width: 120px;

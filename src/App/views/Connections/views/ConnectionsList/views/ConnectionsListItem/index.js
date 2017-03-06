@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 class ConnectionsListItem extends React.Component {
     constructor(props) {
         super(props);
+        this.remove = this.remove.bind(this);
     }
 
     getChannelClass(styles) {
@@ -22,6 +23,10 @@ class ConnectionsListItem extends React.Component {
         }
     }
 
+    remove () {
+        this.props.remove(this.props.connection.connection_id);
+    }
+
     render() {
         const styles = require('./styles.scss');
 
@@ -36,6 +41,10 @@ class ConnectionsListItem extends React.Component {
                         </span>
                     </div>
                     <div className={['col-xs-8', 'col-sm-8', 'col-md-8', 'col-lg-8'].join(' ')}>
+                        <div className={[styles.controlBlock, styles.removeBlock].join(' ')} onClick={this.remove}>
+                            <div><i className="fa fa-close"></i></div>
+                            <div>Remove</div>
+                        </div>
                         <div className={styles.controlBlock}>
                             {this.getStatusLabel(styles)}
                         </div>

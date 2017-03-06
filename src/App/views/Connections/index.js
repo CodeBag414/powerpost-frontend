@@ -25,12 +25,29 @@ class Connections extends React.Component {
         super(props);
         this.props.setConnectionsListShown(require('./connections.json').connections);
         this.handleDialogToggle = this.handleDialogToggle.bind(this);
+        this.removeConnection = this.removeConnection.bind(this);
         this.setChannelFilter = this.setChannelFilter.bind(this);
         this.setChannelType = this.setChannelType.bind(this);
     }
 
     handleDialogToggle() {
         this.props.toggleDialogShown(!this.props.dialogShown);
+    }
+
+    removeConnection(connectionId) {
+        let connections = this.props.connections.slice(), connectionIndex;
+
+        connections.forEach((connection, index) => {
+            if(connection.connection_id === connectionId) {
+                connectionIndex = index;
+            }
+        });
+
+        if(connectionIndex !== undefined) {
+            connections.splice(connectionIndex, 1);
+        }
+
+        this.props.setConnectionsListShown(connections);
     }
 
     setChannelFilter(channelFilter) {
@@ -76,7 +93,7 @@ class Connections extends React.Component {
                 <ConnectionsControlBar handleDialogToggle={this.handleDialogToggle} channels={this.getChannelTypes()}
                                        setChannelFilter={this.setChannelFilter} setChannelType={this.setChannelType}
                                        channelFilter={this.props.channelFilter} channelType={this.props.channelType} />
-                <ConnectionsList connections={ this.getFilteredConnections() }/>
+                <ConnectionsList connections={this.getFilteredConnections()} removeConnection={this.removeConnection}/>
                 <AddConnectionDialog handleDialogToggle={this.handleDialogToggle} dialogShown={this.props.dialogShown}/>
             </div>
         );
