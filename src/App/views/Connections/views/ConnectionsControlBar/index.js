@@ -30,7 +30,7 @@ class ConnectionsControlBar extends React.Component {
         });
 
         return (
-            <div className="row">
+            <div className={['row', styles.mainBlock].join(' ')}>
                 <div
                     className={ ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-3', styles.noLeftPadding].join(' ') }>
                     <h3 className={ [styles.noMargin].join(' ') }>Connected Accounts</h3>
@@ -41,14 +41,19 @@ class ConnectionsControlBar extends React.Component {
                 </div>
                 <div
                     className={ ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-3', styles.noLeftPadding].join(' ') }>
-                    <SelectField onChange={this.setChannelType} value={this.props.channelType} underlineShow={false}>
-                        { channelTypes }
-                    </SelectField>
+                    <div className={[styles.filterBlock, styles.channelTypeBlock].join(' ')}>
+                        <SelectField onChange={this.setChannelType} value={this.props.channelType} underlineShow={false}>
+                            { channelTypes }
+                        </SelectField>
+                    </div>
                 </div>
                 <div
                     className={ ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-3', styles.noLeftPadding].join(' ') }>
-                    <TextField value={ this.props.channelFilter } type="text" hintText="Find Channel"
-                               onChange={ this.setChannelFilter } underlineShow ={ false }/>
+                    <div className={[styles.filterBlock, styles.channelFilterBlock].join(' ')}>
+                        <i className={['fa', 'fa-search', styles.channelFilterIcon].join(' ')}></i>
+                        <TextField value={ this.props.channelFilter } type="text" hintText="Find Channel"
+                                   onChange={ this.setChannelFilter } underlineShow ={ false }/>
+                    </div>
                 </div>
             </div>
         );
