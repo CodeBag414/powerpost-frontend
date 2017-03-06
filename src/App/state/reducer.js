@@ -11,7 +11,8 @@ import {
   SET_ROLES,
   SET_USER,
   CHECK_USER_OBJECT,
-  CLEAR_USER
+  CLEAR_USER,
+  
 } from './constants';
 
 import auth from '../../utils/auth';

@@ -10,7 +10,7 @@ import {connect} from 'react-redux';
 import {loginRequest} from '../../../../state/actions';
 
 import TextField from 'App/shared/atm.TextField';
-import Button from 'App/shared/atm.Button';
+import PPRaisedButton from 'App/shared/atm.RaisedButton';
 import { Link } from 'react-router';
 
 import { push } from 'react-router-redux';
@@ -44,7 +44,7 @@ class Login extends React.Component {
                 <TextField type="text" hintText="your email" floatingLabelText="Email" onChange={ this.changeEmail } />
                 <TextField type="password" hintText="your secure password" floatingLabelText="Password" onChange={ this.changePassword } />
                 
-                <Button label="Login" primary={ true } onClick={ () => this.props.login(this.state.emailValue, this.state.passwordValue) } />
+                <PPRaisedButton label="Login" primary={ true } onClick={ () => this.props.login(this.state.emailValue, this.state.passwordValue) } />
             </div>
         );
     }

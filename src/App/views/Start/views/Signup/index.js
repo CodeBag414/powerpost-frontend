@@ -6,7 +6,7 @@
 
 import React from 'react';
 import TextField from 'App/shared/atm.TextField';
-import Button from 'App/shared/atm.Button';
+import PPRaisedButton from 'App/shared/atm.RaisedButton';
 import {connect} from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import {Link} from 'react-router';
@@ -83,7 +83,7 @@ class Signup extends React.Component {
                     <TextField type="password" errorText={ this.state.passwordError } floatingLabelText="Password" hintText="your secure password" onChange={ this.onPasswordChange }/>
                     <TextField type="password" errorText={ this.state.passwordConfirmError } floatingLabelText="Confirm Password" hintText="retype your password" onChange={ this.onPasswordConfirmChange }/>
                     
-                    <Button type="submit" label="Register" primary={ true } />
+                    <PPRaisedButton type="submit" label="Register" primary={ true } />
                 </form>
                 <div> { this.state.errorText }</div>
             </div>
