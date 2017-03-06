@@ -3,11 +3,8 @@ import TextField from 'material-ui/TextField';
 
 const PPTextField = (props) => {
     const styles = require('./styles.scss');
-    
-
-    
     return(
-        <TextField {...props} className={ styles.inputStyle } floatingLabelStyle={{ color: 'black' }} floatingLabelFixed={ true } underlineShow={ false } floatingLabel hintStyle={{padding: '5px', bottom: '3px' }} inputStyle={{ padding: '5px', marginTop: '35px', height: '34px' }} />
+        <TextField {...props} className={ styles.inputStyle } floatingLabelStyle={{ color: 'black' }} floatingLabelFixed={ true } underlineShow={ false } hintStyle={{padding: '5px', bottom: '3px' }} inputStyle={{ padding: '5px', marginTop: '35px', height: '34px' }} />
     );
 };
 
