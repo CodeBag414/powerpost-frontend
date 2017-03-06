@@ -2,24 +2,18 @@
  * User View
  */
 
-import React, {
-  Component
-}
-from 'react';
+import React, { Component } from 'react';
 import PPTextField from 'App/shared/atm.TextField';
-import Avatar from 'material-ui/Avatar';
+import Avatar from 'App/shared/atm.Avatar';
 import Subheader from 'material-ui/Subheader';
 import Toggle from 'material-ui/Toggle';
-import {
-  RadioButton,
-  RadioButtonGroup
-}
-from 'material-ui/RadioButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
+import PPRadioButton from 'App/shared/atm.RadioButton';
+import PPRadioButtonGroup from 'App/shared/atm.RadioButtonGroup';
+import PPRaisedButton from 'App/shared/atm.RaisedButton';
+import PPFlatButton from 'App/shared/atm.FlatButton';
 import ActionFavorite from 'material-ui/svg-icons/action/favorite';
 import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
-import Checkbox from 'material-ui/Checkbox';
+import PPCheckbox from 'App/shared/atm.Checkbox';
 import {
   connect
 }
@@ -91,7 +85,6 @@ const hrule = {
 };
 
 
-
 class settingsUser extends Component {
   constructor(props) {
     super(props);
@@ -151,7 +144,7 @@ class settingsUser extends Component {
 
 
   render() {
-    const styles = require('./styles.scss');
+ 
     const avatar = this.props.user && this.props.user.properties ? this.props.user.properties.thumb_url : '';
 
     return (
@@ -166,44 +159,41 @@ class settingsUser extends Component {
             <div className="col-md-3">
              <h5 style={{marginLeft: '0px', color:'#9d9d9d'}}>Profile Picture</h5>< br/>
             <Avatar src={avatar}  onClick={this.handleTouchUp} style={{  position:'relative',top:"-25px",left:'0px', width:'180px', height:'180px', borderRadius:'0' }}/>
-            <FlatButton label="Change Media" onClick={this.openFilePicker} style={{  position:'relative',top:"-25px",width:'180px', right:'0px',color:'#000' }} />
+            <PPFlatButton label="Change Media" onClick={this.openFilePicker} style={{  position:'relative',top:"-25px",width:'180px', right:'0px',color:'#000' }} />
             </div>
-            <div className="col-md-3">
-                  <PPTextField
+            <div className="col-md-4">
+                  <PPTextField 
                   hintText="First Name, Last Name"
                   floatingLabelText="Your Name"
                   value={this.props.display_name}
-
-                  floatingLabelFixed={true}
+                  hintStyle={{padding: '5px', bottom: '3px' }} 
                   /><br />
                   <PPTextField
                   hintText="Company Name"
                   floatingLabelText="Company"
-                  floatingLabelFixed={true}
+                  hintStyle={{padding: '5px', bottom: '3px' }} 
                   /><br />
                   <PPTextField
                   hintText="Your Title"
                   floatingLabelText="Title"
-                  floatingLabelFixed={true}
+                  hintStyle={{padding: '5px', bottom: '3px' }} 
                   />
             </div>
-            <div className="col-md-3">
+            <div className="col-md-4">
                   <PPTextField
                   value={this.props.email}
                   hintText="youraddress@yourdomain.com"
                   floatingLabelText="Email"
-                  floatingLabelFixed={true}
+                  hintStyle={{padding: '5px', bottom: '3px' }} 
                   />
                   <PPTextField
                   hintText="000-000-0000"
                   floatingLabelText="Phone"
-                  floatingLabelFixed={true}
+                  hintStyle={{padding: '5px', bottom: '3px' }} 
                   />
                  
             </div>
-            <div className="col-md-2">
-            
-            </div>
+       
       </row>
       <row>
         <div className="col-md-12">
@@ -229,24 +219,23 @@ class settingsUser extends Component {
       <div className="col-md-3">
       <p><b>Frequency</b></p><p>Send me email notifications:</p>
       </div>
-      <div className="col-md-3">
-      <RadioButtonGroup name="freq" defaultSelected="not_light">
-      <RadioButton
+      <div className="col-md-4">
+      <PPRadioButtonGroup name="freq" defaultSelected="not_light">
+      <PPRadioButton
         value="light"
         label="Hourly"
         style={styles.radioButton}
       />
-      <RadioButton
+      <PPRadioButton
         value="light2"
         label="Weekly"
         style={styles.radioButton}
       />
-      </RadioButtonGroup> 
+      </PPRadioButtonGroup> 
       </div>
-      <div className="col-md-5">
-       <Checkbox
+      <div className="col-md-4">
+       <PPCheckbox
       label="Daily Snapshot"
-      style={styles.checkbox}
     />
       <p>Showing what happened yesterday in all my projects.</p>
       </div>
@@ -265,12 +254,12 @@ class settingsUser extends Component {
       <div className="col-md-3">
       
       </div>
-      <div className="col-md-3">
+      <div className="col-md-4">
          <PPTextField
          hintText="Password Field"
          floatingLabelText="Current Password"
          type="password"
-         floatingLabelFixed={true}
+         hintStyle={{padding: '5px', bottom: '3px' }} 
          />
       </div>
       <div className="col-md-4">
@@ -278,12 +267,12 @@ class settingsUser extends Component {
          hintText="Password Field"
          floatingLabelText="New Password"
          type="password"
-         floatingLabelFixed={true}
+         hintStyle={{padding: '5px', bottom: '3px' }} 
          /><br />
       </div>
       </row>
-      <RaisedButton label="Cancel" style={style1} />
-      <RaisedButton label="Update" type="submit" value="submit" primary={true} style={style2} />
+      <PPRaisedButton label="Cancel" style={style1} />
+      <PPRaisedButton label="Update" type="submit" value="submit" primary={true} style={style2} />
   </form>
 
     );

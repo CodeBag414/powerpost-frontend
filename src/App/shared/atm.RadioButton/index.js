@@ -11,8 +11,9 @@ const styles = {
 };
 
 const PPRadioButton = (props) => {
+  const styles = require('./styles.scss');
     return(
-        <RadioButton {...props} />
+        <RadioButton className={styles.radioStyles} {...props} />
     );
 };
 

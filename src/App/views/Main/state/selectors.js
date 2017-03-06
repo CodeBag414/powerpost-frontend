@@ -12,7 +12,13 @@ const makeSelectCurrentAccount = () => createSelector(
     (dashboard) => dashboard.get('activeBrand')
 );
 
+const makeSelectUserAvatar = () => createSelector(
+    selectAuth,
+    (auth) => auth.getIn(['properties', 'thumb_url'])
+);
+
 export {
     makeSelectMenuCollapsed,
-    makeSelectCurrentAccount
+    makeSelectCurrentAccount,
+    makeSelectUserAvatar
 };

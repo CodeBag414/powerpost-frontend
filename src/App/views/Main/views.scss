@@ -1,0 +1,13 @@
+.viewContent {
+    margin-top: 80px;
+    padding: 20px;
+    transition: transform .3s ease-in-out,margin .3s ease-in-out;
+}
+
+.viewContentFull {
+    margin-left: 360px;  
+}
+
+.viewContentCollapsed {
+    margin-left: 80px;
+}

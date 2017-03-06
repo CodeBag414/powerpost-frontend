@@ -17,6 +17,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import ReduxToastr from './lib/react-redux-toastr';
 
+
 //Needed for material-ui libarry
 injectTapEventPlugin();
 

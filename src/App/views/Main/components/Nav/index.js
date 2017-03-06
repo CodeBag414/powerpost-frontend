@@ -4,6 +4,7 @@ import TopNav from '../TopNav';
 
 class Nav extends React.Component {
     render() {
+        const styles = require('../../views.scss');
         return (
             <div>
                 <Sidebar isMenuCollapsed= { this.props.isMenuCollapsed } activeBrand = { this.props.activeBrand } accountId = { this.props.accountId || 'me' } userAccount = { this.props.userAccount } sharedAccounts = { this.props.sharedAccounts } subAccounts = { this.props.subAccounts } />

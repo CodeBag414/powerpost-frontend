@@ -2,8 +2,9 @@ import React, { PropTypes } from 'react';
 import RadioButtonGroup from 'material-ui/RadioButton';
 
 const PPRadioButtonGroup = (props) => {
+    const styles = require('./styles.scss');
     return(
-        <RadioButtonGroup {...props} />
+        <RadioButtonGroup className={styles.radiogStyles} {...props} />
     );
 };
 

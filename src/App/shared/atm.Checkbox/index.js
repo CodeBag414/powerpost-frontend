@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import CheckBox from 'material-ui/Checkbox';
+import Checkbox from 'material-ui/Checkbox';
 
 const styles = {
   block: {
@@ -11,8 +11,9 @@ const styles = {
 };
 
 const PPCheckbox = (props) => {
+  const styles = require('./styles.scss');
     return(
-        <Checkbox {...props} />
+        <Checkbox className={styles.checkboxStyles} {...props} />
     );
 };
 
@@ -22,7 +23,7 @@ PPCheckbox.PropTypes = {
     defaultChekced: PropTypes.bool,
     disabled: PropTypes.bool,
     IconStyle: PropTypes.object,
-    InputSytle: PropTypes.object,
+    InputStyle: PropTypes.object,
     labelPosition: PropTypes.oneOf(['left', 'right']), 
     labelStyle: PropTypes.object,
     onCheck: PropTypes.func
