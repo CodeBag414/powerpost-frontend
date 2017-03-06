@@ -2,6 +2,8 @@ import React from 'react';
 import {connect} from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
+import { UserCanConnections } from 'config.routes/UserRoutePermissions';
+
 import AddConnectionDialog from './components/AddConnectionDialog';
 import ConnectionsControlBar from './components/ConnectionsControlBar';
 import ConnectionsList from './components/ConnectionsList';

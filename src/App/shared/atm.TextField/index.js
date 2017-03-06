@@ -2,22 +2,12 @@ import React, { PropTypes } from 'react';
 import TextField from 'material-ui/TextField';
 
 const PPTextField = (props) => {
+    const styles = require('./styles.scss');
     
-    const elementStyle = {
-        marginRight: '20px',
-        verticalAlign: 'top'
-    };
-    
-    const floatingLabelFocusStyle = {
-        color: '#a452f3'
-    };
 
-    const underlineFocusStyle = {
-        borderColor: '#a452f3'
-    };
     
     return(
-        <TextField {...props} style={ elementStyle } floatingLabelFocusStyle={ floatingLabelFocusStyle } underlineFocusStyle={ underlineFocusStyle } />
+        <TextField {...props} className={ styles.inputStyle } floatingLabelStyle={{ color: 'black' }} floatingLabelFixed={ true } underlineShow={ false } floatingLabel hintStyle={{padding: '5px', bottom: '3px' }} inputStyle={{ padding: '5px', marginTop: '35px', height: '34px' }} />
     );
 };
 
