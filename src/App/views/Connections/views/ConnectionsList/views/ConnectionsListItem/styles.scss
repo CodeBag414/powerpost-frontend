@@ -1,0 +1,35 @@
+$border-color: #E6E6E6;
+$block-vertical-padding: 15px;
+
+.connectionBlock {
+  border-bottom: 1px solid $border-color;
+  padding: $block-vertical-padding 5px $block-vertical-padding 10px;
+}
+
+.connectionName {
+  padding-right: 10px;
+}
+
+.connectionType {
+  padding-left: 5px;
+}
+
+.facebook {
+  color: #4867AA;
+}
+
+.linkedin {
+  color: #0177B5;
+}
+
+.pinterest {
+  color: #D50C22;
+}
+
+.twitter {
+  color: #1DA1F2;
+}
+
+.wordpress {
+  color: #464646;
+}
