@@ -14,6 +14,14 @@ class ConnectionsListItem extends React.Component {
         return this.props.connection.type.split('_')[1];
     }
 
+    getStatusLabel(styles) {
+        switch(this.props.connection.status) {
+            case '1': return <div className={styles.enabledLabel}>Enabled</div>;
+            case '3': return <div className={styles.disconnectedLabel}><i className="fa fa-warning"></i> Reconnect</div>;
+            default: return <div className={styles.disabledLabel}>Disabled</div>;
+        }
+    }
+
     render() {
         const styles = require('./styles.scss');
 
@@ -27,7 +35,11 @@ class ConnectionsListItem extends React.Component {
                             <span className={styles.connectionType}>{this.getType()}</span>
                         </span>
                     </div>
-                    <div className="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                    <div className={['col-xs-8', 'col-sm-8', 'col-md-8', 'col-lg-8'].join(' ')}>
+                        <div className={styles.controlBlock}>
+                            {this.getStatusLabel(styles)}
+                        </div>
+                        <div style={{clear: 'both'}}></div>
                     </div>
                 </div>
             </div>
