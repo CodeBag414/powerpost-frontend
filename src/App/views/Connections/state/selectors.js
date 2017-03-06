@@ -7,6 +7,11 @@ const makeSelectChannelFilter = () => createSelector(
     (connections) => connections.get('channelFilter')
 );
 
+const makeSelectChannelType = () => createSelector(
+    selectConnections,
+    (connections) => connections.get('channelType')
+);
+
 const makeSelectConnections = () => createSelector(
     selectConnections,
     (connections) => connections.get('connections')
@@ -19,6 +24,7 @@ const makeSelectDialogShown = () => createSelector(
 
 export {
     makeSelectChannelFilter,
+    makeSelectChannelType,
     makeSelectConnections,
     makeSelectDialogShown
 };

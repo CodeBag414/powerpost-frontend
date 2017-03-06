@@ -8,12 +8,14 @@ import ConnectionsList from './views/ConnectionsList';
 
 import {
     setChannelFilter,
+    setChannelType,
     setConnectionsList,
     toggleDialog
 } from './state/actions';
 
 import {
     makeSelectChannelFilter,
+    makeSelectChannelType,
     makeSelectConnections,
     makeSelectDialogShown
 } from './state/selectors';
@@ -24,6 +26,7 @@ class Connections extends React.Component {
         this.props.setConnectionsListShown(require('./connections.json').connections);
         this.handleDialogToggle = this.handleDialogToggle.bind(this);
         this.setChannelFilter = this.setChannelFilter.bind(this);
+        this.setChannelType = this.setChannelType.bind(this);
     }
 
     handleDialogToggle() {
@@ -34,6 +37,10 @@ class Connections extends React.Component {
         this.props.setChannelFilter(channelFilter);
     }
 
+    setChannelType(channelType) {
+        this.props.setChannelType(channelType);
+    }
+
     getFilteredConnections () {
         return this.props.connections.filter(connection => {
             let matched = true;
@@ -42,18 +49,35 @@ class Connections extends React.Component {
                 matched = matched && (connection.display_name.toLowerCase().indexOf(this.props.channelFilter.toLowerCase()) > -1);
             }
 
+            if(this.props.channelType) {
+                matched = matched && (connection.channel === this.props.channelType);
+            }
+
             return matched;
         });
+    }
+
+    getChannelTypes () {
+        let types = [];
+
+        this.props.connections.forEach(connection => {
+            if(types.indexOf(connection.channel) === -1) {
+                types.push(connection.channel);
+            }
+        });
+
+        types.sort();
+        return types;
     }
 
     render() {
         return (
             <div className="container">
-                <ConnectionsControlBar handleDialogToggle={ this.handleDialogToggle }
-                                       setChannelFilter={ this.setChannelFilter }/>
+                <ConnectionsControlBar handleDialogToggle={this.handleDialogToggle} channels={this.getChannelTypes()}
+                                       setChannelFilter={this.setChannelFilter} setChannelType={this.setChannelType}
+                                       channelFilter={this.props.channelFilter} channelType={this.props.channelType} />
                 <ConnectionsList connections={ this.getFilteredConnections() }/>
-                <AddConnectionDialog handleDialogToggle={ this.handleDialogToggle }
-                                     dialogShown={ this.props.dialogShown }/>
+                <AddConnectionDialog handleDialogToggle={this.handleDialogToggle} dialogShown={this.props.dialogShown}/>
             </div>
         );
     }
@@ -64,6 +88,7 @@ Connections.propTypes = {children: React.PropTypes.node};
 export function mapDispatchToProps(dispatch) {
     return {
         setChannelFilter: channelFilter => dispatch(setChannelFilter(channelFilter)),
+        setChannelType: channelType => dispatch(setChannelType(channelType)),
         setConnectionsListShown: connections => dispatch(setConnectionsList(connections)),
         toggleDialogShown: isShown => dispatch(toggleDialog(isShown))
     };
@@ -71,6 +96,7 @@ export function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
     channelFilter: makeSelectChannelFilter(),
+    channelType: makeSelectChannelType(),
     connections: makeSelectConnections(),
     dialogShown: makeSelectDialogShown()
 });
