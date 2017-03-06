@@ -2,9 +2,9 @@ import React from 'react';
 import {connect} from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import AddConnectionDialog from './views/AddConnectionDialog';
-import ConnectionsControlBar from './views/ConnectionsControlBar';
-import ConnectionsList from './views/ConnectionsList';
+import AddConnectionDialog from './components/AddConnectionDialog';
+import ConnectionsControlBar from './components/ConnectionsControlBar';
+import ConnectionsList from './components/ConnectionsList';
 
 import {
     setChannelFilter,
