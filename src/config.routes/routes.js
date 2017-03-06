@@ -38,7 +38,7 @@ export function createRoutes(store, auth) {
         importModules.then(([actions, reducer, sagas,component]) => {
           injectReducer('main', reducer.default);
           injectSagas(sagas.default);
-          
+
           renderRoute(component);
           if(auth.loggedIn()) {
             store.dispatch(actions.checkUser());
@@ -63,11 +63,11 @@ export function createRoutes(store, auth) {
             importModules.then(([reducer, sagas, component]) => {
             //  injectReducer('posts', reducer.default);
             //  injectSagas(sagas.default);
-              renderRoute(component);
-            });
-    
-            importModules.catch(errorLoading);
-          }
+            renderRoute(component);
+          });
+
+          importModules.catch(errorLoading);
+        }
       },
       childRoutes: [{
           path: '/user/settings',
@@ -93,9 +93,9 @@ export function createRoutes(store, auth) {
             const importModules = Promise.all([
               System.import('../App/views/Main/views/NoAccess')
             ]);
-            
+
             const renderRoute = loadModule(cb);
-            
+
             importModules.then(([component]) => {
               renderRoute(component);
             });
