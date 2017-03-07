@@ -2,7 +2,10 @@
  * User View
  */
 
-import React, { Component } from 'react';
+import React, {
+  Component
+}
+from 'react';
 import PPTextField from 'App/shared/atm.TextField';
 import Avatar from 'App/shared/atm.Avatar';
 import Subheader from 'material-ui/Subheader';
@@ -145,7 +148,7 @@ class settingsUser extends Component {
 
 
   render() {
- 
+
     const avatar = this.props.user && this.props.user.properties ? this.props.user.properties.thumb_url : '';
 
     return (
@@ -288,7 +291,7 @@ class settingsUser extends Component {
       left: 'auto',
       position: 'fixed',
       }}
-      secondary="true"/>
+      secondary={true}/>
   </form>
 
     );
