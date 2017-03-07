@@ -6,9 +6,9 @@ const style = {
 };
 
 const PPRaisedButton= (props) => {
-    
+    const styles = require('./styles.scss');
     return(
-        <RaisedButton {...props}/>
+        <RaisedButton {...props} className={styles.raisedButtonStyles}/>
     );
 };
 

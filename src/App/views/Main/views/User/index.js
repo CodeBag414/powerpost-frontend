@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import PPTextField from 'App/shared/atm.TextField';
 import Avatar from 'App/shared/atm.Avatar';
 import Subheader from 'material-ui/Subheader';
-import Toggle from 'material-ui/Toggle';
+import PPToggle from 'App/shared/atm.Toggle';
 import PPRadioButton from 'App/shared/atm.RadioButton';
 import PPRadioButtonGroup from 'App/shared/atm.RadioButtonGroup';
 import PPRaisedButton from 'App/shared/atm.RaisedButton';
@@ -43,14 +43,15 @@ const styles = {
     backgroundColor: '#ff9d9d',
   },
   thumbSwitched: {
-    backgroundColor: 'red',
+    backgroundColor: '#e52466',
   },
   trackSwitched: {
-    backgroundColor: '#ff9d9d',
+    backgroundColor: '#e52466',
   },
   labelStyle: {
-    color: 'red',
+    color: '#e52466',
   },
+
 };
 
 
@@ -210,9 +211,11 @@ class settingsUser extends Component {
       <p>We will use this email address when someone comments on a post.: iamgroot@guardians.galaxy (<a href="">change address</a>).</p>
       </div>
       <div className="col-md-2">
-      <Toggle
+      <PPToggle
       label=""
-      style={styles.toggle} />
+      thumbSwitchedStyle={{ backgroundColor: '#e52466' }} 
+      trackSwitchedStyle={{ backgroundColor: '#e52466' }}
+      />
       </div>
       </row>
       <row>
@@ -224,18 +227,19 @@ class settingsUser extends Component {
       <PPRadioButton
         value="light"
         label="Hourly"
-        style={styles.radioButton}
+        iconStyle={{fill: '#e52466'}}
       />
       <PPRadioButton
         value="light2"
         label="Weekly"
-        style={styles.radioButton}
+        iconStyle={{fill: '#e52466'}}
       />
       </PPRadioButtonGroup> 
       </div>
       <div className="col-md-4">
        <PPCheckbox
       label="Daily Snapshot"
+      iconStyle={{fill: '#e52466'}}
     />
       <p>Showing what happened yesterday in all my projects.</p>
       </div>
@@ -272,7 +276,19 @@ class settingsUser extends Component {
       </div>
       </row>
       <PPRaisedButton label="Cancel" style={style1} />
-      <PPRaisedButton label="Update" type="submit" value="submit" primary={true} style={style2} />
+      <PPRaisedButton 
+      label="Update" 
+      type="submit" 
+      value="submit" 
+      style={{
+      margin: 0,
+      top: 'auto',
+      right: 10,
+      bottom: 20,
+      left: 'auto',
+      position: 'fixed',
+      }}
+      secondary="true"/>
   </form>
 
     );

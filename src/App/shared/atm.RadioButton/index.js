@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import RadioButton from 'material-ui/RadioButton';
+import { RadioButton } from 'material-ui/RadioButton';
 
 const styles = {
   block: {
@@ -24,7 +24,7 @@ PPRadioButton.PropTypes = {
     inputStyle: PropTypes.object,
     style: PropTypes.object,
     uncheckedIcon: PropTypes.element, 
-    value: PropTypes.any
+    value: PropTypes.string
     
 };
 
