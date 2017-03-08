@@ -167,17 +167,19 @@ class settingsUser extends Component {
             </div>
             <div className="col-md-4">
                   <PPTextField 
+                  value={this.props.display_name}
                   hintText="First Name, Last Name"
                   floatingLabelText="Your Name"
-                  value={this.props.display_name}
                   hintStyle={{padding: '5px', bottom: '3px' }} 
                   /><br />
                   <PPTextField
+                  value={this.props.company}
                   hintText="Company Name"
                   floatingLabelText="Company"
                   hintStyle={{padding: '5px', bottom: '3px' }} 
                   /><br />
                   <PPTextField
+                  value={this.props.titile}
                   hintText="Your Title"
                   floatingLabelText="Title"
                   hintStyle={{padding: '5px', bottom: '3px' }} 
@@ -191,6 +193,7 @@ class settingsUser extends Component {
                   hintStyle={{padding: '5px', bottom: '3px' }} 
                   />
                   <PPTextField
+                  value={this.props.phone}
                   hintText="000-000-0000"
                   floatingLabelText="Phone"
                   hintStyle={{padding: '5px', bottom: '3px' }} 
@@ -207,7 +210,7 @@ class settingsUser extends Component {
       </row>
       <row>
       <div className="col-md-10">
-      <p>We will use this email address when someone comments on a post.: iamgroot@guardians.galaxy (<a href="">change address</a>).</p>
+      <p>We will use this email address when someone comments on a post.: iamgroot@guardians.galaxy (<a href="" style={{color:'#e52466'}}>change address</a>).</p>
       </div>
       <div className="col-md-2">
       <PPToggle
