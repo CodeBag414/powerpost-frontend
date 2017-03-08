@@ -199,11 +199,7 @@ class settingsUser extends Component {
             </div>
        
       </row>
-      <row>
-        <div className="col-md-12">
            <hr/>
-        </div>
-      </row>
       <row>
       <div className="col-md-12">
       <h4>Email Notifications </h4>
@@ -247,11 +243,7 @@ class settingsUser extends Component {
       <p>Showing what happened yesterday in all my projects.</p>
       </div>
       </row>
-      <row>
-        <div className="col-md-12">
            <hr/>
-        </div>
-      </row>
       <row >
       <div className="col-md-12">
       <h4>Security </h4>
@@ -278,20 +270,18 @@ class settingsUser extends Component {
          /><br />
       </div>
       </row>
-      <PPRaisedButton label="Cancel" style={style1} />
+      <row>
+      <div className="col-md-4"></div>
+      <div className="col-md-4"></div>
+      <div className="col-md-4" style={{paddingTop:'40px'}}>
+      <PPRaisedButton label="Cancel" />
       <PPRaisedButton 
       label="Update" 
       type="submit" 
       value="submit" 
-      style={{
-      margin: 0,
-      top: 'auto',
-      right: 10,
-      bottom: 20,
-      left: 'auto',
-      position: 'fixed',
-      }}
       secondary={true}/>
+      </div>
+      </row>
   </form>
 
     );
