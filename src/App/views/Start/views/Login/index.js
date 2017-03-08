@@ -47,16 +47,25 @@ class Login extends React.Component {
         return (
             <form>
                 <row>
-                <div className="col-md-4"></div>
-                <div className="col-md-4">
+                <div className="col-md-3"></div>
+                <div className="col-md-3">
+                <h3>The Launchpad for Your Brand's Content</h3><br/>
+                <p>Transform your content strategy. Try PowerPost free for two weeks.</p>
+                </div>
+                <div className="col-md-3"> 
+                <a id="login-facebook-btn" href="/user_manager/login_facebook?" class="buttn buttn--facebook" onclick="ga('send', 'event', 'Logins', 'Submitted', 'Login with Facebook');">
+		    			<i class="fa fa-facebook"></i> Sign In with Facebook
+		    		</a><br/>
+		    		<a id="buttn buttn--linkedin" href="/user_manager/login_linkedin?" class="m-t-20 buttn buttn--linkedin" onclick="ga('send', 'event', 'Logins', 'Submitted', 'Login with Linkedin');"><i class="fa fa-linkedin"></i> Sign In with LinkedIn
+					</a><br/>
                 <h4>Login</h4>
                 <PPTextField type="text" hintText="your email" floatingLabelText="Email" onChange={ this.changeEmail } />
                 <PPTextField type="password" hintText="your secure password" floatingLabelText="Password" onChange={ this.changePassword } />
                 <br/>
-                <Link to="/signup" style={{color:'#e52466'}}>Sign Up</Link>
+                <Link to="/signup" style={{color:'#e52466'}}>forgot password?</Link><br/> Don't have an account? <Link to="/signup" style={{color:'#e52466'}}>Sign Up</Link>
                 <PPRaisedButton label="Login" secondary={ true } style={loginBtn} onClick={ () => this.props.login(this.state.emailValue, this.state.passwordValue) } />
                 </div>
-                <div className="col-md-4"></div>
+                <div className="col-md-3"></div>
                 </row>
             </form>
         );

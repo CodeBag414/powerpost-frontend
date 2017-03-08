@@ -17,20 +17,17 @@ import PPFlatButton from 'App/shared/atm.FlatButton';
 import ActionFavorite from 'material-ui/svg-icons/action/favorite';
 import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
 import PPCheckbox from 'App/shared/atm.Checkbox';
-import {
-  connect
-}
-from 'react-redux';
-import {
-  createStructuredSelector
-}
-from "reselect";
+import { connect } from 'react-redux';
+import { createStructuredSelector } from "reselect";
 import {
   makeSelectUser,
   makeSelectFilePickerKey,
   makeSelectUserAvator
 }
 from '../../../../state/selectors';
+import { Link } from 'react-router';
+
+import { push } from 'react-router-redux';
 
 const styles = {
   block: {
@@ -95,11 +92,25 @@ class settingsUser extends Component {
 
     this.openFilePicker = this.openFilePicker.bind(this);
 
-    this.state = {
-      value: 1
-    };
-  }
 
+  
+  this.state = {
+           emailValue: '',
+           passwordValue: '',
+       };
+       
+       this.changeEmail = this.changeEmail.bind(this);
+       this.changePassword = this.changePassword.bind(this);
+    }
+
+    changeEmail(event) {
+        this.setState({ emailValue: event.target.value });
+    }
+    
+    changePassword(event) {
+        this.setState({ passwordValue: event.target.value });
+    }
+ 
   handleChange(event) {
     this.setState({
       value: event.target.value
@@ -187,7 +198,7 @@ class settingsUser extends Component {
             </div>
             <div className="col-md-4">
                   <PPTextField
-                  value={this.props.email}
+                  onChange={ this.changeEmail }
                   hintText="youraddress@yourdomain.com"
                   floatingLabelText="Email"
                   hintStyle={{padding: '5px', bottom: '3px' }} 
