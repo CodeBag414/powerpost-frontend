@@ -156,7 +156,7 @@ class settingsUser extends Component {
      
       <row >
       <div className="col-md-12">
-      <h4>Profile </h4>
+      <h4>User Profile </h4>
       </div>
       </row>
       <row>

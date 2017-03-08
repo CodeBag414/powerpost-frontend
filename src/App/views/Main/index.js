@@ -45,7 +45,7 @@ class Dashboard extends React.Component{
         return(
         <div>
             <Nav userAvatar={ this.props.userAvatar } user={ this.props.user } logout={ this.props.logout } handleMenuToggle={ this.handleMenuToggle } isMenuCollapsed = { this.props.menuCollapsed } activeBrand = { this.props.activeBrand } accountId = { this.props.params.account_id } userAccount = { this.props.userAccount } sharedAccounts = { this.props.sharedAccounts } subAccounts = { this.props.subAccounts } />
-            <div className={[viewContentStyle, styles.viewContent].join(' ') } style={{marginTop:'6px'}}>
+            <div className={[viewContentStyle, styles.viewContent].join(' ') } style={{marginTop:'20px'}}>
        
                 {React.Children.toArray(this.props.children)}
             </div>
