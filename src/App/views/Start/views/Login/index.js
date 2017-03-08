@@ -9,12 +9,19 @@ import {connect} from 'react-redux';
 
 import {loginRequest} from '../../../../state/actions';
 
-import TextField from 'App/shared/atm.TextField';
+import PPTextField from 'App/shared/atm.TextField';
 import PPRaisedButton from 'App/shared/atm.RaisedButton';
 import { Link } from 'react-router';
 
 import { push } from 'react-router-redux';
 
+const loginBtn = {
+        
+        margin: '50px',
+        border: '0px',
+        marginLeft: '120px',
+    };
+    
 class Login extends React.Component {
     constructor(props) {
         super(props);
@@ -38,14 +45,20 @@ class Login extends React.Component {
     
     render() {
         return (
-            <div>
+            <form>
+                <row>
+                <div className="col-md-4"></div>
+                <div className="col-md-4">
                 <h4>Login</h4>
-                <Link to="/signup">Register</Link>
-                <TextField type="text" hintText="your email" floatingLabelText="Email" onChange={ this.changeEmail } />
-                <TextField type="password" hintText="your secure password" floatingLabelText="Password" onChange={ this.changePassword } />
-                
-                <PPRaisedButton label="Login" primary={ true } onClick={ () => this.props.login(this.state.emailValue, this.state.passwordValue) } />
-            </div>
+                <PPTextField type="text" hintText="your email" floatingLabelText="Email" onChange={ this.changeEmail } />
+                <PPTextField type="password" hintText="your secure password" floatingLabelText="Password" onChange={ this.changePassword } />
+                <br/>
+                <Link to="/signup" style={{color:'#e52466'}}>Sign Up</Link>
+                <PPRaisedButton label="Login" secondary={ true } style={loginBtn} onClick={ () => this.props.login(this.state.emailValue, this.state.passwordValue) } />
+                </div>
+                <div className="col-md-4"></div>
+                </row>
+            </form>
         );
     }
 }

@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import TextField from 'App/shared/atm.TextField';
+import PPTextField from 'App/shared/atm.TextField';
 import PPRaisedButton from 'App/shared/atm.RaisedButton';
 import {connect} from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -14,6 +14,13 @@ import {Link} from 'react-router';
 import {registerRequest} from '../../../../state/actions';
 import {makeSelectAuthError, selectAuth} from '../../../../state/selectors';
 
+const loginBtn = {
+        
+        margin: '50px',
+        border: '0px',
+        marginLeft: '145px',
+    };
+    
 class Signup extends React.Component {
     constructor(props) {
         super(props);
@@ -73,20 +80,23 @@ class Signup extends React.Component {
     }
     render() {
         return (
-            <div>
-                in signup view
-                <Link to="/start">Back to login</Link>
+            <form>
+            <div className="col-md-4"></div>
+            <div className="col-md-4">
+                <Link to="/start" style={{color:'#e52466'}}> Back to login</Link>
                 <form onSubmit={ this.onFormSubmit } >
-                    <TextField type='text' errorText={ this.state.nameError } floatingLabelText="Display Name" hintText="name" onChange={ this.onNameChange }/>
-                    <TextField type="email" errorText={ this.state.emailError } floatingLabelText="Email" hintText="your email" onChange={ this.onEmailChange }/>
+                    <PPTextField type='text' errorText={ this.state.nameError } floatingLabelText="Display Name" hintText="name" hintStyle={{padding: '5px', bottom: '3px' }} onChange={ this.onNameChange }/>
+                    <PPTextField type="email" errorText={ this.state.emailError } floatingLabelText="Email" hintText="your email" hintStyle={{padding: '5px', bottom: '3px' }} onChange={ this.onEmailChange }/>
                     
-                    <TextField type="password" errorText={ this.state.passwordError } floatingLabelText="Password" hintText="your secure password" onChange={ this.onPasswordChange }/>
-                    <TextField type="password" errorText={ this.state.passwordConfirmError } floatingLabelText="Confirm Password" hintText="retype your password" onChange={ this.onPasswordConfirmChange }/>
+                    <PPTextField type="password" errorText={ this.state.passwordError } floatingLabelText="Password" hintText="your secure password" hintStyle={{padding: '5px', bottom: '3px' }} onChange={ this.onPasswordChange }/>
+                    <PPTextField type="password" errorText={ this.state.passwordConfirmError } floatingLabelText="Confirm Password" hintText="retype your password" hintStyle={{padding: '5px', bottom: '3px' }}  onChange={ this.onPasswordConfirmChange }/>
                     
-                    <PPRaisedButton type="submit" label="Register" primary={ true } />
+                    <PPRaisedButton type="submit" label="Register" secondary={ true } style={loginBtn}/>
                 </form>
                 <div> { this.state.errorText }</div>
-            </div>
+                </div>
+                <div className="col-md-4"></div>
+            </form>
         );
     }
 }
