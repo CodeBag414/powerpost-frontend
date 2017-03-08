@@ -270,6 +270,7 @@ class settingsUser extends Component {
       <div className="col-md-4">
          <PPTextField
          hintText="Password Field"
+         onChange={ this.changePassword } 
          floatingLabelText="Current Password"
          type="password"
          hintStyle={{padding: '5px', bottom: '3px' }} 
@@ -278,6 +279,7 @@ class settingsUser extends Component {
       <div className="col-md-4">
          <PPTextField
          hintText="Password Field"
+         onChange={ this.changePassword } 
          floatingLabelText="New Password"
          type="password"
          hintStyle={{padding: '5px', bottom: '3px' }} 
@@ -287,7 +289,8 @@ class settingsUser extends Component {
       <row>
       <div className="col-md-4"></div>
       <div className="col-md-4"></div>
-      <div className="col-md-4" style={{paddingTop:'40px'}}>
+      <div className="col-md-1"></div>
+      <div className="col-md-3" style={{paddingTop:'40px'}}>
       <PPRaisedButton label="Cancel" />
       <PPRaisedButton 
       label="Update" 
@@ -303,7 +306,9 @@ class settingsUser extends Component {
 }
 export function mapDispatchToProps(dispatch) {
 
-  return {}
+  return {
+    login: (email, password) => dispatch( ({email, password})),
+  };
 }
 
 const mapStateToProps = createStructuredSelector({

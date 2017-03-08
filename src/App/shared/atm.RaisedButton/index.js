@@ -1,9 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 
-const style = {
-  margin: 12,
-};
+
 
 const PPRaisedButton= (props) => {
     const styles = require('./styles.scss');

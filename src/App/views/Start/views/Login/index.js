@@ -5,6 +5,7 @@
  */
 
 import React, { PropTypes } from 'react';
+
 import {connect} from 'react-redux';
 
 import {loginRequest} from '../../../../state/actions';
@@ -15,6 +16,12 @@ import { Link } from 'react-router';
 
 import { push } from 'react-router-redux';
 
+const header1 = {
+    fontSize: '2em',
+    fontWeight: 'normal',
+    fontFamily: 'Montserrat-Black',
+    color: '#888'
+}
 const loginBtn = {
         
         margin: '50px',
@@ -49,7 +56,7 @@ class Login extends React.Component {
                 <row>
                 <div className="col-md-3"></div>
                 <div className="col-md-3">
-                <h3>The Launchpad for Your Brand's Content</h3><br/>
+                <div style={header1}>The Launchpad for Your Brand's Content</div><br/>
                 <p>Transform your content strategy. Try PowerPost free for two weeks.</p>
                 </div>
                 <div className="col-md-3"> 
@@ -61,8 +68,8 @@ class Login extends React.Component {
                 <h4>Login</h4>
                 <PPTextField type="text" hintText="your email" floatingLabelText="Email" onChange={ this.changeEmail } />
                 <PPTextField type="password" hintText="your secure password" floatingLabelText="Password" onChange={ this.changePassword } />
-                <br/>
-                <Link to="/signup" style={{color:'#e52466'}}>forgot password?</Link><br/> Don't have an account? <Link to="/signup" style={{color:'#e52466'}}>Sign Up</Link>
+                <br/><br/>
+                <Link to="/signup" style={{color:'#e52466'}}>forgot password?</Link><br/><br/> Don't have an account? <Link to="/signup" style={{color:'#e52466'}}>Sign Up</Link>
                 <PPRaisedButton label="Login" secondary={ true } style={loginBtn} onClick={ () => this.props.login(this.state.emailValue, this.state.passwordValue) } />
                 </div>
                 <div className="col-md-3"></div>
