@@ -8,11 +8,15 @@ import PPMenu from 'App/shared/atm.Menu';
 import PPMenuItem from 'App/shared/atm.MenuItem';
 import PPPopover from 'App/shared/atm.Popover';
 import PPAvatar from 'App/shared/atm.Avatar';
+import PPList from 'App/shared/atm.List';
+import PPListItem from 'App/shared/atm.ListItem';
+import withReactRouter from 'App/shared/hoc.withReactRouter';
 
 // Replace with own Icons eventually
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import HardwareKeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 
+const ReactRouterMenuItem = withReactRouter(PPMenuItem);
 
 class TopNav extends Component {
     constructor(props) {
@@ -73,8 +77,8 @@ class TopNav extends Component {
                         onRequestClose={this.handleRequestClose }
                     >
                         <PPMenu onChange={ this.handleTouch }>
-                            <PPMenuItem primaryText="Settings" containerElement={  <Link to={ '/user/settings' } /> } />
-                            <PPMenuItem primaryText="Logout" onTouchTap={ this.props.logout } />
+                            <ReactRouterMenuItem caption="Settings" to={ "/user/settings" } />
+                            <PPMenuItem caption="Logout" onTouchTap={ this.props.logout } />
                         </PPMenu>
                         
                     </PPPopover>

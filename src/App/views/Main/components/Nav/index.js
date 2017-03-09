@@ -6,7 +6,7 @@ class Nav extends React.Component {
     render() {
         return (
             <div>
-                <Sidebar  {...this.props } />
+                <Sidebar {...this.props } />
                 <TopNav {...this.props } />
             </div>
         );

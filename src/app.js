@@ -30,6 +30,8 @@ import configureStore from './config.redux/store';
 import { makeSelectLocationState } from './config.redux/selectors';
 
 import auth from 'utils/auth';
+//import theme from 'lib/react-toolbox/theme';
+//import ThemeProvider from 'react-toolbox/lib/ThemeProvider';
 
 import { createRoutes} from './config.routes/routes';
 

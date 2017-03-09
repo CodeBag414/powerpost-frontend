@@ -3,70 +3,44 @@
  */
 import { fromJS } from 'immutable';
 import {
-
+   FETCH_COLLECTIONS_SUCCESS,
+   
 } from './constants';
 
 // The initial application state
 let initialState = fromJS({
     activeMediaItem: {},
-    
-    
-    
-    menuCollapsed: false,
-    activeBrand: {
-        account_id: false,
+    detailView: false,
+    addView: false,
+    isFetching: true,
+    error: false,
+    searchResults: [],
+    urlContent: { images: [] },
+    collections: [{}],
+    activeCollection: {
+        collection_id: false,
         user_id: false,
-        title: false,
+        account_id: false,
+        type: false,
+        status: false,
         creation_time: false,
-        status: 0,
-        account_type_id: 0,
-        properties: {},
-        subscriptions: [{}],
-        account_access: {
-            permissions: []
-        },
-        user_access: {
-            permissions: []
-        },
-        subAccounts: []
+        properties: [],
+        name: false,
+        title: false,
+        parent_collection_id: false,
     },
-    isFetchingAccount: true,
-    fetchingError: false
+    mediaItems: [{}],
 });
 
 // Takes care of changing the application state
-function dashboardReducer (state = initialState, action) {
+function mediaLibraryReducer (state = initialState, action) {
   switch (action.type) {
-    case IS_LOADING_ACCOUNT:
+    case FETCH_COLLECTIONS_SUCCESS:
         return state
-            .set('isFetchingAccount', true)
-            .set('fetchingError', false);
-    case FETCH_ACCOUNT_SUCCESS:
-        return state    
-            .set('isFetchingAccount', false)
-            .set('fetchingError', false)
-            .setIn(['activeBrand','user_access','permissions'], action.account.data.account.user_access.permissions)
-            .setIn(['activeBrand', 'account_id'], action.account.data.account.account_id)
-            .setIn(['activeBrand', 'user_id'], action.account.data.account.user_id)
-            .setIn(['activeBrand', 'title'], action.account.data.account.title)
-            .setIn(['activeBrand', 'creation_time'], action.account.data.account.creation_time)
-            .setIn(['activeBrand', 'status'], action.account.data.account.status)
-            .setIn(['activeBrand', 'account_type_id'], action.account.data.account.account_type_id)
-            .setIn(['activeBrand', 'properties'], action.account.data.account.properties)
-            .setIn(['activeBrand', 'subscriptions'], action.account.data.account.subscriptions)
-            .setIn(['activeBrand', 'account_access','permissions'], action.account.data.account.account_access.permissions)
-            .setIn(['activeBrand', 'user_access', 'permissions'], action.account.data.account.user_access.permissions)
-            .setIn(['activeBrand', 'subAccounts'], action.account.data.account.subaccounts);
-    case FETCH_ACCOUNT_ERROR:
-        return state
-            .set('isFetchingAccount', false)
-            .set('fetchingError', action.account.data.error);
-    case TOGGLE_MENU:
-        return state
-            .set('menuCollapsed', action.collapsed);
+            .set('error', action.collections.data.error);
     default:
       return state;
   }
 }
 
-export default dashboardReducer;
+export default mediaLibraryReducer;

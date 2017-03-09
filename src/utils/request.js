@@ -20,7 +20,7 @@ export function getData(url, isAuthReq=true ) {
   const requestUrl = API_URL + url;
   let headers = {};
   let key = cookie.load('token');
-  
+  console.log('key: ' + key);
   if(isAuthReq) {
     headers = {headers: {'X-API-KEY': key}};
   }
