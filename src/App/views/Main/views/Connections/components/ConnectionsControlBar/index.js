@@ -37,7 +37,7 @@ class ConnectionsControlBar extends React.Component {
                 </div>
                 <div
                     className={ ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-3', styles.noLeftPadding].join(' ') }>
-                    <PPRButton label="Connect a New Channel" secondary={ true } onClick={ this.props.handleDialogToggle } />
+                    <PPRaisedButton label="Connect a New Channel" secondary={ true } onClick={ this.props.handleDialogToggle } />
                 </div>
                 <div
                     className={ ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-3', styles.noLeftPadding].join(' ') }>
