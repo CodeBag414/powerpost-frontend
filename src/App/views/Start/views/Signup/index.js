@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import TextField from 'App/shared/atm.TextField';
+import PPInput from 'App/shared/atm.Input';
 import PPRaisedButton from 'App/shared/atm.RaisedButton';
 import {connect} from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -77,11 +77,11 @@ class Signup extends React.Component {
                 in signup view
                 <Link to="/start">Back to login</Link>
                 <form onSubmit={ this.onFormSubmit } >
-                    <TextField type='text' errorText={ this.state.nameError } floatingLabelText="Display Name" hintText="name" onChange={ this.onNameChange }/>
-                    <TextField type="email" errorText={ this.state.emailError } floatingLabelText="Email" hintText="your email" onChange={ this.onEmailChange }/>
+                    <PPInput type='text' errorText={ this.state.nameError } floatingLabelText="Display Name" hintText="name" onChange={ this.onNameChange }/>
+                    <PPInput type="email" errorText={ this.state.emailError } floatingLabelText="Email" hintText="your email" onChange={ this.onEmailChange }/>
                     
-                    <TextField type="password" errorText={ this.state.passwordError } floatingLabelText="Password" hintText="your secure password" onChange={ this.onPasswordChange }/>
-                    <TextField type="password" errorText={ this.state.passwordConfirmError } floatingLabelText="Confirm Password" hintText="retype your password" onChange={ this.onPasswordConfirmChange }/>
+                    <PPInput type="password" errorText={ this.state.passwordError } floatingLabelText="Password" hintText="your secure password" onChange={ this.onPasswordChange }/>
+                    <PPInput type="password" errorText={ this.state.passwordConfirmError } floatingLabelText="Confirm Password" hintText="retype your password" onChange={ this.onPasswordConfirmChange }/>
                     
                     <PPRaisedButton type="submit" label="Register" primary={ true } />
                 </form>

@@ -108,12 +108,16 @@ export function createRoutes(store, auth) {
         name: 'Library',
         getComponent(nextState, cb) {
           const importModules = Promise.all([
+            System.import('../App/views/Main/views/MediaItemLibrary/state/reducer'),
+            System.import('../App/views/Main/views/MediaItemLibrary/state/sagas'),
             System.import('../App/views/Main/views/MediaItemLibrary'),
           ]);
   
           const renderRoute = loadModule(cb);
   
-          importModules.then(([component]) => {
+          importModules.then(([reducer, sagas, component]) => {
+            injectReducer('library', reducer.default);
+            injectSagas(sagas.default);
             renderRoute(component);
           });
   

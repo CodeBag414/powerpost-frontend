@@ -6,7 +6,7 @@ import React, {
   Component
 }
 from 'react';
-import PPTextField from 'App/shared/atm.TextField';
+import PPInput from 'App/shared/atm.Input';
 import Avatar from 'material-ui/Avatar';
 import Subheader from 'material-ui/Subheader';
 import Toggle from 'material-ui/Toggle';
@@ -169,32 +169,32 @@ class settingsUser extends Component {
             <FlatButton label="Change Media" onClick={this.openFilePicker} style={{  position:'relative',top:"-25px",width:'180px', right:'0px',color:'#000' }} />
             </div>
             <div className="col-md-3">
-                  <PPTextField
+                  <PPInput
                   hintText="First Name, Last Name"
                   floatingLabelText="Your Name"
                   value={this.props.display_name}
 
                   floatingLabelFixed={true}
                   /><br />
-                  <PPTextField
+                  <PPInput
                   hintText="Company Name"
                   floatingLabelText="Company"
                   floatingLabelFixed={true}
                   /><br />
-                  <PPTextField
+                  <PPInput
                   hintText="Your Title"
                   floatingLabelText="Title"
                   floatingLabelFixed={true}
                   />
             </div>
             <div className="col-md-3">
-                  <PPTextField
+                  <PPInput
                   value={this.props.email}
                   hintText="youraddress@yourdomain.com"
                   floatingLabelText="Email"
                   floatingLabelFixed={true}
                   />
-                  <PPTextField
+                  <PPInput
                   hintText="000-000-0000"
                   floatingLabelText="Phone"
                   floatingLabelFixed={true}
@@ -266,7 +266,7 @@ class settingsUser extends Component {
       
       </div>
       <div className="col-md-3">
-         <PPTextField
+         <PPInput
          hintText="Password Field"
          floatingLabelText="Current Password"
          type="password"
@@ -274,7 +274,7 @@ class settingsUser extends Component {
          />
       </div>
       <div className="col-md-4">
-         <PPTextField
+         <PPInput
          hintText="Password Field"
          floatingLabelText="New Password"
          type="password"

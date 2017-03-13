@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 
 import PPRaisedButton from 'App/shared/atm.RaisedButton';
-import Dialog from 'App/shared/atm.Dialog';
+//import Dialog from 'App/shared/atm.Dialog';
 
 class AddConnectionDialog extends React.Component {
     constructor(props) {
@@ -18,14 +18,6 @@ class AddConnectionDialog extends React.Component {
 
         return (
             <div>
-                <Dialog
-                    title="Add Connection"
-                    actions={actions}
-                    modal={false}
-                    open={this.props.dialogShown}
-                    onRequestClose={ this.props.handleDialogToggle }
-                >
-                </Dialog>
             </div>
         );
     }

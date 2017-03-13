@@ -9,6 +9,9 @@ import PPLogo from './PP_Icon.png';
 import PPIconButton from 'App/shared/atm.IconButton';
 
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import withReactRouter from 'App/shared/hoc.withReactRouter';
+
+import FontIcon from 'App/shared/atm.FontIcon';
 
 // Replace with own Icons eventually
 import Subheader from 'material-ui/Subheader';
@@ -24,6 +27,8 @@ import EditorInsertChart from 'material-ui/svg-icons/editor/insert-chart';
 import ActionOpenInBrowser from 'material-ui/svg-icons/action/open-in-browser';
 import SocialPeople from 'material-ui/svg-icons/social/people';
 import ActionSettings from 'material-ui/svg-icons/action/settings';
+
+const ReactRouterMenuItem = withReactRouter(PPMenuItem);
 
 class Sidebar extends React.Component {
     constructor(props) {
@@ -65,10 +70,10 @@ class Sidebar extends React.Component {
                                         style={{ width: '20px', height: '20px', backgroundColor: '#00d2AF', position: 'absolute', right: '-5px', borderRadius: '5px', bottom: '-10px' }}
                                     >
                                         <Subheader>Main Brand</Subheader>
-                                        <PPMenuItem primaryText={ this.props.userAccount.title } containerElement={ <Link to={ '/account/' + this.props.userAccount.account_id } /> } />
+                                        <ReactRouterMenuItem isSidebar caption={ this.props.userAccount.title }  to={ '/account/' + this.props.userAccount.account_id } />
                                         <Subheader>Sub Accounts</Subheader>
                                         { this.props.userAccount.subaccounts && this.props.userAccount.subaccounts.map((subAccount) => 
-                                            <PPMenuItem key={subAccount.account_id} primaryText={ subAccount.title } containerElement={ <Link to={ '/account/' + subAccount.account_id } /> } />
+                                            <ReactRouterMenuItem key={subAccount.account_id} caption={ subAccount.title } to={ '/account/' + subAccount.account_id } />
                                         )}
                                     </IconMenu>
                             }
@@ -86,10 +91,10 @@ class Sidebar extends React.Component {
                                         style={{ width: '20px', height: '20px', backgroundColor: '#00d2AF', position: 'absolute', right: '-5px', borderRadius: '5px', bottom: '-10px' }}
                                     >
                                         <Subheader>Main Brand</Subheader>
-                                        <PPMenuItem primaryText={ account.title } containerElement={ <Link to={ '/account/' + account.account_id } /> } />
+                                        <ReactRouterMenuItem isSidebar caption={ account.title } to={ '/account/' + account.account_id } />
                                         <Subheader>Sub Accounts</Subheader>
                                         { account.subaccounts && account.subaccounts.map((subAccount) => 
-                                            <PPMenuItem key={subAccount.account_id} primaryText={ subAccount.title } containerElement={ <Link to={ '/account/' + subAccount.account_id } /> } />
+                                            <ReactRouterMenuItem key={subAccount.account_id} caption={ subAccount.title } to={ '/account/' + subAccount.account_id } />
                                         )}
                                     </IconMenu>
                                 }
@@ -117,26 +122,26 @@ class Sidebar extends React.Component {
                                 </PPIconButton>
                                 }
                             </div>
-                            <PPMenu width={200} autoWidth={false}>
-                                <PPMenuItem primaryText="Library" style={{ width: '200px' }} leftIcon={ <ImagePhotoLibrary color='#C9C6CF' /> } innerDivStyle={{ color: '#C9C6CF', padding: '0px 16px 0px 60px' }} containerElement={ <Link to={ '/account/' + this.props.accountId }/> } />
+                            <PPMenu isSidebar selectable={true}>
+                                <ReactRouterMenuItem caption="Library" isSidebar icon={ <ImagePhotoLibrary color='#C9C6CF' /> }  to={ '/account/' + this.props.accountId } />
                                 <PPMenuDivider />
-                                <PPMenuItem primaryText="Calendar" style={{ width: '200px' }} leftIcon={ <ActionDateRange color='#C9C6CF' />} innerDivStyle={{ color: '#C9C6CF', padding: '0px 16px 0px 60px' }} containerElement={ <Link to={ '/account/' + this.props.accountId + '/calendar'} /> } />
-                                <PPMenuItem primaryText="Workflow" style={{ width: '200px' }} leftIcon={ <ActionViewColumn color='#C9C6CF' /> } innerDivStyle={{ color: '#C9C6CF', padding: '0px 16px 0px 60px' }} containerElement={ <Link to={ '/account/' + this.props.accountId + '/workflow' } /> } />
-                                <PPMenuItem primaryText="List" style={{ width: '200px' }} leftIcon={ <ActionList color='#C9C6CF' /> } innerDivStyle={{ color: '#C9C6CF', padding: '0px 16px 0px 60px' }} containerElement={ <Link to={ '/account/' + this.props.accountId + '/list' } /> } />
+                                <ReactRouterMenuItem caption="Calendar" isSidebar icon={ <ActionDateRange color='#C9C6CF' />} to={ '/account/' + this.props.accountId + '/calendar'} />
+                                <ReactRouterMenuItem caption="Workflow"  isSidebar icon={ <ActionViewColumn color='#C9C6CF' /> } to={ '/account/' + this.props.accountId + '/workflow' } />
+                                <ReactRouterMenuItem caption="List" isSidebar icon={ <ActionList color='#C9C6CF' /> } to={ '/account/' + this.props.accountId + '/list' } />
                                 { this.props.accountPermissions && this.props.accountPermissions.indexOf('statistics') > -1 &&
                                     <div>
                                         <PPMenuDivider />
-                                        <PPMenuItem primaryText="Statistics" style={{ width: '200px' }} leftIcon={ <EditorInsertChart color='#C9C6CF' /> } innerDivStyle={{ color: '#C9C6CF', padding: '0px 16px 0px 60px' }} containerElement={ <Link to={ '/account/' + this.props.accountId + '/statistics' }/> } />
+                                        <ReactRouterMenuItem caption="Statistics" isSidebar icon={ <EditorInsertChart color='#C9C6CF' /> } to={ '/account/' + this.props.accountId + '/statistics' } />
                                     </div>
                                 }
                                 { this.props.accountPermissions && this.props.accountPermissions.indexOf('connections') > -1 &&
                                     <div>
                                         <PPMenuDivider />
-                                        <PPMenuItem primaryText="Connections" style={{ width: '200px' }} leftIcon={ <ActionOpenInBrowser color='#C9C6CF' /> } innerDivStyle={{ color: '#C9C6CF', padding: '0px 16px 0px 60px' }} containerElement={ <Link to={ '/account/' + this.props.accountId + '/connections' } /> } />
+                                        <ReactRouterMenuItem caption="Connections" isSidebar icon={ <ActionOpenInBrowser color='#C9C6CF' />}  to={ '/account/' + this.props.accountId + '/connections' } />
                                     </div>
                                 }
                                 { this.props.accountPermissions && this.props.accountPermissions.indexOf('team') > -1 &&
-                                    <PPMenuItem primaryText="Team" style={{ width: '200px' }} leftIcon={ <SocialPeople color='#C9C6CF' /> } innerDivStyle={{ color: '#C9C6CF', padding: '0px 16px 0px 60px' }} containerElement={ <Link to={ '/account/' + this.props.accountId + '/team' } /> } />
+                                    <ReactRouterMenuItem caption="Team" isSidebar icon={ <SocialPeople color='#C9C6CF' /> }  to={ '/account/' + this.props.accountId + '/team' } />
                                 }
                                 
                                 { this.props.activeBrand.account_type_id == 2 && 
@@ -165,19 +170,19 @@ class Sidebar extends React.Component {
                         <div className={ styles.activeBrand } >
                             <span>{ this.props.activeBrand.title ? this.props.activeBrand.title.slice(0,2).toUpperCase() : ''}</span>
                         </div>
-                        <PPMenu autoWidth={false} width={60}>
-                            <PPMenuItem leftIcon={ <ImagePhotoLibrary style={{ marginLeft: '14px' }} color='#C9C6CF' /> } style={{ width: '60px' }} innerDivStyle={{ color: '#C9C6CF' }} containerElement={ <Link to={ '/account/' + this.props.accountId }/> } />
-                            <PPMenuItem leftIcon={ <ActionDateRange style={{ marginLeft: '14px' }} color='#C9C6CF' />} style={{ width: '60px' }} innerDivStyle={{ color: '#C9C6CF'}} containerElement={ <Link to={ '/account/' + this.props.accountId + '/calendar' } /> } />
-                            <PPMenuItem leftIcon={ <ActionViewColumn style={{ marginLeft: '14px' }} color='#C9C6CF' /> } style={{ width: '60px' }} innerDivStyle={{ color: '#C9C6CF' }} containerElement={ <Link to={ '/account/' + this.props.accountId + '/workflow' } /> } />
-                            <PPMenuItem leftIcon={ <ActionList style={{ marginLeft: '14px' }} color='#C9C6CF' /> } style={{ width: '60px' }} innerDivStyle={{ color: '#C9C6CF'}} containerElement={ <Link to={ '/account/' + this.props.accountId + '/list' } /> } />
+                        <PPMenu isSidebar>
+                            <ReactRouterMenuItem isSidebar icon={ <ImagePhotoLibrary style={{ marginLeft: '14px' }} color='#C9C6CF' /> } style={{ width: '60px' }} to={ '/account/' + this.props.accountId }/>
+                            <ReactRouterMenuItem isSidebar icon={ <ActionDateRange style={{ marginLeft: '14px' }} color='#C9C6CF' />} style={{ width: '60px' }} to={ '/account/' + this.props.accountId + '/calendar' } />
+                            <ReactRouterMenuItem isSidebar icon={ <ActionViewColumn style={{ marginLeft: '14px' }} color='#C9C6CF' /> } style={{ width: '60px' }} to={ '/account/' + this.props.accountId + '/workflow' } />
+                            <ReactRouterMenuItem isSidebar icon={ <ActionList style={{ marginLeft: '14px' }} color='#C9C6CF' /> } style={{ width: '60px' }}  to={ '/account/' + this.props.accountId + '/list' } />
                             { this.props.accountPermissions && this.props.accountPermissions.indexOf('statistics') > -1 &&
-                                <PPMenuItem leftIcon={ <EditorInsertChart style={{ marginLeft: '14px' }} color='#C9C6CF' /> } style={{ width: '60px' }} innerDivStyle={{ color: '#C9C6CF'}} containerElement={ <Link to={ '/account/' + this.props.accountId + '/statistics' }/> } />
+                                <ReactRouterMenuItem isSidebar icon={ <EditorInsertChart style={{ marginLeft: '14px' }} color='#C9C6CF' /> } style={{ width: '60px' }} to={ '/account/' + this.props.accountId + '/statistics' } />
                             }
                             { this.props.accountPermissions && this.props.accountPermissions.indexOf('connections') > -1 &&
-                                <PPMenuItem leftIcon={ <ActionOpenInBrowser style={{ marginLeft: '14px' }} color='#C9C6CF' /> } style={{ width: '60px' }} innerDivStyle={{ color: '#C9C6CF' }} containerElement={ <Link to={ '/account/' + this.props.accountId + '/connections' } /> } />
+                                <ReactRouterMenuItem isSidebar icon={ <ActionOpenInBrowser style={{ marginLeft: '14px' }} color='#C9C6CF' /> } style={{ width: '60px' }} to={ '/account/' + this.props.accountId + '/connections' } />
                             }
                             { this.props.accountPermissions && this.props.accountPermissions.indexOf('team') > -1 &&
-                            <PPMenuItem leftIcon={ <SocialPeople style={{ marginLeft: '14px' }} color='#C9C6CF' /> } style={{ width: '60px' }} innerDivStyle={{ color: '#C9C6CF'}} containerElement={ <Link to={ '/account/' + this.props.accountId + '/connections' } /> } />
+                            <ReactRouterMenuItem isSidebar icon={ <SocialPeople style={{ marginLeft: '14px' }} color='#C9C6CF' /> } style={{ width: '60px' }} to={ '/account/' + this.props.accountId + '/connections' } />
                             }
                         </PPMenu>
                 </div>

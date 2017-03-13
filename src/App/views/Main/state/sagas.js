@@ -9,9 +9,10 @@ import {
     FETCH_ACCOUNT_ERROR,
     IS_LOADING_ACCOUNT
 } from './constants';
- import {
-     CHECK_CURRENT_ACCOUNT
- } from '../../../state/constants';
+
+import {
+ CHECK_CURRENT_ACCOUNT
+} from '../../../state/constants';
  
 import {
     getData

@@ -26,7 +26,7 @@ module.exports = (options) => ({
       test: /\.css$/,
       include: /node_modules/,
       loaders: ['style-loader', 'css-loader'],
-    }, 
+    },
     {
       test: /\.scss$/,
       loaders: [
@@ -92,12 +92,17 @@ module.exports = (options) => ({
       '.js',
       '.jsx',
       '.react.js',
+      '.css',
+      '.scss',
     ],
     mainFields: [
       'browser',
       'jsnext:main',
       'main',
     ],
+    alias: {
+      globals: '../../src/globals.scss'
+    }
   },
   devtool: options.devtool,
   target: 'web', // Make web variables accessible to webpack, e.g. window

@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import PPRaisedButton from 'App/shared/atm.RaisedButton';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'App/shared/atm.SelectField';
-import TextField from 'App/shared/atm.TextField';
+import PPInput from 'App/shared/atm.Input';
 
 class ConnectionsControlBar extends React.Component {
     constructor(props) {
@@ -51,7 +51,7 @@ class ConnectionsControlBar extends React.Component {
                     className={ ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-3', styles.noLeftPadding].join(' ') }>
                     <div className={[styles.filterBlock, styles.channelFilterBlock].join(' ')}>
                         <i className={['fa', 'fa-search', styles.channelFilterIcon].join(' ')}></i>
-                        <TextField value={ this.props.channelFilter } type="text" hintText="Find Channel"
+                        <PPInput value={ this.props.channelFilter } type="text" hintText="Find Channel"
                                    onChange={ this.setChannelFilter } underlineShow ={ false }/>
                     </div>
                 </div>
