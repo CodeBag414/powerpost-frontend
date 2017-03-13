@@ -6,7 +6,7 @@ import {toastr} from '../../../../../lib/react-redux-toastr';
 import PPIconButton from 'App/shared/atm.IconButton';
 import PPMenu from 'App/shared/atm.Menu';
 import PPMenuItem from 'App/shared/atm.MenuItem';
-import PPPopover from 'App/shared/atm.Popover';
+import PPIconMenu from 'App/shared/atm.IconMenu';
 import PPAvatar from 'App/shared/atm.Avatar';
 import PPList from 'App/shared/atm.List';
 import PPListItem from 'App/shared/atm.ListItem';
@@ -68,20 +68,14 @@ class TopNav extends Component {
                     </PPIconButton>
                 }
                 <div className={ styles.userContainer } >
-                    <PPAvatar src={ avatar } onClick={ this.handleTouchTap } />
-                    <PPPopover
+                    <PPIconMenu
                         open={ this.state.userMenuOpen }
-                        anchorEl={ this.state.anchorEl }
-                        anchorOrigin={{ horizontal: 'left', vertical:'bottom' }}
-                        targetOrigin={{horizontal: 'right', vertical: 'top' }}
-                        onRequestClose={this.handleRequestClose }
+                        position='topRight'
+                        icon={ <PPAvatar image={ avatar }  /> }
                     >
-                        <PPMenu onChange={ this.handleTouch }>
-                            <ReactRouterMenuItem caption="Settings" to={ "/user/settings" } />
-                            <PPMenuItem caption="Logout" onTouchTap={ this.props.logout } />
-                        </PPMenu>
-                        
-                    </PPPopover>
+                    <ReactRouterMenuItem caption="Settings" to={ "/user/settings" } />
+                    <PPMenuItem caption="Logout" onTouchTap={ this.props.logout } />
+                    </PPIconMenu>
                 </div>
             </div>
         );

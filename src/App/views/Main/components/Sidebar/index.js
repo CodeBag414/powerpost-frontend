@@ -11,6 +11,8 @@ import PPIconButton from 'App/shared/atm.IconButton';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import withReactRouter from 'App/shared/hoc.withReactRouter';
 
+import FontIcon from 'App/shared/atm.FontIcon';
+
 // Replace with own Icons eventually
 import Subheader from 'material-ui/Subheader';
 import IconButton from 'material-ui/IconButton';
