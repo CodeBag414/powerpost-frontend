@@ -9,11 +9,8 @@ import {connect} from 'react-redux';
 
 import {loginRequest} from '../../../../state/actions';
 
-<<<<<<< HEAD
+
 import PPInput from 'App/shared/atm.Input';
-=======
-import PPTextField from 'App/shared/atm.TextField';
->>>>>>> dev
 import PPRaisedButton from 'App/shared/atm.RaisedButton';
 import { Link } from 'react-router';
 
