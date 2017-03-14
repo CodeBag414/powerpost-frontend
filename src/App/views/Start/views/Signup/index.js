@@ -77,11 +77,11 @@ class Signup extends React.Component {
                 in signup view
                 <Link to="/start">Back to login</Link>
                 <form onSubmit={ this.onFormSubmit } >
-                    <PPInput type='text' errorText={ this.state.nameError } floatingLabelText="Display Name" hintText="name" onChange={ this.onNameChange }/>
-                    <PPInput type="email" errorText={ this.state.emailError } floatingLabelText="Email" hintText="your email" onChange={ this.onEmailChange }/>
+                    <PPInput type='text' error={ this.state.nameError } label="Display Name" onChange={ this.onNameChange }/>
+                    <PPInput type="email" error={ this.state.emailError } label="Email" onChange={ this.onEmailChange }/>
                     
-                    <PPInput type="password" errorText={ this.state.passwordError } floatingLabelText="Password" hintText="your secure password" onChange={ this.onPasswordChange }/>
-                    <PPInput type="password" errorText={ this.state.passwordConfirmError } floatingLabelText="Confirm Password" hintText="retype your password" onChange={ this.onPasswordConfirmChange }/>
+                    <PPInput type="password" error={ this.state.passwordError } label="Password" onChange={ this.onPasswordChange }/>
+                    <PPInput type="password" error={ this.state.passwordConfirmError } label="Confirm Password" onChange={ this.onPasswordConfirmChange }/>
                     
                     <PPRaisedButton type="submit" label="Register" primary={ true } />
                 </form>

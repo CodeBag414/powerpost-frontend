@@ -37,10 +37,10 @@ export function postData(action, errorType, isAuthReq, url, key, dispatch, data)
 }
 
 // Get Request
-export function getData(action, errorType, isAuthReq, url, key, dispatch) {
+export function getData(action, errorType, isAuthReq, url, key, dispatch, data) {
   const requestUrl = API_URL + url;
   let headers = {};
-
+  console.log('data: ' + data);
   if(isAuthReq) {
     headers = {headers: {'X-API-KEY': key}};
   }

@@ -1,25 +1,20 @@
 import React from 'react';
-import Button from 'App/newShared/atm.Button';
+import Button from 'App/shared/atm.Button';
 import TextField from 'App/shared/atm.TestTextField';
+import ButtonMenu from 'App/shared/mol.ButtonMenu';
+import MenuItem from 'App/shared/atm.MenuItem';
 
 const MediaNav = (props) => {
     const styles = require('./styles.scss');
     
     return(
         <div className={ styles.mediaNavContainer }>
-            <Button label="Default" onClick={ () => { console.log('clicked button'); } } primary />
-            <Button label="Disabled" onClick={ () => {console.log('clicked disabled'); } } />
-            <Button label="Secondary" onClick={ () => { console.log('clicked secondary'); } } raised primary />
-            
-            <div>
-                <TextField floatingLabelText="Input Label" hintText="Your name" />
-            </div>
-            <div>
-                <TextField floatingLabelText="Input Label with Icon" hintText="Your name" iconClass="fa fa-envelope" />
-            </div>
-            <div>
-                <TextField floatingLabelText="Input Label - Error Message" hintText="Your name" errorText="This is a validation error" />
-            </div>
+            <ButtonMenu label="Add Media">
+                <MenuItem caption="Add File" onClick={props.openAddFile} />
+                <MenuItem caption="Add RSS Feed" onClick={props.openAddRSS} />
+                <MenuItem caption="Add Blog" onClick={props.openAddBlog} />
+                <MenuItem caption="Add Link" onClick={props.openAddLink} />
+            </ButtonMenu>
         </div>
     );
 };

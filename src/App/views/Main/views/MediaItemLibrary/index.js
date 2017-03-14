@@ -11,18 +11,43 @@ import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 import { fetchCollections } from './state/actions';
 
 import MediaNav from './components/MediaNav';
+import MediaContainer from './components/MediaContainer';
 
 class MediaItemLibrary extends React.Component {
+    constructor(props) {
+        super(props);
+        
+        this.openAddBlog = this.openAddBlog.bind(this);
+        this.openAddFile = this.openAddFile.bind(this);
+        this.openAddRSS = this.openAddRSS.bind(this);
+        this.openAddLink = this.openAddLink.bind(this);
+    }
     
     componentDidMount() {
         this.props.getMediaItems(this.props.params.account_id);
     }
     
+    openAddFile() {
+        console.log('open add file');
+    }
+    
+    openAddRSS() {
+        console.log('open add RSS');
+    }
+    
+    openAddLink() {
+        console.log('open add link');
+    }
+    
+    openAddBlog() {
+        console.log('open add blog');
+    }
+    
     render() {
         return (
             <div>
-                <MediaNav />
-                in media item library
+                <MediaNav openAddFile = { this.openAddFile } openAddRSS = { this.openAddRSS } openAddLink = { this.openAddLink } openAddBlog = { this.openAddBlog } />
+                <MediaContainer />
             </div>
         );
     }
