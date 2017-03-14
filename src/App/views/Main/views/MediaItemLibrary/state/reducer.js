@@ -4,7 +4,8 @@
 import { fromJS } from 'immutable';
 import {
    FETCH_COLLECTIONS_SUCCESS,
-   
+   FETCH_MEDIA_ITEMS_SUCCESS,
+   FETCH_MEDIA_ITEMS_ERROR,
 } from './constants';
 
 // The initial application state
@@ -37,7 +38,14 @@ function mediaLibraryReducer (state = initialState, action) {
   switch (action.type) {
     case FETCH_COLLECTIONS_SUCCESS:
         return state
-            .set('error', action.collections.data.error);
+            .set('collections', action.collections.data.collections)
+            .set('activeCollection', action.collections.data.collections.map((coll) => { if(coll.parent_collection_id == null){ return coll }})[0]);
+    case FETCH_MEDIA_ITEMS_SUCCESS:
+        return state
+            .set('mediaItems', action.mediaItems.data.collection.media_items);
+    case FETCH_MEDIA_ITEMS_ERROR:
+        return state
+            .set('error', action.mediaItems.data.message);
     default:
       return state;
   }

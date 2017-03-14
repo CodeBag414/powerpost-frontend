@@ -21,6 +21,7 @@ export function getData(url, isAuthReq=true ) {
   let headers = {};
   let key = cookie.load('token');
   console.log('key: ' + key);
+  console.log('url: ' + url + ' key: ' + key);
   if(isAuthReq) {
     headers = {headers: {'X-API-KEY': key}};
   }
