@@ -29,12 +29,13 @@ class Login extends React.Component {
        this.changePassword = this.changePassword.bind(this);
     }
 
-    changeEmail(event) {
-        this.setState({ emailValue: event.target.value });
+    changeEmail(value) {
+
+        this.setState({ emailValue: value});
     }
     
-    changePassword(event) {
-        this.setState({ passwordValue: event.target.value });
+    changePassword(value) {
+        this.setState({ passwordValue: value});
     }
     
     render() {

@@ -23,6 +23,7 @@ class Signup extends React.Component {
             emailValue: '',
             emailError: '',
             passwordValue: '',
+            passwordConfirmValue: '',
             passwordConfirmError: '',
             passwordError: '',
             validPassword: false,
@@ -48,26 +49,27 @@ class Signup extends React.Component {
         }
     }
     
-    onNameChange(event) {
-        this.setState({ nameValue: event.target.value });
+    onNameChange(value) {
+        this.setState({ nameValue: value });
     }
     
-    onEmailChange(event) {
-        this.setState({ emailValue: event.target.value });        
+    onEmailChange(value) {
+        this.setState({ emailValue: value });        
     }
     
-    onPasswordChange(event) {
-        this.setState({ passwordValue: event.target.value });        
+    onPasswordChange(value) {
+        this.setState({ passwordValue: value });        
     }
     
-    onPasswordConfirmChange(event) {
-        if(event.target.value == this.state.passwordValue) {
+    onPasswordConfirmChange(value) {
+        this.setState({ passwordConfirmValue: value });
+        if(value == this.state.passwordValue) {
             this.setState({ validPassword: true, passwordConfirmError: '' });
         } else if(this.state.validPassword) {
             this.setState({ validPassword: false });
         }
         
-        if(event.target.value != this.state.passwordValue) {
+        if(value != this.state.passwordValue) {
             this.setState({ passwordConfirmError: 'Password does not match previous password'});
         }
     }
@@ -77,11 +79,11 @@ class Signup extends React.Component {
                 in signup view
                 <Link to="/start">Back to login</Link>
                 <form onSubmit={ this.onFormSubmit } >
-                    <PPInput type='text' error={ this.state.nameError } label="Display Name" onChange={ this.onNameChange }/>
-                    <PPInput type="email" error={ this.state.emailError } label="Email" onChange={ this.onEmailChange }/>
+                    <PPInput type='text' error={ this.state.nameError } value={ this.state.nameValue } label="Display Name" onChange={ this.onNameChange }/>
+                    <PPInput type="email" error={ this.state.emailError } value={ this.state.emailValue } label="Email" onChange={ this.onEmailChange }/>
                     
-                    <PPInput type="password" error={ this.state.passwordError } label="Password" onChange={ this.onPasswordChange }/>
-                    <PPInput type="password" error={ this.state.passwordConfirmError } label="Confirm Password" onChange={ this.onPasswordConfirmChange }/>
+                    <PPInput type="password" error={ this.state.passwordError } value={ this.state.passwordValue } label="Password" onChange={ this.onPasswordChange }/>
+                    <PPInput type="password" error={ this.state.passwordConfirmError } value={ this.state.passwordConfirmValue } label="Confirm Password" onChange={ this.onPasswordConfirmChange }/>
                     
                     <PPRaisedButton type="submit" label="Register" primary={ true } />
                 </form>
