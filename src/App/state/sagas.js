@@ -211,6 +211,8 @@ export function * updateFlow () {
     // This returns `true` if the registering was successful, `false` if not
     let wasSuccessful = yield call(authorizeUpdate, data);
     console.log("wasSuccessful",wasSuccessful);
+    toastr.success('Success!', 'User setting is updated.');
+    
     // If we could register a user, we send the appropiate actions
     if (wasSuccessful) {
       yield put({type: SET_AUTH, newAuthState: true}); // User is logged in (authorized) after being registered
