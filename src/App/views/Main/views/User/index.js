@@ -1,95 +1,23 @@
 /*
  * User View
  */
-
-import React, {
-  Component
-}
-from 'react';
-import PPInput from 'App/shared/atm.Input';
-import Avatar from 'material-ui/Avatar';
-import Subheader from 'material-ui/Subheader';
-import Toggle from 'material-ui/Toggle';
-import {
-  RadioButton,
-  RadioButtonGroup
-}
-from 'material-ui/RadioButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
-import ActionFavorite from 'material-ui/svg-icons/action/favorite';
-import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
-import Checkbox from 'material-ui/Checkbox';
-import {
-  connect
-}
-from 'react-redux';
-import {
-  createStructuredSelector
-}
-from "reselect";
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {createStructuredSelector} from "reselect";
+import {updateRequest} from '../../../../state/actions';
 import {
   makeSelectUser,
-  makeSelectFilePickerKey,
-  makeSelectUserAvator
-}
-from '../../../../state/selectors';
+  makeSelectUserAccount,
+  makeSelectFilePickerKey
+} from '../../../../state/selectors';
 
-const styles = {
-  block: {
-    maxWidth: 250,
-  },
-  toggle: {
-    marginBottom: 16,
-  },
-  thumbOff: {
-    backgroundColor: '#ffcccc',
-  },
-  trackOff: {
-    backgroundColor: '#ff9d9d',
-  },
-  thumbSwitched: {
-    backgroundColor: 'red',
-  },
-  trackSwitched: {
-    backgroundColor: '#ff9d9d',
-  },
-  labelStyle: {
-    color: 'red',
-  },
-};
-
-
-
-const style1 = {
-  margin: 0,
-  top: 'auto',
-  right: 120,
-  bottom: 20,
-  left: 'auto',
-  position: 'fixed',
-};
-const style2 = {
-  margin: 0,
-  top: 'auto',
-  right: 10,
-  bottom: 20,
-  left: 'auto',
-  position: 'fixed',
-};
-const style3 = {
-  margin: 0,
-  top: 'auto',
-  right: 10,
-  bottom: 20,
-  left: 'auto',
-  position: 'fixed',
-};
-const hrule = {
-  borderWidth: 1,
-  borderColor: '#dadada',
-};
-
+import Avatar from 'material-ui/Avatar';
+import Toggle from 'material-ui/Toggle';
+import Checkbox from 'material-ui/Checkbox';
+import FlatButton from 'material-ui/FlatButton';
+import PPInput from 'App/shared/atm.Input';
+import PPRaisedButton from 'App/shared/atm.RaisedButton';
+import {RadioButton,RadioButtonGroup} from 'material-ui/RadioButton';
 
 
 class settingsUser extends Component {
@@ -97,21 +25,47 @@ class settingsUser extends Component {
     super(props);
 
     this.openFilePicker = this.openFilePicker.bind(this);
+    this.profileUpdate = this.profileUpdate.bind(this);
+    this.onRadioNotify = this.onRadioNotify.bind(this);
 
+    const user = this.props.user ? this.props.user : null;
+    var avatar = '';
+    var time_zone = '';
+    var receive_notifications = '';
+    if (user) {
+        if (user.properties) {
+            var properties = user.properties;
+            avatar = properties.thumb_url ? properties.thumb_url : '';
+            time_zone = properties.timezone_id ? properties.timezone_id : '';
+            receive_notifications = properties.receive_notifications ? properties.receive_notifications : '';
+        }
+    }
+    
+    const user_own_account = this.props.user_own_account ? this.props.user_own_account : null;
+    var phone_number = '';
+    if (user_own_account)
+        if (user_own_account.properties)
+            phone_number = user_own_account.properties.phone_number ? user_own_account.properties.phone_number : '';
+    
+    console.log("this.props.user",this.props.user);
+    console.log("this.props.user_own_account", user_own_account);
+    
     this.state = {
       value: 1,
-      full_name: 'Clemens',
+      avatar: avatar ? avatar : '',
+      full_name: user ? user.display_name : '',
       company_name: 'PowerPost',
-      your_title: 'Post',
-      your_email: 'test@mail.com',
-      phone_number: '(111) 222 - 3333',
-      time_zone: 'UTC + 1',
+      your_title: user_own_account ? user_own_account.title: '',
+      your_email: user ? user.email : '',
+      phone_number: phone_number,
+      time_zone: time_zone,
+      email_notifications: receive_notifications,
       current_pw: '',
       new_pw: ''
     };
   }
   
-  state = {full_name: '', company_name: '', your_title: '', your_email: '',
+  state = {avatar: '', full_name: '', company_name: '', your_title: '', your_email: '',
            phone_number: '', time_zone: '', current_pw: '', new_pw: ''};
            
   handleChange = (name, value) => {
@@ -121,6 +75,28 @@ class settingsUser extends Component {
   handleSubmit(event) {
     alert('Updates were submitted: ' + this.state.value);
     event.preventDefault();
+  }
+  
+  profileUpdate(event) {
+    event.preventDefault();
+    
+    const account_id = this.props.user_own_account.account_id;
+    const user_id = this.props.user.user_id;
+    
+    var data = {avatar: this.state.avatar,
+                name: this.state.full_name,
+                title: this.state.your_title,
+                email: this.state.your_email,
+                time_zone: this.state.time_zone,
+                phone_number: this.state.phone_number,
+                company_name: this.state.company_name,
+                email_notifications: this.state.email_notifications,
+                current_pw: '',
+                new_pw: '',
+                account_id: account_id,
+                user_id: user_id};
+                
+    this.props.update(data);
   }
   
   openFilePicker() {
@@ -153,162 +129,193 @@ class settingsUser extends Component {
 
   handleFilePickerSuccess(mediaItem) {
   }
-
+  
+  onRadioNotify(event, value) {
+    event.preventDefault();
+    this.setState({email_notifications: value});
+  }
+  
   render() {
     const styles = require('./styles.scss');
-    const avatar = this.props.user && this.props.user.properties ? this.props.user.properties.thumb_url : '';
-
+    
+    const inline = {
+        radioButton: {
+            width: '50%',
+            marginTop: '20px',
+            display: 'inline-block',
+        },
+        toggle: {
+            width: 150,
+            marginTop: 10,
+        }
+    };
+    
     return (
-      <form onSubmit={this.handleSubmit}>
-        <row >
-          <div className="col-md-12">
-            <h3>Profile</h3>
-          </div>
-        </row>
-        <row>
-          <div className="col-md-3">
-            <h5 style={{marginLeft: '0px', color:'#9d9d9d'}}>Profile Picture</h5>< br/>
-            <Avatar src={avatar}  onClick={this.handleTouchUp} style={{  position:'relative',top:"-25px",left:'0px', width:'180px', height:'180px', borderRadius:'0' }}/>
-            <FlatButton label="Change Media" onClick={this.openFilePicker} style={{  position:'relative',top:"-25px",width:'180px', right:'0px',color:'#000' }} />
-          </div>
-          <div className="col-md-9">
+      <div>
+        <form onSubmit={this.profileUpdate}>
             <row>
-              <div className="col-md-6">
-                <PPInput
-                    type='text'
-                    label="Full Name"
-                    required
-                    value={this.state.full_name}
-                    onChange={this.handleChange.bind(this, 'full_name')}
-                  />
-                <br />
-                <PPInput
-                    type='text'
-                    label="Company Name"
-                    value={this.state.company_name}
-                    onChange={this.handleChange.bind(this, 'company_name')}
-                  />
-                <br />
-                <PPInput
-                    type='text'
-                    label="Your Title"
-                    value={this.state.your_title}
-                    onChange={this.handleChange.bind(this, 'your_title')}
-                  />
-              </div>
-              <div className="col-md-6">
-                <PPInput
-                    type='email'
-                    label="Your Email"
-                    value={this.state.your_email}
-                    onChange={this.handleChange.bind(this, 'your_email')}
-                  />
-                <br />
-                <PPInput
-                    type='tel'
-                    label="Phone Number"
-                    value={this.state.phone_number}
-                    onChange={this.handleChange.bind(this, 'phone_number')}
-                  />
-                <br />
-                <PPInput
-                    type='text'
-                    label="Time Zone"
-                    required
-                    value={this.state.time_zone}
-                    onChange={this.handleChange.bind(this, 'time_zone')}
-                  />
+              <div className="col-md-12">
+                <h3>Profile</h3>
               </div>
             </row>
-          </div>
-        </row>
-        <row>
-          <div className="col-md-12">
-            <hr/>
-          </div>
-        </row>
-        <row>
-          <div className="col-md-12">
-            <h3>Email Notifications </h3>
-          </div>
-        </row>
-        <row>
-          <div className="col-md-10">
-            <p>We will use this email address when someone comments on a post.: iamgroot@guardians.galaxy (<a href="">change address</a>).</p>
-          </div>
-          <div className="col-md-2">
-            <Toggle
-              label=""
-              style={styles.toggle} />
-          </div>
-        </row>
-        <row>
-          <div className="col-md-3">
-            <h4>Frequency</h4>
-            <p>Send me email notifications:</p>
-          </div>
-          <div className="col-md-3">
-             <RadioButtonGroup name="freq" defaultSelected="not_light">
-                <RadioButton
-                   value="light"
-                   label="Hourly"
-                   style={styles.radioButton}
-                   />
-                <RadioButton
-                   value="light2"
-                   label="Weekly"
-                   style={styles.radioButton}
-                   />
-             </RadioButtonGroup>
-          </div>
-          <div className="col-md-5">
-            <Checkbox
-              label="Daily Snapshot"
-              style={styles.checkbox}
-              />
-             <p>Showing what happened yesterday in all my projects.</p>
-          </div>
-        </row>
-        <row>
-          <div className="col-md-12">
-             <hr/>
-          </div>
-        </row>
-        <row>
-          <div className="col-md-3">
-            <h3>Security </h3>
-          </div>
-          <div className="col-md-3">
-            <PPInput
-                type='password'
-                label="Current Password"
-                value={this.state.current_pw}
-                onChange={this.handleChange.bind(this, 'current_pw')}
-              />
-          </div>
-          <div className="col-md-4">
-            <PPInput
-                type='password'
-                label="New Password"
-                value={this.state.new_pw}
-                onChange={this.handleChange.bind(this, 'new_pw')}
-              />
-            <br />
-          </div>
-        </row>
-        <RaisedButton label="Cancel" style={style1} />
-        <RaisedButton label="Update" type="submit" value="submit" primary={true} style={style2} />
-      </form>
+            <row>
+              <div className="col-md-3">
+                <h5 style={{marginLeft: '0px', color:'#9d9d9d'}}>Profile Picture</h5>< br/>
+                <Avatar src={this.state.avatar}  onClick={this.handleTouchUp} style={{  position:'relative',top:"-25px",left:'0px', width:'180px', height:'180px', borderRadius:'0' }}/>
+                <FlatButton label="Change Media" onClick={this.openFilePicker} style={{  position:'relative',top:"-25px",width:'180px', right:'0px',color:'#000' }} />
+              </div>
+              <div className="col-md-9">
+                <row>
+                  <div className="col-md-6">
+                    <PPInput
+                        type='text'
+                        label="Full Name"
+                        required
+                        value={this.state.full_name}
+                        onChange={this.handleChange.bind(this, 'full_name')}
+                      />
+                    <br />
+                    <PPInput
+                        type='text'
+                        label="Company Name"
+                        value={this.state.company_name}
+                        onChange={this.handleChange.bind(this, 'company_name')}
+                      />
+                    <br />
+                    <PPInput
+                        type='text'
+                        label="Your Title"
+                        value={this.state.your_title}
+                        onChange={this.handleChange.bind(this, 'your_title')}
+                      />
+                  </div>
+                  <div className="col-md-6">
+                    <PPInput
+                        type='email'
+                        label="Your Email"
+                        value={this.state.your_email}
+                        onChange={this.handleChange.bind(this, 'your_email')}
+                      />
+                    <br />
+                    <PPInput
+                        type='tel'
+                        label="Phone Number"
+                        value={this.state.phone_number}
+                        onChange={this.handleChange.bind(this, 'phone_number')}
+                      />
+                    <br />
+                    <PPInput
+                        type='text'
+                        label="Time Zone"
+                        required
+                        value={this.state.time_zone}
+                        onChange={this.handleChange.bind(this, 'time_zone')}
+                      />
+                  </div>
+                </row>
+              </div>
+            </row>
+            <row>
+                <div className="col-md-12">
+                    <PPRaisedButton type="submit" label="Update" primary={ true } className={styles.submit}/>
+                </div>
+            </row>
+        </form>
+          
+        <form onSubmit={this.handleSubmit}>
+            <row>
+              <div className="col-md-12">
+                <hr/>
+              </div>
+            </row>
+            <row>
+              <div className="col-md-12">
+                <h3>Email Notifications </h3>
+              </div>
+            </row>
+            <row>
+              <div className="col-md-3">
+                <h4>Frequency</h4>
+                <p>Send me email notifications:</p>
+              </div>
+              <div className="col-md-4">
+                 <RadioButtonGroup name="digest" onChange={this.onRadioNotify} defaultSelected={this.state.email_notifications}>
+                    <RadioButton
+                       style={inline.radioButton}
+                       value="hourly_digest"
+                       label="Hourly"
+                      />
+                    <RadioButton
+                       style={inline.radioButton}
+                       value="daily_digest"
+                       label="Daily"
+                      />
+                 </RadioButtonGroup>
+              </div>
+              <div className="col-md-5">
+                <Toggle
+                  label="Daily Snapshot"
+                  style={inline.toggle} />
+                 <p>Showing what happened yesterday in all my projects.</p>
+              </div>
+            </row>
+            <row>
+                <div className="col-md-12">
+                    <PPRaisedButton type="submit" label="Update" primary={ true } className={styles.submit}/>
+                </div>
+            </row>
+        </form>
+        <form>
+            <row>
+              <div className="col-md-12">
+                 <hr/>
+              </div>
+            </row>
+            <row>
+              <div className="col-md-3">
+                <h3>Security </h3>
+              </div>
+              <div className="col-md-9">
+                <row>
+                  <div className="col-md-6">
+                    <PPInput
+                        type='password'
+                        label="Current Password"
+                        value={this.state.current_pw}
+                        onChange={this.handleChange.bind(this, 'current_pw')}
+                      />
+                  </div>
+                  <div className="col-md-6">
+                    <PPInput
+                        type='password'
+                        label="New Password"
+                        value={this.state.new_pw}
+                        onChange={this.handleChange.bind(this, 'new_pw')}
+                      />
+                  </div>
+                </row>
+              </div>
+            </row>
+            <row>
+                <div className="col-md-12">
+                    <PPRaisedButton type="submit" label="Update" primary={ true } className={styles.submit}/>
+                </div>
+            </row>
+        </form>
+      </div>
     );
   }
 }
 
 export function mapDispatchToProps(dispatch) {
-  return {}
+  return {
+    update: (data) => dispatch(updateRequest(data)),
+  };
 }
 
 const mapStateToProps = createStructuredSelector({
   user: makeSelectUser(),
+  user_own_account: makeSelectUserAccount(),
   filePickerKey: makeSelectFilePickerKey(),
   // userAvatar: makeSelectUserAvator()
 });

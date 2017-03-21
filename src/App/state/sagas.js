@@ -14,6 +14,7 @@ import {
   SENDING_REQUEST,
   LOGIN_REQUEST,
   REGISTER_REQUEST,
+  UPDATE_REQUEST,
   SET_AUTH,
   LOGOUT,
   CHANGE_FORM,
@@ -50,6 +51,42 @@ export function * authorize ({name, email, password, isRegistering}) {
     } else {
       response = yield call(auth.login, email, password);
     }
+    return response;
+    
+  } catch (error) {
+    console.log('hi');
+    // If we get an error we send Redux the appropiate action and return
+    yield put({type: REQUEST_ERROR, error: error.message});
+
+    return false;
+  } finally {
+    // When done, we tell Redux we're not in the middle of a request any more
+    yield put({type: SENDING_REQUEST, sending: false});
+  }
+}
+
+/**
+ * Effect to handle authorization
+ * @param  {string} username               The username of the user
+ * @param  {string} password               The password of the user
+ * @param  {object} options                Options
+ * @param  {boolean} options.isRegistering Is this a register request?
+ */
+export function * authorizeUpdate (data) {
+  // We send an action that tells Redux we're sending a request
+  yield put({type: SENDING_REQUEST, sending: true});
+
+  // We then try to register or log in the user, depending on the request
+  try {
+   // let salt = genSalt(username);
+   // let hash = hashSync(password, salt);
+    let response;
+    // For either log in or registering, we call the proper function in the `auth`
+    // module, which is asynchronous. Because we're using generators, we can work
+    // as if it's synchronous because we pause execution until the call is done
+    // with `yield`!
+
+    response = yield call(auth.update, data);
     return response;
     
   } catch (error) {
@@ -160,6 +197,29 @@ export function * registerFlow () {
   }
 }
 
+/**
+ * Update saga
+ * Very similar to register saga!
+ */
+export function * updateFlow () {
+  while (true) {
+    // We always listen to `REGISTER_REQUEST` actions
+    let request = yield take(UPDATE_REQUEST);
+    let data = request.data;
+
+    // We call the `authorize` task with the data, telling it that we are registering a user
+    // This returns `true` if the registering was successful, `false` if not
+    let wasSuccessful = yield call(authorizeUpdate, data);
+    console.log("wasSuccessful",wasSuccessful);
+    // If we could register a user, we send the appropiate actions
+    if (wasSuccessful) {
+      yield put({type: SET_AUTH, newAuthState: true}); // User is logged in (authorized) after being registered
+      yield put({type: CHANGE_FORM, newFormState: {name: '', password: ''}}); // Clear form
+      forwardTo('/dashboard'); // Go to dashboard page
+    }
+  }
+}
+
 export function * userExistsFlow() {
   while(true) {
     let request = yield take(CHECK_USER_OBJECT);
@@ -180,6 +240,7 @@ export default [
   loginFlow,
   logoutFlow,
   registerFlow,
+  updateFlow,
   userExistsFlow
 ];
 

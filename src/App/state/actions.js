@@ -6,6 +6,7 @@ import {
   SENDING_REQUEST,
   LOGIN_REQUEST,
   REGISTER_REQUEST,
+  UPDATE_REQUEST,
   LOGOUT,
   REQUEST_ERROR,
   CLEAR_ERROR,
@@ -63,6 +64,20 @@ export function logout () {
  */
 export function registerRequest (data) {
   return {type: REGISTER_REQUEST, data};
+}
+
+/**
+ * Tells the app we want to update a user
+ * @param  {object} data          The data we're sending for user setting
+ * @param  {string} name          The fullname of the user to update
+ * @param  {string} company_name  The company name of the user to update
+ * @param  {string} title         The title of the user to update
+ * @param  {string} email         The email of the user to update
+ * @param  {string} phone_number  The phone number of the user to update
+ * @param  {string} time_zone     The time zone of the user to update
+ */
+export function updateRequest (data) {
+  return {type: UPDATE_REQUEST, data};
 }
 
 /**
