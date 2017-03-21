@@ -93,11 +93,11 @@ let auth = {
             });
      },
      
-      /**
-      * Update a user setting
+     /**
+      * Update a account object
       * 
       */
-     update(data) {
+     updateAccount(data) {
         const account_data = {
             payload:{
               title: data.title,
@@ -113,21 +113,28 @@ let auth = {
               }
             }
         };
+        
         const headers = { headers:{'X-API-KEY': cookie.load('token') }};
-        var url = API_URL + `/account_api/account/${data.account_id}`;
-        axios.put(url, account_data, headers)
+        const url = API_URL + `/account_api/account/${data.account_id}`;
+        return axios.put(url, account_data, headers)
             .then(response => {
                 console.log('response:' + response);
+                return response.data;
             })
             .catch((error) => {
                 console.log(error.response);
             });
-        
-        // ---------------------------------------------------
+     },
+     
+     /**
+      * Update a user object
+      * 
+      */
+     updateUser(data) {
         const user_data = {
             payload:{
                 display_name: data.name,
-                password: "*****",
+                password: data.password ? data.password : "*****",
                 email: data.email,
                 properties:{
                     thumbnail_image_key: data.avatar,
@@ -137,15 +144,17 @@ let auth = {
             }
         };
         
-        url = API_URL + '/user_api/user';
+        const headers = { headers:{'X-API-KEY': cookie.load('token') }};
+        const url = API_URL + '/user_api/user';
         return axios.put(url, user_data, headers)
             .then(response => {
                 console.log('response:' + response);
+                return response.data;
             })
             .catch((error) => {
                 console.log(error.response);
             });
-    }
+     }
 };
 
 export default auth;

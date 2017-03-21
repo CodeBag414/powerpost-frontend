@@ -80,15 +80,17 @@ export function * authorizeUpdate (data) {
   try {
    // let salt = genSalt(username);
    // let hash = hashSync(password, salt);
-    let response;
+    let responseUser;
+    let responseAccount;
     // For either log in or registering, we call the proper function in the `auth`
     // module, which is asynchronous. Because we're using generators, we can work
     // as if it's synchronous because we pause execution until the call is done
     // with `yield`!
 
-    response = yield call(auth.update, data);
-    return response;
-    
+    responseUser = yield call(auth.updateUser, data);
+    responseAccount = yield call(auth.updateAccount, data);
+    if(responseUser && responseAccount)
+      return true;
   } catch (error) {
     console.log('hi');
     // If we get an error we send Redux the appropiate action and return
@@ -211,10 +213,10 @@ export function * updateFlow () {
     // This returns `true` if the registering was successful, `false` if not
     let wasSuccessful = yield call(authorizeUpdate, data);
     console.log("wasSuccessful",wasSuccessful);
-    toastr.success('Success!', 'User setting is updated.');
     
     // If we could register a user, we send the appropiate actions
     if (wasSuccessful) {
+      toastr.success('Success!', 'User setting is updated.');
       yield put({type: SET_AUTH, newAuthState: true}); // User is logged in (authorized) after being registered
       yield put({type: CHANGE_FORM, newFormState: {name: '', password: ''}}); // Clear form
       forwardTo('/dashboard'); // Go to dashboard page
