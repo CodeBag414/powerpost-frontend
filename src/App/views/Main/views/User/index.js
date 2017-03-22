@@ -13,8 +13,8 @@ import {
 
 import Avatar from 'material-ui/Avatar';
 import Toggle from 'material-ui/Toggle';
-import FlatButton from 'material-ui/FlatButton';
 import PPInput from 'App/shared/atm.Input';
+import FlatButton from 'material-ui/FlatButton';
 import PPRaisedButton from 'App/shared/atm.RaisedButton';
 import {RadioButton,RadioButtonGroup} from 'material-ui/RadioButton';
 
@@ -53,6 +53,7 @@ class settingsUser extends Component {
     this.state = {
       value: 1,
       avatar: avatar ? avatar : '',
+      avatar_key: '',
       full_name: user ? user.display_name : '',
       company_name: 'PowerPost',
       your_title: user_own_account ? user_own_account.title: '',
@@ -65,7 +66,7 @@ class settingsUser extends Component {
     };
   }
   
-  state = {avatar: '', full_name: '', company_name: '', your_title: '', your_email: '',
+  state = {full_name: '', company_name: '', your_title: '', your_email: '',
            phone_number: '', time_zone: '', new_pw: '', confirm_new_pw: ''};
            
   handleChange = (name, value) => {
@@ -82,7 +83,7 @@ class settingsUser extends Component {
     
     const account_id = this.props.user_own_account.account_id;
     
-    var data = {avatar: this.state.avatar,
+    var data = {avatar_key: this.state.avatar_key,
                 name: this.state.full_name,
                 title: this.state.your_title,
                 email: this.state.your_email,
@@ -111,6 +112,8 @@ class settingsUser extends Component {
     this.setState({
       open: false
     });
+    
+    const _this = this;
     const filepicker = require('filepicker-js');
     filepicker.setKey(this.props.filePickerKey);
 
@@ -125,18 +128,24 @@ class settingsUser extends Component {
       conversions: ['crop', 'filter'],
     };
     
-    const filePickerStoreOptions = {
+    const fileStoreOptions = {
       location: 'S3'
     };
 
-    function onFail(error) {
-      console.log('error: ' + error);
-    }
-
-    filepicker.pick(filePickerOptions, this.handleFilePickerSuccess, onFail);
-  }
-
-  handleFilePickerSuccess(mediaItem) {
+    filepicker.pickAndStore(
+      filePickerOptions,
+      fileStoreOptions,
+      function(Blobs) {
+        _this.setState({avatar: Blobs[0].url});
+        _this.setState({avatar_key: Blobs[0].key});
+      },
+      function(error){
+        _this.setState({avatar_key: ''});
+      },
+      function(progress){
+        console.log(JSON.stringify(progress));
+      }
+    );
   }
   
   onRadioNotify(event, value) {
@@ -146,7 +155,6 @@ class settingsUser extends Component {
   
   render() {
     const styles = require('./styles.scss');
-    
     const inline = {
         radioButton: {
             width: '50%',
@@ -317,8 +325,7 @@ export function mapDispatchToProps(dispatch) {
 const mapStateToProps = createStructuredSelector({
   user: makeSelectUser(),
   user_own_account: makeSelectUserAccount(),
-  filePickerKey: makeSelectFilePickerKey(),
-  // userAvatar: makeSelectUserAvator()
+  filePickerKey: makeSelectFilePickerKey()
 });
 
 export default (connect(mapStateToProps, mapDispatchToProps)(settingsUser));

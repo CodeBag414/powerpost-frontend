@@ -102,7 +102,7 @@ let auth = {
             payload:{
               title: data.title,
               properties:{
-                 thumbnail_image_key: data.avatar,
+                 thumbnail_image_key: data.avatar_key,
                  phone_number: data.phone_number
               }
             }
@@ -131,7 +131,7 @@ let auth = {
                 password: data.new_pw ? data.new_pw : "*****",
                 email: data.email,
                 properties:{
-                    thumbnail_image_key: data.avatar,
+                    thumbnail_image_key: data.avatar_key,
                     timezone_id: data.time_zone,
                     receive_notifications: data.email_notifications
                 }
