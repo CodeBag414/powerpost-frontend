@@ -28,10 +28,11 @@ class settingsUser extends Component {
     this.pwUpdate = this.pwUpdate.bind(this);
     this.onRadioNotify = this.onRadioNotify.bind(this);
 
-    const user = this.props.user ? this.props.user : null;
     var avatar = '';
     var time_zone = '';
     var receive_notifications = '';
+    const user = this.props.user ? this.props.user : null;
+    
     if (user) {
         if (user.properties) {
             var properties = user.properties;
@@ -41,17 +42,14 @@ class settingsUser extends Component {
         }
     }
     
-    const user_own_account = this.props.user_own_account ? this.props.user_own_account : null;
     var phone_number = '';
+    const user_own_account = this.props.user_own_account ? this.props.user_own_account : null;
+    
     if (user_own_account)
         if (user_own_account.properties)
             phone_number = user_own_account.properties.phone_number ? user_own_account.properties.phone_number : '';
     
-    console.log("this.props.user",this.props.user);
-    console.log("this.props.user_own_account", user_own_account);
-    
     this.state = {
-      value: 1,
       avatar: avatar ? avatar : '',
       avatar_key: '',
       full_name: user ? user.display_name : '',
@@ -72,11 +70,6 @@ class settingsUser extends Component {
   handleChange = (name, value) => {
     this.setState({...this.state, [name]: value});
   };
-  
-  handleSubmit(event) {
-    alert('Updates were submitted: ' + this.state.value);
-    event.preventDefault();
-  }
   
   profileUpdate(event) {
     event.preventDefault();
@@ -164,6 +157,25 @@ class settingsUser extends Component {
         toggle: {
             width: 150,
             marginTop: 10,
+        },
+        avatar: {
+            position:'relative',
+            top:"-25px",
+        },
+        avatarImg: {
+            left:'0px',
+            width:'180px',
+            height:'180px',
+            borderRadius:'0'
+        },
+        updateAvatar: {
+            position:'absolute',
+            top: 0,
+            width:'180px',
+            height: '180px',
+            left: 0,
+            right: 0,
+            color:'#fff'
         }
     };
     
@@ -178,8 +190,18 @@ class settingsUser extends Component {
             <row>
               <div className="col-md-3">
                 <h5 style={{marginLeft: '0px', color:'#9d9d9d'}}>Profile Picture</h5>< br/>
-                <Avatar src={this.state.avatar}  onClick={this.handleTouchUp} style={{  position:'relative',top:"-25px",left:'0px', width:'180px', height:'180px', borderRadius:'0' }}/>
-                <FlatButton label="Change Media" onClick={this.openFilePicker} style={{  position:'relative',top:"-25px",width:'180px', right:'0px',color:'#000' }} />
+                <div style={inline.avatar}>
+                  <Avatar
+                      src={this.state.avatar}
+                      style={inline.avatarImg}
+                      onClick={this.openFilePicker}
+                    />
+                  <FlatButton
+                      label="Update Photo"
+                      style={inline.updateAvatar}
+                      onClick={this.openFilePicker}
+                    />
+                </div>
               </div>
               <div className="col-md-9">
                 <row>
