@@ -103,12 +103,6 @@ let auth = {
               title: data.title,
               properties:{
                  thumbnail_image_key: data.avatar,
-                 description:"test dave blah",
-                 facebook_url:"http:\/\/www.facebook.com\/eternium",
-                 twitter_url:"http:\/\/www.twitter.com\/powerpostapp",
-                 website_url:"https:\/\/www.powerpost.digital",
-                 newsletter_url:"https:\/\/www.powerpost.digital\/insights",
-                 store_url:"https:\/\/app.powerpost.digital",
                  phone_number: data.phone_number
               }
             }
@@ -134,7 +128,7 @@ let auth = {
         const user_data = {
             payload:{
                 display_name: data.name,
-                password: data.password ? data.password : "*****",
+                password: data.new_pw ? data.new_pw : "*****",
                 email: data.email,
                 properties:{
                     thumbnail_image_key: data.avatar,
