@@ -13,7 +13,6 @@ import {
 
 import Avatar from 'material-ui/Avatar';
 import Toggle from 'material-ui/Toggle';
-import Checkbox from 'material-ui/Checkbox';
 import FlatButton from 'material-ui/FlatButton';
 import PPInput from 'App/shared/atm.Input';
 import PPRaisedButton from 'App/shared/atm.RaisedButton';
@@ -26,6 +25,7 @@ class settingsUser extends Component {
 
     this.openFilePicker = this.openFilePicker.bind(this);
     this.profileUpdate = this.profileUpdate.bind(this);
+    this.pwUpdate = this.pwUpdate.bind(this);
     this.onRadioNotify = this.onRadioNotify.bind(this);
 
     const user = this.props.user ? this.props.user : null;
@@ -60,13 +60,13 @@ class settingsUser extends Component {
       phone_number: phone_number,
       time_zone: time_zone,
       email_notifications: receive_notifications,
-      current_pw: '',
-      new_pw: ''
+      new_pw: '',
+      confirm_new_pw: ''
     };
   }
   
   state = {avatar: '', full_name: '', company_name: '', your_title: '', your_email: '',
-           phone_number: '', time_zone: '', current_pw: '', new_pw: ''};
+           phone_number: '', time_zone: '', new_pw: '', confirm_new_pw: ''};
            
   handleChange = (name, value) => {
     this.setState({...this.state, [name]: value});
@@ -81,7 +81,6 @@ class settingsUser extends Component {
     event.preventDefault();
     
     const account_id = this.props.user_own_account.account_id;
-    const user_id = this.props.user.user_id;
     
     var data = {avatar: this.state.avatar,
                 name: this.state.full_name,
@@ -91,12 +90,21 @@ class settingsUser extends Component {
                 phone_number: this.state.phone_number,
                 company_name: this.state.company_name,
                 email_notifications: this.state.email_notifications,
-                current_pw: '',
                 new_pw: '',
-                account_id: account_id,
-                user_id: user_id};
+                account_id: account_id};
                 
     this.props.update(data);
+  }
+  
+  pwUpdate(event) {
+    event.preventDefault();
+    const account_id = this.props.user_own_account.account_id;
+    
+    if(this.state.new_pw == this.state.confirm_new_pw) {
+        var data = {new_pw: this.state.new_pw,
+                    account_id: account_id};
+        this.props.update(data);
+    }
   }
   
   openFilePicker() {
@@ -116,6 +124,7 @@ class settingsUser extends Component {
       services: ['COMPUTER', 'WEBCAM', 'VIDEO', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
       conversions: ['crop', 'filter'],
     };
+    
     const filePickerStoreOptions = {
       location: 'S3'
     };
@@ -216,14 +225,6 @@ class settingsUser extends Component {
               </div>
             </row>
             <row>
-                <div className="col-md-12">
-                    <PPRaisedButton type="submit" label="Update" primary={ true } className={styles.submit}/>
-                </div>
-            </row>
-        </form>
-          
-        <form onSubmit={this.handleSubmit}>
-            <row>
               <div className="col-md-12">
                 <hr/>
               </div>
@@ -265,7 +266,7 @@ class settingsUser extends Component {
                 </div>
             </row>
         </form>
-        <form>
+        <form onSubmit={this.pwUpdate}>
             <row>
               <div className="col-md-12">
                  <hr/>
@@ -280,17 +281,17 @@ class settingsUser extends Component {
                   <div className="col-md-6">
                     <PPInput
                         type='password'
-                        label="Current Password"
-                        value={this.state.current_pw}
-                        onChange={this.handleChange.bind(this, 'current_pw')}
+                        label="New Password"
+                        value={this.state.new_pw}
+                        onChange={this.handleChange.bind(this, 'new_pw')}
                       />
                   </div>
                   <div className="col-md-6">
                     <PPInput
                         type='password'
-                        label="New Password"
-                        value={this.state.new_pw}
-                        onChange={this.handleChange.bind(this, 'new_pw')}
+                        label="Confirm New Password"
+                        value={this.state.confirm_new_pw}
+                        onChange={this.handleChange.bind(this, 'confirm_new_pw')}
                       />
                   </div>
                 </row>
