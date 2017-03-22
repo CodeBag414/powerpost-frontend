@@ -13,7 +13,6 @@ import {
 
 import Avatar from 'material-ui/Avatar';
 import Toggle from 'material-ui/Toggle';
-import Checkbox from 'material-ui/Checkbox';
 import FlatButton from 'material-ui/FlatButton';
 import PPInput from 'App/shared/atm.Input';
 import PPRaisedButton from 'App/shared/atm.RaisedButton';
@@ -125,6 +124,7 @@ class settingsUser extends Component {
       services: ['COMPUTER', 'WEBCAM', 'VIDEO', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
       conversions: ['crop', 'filter'],
     };
+    
     const filePickerStoreOptions = {
       location: 'S3'
     };
