@@ -22,9 +22,15 @@ const makeSelectDialogShown = () => createSelector(
     (connections) => connections.get('dialogShown')
 );
 
+const makeSelectSocialUrls = () => createSelector(
+    selectConnections,
+    (connections) => connections.get('socialUrls')
+);
+
 export {
     makeSelectChannelFilter,
     makeSelectChannelType,
     makeSelectConnections,
-    makeSelectDialogShown
+    makeSelectDialogShown,
+    makeSelectSocialUrls,
 };

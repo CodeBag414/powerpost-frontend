@@ -12,15 +12,20 @@ import {
     setChannelFilter,
     setChannelType,
     setConnectionsList,
-    toggleDialog
+    toggleDialog,
+    getSocialUrl,
 } from './state/actions';
 
 import {
     makeSelectChannelFilter,
     makeSelectChannelType,
-    makeSelectConnections,
-    makeSelectDialogShown
+    makeSelectDialogShown,
 } from './state/selectors';
+
+import {
+    makeSelectAccountConnections,
+} from 'App/views/Main/state/selectors';
+
 
 class Connections extends React.Component {
     constructor(props) {
@@ -31,11 +36,15 @@ class Connections extends React.Component {
         this.setChannelFilter = this.setChannelFilter.bind(this);
         this.setChannelType = this.setChannelType.bind(this);
     }
-
+    
+    componentDidMount() {
+        this.props.getSocialUrl();
+    }
+    
     handleDialogToggle() {
         this.props.toggleDialogShown(!this.props.dialogShown);
     }
-
+    
     removeConnection(connectionId) {
         let connections = this.props.connections.slice(), connectionIndex;
 
@@ -91,12 +100,12 @@ class Connections extends React.Component {
 
     render() {
         return (
-            <div className="container">
+            <div>
                 <ConnectionsControlBar handleDialogToggle={this.handleDialogToggle} channels={this.getChannelTypes()}
                                        setChannelFilter={this.setChannelFilter} setChannelType={this.setChannelType}
                                        channelFilter={this.props.channelFilter} channelType={this.props.channelType} />
                 <ConnectionsList connections={this.getFilteredConnections()} removeConnection={this.removeConnection}/>
-                <AddConnectionDialog handleDialogToggle={this.handleDialogToggle} dialogShown={this.props.dialogShown}/>
+                <AddConnectionDialog handleDialogToggle={this.handleDialogToggle} dialogShown={this.props.dialogShown} getSocialUrl={this.props.getSocialUrl}/>
             </div>
         );
     }
@@ -109,14 +118,15 @@ export function mapDispatchToProps(dispatch) {
         setChannelFilter: channelFilter => dispatch(setChannelFilter(channelFilter)),
         setChannelType: channelType => dispatch(setChannelType(channelType)),
         setConnectionsListShown: connections => dispatch(setConnectionsList(connections)),
-        toggleDialogShown: isShown => dispatch(toggleDialog(isShown))
+        toggleDialogShown: isShown => dispatch(toggleDialog(isShown)),
+        getSocialUrl: () => dispatch(getSocialUrl()),
     };
 }
 
 const mapStateToProps = createStructuredSelector({
     channelFilter: makeSelectChannelFilter(),
     channelType: makeSelectChannelType(),
-    connections: makeSelectConnections(),
+    connections: makeSelectAccountConnections(),
     dialogShown: makeSelectDialogShown()
 });
 

@@ -114,7 +114,7 @@ class Sidebar extends React.Component {
                                 }
                             </div>
                             <PPMenu isSidebar selectable={true}>
-                                <ReactRouterMenuItem caption="Library" isSidebar icon={ <FontIcon>photo_library</FontIcon> }  to={ '/account/' + this.props.accountId } />
+                                <ReactRouterMenuItem caption="Library" isSidebar icon={ <FontIcon>photo_library</FontIcon> }  to={ '/account/' + this.props.accountId + '/library' } />
                                 <PPMenuDivider />
                                 <ReactRouterMenuItem caption="Calendar" isSidebar icon={ <FontIcon>date_range</FontIcon> } to={ '/account/' + this.props.accountId + '/calendar'} />
                                 <ReactRouterMenuItem caption="Workflow"  isSidebar icon={ <FontIcon>view_column</FontIcon> } to={ '/account/' + this.props.accountId + '/workflow' } />
@@ -134,7 +134,13 @@ class Sidebar extends React.Component {
                                 { this.props.accountPermissions && this.props.accountPermissions.indexOf('team') > -1 &&
                                     <ReactRouterMenuItem caption="Team" isSidebar icon={ <FontIcon>people</FontIcon>}  to={ '/account/' + this.props.accountId + '/team' } />
                                 }
-                                
+                                { this.props.activeBrand.connections &&
+                                    <Subheader style={{ color: '#C9C6Cf' }}>Social Feeds</Subheader>
+                                }
+                                { this.props.activeBrand.connections && this.props.activeBrand.connections.map((connection) => 
+                                        <ReactRouterMenuItem key={ connection.connection_id } caption={ connection.display_name } isSidebar icon={ <i className={ connection.channel_icon } /> } to={ '/account/' + this.props.accountId + '/feed/' + connection.connection_id } />
+                                    )
+                                }
                                 { this.props.activeBrand.account_type_id == 2 && 
                                     <Subheader style={{ color: '#C9C6CF' }}>Sub Accounts</Subheader>
                                 }
@@ -146,6 +152,7 @@ class Sidebar extends React.Component {
                                     </Link>      
                                     )
                                 }
+                                
                             </PPMenu>
                         </div>
                     }
@@ -162,7 +169,7 @@ class Sidebar extends React.Component {
                             <span>{ this.props.activeBrand.title ? this.props.activeBrand.title.slice(0,2).toUpperCase() : ''}</span>
                         </div>
                         <PPMenu isSidebar>
-                            <ReactRouterMenuItem isSidebar icon={ <FontIcon>photo_library</FontIcon> } style={{ width: '60px' }} to={ '/account/' + this.props.accountId }/>
+                            <ReactRouterMenuItem isSidebar icon={ <FontIcon>photo_library</FontIcon> } style={{ width: '60px' }} to={ '/account/' + this.props.accountId + '/library' }/>
                             <ReactRouterMenuItem isSidebar icon={ <FontIcon>date_range</FontIcon>} style={{ width: '60px' }} to={ '/account/' + this.props.accountId + '/calendar' } />
                             <ReactRouterMenuItem isSidebar icon={ <FontIcon>view_column</FontIcon> } style={{ width: '60px' }} to={ '/account/' + this.props.accountId + '/workflow' } />
                             <ReactRouterMenuItem isSidebar icon={ <FontIcon>list</FontIcon> } style={{ width: '60px' }}  to={ '/account/' + this.props.accountId + '/list' } />
