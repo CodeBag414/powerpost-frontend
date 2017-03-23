@@ -61,7 +61,6 @@ class Main extends React.Component{
         <div>
             <Nav accountPermissions = { this.props.accountPermissions } location={ this.props.location } logout={ this.props.logout } user={ this.props.user } handleMenuToggle={ this.handleMenuToggle } isMenuCollapsed = { this.props.menuCollapsed } activeBrand = { this.props.activeBrand } accountId = { this.props.params.account_id } userAccount = { this.props.userAccount } sharedAccounts = { this.props.sharedAccounts } subAccounts = { this.props.subAccounts } />
             <div className={[viewContentStyle, styles.viewContent].join(' ') }>
-                <h1>Dash container</h1>
                 { this.props.children }
             </div>
         </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import FontIcon from 'App/shared/atm.FontIcon';
 
 class ConnectionsListItem extends React.Component {
     constructor(props) {
@@ -17,9 +17,7 @@ class ConnectionsListItem extends React.Component {
 
     getStatusLabel(styles) {
         switch(this.props.connection.status) {
-            case '1': return <div className={styles.enabledLabel}>Enabled</div>;
             case '3': return <div className={styles.disconnectedLabel}><i className="fa fa-warning"></i> Reconnect</div>;
-            default: return <div className={styles.disabledLabel}>Disabled</div>;
         }
     }
 
@@ -32,17 +30,17 @@ class ConnectionsListItem extends React.Component {
 
         return (
             <div className={styles.connectionBlock}>
-                <div className="row">
-                    <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                        <span className={styles.connectionName}>{ this.props.connection.display_name }</span>
-                        <span className={this.getChannelClass(styles)}>
-                            <i className={this.props.connection.channel_icon}></i>
-                            <span className={styles.connectionType}>{this.getType()}</span>
-                        </span>
+                <div>
+                    <div className={ styles.connectionIcon }>
+                        <i className={ this.props.connection.channel_icon + ' ' + this.getChannelClass(styles)}></i>
                     </div>
-                    <div className={['col-xs-8', 'col-sm-8', 'col-md-8', 'col-lg-8'].join(' ')}>
+                    <div style={{ float: 'left' }}>
+                        <div className={styles.connectionName}>{ this.props.connection.display_name }</div>
+                        <div className={this.getChannelClass(styles)}>{this.getType()[0].toUpperCase() + this.getType().slice(1)}</div>
+                    </div>
+                    <div>
                         <div className={[styles.controlBlock, styles.removeBlock].join(' ')} onClick={this.remove}>
-                            <div><i className="fa fa-close"></i></div>
+                            <div><FontIcon value="clear"></FontIcon></div>
                             <div>Remove</div>
                         </div>
                         <div className={styles.controlBlock}>
@@ -58,8 +56,4 @@ class ConnectionsListItem extends React.Component {
 
 ConnectionsListItem.propTypes = {children: React.PropTypes.node};
 
-function mapStateToProps() {
-    return {};
-}
-
-export default connect(mapStateToProps, null)(ConnectionsListItem);
+export default ConnectionsListItem;

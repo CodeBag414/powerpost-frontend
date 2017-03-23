@@ -29,7 +29,8 @@ let initialState = fromJS({
         user_access: {
             permissions: []
         },
-        subAccounts: []
+        subAccounts: [],
+        connections: [{}],
     },
     isFetchingAccount: true,
     fetchingError: false
@@ -57,7 +58,8 @@ function dashboardReducer (state = initialState, action) {
             .setIn(['activeBrand', 'subscriptions'], action.account.data.account.subscriptions)
             .setIn(['activeBrand', 'account_access','permissions'], action.account.data.account.account_access.permissions)
             .setIn(['activeBrand', 'user_access', 'permissions'], action.account.data.account.user_access.permissions)
-            .setIn(['activeBrand', 'subAccounts'], action.account.data.account.subaccounts);
+            .setIn(['activeBrand', 'subAccounts'], action.account.data.account.subaccounts)
+            .setIn(['activeBrand', 'connections'], action.account.data.account.connections);
     case FETCH_ACCOUNT_ERROR:
         return state
             .set('isFetchingAccount', false)

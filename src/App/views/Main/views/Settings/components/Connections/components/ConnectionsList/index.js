@@ -1,13 +1,13 @@
 import React from 'react';
-import {connect} from 'react-redux';
 
-import ConnectionsListItem from './views/ConnectionsListItem';
+
+import ConnectionsListItem from './components/ConnectionsListItem';
 
 class ConnectionsList extends React.Component {
     constructor(props) {
         super(props);
     }
-
+    
     render() {
         let connectionsList;
 
@@ -24,7 +24,7 @@ class ConnectionsList extends React.Component {
         }
 
         return (
-            <div className="row">
+            <div>
                 { connectionsList }
             </div>
         );
@@ -35,8 +35,4 @@ ConnectionsList.propTypes = {
     children: React.PropTypes.node
 };
 
-function mapStateToProps() {
-    return {};
-}
-
-export default connect(mapStateToProps, null)(ConnectionsList);
+export default ConnectionsList;
