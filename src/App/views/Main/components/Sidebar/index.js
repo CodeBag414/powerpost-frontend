@@ -128,30 +128,23 @@ class Sidebar extends React.Component {
                                 { this.props.accountPermissions && this.props.accountPermissions.indexOf('connections') > -1 &&
                                     <div>
                                         <PPMenuDivider />
-                                        <ReactRouterMenuItem caption="Connections" isSidebar icon={ <FontIcon>open_in_browser</FontIcon> }  to={ '/account/' + this.props.accountId + '/connections' } />
+                                        <ReactRouterMenuItem caption="Connections" isSidebar icon={ <FontIcon>open_in_browser</FontIcon> }  to={ '/account/' + this.props.accountId + '/settings/connections' } />
                                     </div>
                                 }
                                 { this.props.accountPermissions && this.props.accountPermissions.indexOf('team') > -1 &&
-                                    <ReactRouterMenuItem caption="Team" isSidebar icon={ <FontIcon>people</FontIcon>}  to={ '/account/' + this.props.accountId + '/team' } />
+                                    <ReactRouterMenuItem caption="Team" isSidebar icon={ <FontIcon>people</FontIcon>}  to={ '/account/' + this.props.accountId + '/settings/team' } />
+                                }
+                                { this.props.activeBrand.account_type_id == 6 && 
+                                    <ReactRouterMenuItem caption="Brands" isSidebar icon={ <FontIcon>library_add</FontIcon>} to={ '/account/' + this.props.accountId + '/brands'} />
                                 }
                                 { this.props.activeBrand.connections &&
                                     <Subheader style={{ color: '#C9C6Cf' }}>Social Feeds</Subheader>
                                 }
                                 { this.props.activeBrand.connections && this.props.activeBrand.connections.map((connection) => 
-                                        <ReactRouterMenuItem key={ connection.connection_id } caption={ connection.display_name } isSidebar icon={ <i className={ connection.channel_icon } /> } to={ '/account/' + this.props.accountId + '/feed/' + connection.connection_id } />
+                                        <ReactRouterMenuItem key={ connection.connection_id + Date.now() } caption={ connection.display_name } isSidebar icon={ <i className={ connection.channel_icon } /> } to={ '/account/' + this.props.accountId + '/feed/' + connection.connection_id } />
                                     )
                                 }
-                                { this.props.activeBrand.account_type_id == 2 && 
-                                    <Subheader style={{ color: '#C9C6CF' }}>Sub Accounts</Subheader>
-                                }
-                                { this.props.activeBrand.subAccounts && this.props.activeBrand.subAccounts.map((account) => 
-                                    <Link to={'/account/' + account.account_id } key={ account.account_id }>
-                                        <div className={ styles.subBrandContainer }> 
-                                              <span> {account.title ? account.title.slice(0,2).toUpperCase() : ''} </span>
-                                        </div>
-                                    </Link>      
-                                    )
-                                }
+
                                 
                             </PPMenu>
                         </div>
@@ -177,10 +170,10 @@ class Sidebar extends React.Component {
                                 <ReactRouterMenuItem isSidebar icon={ <FontIcon>insert_chart</FontIcon> } style={{ width: '60px' }} to={ '/account/' + this.props.accountId + '/statistics' } />
                             }
                             { this.props.accountPermissions && this.props.accountPermissions.indexOf('connections') > -1 &&
-                                <ReactRouterMenuItem isSidebar icon={ <FontIcon>open_in_browser</FontIcon> } style={{ width: '60px' }} to={ '/account/' + this.props.accountId + '/connections' } />
+                                <ReactRouterMenuItem isSidebar icon={ <FontIcon>open_in_browser</FontIcon> } style={{ width: '60px' }} to={ '/account/' + this.props.accountId + '/settings/connections' } />
                             }
                             { this.props.accountPermissions && this.props.accountPermissions.indexOf('team') > -1 &&
-                            <ReactRouterMenuItem isSidebar icon={ <FontIcon>people</FontIcon> } style={{ width: '60px' }} to={ '/account/' + this.props.accountId + '/connections' } />
+                            <ReactRouterMenuItem isSidebar icon={ <FontIcon>people</FontIcon> } style={{ width: '60px' }} to={ '/account/' + this.props.accountId + 'settings/team' } />
                             }
                         </PPMenu>
                 </div>
