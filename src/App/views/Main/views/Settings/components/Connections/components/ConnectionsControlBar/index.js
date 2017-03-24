@@ -1,0 +1,67 @@
+import React from 'react';
+import {connect} from 'react-redux';
+
+import PPButton from 'App/shared/atm.Button';
+import MenuItem from 'material-ui/MenuItem';
+import PPSelectField from 'App/shared/atm.SelectField';
+import PPInput from 'App/shared/atm.Input';
+import PPButtonInput from 'App/shared/atm.ButtonInput';
+
+class ConnectionsControlBar extends React.Component {
+    constructor(props) {
+        super(props);
+        this.setChannelFilter = this.setChannelFilter.bind(this);
+        this.setChannelType = this.setChannelType.bind(this);
+    }
+
+    setChannelFilter(e) {
+        this.props.setChannelFilter(e);
+    }
+
+    setChannelType(event, index, value) {
+        this.props.setChannelType(value);
+    }
+
+    render() {
+        const styles = require('./styles.scss');
+
+        let channelTypes = [<MenuItem value="" primaryText="All Types" key="" />];
+        this.props.channels.forEach(channel => {
+            channelTypes.push(<MenuItem value={channel} primaryText={channel} key={channel} />);
+        });
+
+        return (
+            <div className={ ['row', styles.mainBlock].join(' ') }>
+                <div
+                    className={ ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-3', styles.noLeftPadding].join(' ') }>
+                    <h3 className={ [styles.noMargin, styles.verticalAlign ].join(' ') }>Connected Accounts</h3>
+                </div>
+                <div
+                    className={ ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-3', styles.noLeftPadding, styles.verticalAlign].join(' ') }>
+                    <PPButton label="Connect a New Channel" primary onClick={ this.props.handleDialogToggle } />
+                </div>
+                <div
+                    className={ ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-3', styles.noLeftPadding].join(' ') }>
+                    <div className={[styles.filterBlock, styles.channelTypeBlock].join(' ')}>
+                        <PPSelectField onChange={this.setChannelType} value={this.props.channelType} underlineShow={false}>
+                            { channelTypes }
+                        </PPSelectField>
+                    </div>
+                </div>
+                <div
+                    className={ ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-3', styles.noLeftPadding].join(' ') }>
+                        <PPButtonInput value={ this.props.channelFilter } type="text" hint="Search" icon="search"
+                                   onChange={ this.setChannelFilter }/>
+                </div>
+            </div>
+        );
+    }
+}
+
+ConnectionsControlBar.propTypes = {children: React.PropTypes.node};
+
+function mapStateToProps() {
+    return {};
+}
+
+export default connect(mapStateToProps, null)(ConnectionsControlBar);

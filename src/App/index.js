@@ -9,16 +9,15 @@
 import React from 'react';
 
 class App extends React.Component{
-    
-    /*shouldComponentUpdate(nextProps) {
-        // performance workaround until react-router-redux fixes https://github.com/reactjs/react-router-redux/issues/481
-       // return nextProps.location.action === 'POP';
-    }*/
-  
+    constructor(props) {
+        super(props);
+    }
+    componentWillUpdate() {
+
+    }
     render() {
         return(
-            <div>
-                <h1>App container</h1>
+            <div style={{ width: '100%', height: '100%' }}>
                 {React.Children.toArray(this.props.children)}
             </div>
         );
@@ -28,5 +27,6 @@ class App extends React.Component{
 App.propTypes = {
     children: React.PropTypes.node,
 };
+
 
 export default App;

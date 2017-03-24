@@ -8,7 +8,8 @@ import {
   REGISTER_REQUEST,
   LOGOUT,
   REQUEST_ERROR,
-  CLEAR_ERROR
+  CLEAR_ERROR,
+  CHECK_USER_OBJECT
 } from './constants';
 
 /**

@@ -7,20 +7,101 @@
  */
  
 import React from 'react';
-import TopNav from './components/TopNav';
+import {connect} from 'react-redux';
 
-export function Dashboard(props) {
-    return(
+import Nav from './components/Nav';
+
+import { UserIsAuthenticated } from '../../../config.routes/UserIsAuthenticated';
+import { UserCanAccount } from 'config.routes/UserRoutePermissions';
+import { makeSelectUser, 
+         makeSelectUserAccount,
+         makeSelectSharedAccounts,
+         makeSelectSubAccounts,
+         makeSelectUserAvatar,
+} from '../../state/selectors';
+
+import { checkUser,
+         logout
+} from '../../state/actions';
+
+import { toggleMenu,
+         fetchCurrentAccount,
+} from './state/actions';
+
+import { makeSelectMenuCollapsed,
+         makeSelectCurrentAccount,
+         makeSelectAccountPermissions
+} from './state/selectors';
+
+class Main extends React.Component{
+    constructor(props) {
+        super(props);
+        
+        this.handleMenuToggle = this.handleMenuToggle.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.params.account_id != this.props.params.account_id) {
+            this.props.fetchAccount(nextProps.params.account_id);
+        }
+    }
+    
+    componentDidMount() {
+        this.props.fetchAccount(this.props.params.account_id);  
+    }
+    
+    handleMenuToggle() {
+        this.props.toggleMenuCollapse(!this.props.menuCollapsed);    
+    }
+    
+    render() {
+        const styles = require('./styles.scss');
+        const viewContentStyle = this.props.menuCollapsed ? styles.viewContentCollapsed : styles.viewContentFull;
+        return(
         <div>
-            <h1>Dash container</h1>
-            <TopNav />
-            {React.Children.toArray(props.children)}
+            <Nav accountPermissions = { this.props.accountPermissions } location={ this.props.location } logout={ this.props.logout } user={ this.props.user } handleMenuToggle={ this.handleMenuToggle } isMenuCollapsed = { this.props.menuCollapsed } activeBrand = { this.props.activeBrand } accountId = { this.props.params.account_id } userAccount = { this.props.userAccount } sharedAccounts = { this.props.sharedAccounts } subAccounts = { this.props.subAccounts } />
+            <div className={[viewContentStyle, styles.viewContent].join(' ') }>
+                { this.props.children }
+            </div>
         </div>
     );
+    }
 }
 
-Dashboard.propTypes = {
+Main.propTypes = {
     children: React.PropTypes.node,
 };
 
-export default Dashboard;
+export function mapDispatchToProps(dispatch) {
+    return {
+        checkUserObject: (user) => dispatch(checkUser(user)),
+        toggleMenuCollapse: (isCollapsed) => dispatch(toggleMenu(isCollapsed)),
+        logout: () => dispatch(logout()),
+        fetchAccount: (accountId) => dispatch(fetchCurrentAccount(accountId))
+    };
+}
+
+const mapStateToProps = (initialState, initialProps) => {
+    const selectUser = makeSelectUser();
+    const selectMenuCollapsed = makeSelectMenuCollapsed();
+    const selectSharedAccounts = makeSelectSharedAccounts();
+    const selectActiveBrand = makeSelectCurrentAccount();
+    const selectSubAccounts = makeSelectSubAccounts();
+    const selectUserAccount = makeSelectUserAccount();
+    const selectUserAvatar = makeSelectUserAvatar();
+    const selectAccountPermissions = makeSelectAccountPermissions();
+    
+    return (state, ownProps) => ({
+        user: selectUser(state),
+        menuCollapsed: selectMenuCollapsed(state),
+        sharedAccounts: selectSharedAccounts(state),
+        activeBrand: selectActiveBrand(state),
+        subAccounts: selectSubAccounts(state),
+        userAccount: selectUserAccount(state),
+        userAvatar: selectUserAvatar(state),
+        accountPermissions: selectAccountPermissions(state),
+        location: ownProps.location
+    });
+};
+
+export default UserIsAuthenticated(connect(mapStateToProps, mapDispatchToProps)(Main));

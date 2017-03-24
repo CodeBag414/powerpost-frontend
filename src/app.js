@@ -15,43 +15,53 @@ import { useScroll } from 'react-router-scroll';
 import { syncHistoryWithStore } from 'react-router-redux';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import ReduxToastr from './lib/react-redux-toastr';
 
 //Needed for material-ui libarry
 injectTapEventPlugin();
 
 // import sanitize css
-import 'sanitize.css/sanitize.css';
+//import 'sanitize.css/sanitize.css';
+//import 'react-redux-toastr/src/styles/index.scss';
 
 import configureStore from './config.redux/store';
 
 // import selector for 'syncHistoryWithStore'
 import { makeSelectLocationState } from './config.redux/selectors';
-// root app
-import App from './App';
 
-import { createRoutes} from 'config.routes/routes';
+import auth from 'utils/auth';
+//import theme from 'lib/react-toolbox/theme';
+//import ThemeProvider from 'react-toolbox/lib/ThemeProvider';
+
+import { createRoutes} from './config.routes/routes';
+
+export const historyObj = browserHistory;
 
 // create redux store with history
 const initialState = {};
-const store = configureStore(initialState, browserHistory);
+const store = configureStore(initialState, historyObj);
 // sync history and store, as the react-router-redux reducer
-const history = syncHistoryWithStore(browserHistory, store, {
+const history = syncHistoryWithStore(historyObj, store, {
     selectLocationState: makeSelectLocationState(),
 });
 
-const rootRoute = createRoutes(store);
+
+const rootRoute = createRoutes(store,auth);
 
 ReactDOM.render(
-    <Provider store={store}>
         <MuiThemeProvider>
-            <Router
-                history={history}
-                routes={rootRoute}
-                render={
-                    // Scroll to top when going to new page, imitating default browser behavior
-                    applyRouterMiddleware(useScroll())
-                }
-            />
-        </MuiThemeProvider>
-    </Provider>, document.getElementById('app')
+            <Provider store={store}>
+                <div>
+                    <Router
+                            history={history}
+                            routes={rootRoute}
+                            render={
+                                // Scroll to top when going to new page, imitating default browser behavior
+                                applyRouterMiddleware(useScroll())
+                            }
+                        />
+                    <ReduxToastr />
+                </div>
+            </Provider>
+    </MuiThemeProvider>, document.getElementById('app')
 );

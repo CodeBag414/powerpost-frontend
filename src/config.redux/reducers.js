@@ -6,6 +6,10 @@
  import { fromJS } from 'immutable';
  import { combineReducers } from 'redux-immutable';
  import { LOCATION_CHANGE } from 'react-router-redux';
+ import {reducer as toastrReducer } from '../lib/react-redux-toastr';
+ 
+ import globalReducer from '../App/state/reducer';
+ 
  /**
   * routeReducer
   *
@@ -15,7 +19,7 @@
 
   // initial routing state
   const routeInitialState = fromJS({
-      locationBeforeTransition: null,
+      locationBeforeTransitions: null,
   });
 
   // merge route into the global application state
@@ -23,7 +27,7 @@
       switch(action.type) {
         case LOCATION_CHANGE:
             return state.merge({
-                locationBeforeTransition: action.payload,
+                locationBeforeTransitions: action.payload,
             });
         default:
             return state;
@@ -36,7 +40,9 @@
    */
   export default function createReducer(asyncReducers) {
       return combineReducers({
-          route: routeReducer,
+          routing: routeReducer,
+          toastr: toastrReducer,
+          auth: globalReducer,
           ...asyncReducers
       });
   }

@@ -12,20 +12,19 @@ import {connect} from 'react-redux';
 class Start extends React.Component {
     constructor(props) {
         super(props);
-       
+       console.log('render');
     }
-    
 
     render() {
         const childrenWithProps = React.Children.map(this.props.children,
             (child) => React.cloneElement(child, {
                 auth: this.props.auth
             }));
-        
+        console.log('rerender of app');
         return(
             <div>
                 <h1>Start container</h1>
-                { childrenWithProps }
+                 { this.props.children }
             </div>
         );
     }
@@ -41,4 +40,4 @@ function mapStateToProps(state) {
   };     
 }
 
-export default connect(mapStateToProps)(Start);
+export default connect(mapStateToProps, null)(Start);
