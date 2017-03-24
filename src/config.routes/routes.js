@@ -213,6 +213,23 @@ export function createRoutes(store, auth) {
         },
       },
       {
+        path: '/account(/:account_id)/brands',
+        name: 'brands',
+        getComponent(nextState,cb) {
+          const importModules = Promise.all([
+            System.import('../App/views/Main/views/Brands'),
+          ]);
+          
+          const renderRoute = loadModule(cb);
+          
+          importModules.then(([component]) => {
+            renderRoute(component);
+          });
+          
+          importModules.catch(errorLoading);
+        },
+      },
+      {
         path: '/account(/:account_id)/list',
         name: 'list',
         getComponent(nextState, cb) {

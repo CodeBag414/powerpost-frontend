@@ -134,6 +134,9 @@ class Sidebar extends React.Component {
                                 { this.props.accountPermissions && this.props.accountPermissions.indexOf('team') > -1 &&
                                     <ReactRouterMenuItem caption="Team" isSidebar icon={ <FontIcon>people</FontIcon>}  to={ '/account/' + this.props.accountId + '/settings/team' } />
                                 }
+                                { this.props.activeBrand.account_type_id == 6 && 
+                                    <ReactRouterMenuItem caption="Brands" isSidebar icon={ <FontIcon>library_add</FontIcon>} to={ '/account/' + this.props.accountId + '/brands'} />
+                                }
                                 { this.props.activeBrand.connections &&
                                     <Subheader style={{ color: '#C9C6Cf' }}>Social Feeds</Subheader>
                                 }
@@ -141,17 +144,7 @@ class Sidebar extends React.Component {
                                         <ReactRouterMenuItem key={ connection.connection_id + Date.now() } caption={ connection.display_name } isSidebar icon={ <i className={ connection.channel_icon } /> } to={ '/account/' + this.props.accountId + '/feed/' + connection.connection_id } />
                                     )
                                 }
-                                { this.props.activeBrand.account_type_id == 2 && 
-                                    <Subheader style={{ color: '#C9C6CF' }}>Sub Accounts</Subheader>
-                                }
-                                { this.props.activeBrand.subAccounts && this.props.activeBrand.subAccounts.map((account) => 
-                                    <Link to={'/account/' + account.account_id } key={ account.account_id }>
-                                        <div className={ styles.subBrandContainer }> 
-                                              <span> {account.title ? account.title.slice(0,2).toUpperCase() : ''} </span>
-                                        </div>
-                                    </Link>      
-                                    )
-                                }
+
                                 
                             </PPMenu>
                         </div>
