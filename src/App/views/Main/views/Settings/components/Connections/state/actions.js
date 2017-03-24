@@ -2,7 +2,9 @@ import {
     SET_CHANNEL_FILTER,
     SET_CHANNEL_TYPE,
     SET_CONNECTIONS_LIST,
-    TOGGLE_ADD_CONNECTION_DIALOG
+    TOGGLE_ADD_CONNECTION_DIALOG,
+    FETCH_SOCIAL_URL,
+    CONNECTION_CALLBACK,
 } from './constants';
 
 export function setChannelFilter(channelFilter) {
@@ -19,4 +21,12 @@ export function setConnectionsList(connections) {
 
 export function toggleDialog(shown) {
     return {type: TOGGLE_ADD_CONNECTION_DIALOG, shown};
+}
+
+export function getSocialUrl() {
+   return {type: FETCH_SOCIAL_URL }; 
+}
+
+export function connectionCallback(channelObject) {
+    return {type: CONNECTION_CALLBACK, channelObject};
 }

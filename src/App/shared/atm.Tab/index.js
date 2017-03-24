@@ -1,15 +1,10 @@
 import React from 'react';
-import {Tab, Tabs} from 'react-toolbox';
+import {Tab} from 'react-toolbox';
 
-export const PPTab = (props) => {
+const PPTab = (props) => {
     
     return(
-        <PPTab {...props} />
+        <Tab {...props} />
     );
 };
-
-export const PPTabs = (props) => {
-    return(
-        <PPTabs {...props} />
-    );
-}
+export default PPTab;

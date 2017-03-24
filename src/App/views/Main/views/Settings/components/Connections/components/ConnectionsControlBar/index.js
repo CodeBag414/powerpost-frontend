@@ -1,10 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import PPRaisedButton from 'App/shared/atm.RaisedButton';
+import PPButton from 'App/shared/atm.Button';
 import MenuItem from 'material-ui/MenuItem';
-import SelectField from 'App/shared/atm.SelectField';
+import PPSelectField from 'App/shared/atm.SelectField';
 import PPInput from 'App/shared/atm.Input';
+import PPButtonInput from 'App/shared/atm.ButtonInput';
 
 class ConnectionsControlBar extends React.Component {
     constructor(props) {
@@ -14,7 +15,7 @@ class ConnectionsControlBar extends React.Component {
     }
 
     setChannelFilter(e) {
-        this.props.setChannelFilter(e.target.value);
+        this.props.setChannelFilter(e);
     }
 
     setChannelType(event, index, value) {
@@ -30,30 +31,27 @@ class ConnectionsControlBar extends React.Component {
         });
 
         return (
-            <div className={['row', styles.mainBlock].join(' ')}>
+            <div className={ ['row', styles.mainBlock].join(' ') }>
                 <div
                     className={ ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-3', styles.noLeftPadding].join(' ') }>
-                    <h3 className={ [styles.noMargin].join(' ') }>Connected Accounts</h3>
+                    <h3 className={ [styles.noMargin, styles.verticalAlign ].join(' ') }>Connected Accounts</h3>
                 </div>
                 <div
-                    className={ ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-3', styles.noLeftPadding].join(' ') }>
-                    <PPRaisedButton label="Connect a New Channel" secondary={ true } onClick={ this.props.handleDialogToggle } />
+                    className={ ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-3', styles.noLeftPadding, styles.verticalAlign].join(' ') }>
+                    <PPButton label="Connect a New Channel" primary onClick={ this.props.handleDialogToggle } />
                 </div>
                 <div
                     className={ ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-3', styles.noLeftPadding].join(' ') }>
                     <div className={[styles.filterBlock, styles.channelTypeBlock].join(' ')}>
-                        <SelectField onChange={this.setChannelType} value={this.props.channelType} underlineShow={false}>
+                        <PPSelectField onChange={this.setChannelType} value={this.props.channelType} underlineShow={false}>
                             { channelTypes }
-                        </SelectField>
+                        </PPSelectField>
                     </div>
                 </div>
                 <div
                     className={ ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-3', styles.noLeftPadding].join(' ') }>
-                    <div className={[styles.filterBlock, styles.channelFilterBlock].join(' ')}>
-                        <i className={['fa', 'fa-search', styles.channelFilterIcon].join(' ')}></i>
-                        <PPInput value={ this.props.channelFilter } type="text" hintText="Find Channel"
-                                   onChange={ this.setChannelFilter } underlineShow ={ false }/>
-                    </div>
+                        <PPButtonInput value={ this.props.channelFilter } type="text" hint="Search" icon="search"
+                                   onChange={ this.setChannelFilter }/>
                 </div>
             </div>
         );

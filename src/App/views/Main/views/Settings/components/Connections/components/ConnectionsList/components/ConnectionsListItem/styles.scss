@@ -1,9 +1,18 @@
+@import '../../../../../../../../../../../globals.scss';
+
 $border-color: #E6E6E6;
 $block-vertical-padding: 15px;
 
 $label-primary-color: #EC0057;
 $label-secondary-color: #FFFFFF;
 
+.connectionIcon {
+  float:left;
+  margin-right: 20px;
+  i {
+    font-size: 40px;
+  }
+}
 .connectionBlock {
   border-bottom: 1px solid $border-color;
   padding: $block-vertical-padding 5px $block-vertical-padding 10px;
