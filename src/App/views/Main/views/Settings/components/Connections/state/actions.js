@@ -5,6 +5,7 @@ import {
     TOGGLE_ADD_CONNECTION_DIALOG,
     FETCH_SOCIAL_URL,
     CONNECTION_CALLBACK,
+    SET_SOCIAL_URLS,
 } from './constants';
 
 export function setChannelFilter(channelFilter) {
@@ -29,4 +30,7 @@ export function getSocialUrl() {
 
 export function connectionCallback(channelObject) {
     return {type: CONNECTION_CALLBACK, channelObject};
+}
+export function setSocialUrls(urls) {
+    return {type: SET_SOCIAL_URLS, urls};
 }

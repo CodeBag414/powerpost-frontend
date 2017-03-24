@@ -29,7 +29,7 @@ function connectionsReducer (state = initialState, action) {
             .set('connections', action.connections);
       case SET_SOCIAL_URLS:
           return state
-            .set('socialUrls', action.socialUrls);
+            .set('socialUrls', action.urls);
       case TOGGLE_ADD_CONNECTION_DIALOG:
           return state
             .set('dialogShown', action.shown);

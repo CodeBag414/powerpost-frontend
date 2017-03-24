@@ -41,33 +41,45 @@ class AddConnectionDialog extends React.Component {
             { name: 'Facebook Profile',
               icon: 'fa fa-facebook-square',
               text: 'Log into your Facebook to start sharing content',
-              channel: 'facebook'
+              channel: 'facebook',
+              url: this.props.socialUrls ? this.props.socialUrls.facebook : '',
             },
             { name: 'Facebook Page',
               icon: 'fa fa-facebook-square',
               text: 'Log into your Facebook to start sharing content',
-              channel: 'facebook'
+              channel: 'facebook',
+              url: this.props.socialUrls ? this.props.socialUrls.facebook : '',
             },
             { name: 'Twitter Profile',
               icon: 'fa fa-twitter-square',
               text: 'Log into your Twitter to start sharing content',
-              channel: 'twitter'
+              channel: 'twitter',
+              url: this.props.socialUrls ? this.props.socialUrls.twitter : ''
             },
             { name: 'LinkedIn Profile',
               icon: 'fa fa-linkedin-square',
               text: 'Log into your LinkedIn to start sharing content',
-              channel:'linkedin'
+              channel:'linkedin',
+              url: this.props.socialUrls ? this.props.socialUrls.linkedin : ''
             },
             { name: 'LinkedIn Company',
               icon: 'fa fa-linkedin-square',
               text: 'Log into your LinkedIn to start sharing content',
               channel: 'linkedin',
+              url: this.props.socialUrls ? this.props.socialUrls.linkedin : ''
             },
             { name: 'Pinterest Board',
               icon: 'fa fa-pinterest-square',
               text: 'Log into your Pinterest to start sharing content',
-              channel: 'pinterest'
+              channel: 'pinterest',
+              url: this.props.socialUrls ? this.props.socialUrls.pinterest : ''
             },
+            { name: 'Google Profile',
+              icon: 'fa fa-google-plus-square',
+              text: 'Log into your Google Plus account to start sharing content',
+              channel: 'google',
+              url: this.props.socialUrls ? this.props.socialUrls.google : ''
+            }
         ];
         
         const styles = require('./styles.scss');
@@ -81,7 +93,7 @@ class AddConnectionDialog extends React.Component {
                         <hr/>
                         <div>
                         { connectionTypes.map((connection, i) => 
-                            <div key={ i } className={ styles.connectionTypeContainer }><i className={ [connection.icon, styles.icon, this.getChannelClass(connection, styles)].join(' ') } /><div className={ styles.connectionType }><div className={ styles.connectionName }>{ connection.name }</div><div className={ styles.connectionDesc }>{ connection.text }</div></div><div className={ styles.buttonContainer }><PPButton label="Connect" neutral onClick={ () => this.props.getSocialUrl(connection.channel) } /></div></div>
+                            <div key={ i } className={ styles.connectionTypeContainer }><i className={ [connection.icon, styles.icon, this.getChannelClass(connection, styles)].join(' ') } /><div className={ styles.connectionType }><div className={ styles.connectionName }>{ connection.name }</div><div className={ styles.connectionDesc }>{ connection.text }</div></div><div className={ styles.buttonContainer }><PPButton label="Connect" neutral onClick={ () => window.open(connection.url) } /></div></div>
                         )}
                         </div>
                     </div>
@@ -111,8 +123,4 @@ class AddConnectionDialog extends React.Component {
 
 AddConnectionDialog.propTypes = {children: React.PropTypes.node};
 
-function mapStateToProps() {
-    return {};
-}
-
-export default connect(mapStateToProps, null)(AddConnectionDialog);
+export default AddConnectionDialog;
