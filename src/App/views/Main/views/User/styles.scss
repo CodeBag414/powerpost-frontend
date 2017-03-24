@@ -1,3 +1,22 @@
 .submit {
-  float: right;
+    float: right;
+}
+
+.updateAvatar {
+    position: absolute !important;
+    width: 180px;
+    height: 180px !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    color: #fff !important;
+
+    &:hover {
+        background-color: rgba(0,0,0,.5) !important;
+    }
+}
+
+.ppInput1 {
+    border: 1px solid #E81C64;
+    border-radius: 4px;
 }

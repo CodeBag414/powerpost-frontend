@@ -1,14 +1,13 @@
 /*
  * User View
  */
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {createStructuredSelector} from "reselect";
-import {updateRequest} from '../../../../state/actions';
-import {
-  makeSelectUser,
-  makeSelectUserAccount,
-  makeSelectFilePickerKey
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { updateRequest } from '../../../../state/actions';
+import { makeSelectUser,
+         makeSelectUserAccount,
+         makeSelectFilePickerKey
 } from '../../../../state/selectors';
 
 import Avatar from 'material-ui/Avatar';
@@ -16,7 +15,7 @@ import Toggle from 'material-ui/Toggle';
 import PPInput from 'App/shared/atm.Input';
 import FlatButton from 'material-ui/FlatButton';
 import PPRaisedButton from 'App/shared/atm.RaisedButton';
-import {RadioButton,RadioButtonGroup} from 'material-ui/RadioButton';
+import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 
 
 class settingsUser extends Component {
@@ -28,33 +27,35 @@ class settingsUser extends Component {
     this.pwUpdate = this.pwUpdate.bind(this);
     this.onRadioNotify = this.onRadioNotify.bind(this);
 
-    var avatar = '';
-    var time_zone = '';
-    var receive_notifications = '';
+    let avatar = '';
+    let time_zone = '';
+    let receive_notifications = '';
     const user = this.props.user ? this.props.user : null;
-    
+
     if (user) {
-        if (user.properties) {
-            var properties = user.properties;
-            avatar = properties.thumb_url ? properties.thumb_url : '';
-            time_zone = properties.timezone_id ? properties.timezone_id : '';
-            receive_notifications = properties.receive_notifications ? properties.receive_notifications : '';
-        }
+      if (user.properties) {
+        const properties = user.properties;
+        avatar = properties.thumb_url ? properties.thumb_url : '';
+        time_zone = properties.timezone_id ? properties.timezone_id : '';
+        receive_notifications = properties.receive_notifications ? properties.receive_notifications : '';
+      }
     }
-    
-    var phone_number = '';
+
+    let phone_number = '';
     const user_own_account = this.props.user_own_account ? this.props.user_own_account : null;
-    
-    if (user_own_account)
-        if (user_own_account.properties)
-            phone_number = user_own_account.properties.phone_number ? user_own_account.properties.phone_number : '';
-    
+
+    if (user_own_account) {
+      if (user_own_account.properties) {
+        phone_number = user_own_account.properties.phone_number ? user_own_account.properties.phone_number : '';
+      }
+    }
+
     this.state = {
       avatar: avatar ? avatar : '',
       avatar_key: '',
       full_name: user ? user.display_name : '',
       company_name: 'PowerPost',
-      your_title: user_own_account ? user_own_account.title: '',
+      your_title: user_own_account ? user_own_account.title : '',
       your_email: user ? user.email : '',
       phone_number: phone_number,
       time_zone: time_zone,
@@ -63,10 +64,18 @@ class settingsUser extends Component {
       confirm_new_pw: ''
     };
   }
-  
-  state = {full_name: '', company_name: '', your_title: '', your_email: '',
-           phone_number: '', time_zone: '', new_pw: '', confirm_new_pw: ''};
-           
+
+  state = {
+    full_name: '',
+    company_name: '',
+    your_title: '',
+    your_email: '',
+    phone_number: '',
+    time_zone: '',
+    new_pw: '',
+    confirm_new_pw: ''
+  };
+
   handleChange = (name, value) => {
     this.setState({...this.state, [name]: value});
   };
@@ -76,36 +85,38 @@ class settingsUser extends Component {
     
     const account_id = this.props.user_own_account.account_id;
     
-    var data = {avatar_key: this.state.avatar_key,
-                name: this.state.full_name,
-                title: this.state.your_title,
-                email: this.state.your_email,
-                time_zone: this.state.time_zone,
-                phone_number: this.state.phone_number,
-                company_name: this.state.company_name,
-                email_notifications: this.state.email_notifications,
-                new_pw: '',
-                account_id: account_id};
-                
+    var data = {
+      avatar_key: this.state.avatar_key,
+      name: this.state.full_name,
+      title: this.state.your_title,
+      email: this.state.your_email,
+      time_zone: this.state.time_zone,
+      phone_number: this.state.phone_number,
+      company_name: this.state.company_name,
+      email_notifications: this.state.email_notifications,
+      new_pw: '',
+      account_id: account_id
+    };
+
     this.props.update(data);
   }
-  
+
   pwUpdate(event) {
     event.preventDefault();
     const account_id = this.props.user_own_account.account_id;
-    
+
     if(this.state.new_pw == this.state.confirm_new_pw) {
         var data = {new_pw: this.state.new_pw,
                     account_id: account_id};
         this.props.update(data);
     }
   }
-  
+
   openFilePicker() {
     this.setState({
       open: false
     });
-    
+
     const _this = this;
     const filepicker = require('filepicker-js');
     filepicker.setKey(this.props.filePickerKey);
@@ -120,7 +131,7 @@ class settingsUser extends Component {
       services: ['COMPUTER', 'WEBCAM', 'VIDEO', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
       conversions: ['crop', 'filter'],
     };
-    
+
     const fileStoreOptions = {
       location: 'S3'
     };
@@ -140,12 +151,12 @@ class settingsUser extends Component {
       }
     );
   }
-  
+
   onRadioNotify(event, value) {
     event.preventDefault();
     this.setState({email_notifications: value});
   }
-  
+
   render() {
     const styles = require('./styles.scss');
     const inline = {
@@ -168,17 +179,12 @@ class settingsUser extends Component {
             height:'180px',
             borderRadius:'0'
         },
-        updateAvatar: {
-            position:'absolute',
-            top: 0,
-            width:'180px',
-            height: '180px',
-            left: 0,
-            right: 0,
-            color:'#fff'
+        ppInput: {
+            border: '1px solid #E81C64',
+            borderRadius: '4px'
         }
     };
-    
+
     return (
       <div>
         <form onSubmit={this.profileUpdate}>
@@ -189,7 +195,7 @@ class settingsUser extends Component {
             </row>
             <row>
               <div className="col-md-3">
-                <h5 style={{marginLeft: '0px', color:'#9d9d9d'}}>Profile Picture</h5>< br/>
+                <h5 style={{marginLeft: '0px', color:'#9d9d9d'}}>Profile Picture</h5> <br/>
                 <div style={inline.avatar}>
                   <Avatar
                       src={this.state.avatar}
@@ -198,7 +204,7 @@ class settingsUser extends Component {
                     />
                   <FlatButton
                       label="Update Photo"
-                      style={inline.updateAvatar}
+                      className={styles.updateAvatar}
                       onClick={this.openFilePicker}
                     />
                 </div>
@@ -209,6 +215,7 @@ class settingsUser extends Component {
                     <PPInput
                         type='text'
                         label="Full Name"
+                        style={styles.ppInput}
                         required
                         value={this.state.full_name}
                         onChange={this.handleChange.bind(this, 'full_name')}
@@ -292,7 +299,12 @@ class settingsUser extends Component {
             </row>
             <row>
                 <div className="col-md-12">
-                    <PPRaisedButton type="submit" label="Update" primary={ true } className={styles.submit}/>
+                  <PPRaisedButton
+                      type="submit"
+                      label="Update"
+                      primary={ true }
+                      className={styles.submit}
+                    />
                 </div>
             </row>
         </form>
@@ -329,7 +341,12 @@ class settingsUser extends Component {
             </row>
             <row>
                 <div className="col-md-12">
-                    <PPRaisedButton type="submit" label="Update" primary={ true } className={styles.submit}/>
+                  <PPRaisedButton
+                      type="submit"
+                      label="Update"
+                      primary={ true }
+                      className={styles.submit}
+                    />
                 </div>
             </row>
         </form>
