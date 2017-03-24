@@ -5,6 +5,7 @@ import { makeSelectCurrentAccount } from '../../../../../state/selectors';
 
 import {
     FETCH_SOCIAL_URL,
+    SET_SOCIAL_URLS,
 } from './constants';
 
 import {
@@ -18,7 +19,7 @@ import {
 export function* getSocialUrls(action, dispatch) {
   
     const currentAccount = yield select(makeSelectCurrentAccount());
-    
+    console.log(currentAccount);
     const data = {
         payload: {
           account_id: currentAccount.account_id,
@@ -29,8 +30,10 @@ export function* getSocialUrls(action, dispatch) {
     const requestUrl = `/connection_api/social_urls?${params}`;
     
     const result = yield call(getData, requestUrl);
+    console.log(result);
     if(result.data.status == 'success') {
-        console.log(result);
+        const urls = result.data.urls;
+        yield put({type: SET_SOCIAL_URLS, urls});
     } else {
         console.log(result);
     }

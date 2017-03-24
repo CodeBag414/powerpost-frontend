@@ -20,6 +20,7 @@ import {
     makeSelectChannelFilter,
     makeSelectChannelType,
     makeSelectDialogShown,
+    makeSelectSocialUrls,
 } from './state/selectors';
 
 import {
@@ -41,6 +42,9 @@ class Connections extends React.Component {
         this.props.getSocialUrl();
     }
     
+    componentDidUpdate() {
+       // this.props.getSocialUrl();
+    }
     handleDialogToggle() {
         this.props.toggleDialogShown(!this.props.dialogShown);
     }
@@ -105,7 +109,7 @@ class Connections extends React.Component {
                                        setChannelFilter={this.setChannelFilter} setChannelType={this.setChannelType}
                                        channelFilter={this.props.channelFilter} channelType={this.props.channelType} />
                 <ConnectionsList connections={this.getFilteredConnections()} removeConnection={this.removeConnection}/>
-                <AddConnectionDialog handleDialogToggle={this.handleDialogToggle} dialogShown={this.props.dialogShown} getSocialUrl={this.props.getSocialUrl}/>
+                <AddConnectionDialog handleDialogToggle={this.handleDialogToggle} dialogShown={this.props.dialogShown} socialUrls={ this.props.socialUrls }/>
             </div>
         );
     }
@@ -127,7 +131,8 @@ const mapStateToProps = createStructuredSelector({
     channelFilter: makeSelectChannelFilter(),
     channelType: makeSelectChannelType(),
     connections: makeSelectAccountConnections(),
-    dialogShown: makeSelectDialogShown()
+    dialogShown: makeSelectDialogShown(),
+    socialUrls: makeSelectSocialUrls(),
 });
 
 export default UserCanConnections(connect(mapStateToProps, mapDispatchToProps)(Connections));
