@@ -4,9 +4,10 @@
 
 // Sagas help us gather all our side effects (network requests in this case) in one place
 
-import {take, call, put, fork, race, apply, select} from 'redux-saga/effects';
-import auth from '../../utils/auth';
+import { take, call, put, race, select } from 'redux-saga/effects';
 import { browserHistory } from 'react-router';
+
+import auth from '../../utils/auth';
 import { makeSelectUser } from './selectors';
 import { toastr } from '../../lib/react-redux-toastr';
 
@@ -19,9 +20,9 @@ import {
   CHANGE_FORM,
   REQUEST_ERROR,
   SET_USER,
-  SET_ROLES,
+  // SET_ROLES,
   CHECK_USER_OBJECT,
-  CLEAR_USER
+  CLEAR_USER,
 } from './constants';
 
 /**
@@ -31,9 +32,9 @@ import {
  * @param  {object} options                Options
  * @param  {boolean} options.isRegistering Is this a register request?
  */
-export function * authorize ({name, email, password, isRegistering}) {
+export function* authorize({ name, email, password, isRegistering }) {
   // We send an action that tells Redux we're sending a request
-  yield put({type: SENDING_REQUEST, sending: true});
+  yield put({ type: SENDING_REQUEST, sending: true });
 
   // We then try to register or log in the user, depending on the request
   try {
@@ -51,67 +52,67 @@ export function * authorize ({name, email, password, isRegistering}) {
       response = yield call(auth.login, email, password);
     }
     return response;
-    
   } catch (error) {
     console.log('hi');
     // If we get an error we send Redux the appropiate action and return
-    yield put({type: REQUEST_ERROR, error: error.message});
+    yield put({ type: REQUEST_ERROR, error: error.message });
 
     return false;
   } finally {
     // When done, we tell Redux we're not in the middle of a request any more
-    yield put({type: SENDING_REQUEST, sending: false});
+    yield put({ type: SENDING_REQUEST, sending: false });
   }
 }
 
 /**
  * Effect to handle logging out
  */
-export function * logout () {
+export function* logout() {
   // We tell Redux we're in the middle of a request
-  yield put({type: SENDING_REQUEST, sending: true});
+  yield put({ type: SENDING_REQUEST, sending: true });
 
   // Similar to above, we try to log out by calling the `logout` function in the
   // `auth` module. If we get an error, we send an appropiate action. If we don't,
   // we return the response.
   try {
-    let response = yield call(auth.logout);
-    yield put({type: SENDING_REQUEST, sending: false});
+    const response = yield call(auth.logout);
+    yield put({ type: SENDING_REQUEST, sending: false });
     return response;
   } catch (error) {
-    yield put({type: REQUEST_ERROR, error: error.message});
+    yield put({ type: REQUEST_ERROR, error: error.message });
+    return error.message;
   }
 }
 
 /**
  * Log in saga
  */
-export function * loginFlow (store) {
+export function* loginFlow() {
   // Because sagas are generators, doing `while (true)` doesn't block our program
   // Basically here we say "this saga is always listening for actions"
   while (true) {
     // And we're listening for `LOGIN_REQUEST` actions and destructuring its payload
-    let request = yield take(LOGIN_REQUEST);
-    let {email, password} = request.data;
+    const request = yield take(LOGIN_REQUEST);
+    const { email, password } = request.data;
 
     // A `LOGOUT` action may happen while the `authorize` effect is going on, which may
     // lead to a race condition. This is unlikely, but just in case, we call `race` which
     // returns the "winner", i.e. the one that finished first
-    let winner = yield race({
-      auth: call(authorize, {email, password, isRegistering: false}),
-      logout: take(LOGOUT)
+    const winner = yield race({
+      auth: call(authorize, { email, password, isRegistering: false }),
+      logout: take(LOGOUT),
     });
     // If `authorize` was the winner...
     if (winner.auth) {
       // ...we send Redux appropiate actions
-      yield put({type: SET_AUTH, newAuthState: true}); // User is logged in (authorized)
-      yield put({type: SET_USER, user: winner.auth });
-      yield put({type: CHANGE_FORM, newFormState: {username: '', password: ''}}); // Clear form
+      yield put({ type: SET_AUTH, newAuthState: true }); // User is logged in (authorized)
+      yield put({ type: SET_USER, user: winner.auth });
+      yield put({ type: CHANGE_FORM, newFormState: { username: '', password: '' } }); // Clear form
       yield call(forwardTo, '/'); // Go to dashboard page
       // If `logout` won...
     } else if (winner.logout) {
       // ...we send Redux appropiate action
-      yield put({type: SET_AUTH, newAuthState: false}); // User is not logged in (not authorized)
+      yield put({ type: SET_AUTH, newAuthState: false }); // User is not logged in (not authorized)
       yield call(logout); // Call `logout` effect
       yield call(forwardTo, '/start'); // Go to root page
     }
@@ -123,16 +124,16 @@ export function * loginFlow (store) {
  * This is basically the same as the `if (winner.logout)` of above, just written
  * as a saga that is always listening to `LOGOUT` actions
  */
-export function * logoutFlow () {
+export function* logoutFlow() {
   while (true) {
     yield take(LOGOUT);
-    yield put({type: SET_AUTH, newAuthState: false});
- 
+    yield put({ type: SET_AUTH, newAuthState: false });
+
     yield call(logout);
-    yield put({type: CLEAR_USER});
-    
+    yield put({ type: CLEAR_USER });
+
     yield call(forwardTo, '/start');
-    
+
     toastr.success('Success!', 'You are now logged out.');
   }
 }
@@ -141,33 +142,31 @@ export function * logoutFlow () {
  * Register saga
  * Very similar to log in saga!
  */
-export function * registerFlow () {
+export function* registerFlow() {
   while (true) {
     // We always listen to `REGISTER_REQUEST` actions
-    let request = yield take(REGISTER_REQUEST);
-    let {name, password, email} = request.data;
+    const request = yield take(REGISTER_REQUEST);
+    const { name, password, email } = request.data;
 
     // We call the `authorize` task with the data, telling it that we are registering a user
     // This returns `true` if the registering was successful, `false` if not
-    let wasSuccessful = yield call(authorize, {name, email, password, isRegistering: true});
+    const wasSuccessful = yield call(authorize, { name, email, password, isRegistering: true });
 
     // If we could register a user, we send the appropiate actions
     if (wasSuccessful) {
-      yield put({type: SET_AUTH, newAuthState: true}); // User is logged in (authorized) after being registered
-      yield put({type: CHANGE_FORM, newFormState: {name: '', password: ''}}); // Clear form
+      yield put({ type: SET_AUTH, newAuthState: true }); // User is logged in (authorized) after being registered
+      yield put({ type: CHANGE_FORM, newFormState: { name: '', password: '' } }); // Clear form
       forwardTo('/dashboard'); // Go to dashboard page
     }
   }
 }
 
-export function * userExistsFlow() {
-  while(true) {
-    let request = yield take(CHECK_USER_OBJECT);
-    let user = yield select(makeSelectUser());
-    if(user.user_id) {
-
-    } else {
-      let currentUser = yield call(auth.getCurrentUser);
+export function* userExistsFlow() {
+  while (true) {
+    yield take(CHECK_USER_OBJECT);
+    const user = yield select(makeSelectUser());
+    if (!user.user_id) {
+      const currentUser = yield call(auth.getCurrentUser);
       yield put({ type: SET_USER, user: currentUser });
     }
   }
@@ -180,17 +179,11 @@ export default [
   loginFlow,
   logoutFlow,
   registerFlow,
-  userExistsFlow
+  userExistsFlow,
 ];
 
 // Little helper function to abstract going to different pages
-export function* forwardTo (location) {
+export function* forwardTo(location) {
   yield call(browserHistory.push, location);
 }
-//
-export function isEmpty( obj ) {
-  for (var prop in obj) {
-    return false;
-  }
-  return true;
-}
+
