@@ -10,14 +10,13 @@ import { makeSelectUser,
          makeSelectFilePickerKey
 } from '../../../../state/selectors';
 
-import Avatar from 'material-ui/Avatar';
+import Avatar from 'App/shared/atm.Avatar';
 import Toggle from 'material-ui/Toggle';
-import PPInput from 'App/shared/atm.Input';
 import FlatButton from 'material-ui/FlatButton';
+import PPTextField from 'App/shared/atm.TestTextField';
 import PPRaisedButton from 'App/shared/atm.RaisedButton';
-import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
-
-
+import RadioButton from 'App/shared/atm.RadioButton';
+import RadioGroup from 'App/shared/atm.RadioButtonGroup';
 class settingsUser extends Component {
   constructor(props) {
     super(props);
@@ -26,7 +25,7 @@ class settingsUser extends Component {
     this.profileUpdate = this.profileUpdate.bind(this);
     this.pwUpdate = this.pwUpdate.bind(this);
     this.onRadioNotify = this.onRadioNotify.bind(this);
-
+    this.handleChange = this.handleChange.bind(this);
     let avatar = '';
     let time_zone = '';
     let receive_notifications = '';
@@ -65,19 +64,10 @@ class settingsUser extends Component {
     };
   }
 
-  state = {
-    full_name: '',
-    company_name: '',
-    your_title: '',
-    your_email: '',
-    phone_number: '',
-    time_zone: '',
-    new_pw: '',
-    confirm_new_pw: ''
-  };
-
-  handleChange = (name, value) => {
-    this.setState({...this.state, [name]: value});
+  handleChange(e) {
+    const name = e.target.name;
+    const value = e.target.value;
+    this.setState({[name]: value});
   };
   
   profileUpdate(event) {
@@ -198,7 +188,7 @@ class settingsUser extends Component {
                 <h5 style={{marginLeft: '0px', color:'#9d9d9d'}}>Profile Picture</h5> <br/>
                 <div style={inline.avatar}>
                   <Avatar
-                      src={this.state.avatar}
+                      image={this.state.avatar}
                       style={inline.avatarImg}
                       onClick={this.openFilePicker}
                     />
@@ -212,50 +202,61 @@ class settingsUser extends Component {
               <div className="col-md-9">
                 <row>
                   <div className="col-md-6">
-                    <PPInput
+                    <PPTextField
                         type='text'
-                        label="Full Name"
-                        style={styles.ppInput}
-                        required
+                        name='full_name'
+                        floatingLabelText='Name'
                         value={this.state.full_name}
-                        onChange={this.handleChange.bind(this, 'full_name')}
+                        onChange={this.handleChange}
+                        style={{margin: 0}}
+                        required
                       />
                     <br />
-                    <PPInput
+                    <PPTextField
                         type='text'
-                        label="Company Name"
+                        name='company_name'
+                        floatingLabelText='Company'
                         value={this.state.company_name}
-                        onChange={this.handleChange.bind(this, 'company_name')}
+                        onChange={this.handleChange}
+                        style={{margin: 0}}
                       />
                     <br />
-                    <PPInput
+                    <PPTextField
                         type='text'
-                        label="Your Title"
+                        name='your_title'
+                        floatingLabelText="Title"
                         value={this.state.your_title}
-                        onChange={this.handleChange.bind(this, 'your_title')}
+                        onChange={this.handleChange}
+                        style={{margin: 0}}
                       />
                   </div>
                   <div className="col-md-6">
-                    <PPInput
+                    <PPTextField
                         type='email'
-                        label="Your Email"
+                        name='your_email'
+                        floatingLabelText="Email"
                         value={this.state.your_email}
-                        onChange={this.handleChange.bind(this, 'your_email')}
+                        onChange={this.handleChange}
+                        style={{margin: 0}}
                       />
                     <br />
-                    <PPInput
+                    <PPTextField
                         type='tel'
-                        label="Phone Number"
+                        name='phone_number'
+                        floatingLabelText="Phone"
                         value={this.state.phone_number}
-                        onChange={this.handleChange.bind(this, 'phone_number')}
+                        onChange={this.handleChange}
+                        style={{margin: 0}}
                       />
                     <br />
-                    <PPInput
+                    <PPTextField
                         type='text'
-                        label="Time Zone"
-                        required
+                        name='time_zone'
+                        floatingLabelText="Time Zone"
                         value={this.state.time_zone}
-                        onChange={this.handleChange.bind(this, 'time_zone')}
+                        onChange={this.handleChange}
+                        style={{margin: 0}}
+                        required
                       />
                   </div>
                 </row>
@@ -277,7 +278,7 @@ class settingsUser extends Component {
                 <p>Send me email notifications:</p>
               </div>
               <div className="col-md-4">
-                 <RadioButtonGroup name="digest" onChange={this.onRadioNotify} defaultSelected={this.state.email_notifications}>
+                 <RadioGroup name="digest" onChange={this.onRadioNotify} value={this.state.email_notifications}>
                     <RadioButton
                        style={inline.radioButton}
                        value="hourly_digest"
@@ -288,7 +289,7 @@ class settingsUser extends Component {
                        value="daily_digest"
                        label="Daily"
                       />
-                 </RadioButtonGroup>
+                 </RadioGroup>
               </div>
               <div className="col-md-5">
                 <Toggle
@@ -301,7 +302,7 @@ class settingsUser extends Component {
                 <div className="col-md-12">
                   <PPRaisedButton
                       type="submit"
-                      label="Update"
+                      label="Save"
                       primary={ true }
                       className={styles.submit}
                     />
@@ -321,19 +322,23 @@ class settingsUser extends Component {
               <div className="col-md-9">
                 <row>
                   <div className="col-md-6">
-                    <PPInput
+                    <PPTextField
                         type='password'
-                        label="New Password"
+                        name='new_pw'
+                        floatingLabelText="New Password"
                         value={this.state.new_pw}
-                        onChange={this.handleChange.bind(this, 'new_pw')}
+                        onChange={this.handleChange}
+                        style={{margin: 0}}
                       />
                   </div>
                   <div className="col-md-6">
-                    <PPInput
+                    <PPTextField
                         type='password'
-                        label="Confirm New Password"
+                        name='confirm_new_pw'
+                        floatingLabelText="Confirm New Password"
                         value={this.state.confirm_new_pw}
-                        onChange={this.handleChange.bind(this, 'confirm_new_pw')}
+                        onChange={this.handleChange}
+                        style={{margin: 0}}
                       />
                   </div>
                 </row>
@@ -343,7 +348,7 @@ class settingsUser extends Component {
                 <div className="col-md-12">
                   <PPRaisedButton
                       type="submit"
-                      label="Update"
+                      label="Save"
                       primary={ true }
                       className={styles.submit}
                     />
