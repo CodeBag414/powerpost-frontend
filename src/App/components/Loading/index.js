@@ -1,14 +1,11 @@
 import React from 'react';
 
-export default class Loading extends React.Component {
+import styles from './styles.scss';
 
-    render() {
-        const styles = require('./styles.scss');
-        
-        return (
-            <div className={ styles.loadingOverlay }>
-                <h1>Loading...</h1>
-            </div>
-        );
-    }
+export default function Loading() {
+  return (
+    <div className={styles.loadingOverlay}>
+      <h1>Loading...</h1>
+    </div>
+  );
 }

@@ -1,10 +1,6 @@
-import React, { PropTypes } from 'react';
-import {IconMenu} from 'react-toolbox/lib/menu';
+import React from 'react';
+import { IconMenu } from 'react-toolbox/lib/menu';
 
-const PPIconMenu = (props) => {
-    return(
-        <IconMenu {...props} />
-    );
-};
+const PPIconMenu = (props) => <IconMenu {...props} />;
 
 export default PPIconMenu;

@@ -1,10 +1,6 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import { RadioButton } from 'react-toolbox/lib/radio';
 
-const PPRadioButton = (props) => {
-    return(
-        <RadioButton {...props} />
-    );
-};
+const PPRadioButton = (props) => <RadioButton {...props} />;
 
 export default PPRadioButton;
