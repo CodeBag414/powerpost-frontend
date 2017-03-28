@@ -11,7 +11,7 @@ import { makeSelectUser,
 } from '../../../../state/selectors';
 
 import Avatar from 'App/shared/atm.Avatar';
-import Toggle from 'material-ui/Toggle';
+import PPToggle from 'App/shared/atm.Switch';
 import FlatButton from 'material-ui/FlatButton';
 import PPTextField from 'App/shared/atm.TestTextField';
 import PPRaisedButton from 'App/shared/atm.RaisedButton';
@@ -158,6 +158,7 @@ class settingsUser extends Component {
         toggle: {
             width: 150,
             marginTop: 10,
+            color: '#6F6F6F'
         },
         avatar: {
             position:'relative',
@@ -176,7 +177,7 @@ class settingsUser extends Component {
     };
 
     return (
-      <div>
+      <div style={styles}>
         <form onSubmit={this.profileUpdate}>
             <row>
               <div className="col-md-12">
@@ -292,9 +293,9 @@ class settingsUser extends Component {
                  </RadioGroup>
               </div>
               <div className="col-md-5">
-                <Toggle
-                  label="Daily Snapshot"
-                  style={inline.toggle} />
+                <PPToggle
+                checked
+                  label="Daily Snapshot" />
                  <p>Showing what happened yesterday in all my projects.</p>
               </div>
             </row>

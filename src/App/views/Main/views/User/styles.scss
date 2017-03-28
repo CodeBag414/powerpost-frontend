@@ -1,5 +1,8 @@
 .submit {
     float: right;
+    button {
+        background-color: #E81C64 !important;
+    }
 }
 
 .updateAvatar {
@@ -19,4 +22,8 @@
 .ppInput1 {
     border: 1px solid #E81C64;
     border-radius: 4px;
+}
+
+h1,h2,h3,h4,h5,h6,p {
+    color: #6F6F6F;
 }
