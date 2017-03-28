@@ -1,10 +1,6 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import { List } from 'react-toolbox/lib/list';
 
-const PPList = (props) => {
-    return(
-        <List {...props} />
-    );
-};
+const PPList = (props) => <List {...props} />;
 
 export default PPList;

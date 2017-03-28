@@ -9,7 +9,7 @@ const makeSelectMenuCollapsed = () => createSelector(
 
 const makeSelectCurrentAccount = () => createSelector(
     selectDashboard,
-    (dashboard) => { if(dashboard.get('activeBrand')) { return dashboard.get('activeBrand').toJS(); } return dashboard.get('activeBrand') }
+    (dashboard) => { if (dashboard.get('activeBrand')) { return dashboard.get('activeBrand').toJS(); } return dashboard.get('activeBrand'); }
 );
 
 const makeSelectAccountPermissions = () => createSelector(
