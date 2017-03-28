@@ -15,8 +15,9 @@ import PPToggle from 'App/shared/atm.Switch';
 import FlatButton from 'material-ui/FlatButton';
 import PPTextField from 'App/shared/atm.TestTextField';
 import PPRaisedButton from 'App/shared/atm.RaisedButton';
-import RadioButton from 'App/shared/atm.RadioButton';
-import RadioGroup from 'App/shared/atm.RadioButtonGroup';
+import PPRadioButton from 'App/shared/atm.RadioButton';
+import PPRadioButtonGroup from 'App/shared/atm.RadioButtonGroup';
+
 class settingsUser extends Component {
   constructor(props) {
     super(props);
@@ -142,8 +143,7 @@ class settingsUser extends Component {
     );
   }
 
-  onRadioNotify(event, value) {
-    event.preventDefault();
+  onRadioNotify(value) {
     this.setState({email_notifications: value});
   }
 
@@ -279,18 +279,18 @@ class settingsUser extends Component {
                 <p>Send me email notifications:</p>
               </div>
               <div className="col-md-4">
-                 <RadioGroup name="digest" onChange={this.onRadioNotify} value={this.state.email_notifications}>
-                    <RadioButton
+                 <PPRadioButtonGroup name="digest" onChange={this.onRadioNotify} value={this.state.email_notifications}>
+                    <PPRadioButton
                        style={inline.radioButton}
                        value="hourly_digest"
                        label="Hourly"
                       />
-                    <RadioButton
+                    <PPRadioButton
                        style={inline.radioButton}
                        value="daily_digest"
                        label="Daily"
                       />
-                 </RadioGroup>
+                 </PPRadioButtonGroup>
               </div>
               <div className="col-md-5">
                 <PPToggle
