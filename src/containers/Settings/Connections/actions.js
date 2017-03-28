@@ -6,6 +6,7 @@ import {
     FETCH_SOCIAL_URL,
     CONNECTION_CALLBACK,
     SET_SOCIAL_URLS,
+    REMOVE_CONNECTION,
 } from './constants';
 
 export function setChannelFilter(channelFilter) {
@@ -26,6 +27,10 @@ export function toggleDialog(shown) {
 
 export function getSocialUrl() {
    return {type: FETCH_SOCIAL_URL }; 
+}
+
+export function removeConnection(connectionId) {
+    return {type: REMOVE_CONNECTION, connectionId };
 }
 
 export function connectionCallback(channelObject) {

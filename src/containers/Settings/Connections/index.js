@@ -14,7 +14,10 @@ import {
     setConnectionsList,
     toggleDialog,
     getSocialUrl,
+    removeConnection,
+    connectionCallback,
 } from './actions';
+
 
 import {
     makeSelectChannelFilter,
@@ -40,11 +43,15 @@ class Connections extends React.Component {
     
     componentDidMount() {
         this.props.getSocialUrl();
+        window.addEventListener("message", receiveMessage.bind(this), false);
+
+        function receiveMessage(event)
+        {
+            console.log(event);
+            this.props.connectionCallback(event.data);
+        }
     }
     
-    componentDidUpdate() {
-       // this.props.getSocialUrl();
-    }
     handleDialogToggle() {
         this.props.toggleDialogShown(!this.props.dialogShown);
     }
@@ -61,7 +68,7 @@ class Connections extends React.Component {
         if(connectionIndex !== undefined) {
             connections.splice(connectionIndex, 1);
         }
-
+        this.props.removeChannel(connectionId);
         this.props.setConnectionsListShown(connections);
     }
 
@@ -124,6 +131,8 @@ export function mapDispatchToProps(dispatch) {
         setConnectionsListShown: connections => dispatch(setConnectionsList(connections)),
         toggleDialogShown: isShown => dispatch(toggleDialog(isShown)),
         getSocialUrl: () => dispatch(getSocialUrl()),
+        removeChannel: (channelId) => dispatch(removeConnection(channelId)),
+        connectionCallback: (channelObject) => dispatch(connectionCallback(channelObject)),
     };
 }
 

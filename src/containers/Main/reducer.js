@@ -7,6 +7,7 @@ import {
     FETCH_ACCOUNT_ERROR,
     TOGGLE_MENU,
     IS_LOADING_ACCOUNT,
+    SET_CONNECTIONS_LIST,
 } from './constants';
 
 // The initial application state
@@ -65,6 +66,9 @@ function dashboardReducer(state = initialState, action) {
     case TOGGLE_MENU:
       return state
             .set('menuCollapsed', action.collapsed);
+    case SET_CONNECTIONS_LIST:
+        return state
+            .setIn(['activeBrand', 'connections'], action.connections);
     default:
       return state;
   }

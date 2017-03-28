@@ -45,7 +45,6 @@ const history = syncHistoryWithStore(historyObj, store, {
     selectLocationState: makeSelectLocationState(),
 });
 
-
 const rootRoute = createRoutes(store,auth);
 
 ReactDOM.render(
