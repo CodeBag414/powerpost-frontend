@@ -1,9 +1,7 @@
 import React, { PropTypes } from 'react';
 import { RadioGroup } from 'react-toolbox/lib/radio';
-const PPRadioButtonGroup = (props) => {
-    return(
-        <RadioGroup {...props} />
-    );
-};
+
+const PPRadioButtonGroup = (props) => <RadioGroup {...props} />;
+
 
 export default PPRadioButtonGroup;
