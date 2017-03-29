@@ -1,18 +1,13 @@
 /*
  * Dashboard
  *
- * 
+ *
  */
 
 import React from 'react';
 
-export default class Settings extends React.Component {
-    
-    render() {
-        return (
-            <div>
-                In Dashboard view
-            </div>
-        );
-    }
-}
+import { UserCanAccount } from 'config.routes/UserRoutePermissions';
+
+const Dashboard = () => <div>in Dashboard View</div>;
+
+export default UserCanAccount(Dashboard);

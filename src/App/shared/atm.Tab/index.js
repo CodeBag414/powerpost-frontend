@@ -1,10 +1,6 @@
 import React from 'react';
-import {Tab} from 'react-toolbox';
+import { Tab } from 'react-toolbox';
 
-const PPTab = (props) => {
-    
-    return(
-        <Tab {...props} />
-    );
-};
+const PPTab = (props) => <Tab {...props} />;
+
 export default PPTab;
