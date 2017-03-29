@@ -429,4 +429,3 @@ export function createRoutes(store, auth) {
     childRoutes: routes,
   };
 }
-

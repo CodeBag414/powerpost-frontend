@@ -47,8 +47,8 @@ class Connections extends React.Component {
 
         function receiveMessage(event)
         {
-            console.log(event);
-            this.props.connectionCallback(event.data);
+            console.log(event.origin);
+            //this.props.connectionCallback(event.data);
         }
     }
     
