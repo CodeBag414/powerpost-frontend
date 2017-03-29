@@ -30,11 +30,11 @@ module.exports = (options) => ({
     {
       test: /\.scss$/,
       loaders: [
-          'style-loader',
-          'css-loader?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
-          'resolve-url-loader',
-          'sass-loader?sourceMap'
-        ]
+        'style-loader',
+        'css-loader?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
+        'resolve-url-loader',
+        'sass-loader?sourceMap',
+      ],
     },
     {
       test: /\.(eot|svg|ttf|woff|woff2)$/,
@@ -101,8 +101,8 @@ module.exports = (options) => ({
       'main',
     ],
     alias: {
-      globals: '../../src/globals.scss'
-    }
+      // We can define alias later if needed but we don't need it for now
+    },
   },
   devtool: options.devtool,
   target: 'web', // Make web variables accessible to webpack, e.g. window
