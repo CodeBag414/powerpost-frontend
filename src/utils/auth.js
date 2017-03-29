@@ -128,7 +128,7 @@ let auth = {
         const user_data = {
             payload:{
                 display_name: data.name,
-                password: data.new_pw ? data.new_pw : "*****",
+                password: data.new_pw || "*****",
                 email: data.email,
                 properties:{
                     thumbnail_image_key: data.avatar_key,

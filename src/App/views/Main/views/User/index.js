@@ -15,8 +15,7 @@ import PPToggle from 'App/shared/atm.Switch';
 import FlatButton from 'material-ui/FlatButton';
 import PPTextField from 'App/shared/atm.TestTextField';
 import PPRaisedButton from 'App/shared/atm.RaisedButton';
-import PPRadioButton from 'App/shared/atm.RadioButton';
-import PPRadioButtonGroup from 'App/shared/atm.RadioButtonGroup';
+import { RadioGroup, RadioButton } from 'react-toolbox/lib/radio';
 
 class settingsUser extends Component {
   constructor(props) {
@@ -24,83 +23,33 @@ class settingsUser extends Component {
 
     this.openFilePicker = this.openFilePicker.bind(this);
     this.profileUpdate = this.profileUpdate.bind(this);
-    this.pwUpdate = this.pwUpdate.bind(this);
+    this.passwordUpdate = this.passwordUpdate.bind(this);
     this.onRadioNotify = this.onRadioNotify.bind(this);
+    this.onToggleNotify = this.onToggleNotify.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    let avatar = '';
-    let time_zone = '';
-    let receive_notifications = '';
-    const user = this.props.user ? this.props.user : null;
 
-    if (user) {
-      if (user.properties) {
-        const properties = user.properties;
-        avatar = properties.thumb_url ? properties.thumb_url : '';
-        time_zone = properties.timezone_id ? properties.timezone_id : '';
-        receive_notifications = properties.receive_notifications ? properties.receive_notifications : '';
-      }
-    }
-
-    let phone_number = '';
-    const user_own_account = this.props.user_own_account ? this.props.user_own_account : null;
-
-    if (user_own_account) {
-      if (user_own_account.properties) {
-        phone_number = user_own_account.properties.phone_number ? user_own_account.properties.phone_number : '';
-      }
-    }
+    const user = this.props.user || null;
+    const user_properties = user.properties || null;
+    const user_own_account = this.props.user_own_account || null;
+    const user_own_account_properties = user_own_account.properties || null;
 
     this.state = {
-      avatar: avatar ? avatar : '',
+      avatar: (user_properties && user_properties.thumb_url) || '',
       avatar_key: '',
-      full_name: user ? user.display_name : '',
-      company_name: 'PowerPost',
-      your_title: user_own_account ? user_own_account.title : '',
-      your_email: user ? user.email : '',
-      phone_number: phone_number,
-      time_zone: time_zone,
-      email_notifications: receive_notifications,
+      your_email: user.email || '',
+      full_name: user.display_name || '',
+      company_name: user.company_name || '',
+
+      time_zone: (user_properties && user_properties.timezone_id) || '',
+      daily_snapshot: (user_properties && user_properties.daily_snapshot) || false,
+      email_notifications: (user_properties && user_properties.receive_notifications) || '',
+
+      your_title: user_own_account.title || '',
+      phone_number: (user_own_account_properties && user_own_account_properties.phone_number) || '',
+
       new_pw: '',
       confirm_new_pw: ''
     };
-  }
-
-  handleChange(e) {
-    const name = e.target.name;
-    const value = e.target.value;
-    this.setState({[name]: value});
-  };
-  
-  profileUpdate(event) {
-    event.preventDefault();
-    
-    const account_id = this.props.user_own_account.account_id;
-    
-    var data = {
-      avatar_key: this.state.avatar_key,
-      name: this.state.full_name,
-      title: this.state.your_title,
-      email: this.state.your_email,
-      time_zone: this.state.time_zone,
-      phone_number: this.state.phone_number,
-      company_name: this.state.company_name,
-      email_notifications: this.state.email_notifications,
-      new_pw: '',
-      account_id: account_id
-    };
-
-    this.props.update(data);
-  }
-
-  pwUpdate(event) {
-    event.preventDefault();
-    const account_id = this.props.user_own_account.account_id;
-
-    if(this.state.new_pw == this.state.confirm_new_pw) {
-        var data = {new_pw: this.state.new_pw,
-                    account_id: account_id};
-        this.props.update(data);
-    }
   }
 
   openFilePicker() {
@@ -142,24 +91,56 @@ class settingsUser extends Component {
       }
     );
   }
+  
+  profileUpdate(event) {
+    event.preventDefault();
+    
+    const account_id = this.props.user_own_account.account_id;
+    
+    var data = {
+      avatar_key: this.state.avatar_key,
+      name: this.state.full_name,
+      title: this.state.your_title,
+      email: this.state.your_email,
+      time_zone: this.state.time_zone,
+      phone_number: this.state.phone_number,
+      company_name: this.state.company_name,
+      email_notifications: this.state.email_notifications,
+      new_pw: '',
+      account_id: account_id
+    };
+
+    this.props.update(data);
+  }
+
+  passwordUpdate(event) {
+    event.preventDefault();
+    const account_id = this.props.user_own_account.account_id;
+
+    if(this.state.new_pw == this.state.confirm_new_pw) {
+        var data = {new_pw: this.state.new_pw,
+                    account_id: account_id};
+        this.props.update(data);
+    }
+  }
+
+  handleChange(event) {
+    const name = event.target.name;
+    const value = event.target.value;
+    this.setState({[name]: value});
+  };
 
   onRadioNotify(value) {
     this.setState({email_notifications: value});
   }
 
+  onToggleNotify(value) {
+    this.setState({daily_snapshot: value});    
+  }
+
   render() {
     const styles = require('./styles.scss');
     const inline = {
-        radioButton: {
-            width: '50%',
-            marginTop: '20px',
-            display: 'inline-block',
-        },
-        toggle: {
-            width: 150,
-            marginTop: 10,
-            color: '#6F6F6F'
-        },
         avatar: {
             position:'relative',
             top:"-25px",
@@ -169,10 +150,6 @@ class settingsUser extends Component {
             width:'180px',
             height:'180px',
             borderRadius:'0'
-        },
-        ppInput: {
-            border: '1px solid #E81C64',
-            borderRadius: '4px'
         }
     };
 
@@ -279,23 +256,28 @@ class settingsUser extends Component {
                 <p>Send me email notifications:</p>
               </div>
               <div className="col-md-4">
-                 <PPRadioButtonGroup name="digest" onChange={this.onRadioNotify} value={this.state.email_notifications}>
-                    <PPRadioButton
-                       style={inline.radioButton}
+                 <RadioGroup name="digest" onChange={this.onRadioNotify} value={this.state.email_notifications}>
+                    <RadioButton
+                       theme={styles}
+                       className={styles.radioButton}
                        value="hourly_digest"
                        label="Hourly"
                       />
-                    <PPRadioButton
-                       style={inline.radioButton}
+                    <RadioButton
+                       theme={styles}
+                       className={styles.radioButton}
                        value="daily_digest"
                        label="Daily"
                       />
-                 </PPRadioButtonGroup>
+                 </RadioGroup>
               </div>
               <div className="col-md-5">
                 <PPToggle
-                checked
-                  label="Daily Snapshot" />
+                    name='daily_snapshot'
+                    label='Daily Snapshot'
+                    checked={this.state.daily_snapshot}
+                    onChange={this.onToggleNotify}
+                  />
                  <p>Showing what happened yesterday in all my projects.</p>
               </div>
             </row>
@@ -310,7 +292,7 @@ class settingsUser extends Component {
                 </div>
             </row>
         </form>
-        <form onSubmit={this.pwUpdate}>
+        <form onSubmit={this.passwordUpdate}>
             <row>
               <div className="col-md-12">
                  <hr/>
