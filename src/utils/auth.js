@@ -102,14 +102,14 @@ let auth = {
             payload:{
               title: data.title,
               properties:{
-                 thumbnail_image_key: data.avatar_key,
-                 phone_number: data.phone_number
+                 thumbnail_image_key: data.avatarKey,
+                 phone_number: data.phoneNumber
               }
             }
         };
         
         const headers = { headers:{'X-API-KEY': cookie.load('token') }};
-        const url = API_URL + `/account_api/account/${data.account_id}`;
+        const url = API_URL + `/account_api/account/${data.accountID}`;
         return axios.put(url, account_data, headers)
             .then(response => {
                 console.log('response:' + response);
@@ -128,12 +128,12 @@ let auth = {
         const user_data = {
             payload:{
                 display_name: data.name,
-                password: data.new_pw || "*****",
+                password: data.newPW || "*****",
                 email: data.email,
                 properties:{
-                    thumbnail_image_key: data.avatar_key,
-                    timezone_id: data.time_zone,
-                    receive_notifications: data.email_notifications
+                    thumbnail_image_key: data.avatarKey,
+                    timezone_id: data.timeZone,
+                    receive_notifications: data.emailNotifications
                 }
             }
         };
