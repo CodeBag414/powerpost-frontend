@@ -192,7 +192,7 @@ class settingsUser extends Component {
     };
 
     return (
-      <div style={styles}>
+      <div className="container" style={styles}>
         <form onSubmit={this.profileUpdate}>
           <row>
             <div className="col-md-12">
@@ -207,6 +207,7 @@ class settingsUser extends Component {
                 <Avatar
                   image={this.state.avatar}
                   style={inline.avatarImg}
+                  theme={styles}
                   onClick={this.openFilePicker}
                 />
                 <FlatButton
