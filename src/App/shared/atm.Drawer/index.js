@@ -1,11 +1,6 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import Drawer from 'react-toolbox/lib/drawer';
 
-  
-const PPDrawer = (props) => {
-    return(
-        <Drawer {...props} />
-    );
-};
+const PPDrawer = (props) => <Drawer {...props} />;
 
 export default PPDrawer;

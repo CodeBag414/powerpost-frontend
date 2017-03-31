@@ -2,7 +2,7 @@
  * Dashboard constants
  *
  */
- 
+
 export const SET_ACTIVE_BRAND = 'SET_ACTIVE_BRAND';
 export const FETCH_ACCOUNT = 'FETCH_ACCOUNT';
 export const IS_LOADING_ACCOUNT = 'IS_LOADING_ACCOUNT';

@@ -3,51 +3,49 @@
  */
 import { fromJS } from 'immutable';
 import {
-    SET_ACTIVE_BRAND,
-    FETCH_ACCOUNT,
     FETCH_ACCOUNT_SUCCESS,
     FETCH_ACCOUNT_ERROR,
     TOGGLE_MENU,
-    IS_LOADING_ACCOUNT
+    IS_LOADING_ACCOUNT,
 } from './constants';
 
 // The initial application state
-let initialState = fromJS({
-    menuCollapsed: false,
-    activeBrand: {
-        account_id: false,
-        user_id: false,
-        title: false,
-        creation_time: false,
-        status: 0,
-        account_type_id: 0,
-        properties: {},
-        subscriptions: [{}],
-        account_access: {
-            permissions: []
-        },
-        user_access: {
-            permissions: []
-        },
-        subAccounts: [],
-        connections: [{}],
+const initialState = fromJS({
+  menuCollapsed: false,
+  activeBrand: {
+    account_id: false,
+    user_id: false,
+    title: false,
+    creation_time: false,
+    status: 0,
+    account_type_id: 0,
+    properties: {},
+    subscriptions: [{}],
+    account_access: {
+      permissions: [],
     },
-    isFetchingAccount: true,
-    fetchingError: false
+    user_access: {
+      permissions: [],
+    },
+    subAccounts: [],
+    connections: [{}],
+  },
+  isFetchingAccount: true,
+  fetchingError: false,
 });
 
 // Takes care of changing the application state
-function dashboardReducer (state = initialState, action) {
+function dashboardReducer(state = initialState, action) {
   switch (action.type) {
     case IS_LOADING_ACCOUNT:
-        return state
+      return state
             .set('isFetchingAccount', true)
             .set('fetchingError', false);
     case FETCH_ACCOUNT_SUCCESS:
-        return state    
+      return state
             .set('isFetchingAccount', false)
             .set('fetchingError', false)
-            .setIn(['activeBrand','user_access','permissions'], action.account.data.account.user_access.permissions)
+            .setIn(['activeBrand', 'user_access', 'permissions'], action.account.data.account.user_access.permissions)
             .setIn(['activeBrand', 'account_id'], action.account.data.account.account_id)
             .setIn(['activeBrand', 'user_id'], action.account.data.account.user_id)
             .setIn(['activeBrand', 'title'], action.account.data.account.title)
@@ -56,16 +54,16 @@ function dashboardReducer (state = initialState, action) {
             .setIn(['activeBrand', 'account_type_id'], action.account.data.account.account_type_id)
             .setIn(['activeBrand', 'properties'], action.account.data.account.properties)
             .setIn(['activeBrand', 'subscriptions'], action.account.data.account.subscriptions)
-            .setIn(['activeBrand', 'account_access','permissions'], action.account.data.account.account_access.permissions)
+            .setIn(['activeBrand', 'account_access', 'permissions'], action.account.data.account.account_access.permissions)
             .setIn(['activeBrand', 'user_access', 'permissions'], action.account.data.account.user_access.permissions)
             .setIn(['activeBrand', 'subAccounts'], action.account.data.account.subaccounts)
             .setIn(['activeBrand', 'connections'], action.account.data.account.connections);
     case FETCH_ACCOUNT_ERROR:
-        return state
+      return state
             .set('isFetchingAccount', false)
             .set('fetchingError', action.account.data.error);
     case TOGGLE_MENU:
-        return state
+      return state
             .set('menuCollapsed', action.collapsed);
     default:
       return state;

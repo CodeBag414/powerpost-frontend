@@ -1,10 +1,6 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import Dropdown from 'react-toolbox/lib/dropdown';
 
-const PPDropDownMenu = (props) => {
-    return(
-        <Dropdown {...props} />
-    );
-};
+const PPDropDownMenu = (props) => <Dropdown {...props} />;
 
 export default PPDropDownMenu;

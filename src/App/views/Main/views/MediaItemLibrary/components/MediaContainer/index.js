@@ -1,13 +1,11 @@
 import React from 'react';
 
+import styles from './styles.scss';
 
-const MediaContainer = (props) => {
-    const styles = require('./styles.scss');
-    return(
-        <div className={ styles.mediaContainer }>
-            
-        </div>
-    );
-};
+const MediaContainer = () => (
+  <div className={styles.mediaContainer}>
+
+  </div>
+  );
 
 export default MediaContainer;
