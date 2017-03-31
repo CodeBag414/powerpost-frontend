@@ -9,7 +9,7 @@ const TextField = (props) => {
     <div className={styles.textFieldContainer} style={props.style}>
       <label className={styles.labelStyles} htmlFor={props.htmlFor}>{props.floatingLabelText}</label>
       <div className={styles.inputContainer} >
-        <input className={props.iconClass ? styles.inputStylesWithIcon : `${styles.inputStyles} ${errorStyles}`} type={props.type} name={props.name} value={props.value} placeholder={props.hintText} onChange={props.onChange} />
+        <input className={props.iconClass ? styles.inputStylesWithIcon : `${styles.inputStyles} ${errorStyles}`} type={props.type} name={props.name} value={props.value} maxLength={props.maxLength} placeholder={props.hintText} onChange={props.onChange} />
         { props.iconClass && <i className={props.iconClass} /> }
       </div>
       <div className={styles.errorContainer}>
@@ -30,6 +30,7 @@ TextField.propTypes = {
   iconClass: PropTypes.string,
   errorText: PropTypes.string,
   htmlFor: PropTypes.any,
+  maxLength: PropTypes.number,
 };
 
 export default TextField;

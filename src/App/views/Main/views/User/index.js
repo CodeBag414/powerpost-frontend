@@ -212,6 +212,7 @@ class settingsUser extends Component {
                     type="text"
                     name="name"
                     floatingLabelText="Name"
+                    maxLength={200}
                     value={this.state.name}
                     onChange={this.handleChange}
                     style={{ margin: 0 }}
@@ -222,6 +223,7 @@ class settingsUser extends Component {
                     type="text"
                     name="title"
                     floatingLabelText="Title"
+                    maxLength={100}
                     value={this.state.title}
                     onChange={this.handleChange}
                     style={{ margin: 0 }}
@@ -241,6 +243,7 @@ class settingsUser extends Component {
                     type="tel"
                     name="phoneNumber"
                     floatingLabelText="Phone"
+                    maxLength={100}
                     value={this.state.phoneNumber}
                     onChange={this.handleChange}
                     style={{ margin: 0 }}
@@ -315,6 +318,7 @@ class settingsUser extends Component {
                     type="password"
                     name="newPW"
                     floatingLabelText="New Password"
+                    maxLength={45}
                     value={this.state.newPW}
                     onChange={this.handleChange}
                     style={{ margin: 0 }}
@@ -325,6 +329,7 @@ class settingsUser extends Component {
                     type="password"
                     name="confirmNewPW"
                     floatingLabelText="Confirm New Password"
+                    maxLength={45}
                     value={this.state.confirmNewPW}
                     onChange={this.handleChange}
                     style={{ margin: 0 }}
