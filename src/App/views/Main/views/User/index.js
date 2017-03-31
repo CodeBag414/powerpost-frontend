@@ -77,13 +77,14 @@ class settingsUser extends Component {
     filepicker.setKey(this.props.filePickerKey);
 
     const filePickerOptions = {
+      cropRatio: 1 / 1,
       buttonText: 'Choose',
       container: 'modal',
       multiple: false,
       maxFiles: 1,
       imageQuality: 80,
       imageMax: [1200, 1200],
-      services: ['COMPUTER', 'WEBCAM', 'VIDEO', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
+      services: ['CONVERT', 'COMPUTER', 'WEBCAM', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
       conversions: ['crop', 'filter'],
     };
 
@@ -98,7 +99,7 @@ class settingsUser extends Component {
       });
     };
 
-    const uploadFial = function () {
+    const uploadFail = function () {
       tthis.setState({
         avatarKey: '',
       });
@@ -112,7 +113,7 @@ class settingsUser extends Component {
       filePickerOptions,
       fileStoreOptions,
       uploadSuccess,
-      uploadFial,
+      uploadFail,
       uploadProgress,
     );
   }
