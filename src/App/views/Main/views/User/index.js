@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import filepicker from 'filepicker-js';
 import Avatar from 'App/shared/atm.Avatar';
-import PPToggle from 'App/shared/atm.Switch';
 import FlatButton from 'material-ui/FlatButton';
 import PPTextField from 'App/shared/atm.TestTextField';
 import PPRaisedButton from 'App/shared/atm.RaisedButton';
@@ -38,7 +37,6 @@ class settingsUser extends Component {
     this.profileUpdate = this.profileUpdate.bind(this);
     this.passwordUpdate = this.passwordUpdate.bind(this);
     this.onRadioNotify = this.onRadioNotify.bind(this);
-    this.onToggleNotify = this.onToggleNotify.bind(this);
     this.handleChange = this.handleChange.bind(this);
 
     const user = this.props.user || null;
@@ -51,9 +49,7 @@ class settingsUser extends Component {
       avatarKey: '',
       email: user.email || '',
       name: user.display_name || '',
-      companyName: user.company_name || '',
 
-      timeZone: (userProperties && userProperties.timezone_id) || '',
       dailySnapshot: (userProperties && userProperties.daily_snapshot) || false,
       emailNotifications: (userProperties && userProperties.receive_notifications) || 'hourly_digest',
 
@@ -69,12 +65,6 @@ class settingsUser extends Component {
   onRadioNotify(value) {
     this.setState({
       emailNotifications: value,
-    });
-  }
-
-  onToggleNotify(value) {
-    this.setState({
-      dailySnapshot: value,
     });
   }
 
@@ -135,9 +125,7 @@ class settingsUser extends Component {
       name: this.state.name,
       title: this.state.title,
       email: this.state.email,
-      timeZone: this.state.timeZone,
       phoneNumber: this.state.phoneNumber,
-      companyName: this.state.companyName,
       emailNotifications: this.state.emailNotifications,
       newPW: '*****',
       accountID: this.props.userOwnAccount.account_id,
@@ -232,15 +220,6 @@ class settingsUser extends Component {
                   <br />
                   <PPTextField
                     type="text"
-                    name="companyName"
-                    floatingLabelText="Company"
-                    value={this.state.companyName}
-                    onChange={this.handleChange}
-                    style={{ margin: 0 }}
-                  />
-                  <br />
-                  <PPTextField
-                    type="text"
                     name="title"
                     floatingLabelText="Title"
                     value={this.state.title}
@@ -266,16 +245,6 @@ class settingsUser extends Component {
                     onChange={this.handleChange}
                     style={{ margin: 0 }}
                   />
-                  <br />
-                  <PPTextField
-                    type="text"
-                    name="timeZone"
-                    floatingLabelText="Time Zone"
-                    value={this.state.timeZone}
-                    onChange={this.handleChange}
-                    style={{ margin: 0 }}
-                    required
-                  />
                 </div>
               </row>
             </div>
@@ -295,8 +264,14 @@ class settingsUser extends Component {
               <h4>Frequency</h4>
               <p>Send me email notifications:</p>
             </div>
-            <div className="col-md-4">
+            <div className="col-md-9">
               <RadioGroup name="digest" onChange={this.onRadioNotify} value={this.state.emailNotifications}>
+                <RadioButton
+                  theme={styles}
+                  className={styles.radioButton}
+                  value="none"
+                  label="None"
+                />
                 <RadioButton
                   theme={styles}
                   className={styles.radioButton}
@@ -310,15 +285,6 @@ class settingsUser extends Component {
                   label="Daily"
                 />
               </RadioGroup>
-            </div>
-            <div className="col-md-5">
-              <PPToggle
-                name="dailySnapshot"
-                label="Daily Snapshot"
-                checked={this.state.dailySnapshot}
-                onChange={this.onToggleNotify}
-              />
-              <p>Showing what happened yesterday in all my projects.</p>
             </div>
           </row>
           <row>
