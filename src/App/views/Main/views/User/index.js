@@ -55,7 +55,7 @@ class settingsUser extends Component {
 
       timeZone: (userProperties && userProperties.timezone_id) || '',
       dailySnapshot: (userProperties && userProperties.daily_snapshot) || false,
-      emailNotifications: (userProperties && userProperties.receive_notifications) || '',
+      emailNotifications: (userProperties && userProperties.receive_notifications) || 'hourly_digest',
 
       title: (userOwnAccount && userOwnAccount.title) || '',
       phoneNumber: (userOwnAccountProperties && userOwnAccountProperties.phone_number) || '',
