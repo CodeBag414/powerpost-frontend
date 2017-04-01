@@ -85,7 +85,7 @@ class Signup extends React.Component {
                     <PPInput type="password" error={ this.state.passwordError } value={ this.state.passwordValue } label="Password" onChange={ this.onPasswordChange }/>
                     <PPInput type="password" error={ this.state.passwordConfirmError } value={ this.state.passwordConfirmValue } label="Confirm Password" onChange={ this.onPasswordConfirmChange }/>
                     
-                    <PPRaisedButton type="submit" label="Register" primary={ true } />
+                    <PPRaisedButton type="submit" label="Sign Up" primary={ true } />
                 </form>
                 <div> { this.state.errorText }</div>
             </div>
