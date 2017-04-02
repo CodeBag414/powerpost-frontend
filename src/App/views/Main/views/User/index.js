@@ -51,7 +51,7 @@ class settingsUser extends Component {
       name: user.display_name || '',
 
       dailySnapshot: (userProperties && userProperties.daily_snapshot) || false,
-      emailNotifications: (userProperties && userProperties.receive_notifications) || 'hourly_digest',
+      emailNotifications: (userProperties && userProperties.receive_notifications) || 'none',
 
       title: (userOwnAccount && userOwnAccount.title) || '',
       phoneNumber: (userOwnAccountProperties && userOwnAccountProperties.phone_number) || '',
