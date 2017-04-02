@@ -200,14 +200,18 @@ export function createRoutes(store, auth) {
           name: 'statistics',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
+              System.import('../App/views/Main/views/Statistics/state/reducer'),
+              System.import('../App/views/Main/views/Statistics/state/sagas'),
               System.import('../App/views/Main/views/Statistics'),
-            ]);
-
-            const renderRoute = loadModule(cb);
-
-            importModules.then(([component]) => {
-              renderRoute(component);
-            });
+              ]);
+              
+              const renderRoute = loadModule(cb);
+              
+              importModules.then(([reducer, sagas, component]) => {
+                injectReducer('connections', reducer.default);
+                injectSagas(sagas.default);
+                renderRoute(component);
+              });
 
             importModules.catch(errorLoading);
           },
