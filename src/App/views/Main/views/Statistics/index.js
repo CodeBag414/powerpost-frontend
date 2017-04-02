@@ -13,7 +13,7 @@ import { UserCanStatistics } from 'config.routes/UserRoutePermissions';
 
 import AddConnectionDialog from './components/AddConnectionDialog';
 import ConnectionsControlBar from './components/ConnectionsControlBar';
-import ConnectionsList from './components/ConnectionsList';
+import ChannelsList from './components/ChannelsList';
 
 import {
     setChannelFilter,
@@ -121,7 +121,7 @@ class Statistics extends React.Component {
                     <ConnectionsControlBar handleDialogToggle={this.handleDialogToggle} channels={this.getChannelTypes()}
                                            setChannelFilter={this.setChannelFilter} setChannelType={this.setChannelType}
                                            channelFilter={this.props.channelFilter} channelType={this.props.channelType} />
-                    <ConnectionsList connections={this.getFilteredConnections()} removeConnection={this.removeConnection} accountId={ this.props.params.account_id }/>
+                    <ChannelsList connections={this.getFilteredConnections()} removeConnection={this.removeConnection} accountId={ this.props.params.account_id }/>
                     <AddConnectionDialog handleDialogToggle={this.handleDialogToggle} dialogShown={this.props.dialogShown} socialUrls={ this.props.socialUrls }/>
                 </div>
             </div>
