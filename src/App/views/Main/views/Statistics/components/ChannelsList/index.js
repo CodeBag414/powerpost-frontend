@@ -5,7 +5,7 @@ import ChannelsListItem from './components/ChannelsListItem';
 import ConnectionsControlBar from '../ConnectionsControlBar';
 import TabLink from 'App/shared/atm.TabLink';
 
-class ConnectionsList extends React.Component {
+class ChannelsList extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -49,4 +49,4 @@ ChannelsList.propTypes = {
     loading: React.PropTypes.any,
 };
 
-export default ConnectionsList;
+export default ChannelsList;
