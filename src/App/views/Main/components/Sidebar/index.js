@@ -17,7 +17,7 @@ import IconMenu from 'material-ui/IconMenu';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
 import styles from './styles.scss';
-import PPLogo from './PP_Icon.png';
+// import PPLogo from './PP_Icon.png';
 
 const ReactRouterMenuItem = withReactRouter(PPMenuItem);
 
@@ -45,7 +45,7 @@ class Sidebar extends React.Component {
       <div>
         <div className={styles.brandNav}>
           <div className={styles.powerpostLogoContainer} >
-            <Link to="/"><img src={PPLogo} alt="Powerpost Logo" style={{ marginTop: '15px' }} /></Link>
+            <Link to="/">PPLogo{/*<img src={PPLogo} alt="Powerpost Logo" style={{ marginTop: '15px' }} />*/}</Link>
           </div>
           <div>
             { this.props.userAccount && this.props.userAccount.account_type_id !== 5 &&
@@ -136,7 +136,7 @@ class Sidebar extends React.Component {
                 { this.props.accountPermissions && this.props.accountPermissions.indexOf('team') > -1 &&
                 <ReactRouterMenuItem caption="Team" isSidebar icon={<FontIcon>people</FontIcon>} to={`/account/${this.props.accountId}/settings/team`} />
                                 }
-                { this.props.activeBrand.account_type_id === 6 &&
+                { this.props.activeBrand.account_type_id == 6 &&
                 <ReactRouterMenuItem caption="Brands" isSidebar icon={<FontIcon>library_add</FontIcon>} to={`/account/${this.props.accountId}/brands`} />
                                 }
                 { this.props.activeBrand.connections &&
