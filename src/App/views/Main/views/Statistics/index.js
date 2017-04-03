@@ -121,7 +121,7 @@ class Statistics extends React.Component {
                     <ConnectionsControlBar handleDialogToggle={this.handleDialogToggle} channels={this.getChannelTypes()}
                                            setChannelFilter={this.setChannelFilter} setChannelType={this.setChannelType}
                                            channelFilter={this.props.channelFilter} channelType={this.props.channelType} />
-                    <ChannelsList connections={this.getFilteredConnections()} removeConnection={this.removeConnection} accountId={ this.props.params.account_id }/>
+                    <ChannelsList connections={this.getFilteredConnections()} removeConnection={this.removeConnection} accountId={ this.props.params.account_id }  loading={ this.props.children }/>
                     <AddConnectionDialog handleDialogToggle={this.handleDialogToggle} dialogShown={this.props.dialogShown} socialUrls={ this.props.socialUrls }/>
                 </div>
             </div>

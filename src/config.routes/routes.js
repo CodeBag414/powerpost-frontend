@@ -215,6 +215,23 @@ export function createRoutes(store, auth) {
 
             importModules.catch(errorLoading);
           },
+          childRoutes: [{
+            path: '/account(/:account_id)/statistics(/:channel_id)',
+            name: 'Channel Info',
+            getComponent(nextstate, cb) {
+              const importModules = Promise.all([
+                System.import('../App/views/Main/views/Statistics/components/Loading'),
+              ]);
+
+              const renderRoute = loadModule(cb);
+
+              importModules.then(([component]) => {
+                renderRoute(component);
+              });
+              importModules.catch(errorLoading);
+            },
+          },
+          ]
         },
         {
           path: '/account(/:account_id)/brands',

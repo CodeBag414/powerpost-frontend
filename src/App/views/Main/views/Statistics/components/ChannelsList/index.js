@@ -28,15 +28,21 @@ class ConnectionsList extends React.Component {
 
         return (
             <div>
-                { connectionsList }
+                <div className={ ['col-xs-4', 'col-sm-4', 'col-md-4'].join(' ') }>
+                    { connectionsList }
+                </div>
+                <div className={ ['col-xs-8', 'col-sm-8', 'col-md-8'].join(' ') } style={{ 'background-color': '#efefef', 'min-height': '100vh' }}>
+                    { this.props.loading }
+                </div>
             </div>
         );
     }
 }
 
-ConnectionsList.propTypes = {
+ChannelsList.propTypes = {
     children: React.PropTypes.node,
     accountId: React.PropTypes.string,
+    loading: React.PropTypes.any,
 };
 
 export default ConnectionsList;
