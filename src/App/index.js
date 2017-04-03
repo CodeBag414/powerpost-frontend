@@ -8,13 +8,12 @@
 
 import React from 'react';
 
-class App extends React.Component {
-  componentWillUpdate() {
+import './styles.scss';
 
-  }
+class App extends React.Component {
   render() {
     return (
-      <div style={{ width: '100%', height: '100%' }}>
+      <div className="app">
         {React.Children.toArray(this.props.children)}
       </div>
     );
