@@ -12,7 +12,6 @@ import { createStructuredSelector } from 'reselect';
 import { UserCanStatistics } from 'config.routes/UserRoutePermissions';
 
 import AddConnectionDialog from './components/AddConnectionDialog';
-import ConnectionsControlBar from './components/ConnectionsControlBar';
 import ChannelsList from './components/ChannelsList';
 
 import {
@@ -118,10 +117,10 @@ class Statistics extends React.Component {
         return (
             <div>
                 <div className={ styles.sidechannelbar }>
-                    <ConnectionsControlBar handleDialogToggle={this.handleDialogToggle} channels={this.getChannelTypes()}
-                                           setChannelFilter={this.setChannelFilter} setChannelType={this.setChannelType}
-                                           channelFilter={this.props.channelFilter} channelType={this.props.channelType} />
-                    <ChannelsList connections={this.getFilteredConnections()} removeConnection={this.removeConnection} accountId={ this.props.params.account_id }  loading={ this.props.children }/>
+                    <ChannelsList connections={this.getFilteredConnections()} removeConnection={this.removeConnection} accountId={ this.props.params.account_id } loading={ this.props.children }
+                                    handleDialogToggle={this.handleDialogToggle} channels={this.getChannelTypes()}
+                                    setChannelFilter={this.setChannelFilter} setChannelType={this.setChannelType}
+                                    channelFilter={this.props.channelFilter} channelType={this.props.channelType} />
                     <AddConnectionDialog handleDialogToggle={this.handleDialogToggle} dialogShown={this.props.dialogShown} socialUrls={ this.props.socialUrls }/>
                 </div>
             </div>

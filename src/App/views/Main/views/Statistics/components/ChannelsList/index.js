@@ -2,6 +2,7 @@ import React from 'react';
 
 
 import ChannelsListItem from './components/ChannelsListItem';
+import ConnectionsControlBar from '../ConnectionsControlBar';
 import TabLink from 'App/shared/atm.TabLink';
 
 class ConnectionsList extends React.Component {
@@ -29,6 +30,9 @@ class ConnectionsList extends React.Component {
         return (
             <div>
                 <div className={ ['col-xs-4', 'col-sm-4', 'col-md-4'].join(' ') }>
+                    <ConnectionsControlBar handleDialogToggle={ this.props.handleDialogToggle } channels={ this.props.channels }
+                                           setChannelFilter={ this.props.setChannelFilter } setChannelType={ this.props.setChannelType }
+                                           channelFilter={ this.props.channelFilter } channelType={ this.props.channelType } />
                     { connectionsList }
                 </div>
                 <div className={ ['col-xs-8', 'col-sm-8', 'col-md-8'].join(' ') } style={{ 'background-color': '#efefef', 'min-height': '100vh' }}>
