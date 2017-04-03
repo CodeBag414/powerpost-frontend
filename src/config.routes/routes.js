@@ -379,9 +379,31 @@ export function createRoutes(store, auth) {
           name: 'signup',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
-              System.import('../App/views/Start/views/Signup/state/reducer'),
-              System.import('../App/views/Start/views/Signup/state/sagas'),
+              System.import('../App/views/Start/views/Signup/reducer'),
+              System.import('../App/views/Start/views/Signup/sagas'),
               System.import('../App/views/Start/views/Signup'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([reducer, sagas, component]) => {
+            //  injectReducer('signup', reducer.default);
+            //  injectSagas(sagas.default);
+
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+        {
+          path: '/checkout',
+          name: 'checkout',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('../App/views/Start/views/Checkout/reducer'),
+              System.import('../App/views/Start/views/Checkout/sagas'),
+              System.import('../App/views/Start/views/Checkout'),
             ]);
 
             const renderRoute = loadModule(cb);
