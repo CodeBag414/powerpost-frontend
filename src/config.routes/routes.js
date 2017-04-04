@@ -200,17 +200,37 @@ export function createRoutes(store, auth) {
           name: 'statistics',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
+              System.import('containers/Statistics/reducer'),
+              System.import('containers/Statistics/sagas'),
               System.import('containers/Statistics'),
             ]);
 
             const renderRoute = loadModule(cb);
 
-            importModules.then(([component]) => {
-              renderRoute(component);
+            importModules.then(([reducer, sagas, component]) => {
+                injectReducer('connections', reducer.default);
+                injectSagas(sagas.default);
+                renderRoute(component);
             });
 
             importModules.catch(errorLoading);
           },
+          childRoutes: [{
+            path: '/account(/:account_id)/statistics(/:channel_id)',
+            name: 'Channels Info',
+            getComponent(nextstate, cb) {
+              const importModules = Promise.all([
+                System.import('containers/Statistics/Loading'),
+              ]);
+
+              const renderRoute = loadModule(cb);
+
+              importModules.then(([component]) => {
+                renderRoute(component);
+              });
+            },
+          },
+          ]
         },
         {
           path: '/account(/:account_id)/brands',
