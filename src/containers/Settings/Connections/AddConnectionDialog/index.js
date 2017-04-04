@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { Tab, Tabs } from 'react-toolbox';
 
 import PPFullScreenDialog from 'elements/atm.FullScreenDialog';
-import TextField from 'elements/atm.TestTextField';
+import TextField from 'elements/atm.TextField';
 import PPButton from 'elements/atm.Button';
 
 import styles from './styles.scss';

@@ -7,7 +7,7 @@ import { createStructuredSelector } from 'reselect';
 import filepicker from 'filepicker-js';
 import Avatar from 'elements/atm.Avatar';
 import FlatButton from 'material-ui/FlatButton';
-import PPTextField from 'elements/atm.TestTextField';
+import PPTextField from 'elements/atm.TextField';
 import PPRaisedButton from 'elements/atm.RaisedButton';
 import {
   RadioGroup,
