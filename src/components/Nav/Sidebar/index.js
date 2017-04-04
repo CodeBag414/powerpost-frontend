@@ -145,13 +145,14 @@ class Sidebar extends React.Component {
 
                 {this.props.activeBrand.connections &&
                   this.props.activeBrand.connections.map((connection) =>
-                    <ReactRouterMenuItem
-                      key={connection.connection_id + Date.now()}
-                      caption={connection.display_name}
-                      isSidebar
-                      icon={<i className={connection.channel_icon} />}
-                      to={`/account/${this.props.accountId}/feed/${connection.connection_id}`}
-                    />
+                    connection.channel !== 'wordpress' &&
+                      <ReactRouterMenuItem
+                        key={connection.connection_id + Date.now()}
+                        caption={connection.display_name}
+                        isSidebar
+                        icon={<i className={connection.channel_icon} />}
+                        to={`/account/${this.props.accountId}/feed/${connection.connection_id}`}
+                      />
                   )
                 }
 
