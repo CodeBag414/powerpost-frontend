@@ -6,7 +6,7 @@ import moment from 'moment';
 import { range } from 'lodash';
 
 import PPInput from 'elements/atm.Input';
-import PPDropdown from 'elements/atm.Dropdown';
+import PPDropdown from 'elements/atm.DropDown';
 import PPRaisedButton from 'elements/atm.RaisedButton';
 
 const monthOptions = moment.months().map((month, index) => {
