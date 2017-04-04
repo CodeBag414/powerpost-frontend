@@ -16,14 +16,21 @@ import {
     getSocialUrl,
     removeConnection,
     connectionCallback,
+    setSubCallback,
+    setSubChannel,
+    createSubChannels,
+    clearSubData,
+    getWordpressBlogs,
 } from './actions';
-
 
 import {
     makeSelectChannelFilter,
     makeSelectChannelType,
     makeSelectDialogShown,
     makeSelectSocialUrls,
+    makeSelectSubCallback,
+    makeSelectSubChannel,
+    makeSelectSubChannels,
 } from './selectors';
 
 import {
@@ -34,7 +41,7 @@ import {
 class Connections extends React.Component {
     constructor(props) {
         super(props);
-        //this.props.setConnectionsListShown(require('./connections.json').connections);
+        
         this.handleDialogToggle = this.handleDialogToggle.bind(this);
         this.removeConnection = this.removeConnection.bind(this);
         this.setChannelFilter = this.setChannelFilter.bind(this);
@@ -47,13 +54,15 @@ class Connections extends React.Component {
 
         function receiveMessage(event)
         {
-            console.log(event.origin);
-            //this.props.connectionCallback(event.data);
+            if (event.origin.includes('dev2')) {
+              //this.props.connectionCallback(event.data);
+            }
         }
     }
     
     handleDialogToggle() {
         this.props.toggleDialogShown(!this.props.dialogShown);
+        this.props.clearSubData();
     }
     
     removeConnection(connectionId) {
@@ -110,13 +119,15 @@ class Connections extends React.Component {
     }
 
     render() {
+        const styles = require('./styles.scss');
+        
         return (
-            <div>
+            <div className={styles.containerDiv} >
                 <ConnectionsControlBar handleDialogToggle={this.handleDialogToggle} channels={this.getChannelTypes()}
                                        setChannelFilter={this.setChannelFilter} setChannelType={this.setChannelType}
                                        channelFilter={this.props.channelFilter} channelType={this.props.channelType} />
-                <ConnectionsList connections={this.getFilteredConnections()} removeConnection={this.removeConnection}/>
-                <AddConnectionDialog handleDialogToggle={this.handleDialogToggle} dialogShown={this.props.dialogShown} socialUrls={ this.props.socialUrls }/>
+                <ConnectionsList getSubConnections={this.getSubConnections} connections={this.getFilteredConnections()} removeConnection={this.removeConnection}/>
+                <AddConnectionDialog getWordpressBlogs={this.props.getWordpressBlogs} createSubChannels={this.props.createSubChannels} subChannels={this.props.subChannels} setSubChannel={this.props.setSubChannel} subChannel={this.props.subChannel} setSubCallback={this.props.setSubCallback} subCallback={this.props.subCallback} handleDialogToggle={this.handleDialogToggle} dialogShown={this.props.dialogShown} socialUrls={ this.props.socialUrls }/>
             </div>
         );
     }
@@ -133,6 +144,11 @@ export function mapDispatchToProps(dispatch) {
         getSocialUrl: () => dispatch(getSocialUrl()),
         removeChannel: (channelId) => dispatch(removeConnection(channelId)),
         connectionCallback: (channelObject) => dispatch(connectionCallback(channelObject)),
+        setSubCallback: (sub) => dispatch(setSubCallback(sub)),
+        setSubChannel: (subChannel) => dispatch(setSubChannel(subChannel)),
+        createSubChannels: (data) => dispatch(createSubChannels(data)),
+        clearSubData: () => dispatch(clearSubData()),
+        getWordpressBlogs: (data) => dispatch(getWordpressBlogs(data)),
     };
 }
 
@@ -142,6 +158,9 @@ const mapStateToProps = createStructuredSelector({
     connections: makeSelectAccountConnections(),
     dialogShown: makeSelectDialogShown(),
     socialUrls: makeSelectSocialUrls(),
+    subCallback: makeSelectSubCallback(),
+    subChannel: makeSelectSubChannel(),
+    subChannels: makeSelectSubChannels(),
 });
 
 export default UserCanConnections(connect(mapStateToProps, mapDispatchToProps)(Connections));

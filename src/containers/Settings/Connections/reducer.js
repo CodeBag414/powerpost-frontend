@@ -6,6 +6,10 @@ import {
     SET_CONNECTIONS_LIST,
     TOGGLE_ADD_CONNECTION_DIALOG,
     SET_SOCIAL_URLS,
+    SET_SUB_CALLBACK,
+    SET_SUB_CHANNEL,
+    SET_SUB_CHANNELS,
+    CLEAR_SUB_DATA,
 } from './constants';
 
 let initialState = fromJS({
@@ -14,6 +18,9 @@ let initialState = fromJS({
     dialogShown: false,
     connections: [],
     socialUrls: {},
+    subCallback: false,
+    subChannel: false,
+    subChannels: false,
 });
 
 function connectionsReducer (state = initialState, action) {
@@ -33,6 +40,20 @@ function connectionsReducer (state = initialState, action) {
       case TOGGLE_ADD_CONNECTION_DIALOG:
           return state
             .set('dialogShown', action.shown);
+      case SET_SUB_CALLBACK:
+          return state
+            .set('subCallback', action.sub);
+      case SET_SUB_CHANNEL:
+          return state
+            .set('subChannel', action.subChannel);
+      case SET_SUB_CHANNELS:
+          return state
+            .set('subChannels', action.subChannels);
+      case CLEAR_SUB_DATA:
+          return state
+            .set('subChannels', false)
+            .set('subChannel', false)
+            .set('subCallback', false);
       default: return state;
   }
 }

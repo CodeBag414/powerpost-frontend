@@ -17,7 +17,6 @@ export function* getAccount(action) {
   console.log(accountId);
   if (!action.accountId) {
     accountId = 'me';
-    console.log('IN select user account!');
   }
   const currentAccount = yield select(makeSelectCurrentAccount());
   if ((accountId === 'me' && currentAccount.account_id) || accountId === currentAccount.account_id) {
