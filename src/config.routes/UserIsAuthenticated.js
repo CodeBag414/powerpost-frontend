@@ -7,7 +7,7 @@ export const UserIsAuthenticated = UserAuthWrapper({
     authSelector: state => state.get('auth'),
     redirectAction: routerActions.push,
     predicate: auth => auth.get('loggedIn'),
-    failureRedirectPath: '/start',
+    failureRedirectPath: '/login',
     wrapperDisplayName: 'UserIsAuthenticated',
     allowRedirectBack: false
   });
