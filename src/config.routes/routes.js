@@ -217,36 +217,21 @@ export function createRoutes(store, auth) {
           name: 'brands',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
+              System.import('containers/Brands/reducer'),
+              System.import('containers/Brands/sagas'),
               System.import('containers/Brands'),
             ]);
 
             const renderRoute = loadModule(cb);
 
-            importModules.then(([component]) => {
+            importModules.then(([reducer, sagas, component]) => {
+              injectReducer('brands', reducer.default);
+              injectSagas(sagas.default);
               renderRoute(component);
             });
 
             importModules.catch(errorLoading);
           },
-          childRoutes: [{
-            path: '/account(/:account_id)/brands/brandsadddialog',
-            name: 'connections',
-            getComponent(nextstate, cb) {
-              const importModules = Promise.all([
-                System.import('../App/views/Main/views/Brands/state/reducer'),
-                System.import('../App/views/Main/views/Brands/state/sagas'),
-                System.import('../App/views/Main/views/Brands'),
-              ]);
-
-              const renderRoute = loadModule(cb);
-
-              importModules.then(([reducer, sagas, component]) => {
-                injectReducer('connections', reducer.default);
-                injectSagas(sagas.default);
-                renderRoute(component);
-              });
-            },
-          },]
         },
         {
           path: '/account(/:account_id)/list',
