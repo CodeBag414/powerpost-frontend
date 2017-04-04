@@ -1,7 +1,7 @@
 import React from 'react';
 import { UserAuthWrapper } from 'redux-auth-wrapper';
 import { routerActions } from 'react-router-redux';
-import Loading from '../App/components/Loading';
+import Loading from 'components/Loading';
 
 export const UserCanAccount= UserAuthWrapper({
     authSelector: state => state.get('main'),
