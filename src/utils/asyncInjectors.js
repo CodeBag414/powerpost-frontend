@@ -6,7 +6,7 @@ import isString from 'lodash/isString';
 import invariant from 'invariant';
 import warning from 'warning';
 
-import createReducer from '../config.redux/reducers';
+import createReducer from 'config.redux/reducers';
 
 /**
  * Validate the shape of redux store
