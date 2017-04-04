@@ -149,6 +149,7 @@ class Sidebar extends React.Component {
                       <ReactRouterMenuItem
                         key={connection.connection_id + Date.now()}
                         caption={connection.display_name}
+                        title={connection.display_name}
                         isSidebar
                         icon={<i className={connection.channel_icon} />}
                         to={`/account/${this.props.accountId}/feed/${connection.connection_id}`}
