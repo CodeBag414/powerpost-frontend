@@ -6,9 +6,9 @@
  import { fromJS } from 'immutable';
  import { combineReducers } from 'redux-immutable';
  import { LOCATION_CHANGE } from 'react-router-redux';
- import {reducer as toastrReducer } from '../lib/react-redux-toastr';
+ import {reducer as toastrReducer } from 'lib/react-redux-toastr';
  
- import globalReducer from '../App/state/reducer';
+ import globalReducer from 'containers/App/reducer';
  
  /**
   * routeReducer

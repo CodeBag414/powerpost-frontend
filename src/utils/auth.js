@@ -91,7 +91,63 @@ let auth = {
             .catch((error) => {
                 console.log(error.response);
             });
-         
+     },
+     
+     /**
+      * Update a account object
+      * 
+      */
+     updateAccount(data) {
+        const account_data = {
+            payload:{
+              title: data.title,
+              properties:{
+                 thumbnail_image_key: data.avatarKey,
+                 phone_number: data.phoneNumber
+              }
+            }
+        };
+        
+        const headers = { headers:{'X-API-KEY': cookie.load('token') }};
+        const url = API_URL + `/account_api/account/${data.accountID}`;
+        return axios.put(url, account_data, headers)
+            .then(response => {
+                console.log('response:' + response);
+                return response.data;
+            })
+            .catch((error) => {
+                console.log(error.response);
+            });
+     },
+     
+     /**
+      * Update a user object
+      * 
+      */
+     updateUser(data) {
+        const user_data = {
+            payload:{
+                display_name: data.name,
+                password: data.newPW || "*****",
+                email: data.email,
+                properties:{
+                    thumbnail_image_key: data.avatarKey,
+                    timezone_id: data.timeZone,
+                    receive_notifications: data.emailNotifications
+                }
+            }
+        };
+        
+        const headers = { headers:{'X-API-KEY': cookie.load('token') }};
+        const url = API_URL + '/user_api/user';
+        return axios.put(url, user_data, headers)
+            .then(response => {
+                console.log('response:' + response);
+                return response.data;
+            })
+            .catch((error) => {
+                console.log(error.response);
+            });
      }
 };
 
