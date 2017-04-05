@@ -34,9 +34,7 @@ export function* getSocialUrls(action, dispatch) { // eslint-disable-line no-unu
       callback_function: 'postMessage',
     },
   };
-  console.log(data);
   const params = serialize(data);
-  console.log(params);
   const requestUrl = `/connection_api/social_urls?${params}`;
   const result = yield call(getData, requestUrl);
 

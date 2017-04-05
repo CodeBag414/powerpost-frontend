@@ -218,7 +218,6 @@ class AddConnectionDialog extends React.Component {
       },
     ];
     if (Object.getOwnPropertyNames(this.props.subChannel).length !== 0) {
-      console.log(this.props.subChannel + 'not empty');
       let subChannelType = 'Page';
       if (this.state.channel === 'pinterest') {
         subChannelType = 'Board';
