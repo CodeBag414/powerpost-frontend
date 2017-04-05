@@ -7,7 +7,7 @@ import PPButton from 'elements/atm.Button';
 
 import styles from './styles.scss';
 import tabTheme from './tabTheme.scss';
-import ConnectionsListItem from '../ConnectionsList/components/ConnectionsListItem';
+import ConnectionsListItem from '../ConnectionsList/ConnectionsListItem';
 
 class AddConnectionDialog extends React.Component {
   constructor(props) {
@@ -215,13 +215,6 @@ class AddConnectionDialog extends React.Component {
         channel: 'pinterest',
         sub: true,
         url: this.props.socialUrls ? this.props.socialUrls.pinterest : '',
-      },
-      { name: 'Google Profile',
-        icon: 'fa fa-google-plus-square',
-        text: 'Log into your Google Plus account to start sharing content',
-        channel: 'google',
-        sub: false,
-        url: this.props.socialUrls ? this.props.socialUrls.google : '',
       },
     ];    
     if (this.props.subChannel) {

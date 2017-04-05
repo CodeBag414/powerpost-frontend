@@ -1,10 +1,10 @@
 import { takeLatest, takeEvery } from 'redux-saga';
 import { take, pull, call, put, fork, cancel, select } from 'redux-saga/effects';
 import {LOCATION_CHANGE} from 'react-router-redux';
-import { makeSelectCurrentAccount } from 'containers/App/selectors';
+import { makeSelectCurrentAccount } from 'containers/Main/selectors';
 import { toastr } from 'lib/react-redux-toastr';
 
-import { SET_CONNECTIONS_LIST } from '../../../../../state/constants';
+import { SET_CONNECTIONS_LIST } from 'containers/Main/constants';
 import { makeSelectSubCallback } from './selectors';
 
 import {

@@ -33,15 +33,15 @@ class ConnectionsControlBar extends React.Component {
         return (
             <div className={ ['row', styles.mainBlock].join(' ') }>
                 <div
-                    className={ ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-3', styles.noLeftPadding].join(' ') }>
+                    className={ ['col-xs-12', 'col-sm-6', 'col-md-3', styles.noLeftPadding].join(' ') }>
                     <h3 className={ [styles.noMargin, styles.verticalAlign ].join(' ') }>Connected Accounts</h3>
                 </div>
                 <div
-                    className={ ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-3', styles.noLeftPadding, styles.verticalAlign].join(' ') }>
+                    className={ ['col-xs-12', 'col-sm-6', 'col-md-3', styles.noLeftPadding, styles.verticalAlign].join(' ') }>
                     <PPButton label="Connect a New Channel" primary onClick={ this.props.handleDialogToggle } />
                 </div>
                 <div
-                    className={ ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-3', styles.noLeftPadding].join(' ') }>
+                    className={ ['col-xs-12', 'col-sm-6', 'col-md-3', 'col-lg-3', styles.noLeftPadding].join(' ') }>
                     <div className={[styles.filterBlock, styles.channelTypeBlock].join(' ')}>
                         <PPSelectField onChange={this.setChannelType} value={this.props.channelType} underlineShow={false}>
                             { channelTypes }
@@ -49,7 +49,7 @@ class ConnectionsControlBar extends React.Component {
                     </div>
                 </div>
                 <div
-                    className={ ['col-xs-12', 'col-sm-12', 'col-md-12', 'col-lg-3', styles.noLeftPadding].join(' ') }>
+                    className={ ['col-xs-12', 'col-sm-6', 'col-md-3', 'col-lg-3', styles.noLeftPadding].join(' ') }>
                         <PPButtonInput value={ this.props.channelFilter } type="text" hint="Search" icon="search"
                                    onChange={ this.setChannelFilter }/>
                 </div>

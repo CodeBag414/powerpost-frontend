@@ -55,7 +55,7 @@ class Connections extends React.Component {
         function receiveMessage(event)
         {
             if (event.origin.includes('dev2')) {
-              //this.props.connectionCallback(event.data);
+              this.props.connectionCallback(event.data);
             }
         }
     }
