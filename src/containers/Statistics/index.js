@@ -35,8 +35,6 @@ import {
     makeSelectAccountConnections,
 } from 'containers/Main/selectors';
 
-import styles from './styles.scss';
-
 class Statistics extends React.Component {
     constructor(props) {
         super(props);
@@ -116,7 +114,7 @@ class Statistics extends React.Component {
 
         return (
             <div>
-                <div className={ styles.sidechannelbar }>
+                <div>
                     <ChannelsList connections={this.getFilteredConnections()} removeConnection={this.removeConnection} accountId={ this.props.params.account_id } loading={ this.props.children }
                                     handleDialogToggle={this.handleDialogToggle} channels={this.getChannelTypes()}
                                     setChannelFilter={this.setChannelFilter} setChannelType={this.setChannelType}

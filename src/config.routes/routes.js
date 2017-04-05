@@ -217,10 +217,10 @@ export function createRoutes(store, auth) {
           },
           childRoutes: [{
             path: '/account(/:account_id)/statistics(/:channel_id)',
-            name: 'Channels Info',
+            name: 'Channels',
             getComponent(nextstate, cb) {
               const importModules = Promise.all([
-                System.import('containers/Statistics/Loading'),
+                System.import('containers/Statistics/ChannelsInfo'),
               ]);
 
               const renderRoute = loadModule(cb);
@@ -229,6 +229,52 @@ export function createRoutes(store, auth) {
                 renderRoute(component);
               });
             },
+            childRoutes: [{
+            path: '/account(/:account_id)/statistics(/:channel_id)/tweets',
+            name: 'tweets',
+            getComponent(nextstate, cb) {
+              const importModules = Promise.all([
+                System.import('containers/Statistics/ChannelsInfo/Tweets'),
+              ]);
+
+              const renderRoute = loadModule(cb);
+
+              importModules.then(([component]) => {
+                renderRoute(component);
+              });
+            },
+          },
+          {
+            path: '/account(/:account_id)/statistics(/:channel_id)/retweets',
+            name: 'tweets',
+            getComponent(nextstate, cb) {
+              const importModules = Promise.all([
+                System.import('containers/Statistics/ChannelsInfo/ReTweets'),
+              ]);
+
+              const renderRoute = loadModule(cb);
+
+              importModules.then(([component]) => {
+                renderRoute(component);
+              });
+            },
+          },
+          {
+            path: '/account(/:account_id)/statistics(/:channel_id)/favorites',
+            name: 'tweets',
+            getComponent(nextstate, cb) {
+              const importModules = Promise.all([
+                System.import('containers/Statistics/ChannelsInfo/Favorites'),
+              ]);
+
+              const renderRoute = loadModule(cb);
+
+              importModules.then(([component]) => {
+                renderRoute(component);
+              });
+            },
+          },
+          ]
           },
           ]
         },
