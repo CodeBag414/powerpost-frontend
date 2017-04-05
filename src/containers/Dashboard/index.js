@@ -11,6 +11,7 @@ import { createStructuredSelector } from 'reselect';
 
 import PPButton from 'elements/atm.Button';
 import Avatar from 'elements/atm.Avatar';
+import withReactRouter from 'elements/hoc.withReactRouter';
 
 import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 
@@ -22,13 +23,15 @@ import {
 import BrandItem from './BrandItem';
 import styles from './styles.scss';
 
+const ReactRouterButton = withReactRouter(PPButton);
+
 class Dashboard extends React.Component {
 	constructor(props) {
 		super(props);
+
 	}
 
 	render() {
-		console.log("this.props",this.props);
 		const userInfo = this.props.user || null;
 		const avatarUrl = (userInfo && userInfo.properties && userInfo.properties.thumb_url) ? userInfo.properties.thumb_url : null;
 
@@ -48,7 +51,8 @@ class Dashboard extends React.Component {
     			<div className="col-md-7">
     				<div className={['col-md-12', styles.userDashboardContain].join(' ')}>
 	    				<row>
-	    					<h3>My Brands</h3>
+	    					
+	    					<h3><i className="material-icons">flash_on</i>My Brands</h3>
 	    				</row>
 
 	    				<hr />
@@ -67,15 +71,20 @@ class Dashboard extends React.Component {
     			<div className="col-md-5">
     				<div className={['col-md-12', styles.userDashboardContain].join(' ')}>
 	    				<row>
-	    					<h3>My User Settings</h3>
+	    					<h3><i className="material-icons">flash_on</i>My User Settings</h3>
 	    				</row>
 
 	    				<hr />
 
 	    				<row>
 	    					<div style={{margin: '20px 0'}}>
-	  							<p style={{display: 'inline-block'}}>Go here to manage all of your user info.</p>
-	  							<PPButton theme={styles}>User Settings</PPButton>
+	  							<p style={{display: 'inline-block', marginRight: '10px'}}>Go here to manage all of your user info.</p>
+	  							<ReactRouterButton
+	  								style={{fontSize: '10px'}}
+	  								label="Go to Settings"
+	  								primary
+	  								to={'/user/settings'}
+	  							/>
   							</div>
 	    				</row>
 

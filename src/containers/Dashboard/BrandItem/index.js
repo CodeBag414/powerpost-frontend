@@ -29,7 +29,7 @@ class BrandItem extends React.Component {
 
   			<div style={inline.socialButton}>
   				<i className="material-icons">send</i>
-  				<i className="material-icons">share</i>
+  				<i className="material-icons">repeat</i>
   				<i className="material-icons">group</i>
   				<i className="material-icons">settings</i>
   			</div>
