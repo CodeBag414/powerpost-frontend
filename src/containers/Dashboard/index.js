@@ -73,31 +73,32 @@ class Dashboard extends React.Component {
 	    				<hr />
 
 	    				<row>
-	    					<div>
+	    					<div style={{margin: '20px 0'}}>
 	  							<p style={{display: 'inline-block'}}>Go here to manage all of your user info.</p>
 	  							<PPButton theme={styles}>User Settings</PPButton>
   							</div>
 	    				</row>
 
 	    				<row>
-                <img
-                  src={avatarUrl}
-                  className={styles.avatar}
-                  alt="Profile Photo"
-                />
+	    					<div className={styles.profile}>
+	                <img
+	                  src={avatarUrl}
+	                  className={styles.avatar}
+	                  alt="Profile Photo"
+	                />
 
-                <div>
-	                <div className={styles.avatar}>
-	                	<p>Name</p>
-	                	<span> {userInfo.display_name || ''} </span>
-	                </div>
+	                <div className={styles.userInfo}>
+		                <div>
+		                	<p>Name</p>
+		                	<span> {userInfo.display_name || ''} </span>
+		                </div>
 
-	                <div>
-	                	<p>Email</p>
-	                	<span> {userInfo.email || ''} </span>
+		                <div>
+		                	<p>Email</p>
+		                	<span> {userInfo.email || ''} </span>
+		                </div>
 	                </div>
                 </div>
-
 	    				</row>
     				</div>
     			</div>

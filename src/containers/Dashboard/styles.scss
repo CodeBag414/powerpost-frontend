@@ -4,12 +4,7 @@
 }
 
 
-.avatar {
-    width: 90px;
-    height: 90px;
-    border-radius: 10px;
-    overflow: hidden; 
-}
+
 
 .button {
 	color: white;
@@ -22,4 +17,28 @@ h1, h2, h3, h4, h5, h6, p {
 
 p, div {
     font-size: 13px;
+}
+
+
+.profile {
+	margin: 10px 0 50px;
+}
+.avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-right: 30px;
+    display: inline-block;
+}
+
+.userInfo {
+    display: inline-block;
+    height: 90px;
+    vertical-align: middle;
+    padding: 20px 0;
+	p {
+		display: inline-block;
+		width: 60px;
+	}
 }
