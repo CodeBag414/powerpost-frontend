@@ -153,6 +153,7 @@ class Sidebar extends React.Component {
                         isSidebar
                         icon={<i className={connection.channel_icon} />}
                         to={`/account/${this.props.accountId}/feed/${connection.connection_id}`}
+                        selected={this.props.location.pathname.match(`/feed/${connection.connection_id}`) != null}
                       />
                   )
                 }
