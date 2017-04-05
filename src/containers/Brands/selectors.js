@@ -2,19 +2,9 @@ import { createSelector } from 'reselect';
 
 const selectBrands = (state) => state.get('brands');
 
-const makeSelectChannelFilter = () => createSelector(
+const makeSelectBrandFilter = () => createSelector(
     selectBrands,
-    (brands) => brands.get('channelFilter')
-);
-
-const makeSelectChannelType = () => createSelector(
-    selectBrands,
-    (brands) => brands.get('channelType')
-);
-
-const makeSelectConnections = () => createSelector(
-    selectBrands,
-    (brands) => brands.get('connections')
+    (brands) => brands.get('brandFilter')
 );
 
 const makeSelectDialogShown = () => createSelector(
@@ -22,15 +12,7 @@ const makeSelectDialogShown = () => createSelector(
     (brands) => brands.get('dialogShown')
 );
 
-const makeSelectSocialUrls = () => createSelector(
-    selectBrands,
-    (brands) => brands.get('socialUrls')
-);
-
 export {
-    makeSelectChannelFilter,
-    makeSelectChannelType,
-    makeSelectConnections,
+    makeSelectBrandFilter,
     makeSelectDialogShown,
-    makeSelectSocialUrls,
 };
