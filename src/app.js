@@ -16,7 +16,8 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import ReduxToastr from './lib/react-redux-toastr';
-
+import { ThemeProvider } from 'styled-components';
+import auth from 'utils/auth';
 //Needed for material-ui libarry
 injectTapEventPlugin();
 
@@ -26,14 +27,9 @@ injectTapEventPlugin();
 
 import configureStore from './config.redux/store';
 
-// import selector for 'syncHistoryWithStore'
 import { makeSelectLocationState } from './config.redux/selectors';
-
-import auth from 'utils/auth';
-//import theme from 'lib/react-toolbox/theme';
-//import ThemeProvider from 'react-toolbox/lib/ThemeProvider';
-
 import { createRoutes} from './config.routes/routes';
+import PPTheme from './theme';
 
 export const historyObj = browserHistory;
 
@@ -49,18 +45,20 @@ const rootRoute = createRoutes(store,auth);
 
 ReactDOM.render(
         <MuiThemeProvider>
-            <Provider store={store}>
-                <div>
-                    <Router
-                            history={history}
-                            routes={rootRoute}
-                            render={
-                                // Scroll to top when going to new page, imitating default browser behavior
-                                applyRouterMiddleware(useScroll())
-                            }
-                        />
-                    <ReduxToastr />
-                </div>
-            </Provider>
+            <ThemeProvider theme={PPTheme}>
+                <Provider store={store}>
+                    <div>
+                        <Router
+                                history={history}
+                                routes={rootRoute}
+                                render={
+                                    // Scroll to top when going to new page, imitating default browser behavior
+                                    applyRouterMiddleware(useScroll())
+                                }
+                            />
+                        <ReduxToastr />
+                    </div>
+                </Provider>
+            </ThemeProvider>
     </MuiThemeProvider>, document.getElementById('app')
 );

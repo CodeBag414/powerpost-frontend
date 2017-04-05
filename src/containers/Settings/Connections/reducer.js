@@ -19,8 +19,8 @@ let initialState = fromJS({
     connections: [],
     socialUrls: {},
     subCallback: false,
-    subChannel: false,
-    subChannels: false,
+    subChannel: {},
+    subChannels: [],
 });
 
 function connectionsReducer (state = initialState, action) {
@@ -51,8 +51,8 @@ function connectionsReducer (state = initialState, action) {
             .set('subChannels', action.subChannels);
       case CLEAR_SUB_DATA:
           return state
-            .set('subChannels', false)
-            .set('subChannel', false)
+            .set('subChannels', [])
+            .set('subChannel', {})
             .set('subCallback', false);
       default: return state;
   }
