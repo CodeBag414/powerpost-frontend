@@ -35,8 +35,6 @@ import {
     makeSelectAccountConnections,
 } from 'containers/Main/selectors';
 
-import styles from './styles.scss';
-
 class Statistics extends React.Component {
     constructor(props) {
         super(props);
