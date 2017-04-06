@@ -1,0 +1,2 @@
+export const FETCH_SOCIAL_FEED = 'FETCH_SOCIAL_FEED';
+export const SET_SOCIAL_FEED = 'SET_SOCIAL_FEED';
