@@ -1,31 +1,48 @@
 import React, { Component } from 'react';
-import PPInput from 'elements/atm.Input';
-import PPRaisedButton from 'elements/atm.RaisedButton';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Link } from 'react-router';
 import classnames from 'classnames';
 
 import { registerRequest } from 'containers/App/actions';
 import { makeSelectAuthError, selectAuth } from 'containers/App/selectors';
 
-import styles from './styles.scss';
+import PPTextField from 'elements/atm.TextField';
+import PPButton from 'elements/atm.Button';
+import Title from 'elements/atm.Title';
+import Center from 'elements/atm.Center';
+import PPLink from 'elements/atm.Link';
+
+import Wrapper from './Wrapper';
+import FormWrapper from './FormWrapper';
+import LeftPane from './LeftPane';
+import RightPane from './RightPane';
+import Topbar from './Topbar';
 
 class Signup extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      nameValue: '',
-      nameError: '',
-      emailValue: '',
-      emailError: '',
-      passwordValue: '',
-      passwordConfirmValue: '',
-      passwordConfirmError: '',
-      passwordError: '',
-      validPassword: false,
-      errorText: props.error || '',
+      name: {
+        value: '',
+        error: '',
+      },
+      email: {
+        value: '',
+        error: '',
+      },
+      phone: {
+        value: '',
+        error: '',
+      },
+      password: {
+        value: '',
+        error: '',
+      },
+      confirmPassword: {
+        value: '',
+        error: '',
+      },
     };
   }
 
@@ -39,53 +56,104 @@ class Signup extends Component {
     }
   }
 
-  onNameChange = (value) => {
-    this.setState({ nameValue: value });
-  }
+  onFieldChange = (ev) => {
+    let { name, value } = ev.target;
+    let error;
 
-  onEmailChange = (value) => {
-    this.setState({ emailValue: value });
-  }
-
-  onPasswordChange = (value) => {
-    this.setState({ passwordValue: value });
-  }
-
-  onPasswordConfirmChange = (value) => {
-    this.setState({ passwordConfirmValue: value });
-    if (value === this.state.passwordValue) {
-      this.setState({ validPassword: true, passwordConfirmError: '' });
-    } else if (this.state.validPassword) {
-      this.setState({ validPassword: false });
+    switch (name) {
+      case 'password':
+        if (value !== this.state.confirmPassword.value) {
+          error = 'Password does not match';
+        }
+        break;
+        // return this.setState({
+        //   password: {
+        //     value,
+        //   },
+        //   confirmPassword: {
+        //     value: this.state.confirmPassword.value,
+        //     error,
+        //   },
+        // });
+      case 'confirmPassword':
+        if (value !== this.state.password.value) {
+          error = 'Password does not match';
+        }
+        break;
+      default:
+        error = '';
     }
 
-    if (value !== this.state.passwordValue) {
-      this.setState({ passwordConfirmError: 'Password does not match previous password' });
-    }
+    this.setState({
+      [name]: {
+        value,
+        error,
+      },
+    });
   }
 
   render() {
     return (
-      <div className={styles.signup}>
-        <div className={styles.leftPane}>
-
-        </div>
-        <div className={styles.rightPane}>
-          <div className={styles.topBar}>
-            Already have an account? <Link to="/login"><div>Sign In</div></Link>
-          </div>
-          <form onSubmit={this.onFormSubmit}>
-            <PPInput type="text" error={ this.state.nameError } value={ this.state.nameValue } label="Display Name" onChange={ this.onNameChange }/>
-            <PPInput type="email" error={ this.state.emailError } value={ this.state.emailValue } label="Email" onChange={ this.onEmailChange }/>
-
-            <PPInput type="password" error={ this.state.passwordError } value={ this.state.passwordValue } label="Password" onChange={ this.onPasswordChange }/>
-            <PPInput type="password" error={ this.state.passwordConfirmError } value={ this.state.passwordConfirmValue } label="Confirm Password" onChange={ this.onPasswordConfirmChange }/>
-
-            <PPRaisedButton type="submit" label="Sign Up" primary={ true } />
-          </form>
-          <div> { this.state.errorText }</div>
-        </div>
-      </div>
+      <Wrapper>
+        <LeftPane />
+        <RightPane>
+          <Topbar />
+          <FormWrapper>
+            <Title>Become a Power Publisher</Title>
+            <Center>Create more content. Reach more people. Generate more leads.</Center>
+            <form onSubmit={this.onFormSubmit} style={{ marginTop: '40px' }}>
+              <PPTextField
+                type="text"
+                name="name"
+                hintText="Example Name"
+                floatingLabelText="Name"
+                value={this.state.name.value}
+                errorText={this.state.name.error}
+                onChange={this.onFieldChange}
+              />
+              <PPTextField
+                type="email"
+                name="email"
+                hintText="example@name.example"
+                floatingLabelText="Email"
+                value={this.state.email.value}
+                errorText={this.state.email.error}
+                onChange={this.onFieldChange}
+              />
+              <PPTextField
+                type="text"
+                name="phone"
+                hintText="Optional"
+                floatingLabelText="Phone Number"
+                rightLabelText="Optional"
+                value={this.state.phone.value}
+                errorText={this.state.phone.error}
+                onChange={this.onFieldChange}
+              />
+              <PPTextField
+                type="password"
+                name="password"
+                hintText="6+ Characters"
+                floatingLabelText="Password"
+                value={this.state.password.value}
+                errorText={this.state.password.error}
+                onChange={this.onFieldChange}
+              />
+              <PPTextField
+                type="password"
+                name="confirmPassword"
+                hintText="6+ Characters"
+                floatingLabelText="Confirm Password"
+                value={this.state.confirmPassword.value}
+                errorText={this.state.confirmPassword.error}
+                onChange={this.onFieldChange}
+              />
+              <Center style={{ marginTop: '30px' }}><PPButton type="submit" label="Sign Up" primary /></Center>
+              <Center style={{ marginTop: '30px' }}>By clicking Sign Up, I accept PowerPost's&nbsp;<PPLink to="/terms">Licence Terms</PPLink></Center>
+            </form>
+          </FormWrapper>
+        </RightPane>
+      </Wrapper>
     );
   }
 }
