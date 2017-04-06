@@ -416,6 +416,9 @@ export function createRoutes(store, auth) {
         const renderRoute = loadModule(cb);
 
         importModules.then(([reducer, sagas, component]) => {
+          injectReducer('login', reducer.default);
+          injectSagas(sagas.default);
+
           renderRoute(component);
         });
 
@@ -435,8 +438,8 @@ export function createRoutes(store, auth) {
         const renderRoute = loadModule(cb);
 
         importModules.then(([reducer, sagas, component]) => {
-        //  injectReducer('signup', reducer.default);
-        //  injectSagas(sagas.default);
+          injectReducer('signup', reducer.default);
+          injectSagas(sagas.default);
 
           renderRoute(component);
         });
@@ -457,15 +460,15 @@ export function createRoutes(store, auth) {
         const renderRoute = loadModule(cb);
 
         importModules.then(([reducer, sagas, component]) => {
-        //  injectReducer('signup', reducer.default);
-        //  injectSagas(sagas.default);
+          injectReducer('signup', reducer.default);
+          injectSagas(sagas.default);
 
           renderRoute(component);
         });
 
         importModules.catch(errorLoading);
       },
-    }
+    },
   ];
 
   return {
@@ -475,4 +478,3 @@ export function createRoutes(store, auth) {
     childRoutes: routes,
   };
 }
-
