@@ -88,6 +88,7 @@ export function* authorizeUpdate(data) {
     const responseUser = yield call(auth.updateUser, data);
     const responseAccount = yield call(auth.updateAccount, data);
     if (responseUser && responseAccount) {
+      yield put({ type: SET_USER, user: responseUser });
       return true;
     }
     return responseUser || responseAccount;
