@@ -2,46 +2,17 @@
 
 $border-color: #E6E6E6;
 
-.verticalAlign {
-  height: 60px;
-  line-height: 60px;
-}
+.BrandsControlBarContainer {
+  width: 100%;
+  padding: 10px;
+  display: inline-block;
+  border: 1px solid #ddd;
+  font-size: 18px;
+  text-align: left;
+  box-shadow: 2px 2px 9px rgba(0,0,0,0.1);
 
-.brandFilterBlock {
-  padding-left: 36px;
-  position: relative;
-}
-
-.brandFilterIcon {
-  top: 15px;
-  left: 12px;
-  position: absolute;
-  color: $border-color;
-}
-
-.filterBlock {
-  border: 1px solid $border-color;
-  height: 48px;
-  border-radius: 8px;
-}
-
-.mainBlock {
-  border-bottom: 1px solid $border-color;
-  padding: 20px;
-  padding-top: 0px;
-  color: $textColor;
-  height: 80px;
-}
-
-.noLeftPadding {
-  padding-left: 0;
-}
-
-.noMargin {
-  margin: 0;
-}
-
-.searchbox {
-  width: 350px;
-  margin-top: 10px;
+  div {
+    display: inline-block;
+    vertical-align: top;
+  }
 }

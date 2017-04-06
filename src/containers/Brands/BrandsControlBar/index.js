@@ -1,13 +1,9 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import styled from 'styled-components';
 
-import FontIcon from 'elements/atm.FontIcon';
 import PPButton from 'elements/atm.Button';
-import IconButton from 'material-ui/IconButton';
-import PPIconButton from 'elements/atm.IconButton';
-import MenuItem from 'material-ui/MenuItem';
-import PPSelectField from 'elements/atm.SelectField';
-import PPInput from 'elements/atm.Input';
+import {Button, IconButton} from 'react-toolbox/lib/button';
 import PPButtonInput from 'elements/atm.ButtonInput';
 
 class BrandsControlBar extends React.Component {
@@ -23,21 +19,32 @@ class BrandsControlBar extends React.Component {
     render() {
         const styles = require('./styles.scss');
 
+        const BrandsControlBarContainer = styled.div`
+            width: 100%;
+            padding: 10px;
+            display: inline-block;
+            border: 1px solid #ddd;
+            font-size: 18px;
+            text-align: left;
+            box-shadow: 2px 2px 9px rgba(0,0,0,0.1);
+
+            div {
+                display: inline-block;
+                vertical-align: top;
+            }
+        `;
+
         return (
-            <div className={ ['row', styles.mainBlock].join(' ') }>
-                <div className={ ['col-xs-12', 'col-sm-6', 'col-md-4', 'col-lg-2', styles.noLeftPadding, styles.verticalAlign].join(' ') }>
+            <BrandsControlBarContainer>
+                <div>
                     <PPButton label="ADD NEW BRAND" primary onClick={ this.props.handleDialogToggle } />
-                    <PPIconButton style={{ top: '14px'}}>
-                      <FontIcon>list</FontIcon>
-                    </PPIconButton>
-                    <PPIconButton style={{ top: '14px'}}>
-                      <FontIcon>list</FontIcon>
-                    </PPIconButton>
+                    <IconButton icon='list' />
+                    <IconButton icon='apps' accent />
                 </div>
-                <div className={ ['col-xs-12', 'col-sm-6', 'col-md-6', 'col-lg-3', styles.noLeftPadding, styles.verticalAlign, styles.searchbox].join(' ') }>
+                <div>
                   <PPButtonInput value={ this.props.brandFilter } type="text" hint="Search" icon="search" onChange={ this.setBrandFilter }/>
                 </div>
-            </div>
+            </BrandsControlBarContainer>
         );
     }
 }

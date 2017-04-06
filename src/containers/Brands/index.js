@@ -23,6 +23,10 @@ import {
     makeSelectAccountBrands,
 } from 'containers/Main/selectors';
 
+import {
+  makeSelectSharedAccounts,
+} from 'containers/App/selectors';
+
 
 class Brands extends React.Component {
     constructor(props) {
@@ -61,10 +65,11 @@ class Brands extends React.Component {
     }
 
     render() {
+        console.log('this.props.brands', this.props.brands)
         return (
             <div>
                 <BrandsControlBar handleDialogToggle={this.handleDialogToggle} 
-                            setBrandFilter={this.setBrandFilter} brandFilter={this.props.brandFilter}/>
+                            setBrandFilter={this.setBrandFilter} brandFilter={'this.props.brand', this.props.brandFilter}/>
                 <BrandsList brands={this.getFilteredBrands()} /> 
                 <AddBrandDialog handleDialogToggle={this.handleDialogToggle} dialogShown={this.props.dialogShown} />
             </div>
@@ -84,7 +89,8 @@ export function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
     brandFilter: makeSelectBrandFilter(),
-    brands: makeSelectAccountBrands(),
+    // brands: makeSelectAccountBrands(),
+    brands: makeSelectSharedAccounts(),
     dialogShown: makeSelectDialogShown(),
 });
 
