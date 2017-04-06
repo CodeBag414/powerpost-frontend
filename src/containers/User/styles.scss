@@ -53,6 +53,12 @@ h1, h2, h3, h4, h5, h6, p {
     }
 }
 
-.image {
-    border-radius: 0;
+.avatar {
+    width: 180px;
+    height: 180px;
+    .image {
+        border-radius: 0;
+        width: 180px;
+        height: 180px;
+    }
 }
