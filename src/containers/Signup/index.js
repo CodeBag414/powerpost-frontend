@@ -1,106 +1,170 @@
-/*
- * Signup View
- *
- * 
- */
-
-import React from 'react';
-import PPInput from 'elements/atm.Input';
-import PPRaisedButton from 'elements/atm.RaisedButton';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import {Link} from 'react-router';
+import classnames from 'classnames';
 
-import {registerRequest} from 'containers/App/actions';
-import {makeSelectAuthError, selectAuth} from 'containers/App/selectors';
+import { registerRequest } from 'containers/App/actions';
+import { makeSelectAuthError, selectAuth } from 'containers/App/selectors';
 
-class Signup extends React.Component {
-    constructor(props) {
-        super(props);
-        const initialState = {
-            nameValue: '',
-            nameError: '',
-            emailValue: '',
-            emailError: '',
-            passwordValue: '',
-            passwordConfirmValue: '',
-            passwordConfirmError: '',
-            passwordError: '',
-            validPassword: false,
-            errorText: this.props.error || '',
-        };
-        
-        this.state = initialState;
-        
-        this.onFormSubmit = this.onFormSubmit.bind(this);
-        this.onNameChange = this.onNameChange.bind(this);
-        this.onEmailChange = this.onEmailChange.bind(this);
-        this.onPasswordChange = this.onPasswordChange.bind(this);
-        this.onPasswordConfirmChange = this.onPasswordConfirmChange.bind(this);
+import PPTextField from 'elements/atm.TextField';
+import PPButton from 'elements/atm.Button';
+import Title from 'elements/atm.Title';
+import Center from 'elements/atm.Center';
+import PPLink from 'elements/atm.Link';
+
+import Wrapper from './Wrapper';
+import FormWrapper from './FormWrapper';
+import LeftPane from './LeftPane';
+import RightPane from './RightPane';
+import Topbar from './Topbar';
+
+class Signup extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      name: {
+        value: '',
+        error: '',
+      },
+      email: {
+        value: '',
+        error: '',
+      },
+      phone: {
+        value: '',
+        error: '',
+      },
+      password: {
+        value: '',
+        error: '',
+      },
+      confirmPassword: {
+        value: '',
+        error: '',
+      },
+    };
+  }
+
+  onFormSubmit = (event) => {
+    event.preventDefault();
+
+    if (this.state.validPassword) {
+      this.props.register(this.state.nameValue, this.state.emailValue, this.state.passwordValue);
+    } else {
+      this.setState({ errorText: 'Passwords do not match' });
     }
-    
-    onFormSubmit(event) {
-        event.preventDefault();
-        
-        if(this.state.validPassword) {
-            this.props.register(this.state.nameValue, this.state.emailValue, this.state.passwordValue);       
-        }else {
-            this.setState({ errorText: 'Passwords do not match' });
+  }
+
+  onFieldChange = (ev) => {
+    let { name, value } = ev.target;
+    let error;
+
+    switch (name) {
+      case 'password':
+        if (value !== this.state.confirmPassword.value) {
+          error = 'Password does not match';
         }
-    }
-    
-    onNameChange(value) {
-        this.setState({ nameValue: value });
-    }
-    
-    onEmailChange(value) {
-        this.setState({ emailValue: value });        
-    }
-    
-    onPasswordChange(value) {
-        this.setState({ passwordValue: value });        
-    }
-    
-    onPasswordConfirmChange(value) {
-        this.setState({ passwordConfirmValue: value });
-        if(value == this.state.passwordValue) {
-            this.setState({ validPassword: true, passwordConfirmError: '' });
-        } else if(this.state.validPassword) {
-            this.setState({ validPassword: false });
+        break;
+        // return this.setState({
+        //   password: {
+        //     value,
+        //   },
+        //   confirmPassword: {
+        //     value: this.state.confirmPassword.value,
+        //     error,
+        //   },
+        // });
+      case 'confirmPassword':
+        if (value !== this.state.password.value) {
+          error = 'Password does not match';
         }
-        
-        if(value != this.state.passwordValue) {
-            this.setState({ passwordConfirmError: 'Password does not match previous password'});
-        }
+        break;
+      default:
+        error = '';
     }
-    render() {
-        return (
-            <div>
-                in signup view
-                <Link to="/login">Back to login</Link>
-                <form onSubmit={ this.onFormSubmit } >
-                    <PPInput type='text' error={ this.state.nameError } value={ this.state.nameValue } label="Display Name" onChange={ this.onNameChange }/>
-                    <PPInput type="email" error={ this.state.emailError } value={ this.state.emailValue } label="Email" onChange={ this.onEmailChange }/>
-                    
-                    <PPInput type="password" error={ this.state.passwordError } value={ this.state.passwordValue } label="Password" onChange={ this.onPasswordChange }/>
-                    <PPInput type="password" error={ this.state.passwordConfirmError } value={ this.state.passwordConfirmValue } label="Confirm Password" onChange={ this.onPasswordConfirmChange }/>
-                    
-                    <PPRaisedButton type="submit" label="Sign Up" primary={ true } />
-                </form>
-                <div> { this.state.errorText }</div>
-            </div>
-        );
-    }
+
+    this.setState({
+      [name]: {
+        value,
+        error,
+      },
+    });
+  }
+
+  render() {
+    return (
+      <Wrapper>
+        <LeftPane />
+        <RightPane>
+          <Topbar />
+          <FormWrapper>
+            <Title>Become a Power Publisher</Title>
+            <Center>Create more content. Reach more people. Generate more leads.</Center>
+            <form onSubmit={this.onFormSubmit} style={{ marginTop: '40px' }}>
+              <PPTextField
+                type="text"
+                name="name"
+                hintText="Example Name"
+                floatingLabelText="Name"
+                value={this.state.name.value}
+                errorText={this.state.name.error}
+                onChange={this.onFieldChange}
+              />
+              <PPTextField
+                type="email"
+                name="email"
+                hintText="example@name.example"
+                floatingLabelText="Email"
+                value={this.state.email.value}
+                errorText={this.state.email.error}
+                onChange={this.onFieldChange}
+              />
+              <PPTextField
+                type="text"
+                name="phone"
+                hintText="Optional"
+                floatingLabelText="Phone Number"
+                rightLabelText="Optional"
+                value={this.state.phone.value}
+                errorText={this.state.phone.error}
+                onChange={this.onFieldChange}
+              />
+              <PPTextField
+                type="password"
+                name="password"
+                hintText="6+ Characters"
+                floatingLabelText="Password"
+                value={this.state.password.value}
+                errorText={this.state.password.error}
+                onChange={this.onFieldChange}
+              />
+              <PPTextField
+                type="password"
+                name="confirmPassword"
+                hintText="6+ Characters"
+                floatingLabelText="Confirm Password"
+                value={this.state.confirmPassword.value}
+                errorText={this.state.confirmPassword.error}
+                onChange={this.onFieldChange}
+              />
+              <Center style={{ marginTop: '30px' }}><PPButton type="submit" label="Sign Up" primary /></Center>
+              <Center style={{ marginTop: '30px' }}>By clicking Sign Up, I accept PowerPost's&nbsp;<PPLink to="/terms">Licence Terms</PPLink></Center>
+            </form>
+          </FormWrapper>
+        </RightPane>
+      </Wrapper>
+    );
+  }
 }
 
 export function mapDispatchToProps(dispatch) {
   return {
-    register: (name, email, password) => dispatch(registerRequest({name, email, password})),
+    register: (name, email, password) => dispatch(registerRequest({ name, email, password })),
   };
 }
 
 const mapStateToProps = createStructuredSelector({
-   // error: selectAuth()
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Signup);
