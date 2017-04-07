@@ -46,7 +46,7 @@ class BrandItem extends React.Component {
         <div className={styles.brandLinks}>
           <ReactRouterButton
             style={themes.link}
-            to={brandURL + '/posts'}
+            to={brandURL + '/list'}
             floating mini
           >
             <i className="fa fa-paper-plane"></i>

@@ -42,11 +42,13 @@ class Dashboard extends Component {
       <div className="container">
         <row>
           <div className="col-md-12">
-            {
-              userInfo && userInfo.display_name
-              ?  'Hello there ' + userInfo.display_name + ' !'
-              : ''
-            }
+            <h4>
+              {
+                userInfo && userInfo.display_name
+                ?  'Hello there ' + userInfo.display_name + ' !'
+                : ''
+              }
+            </h4>
           </div>
         </row>
 
@@ -54,7 +56,7 @@ class Dashboard extends Component {
           <div className="col-md-7">
             <div className={['col-md-12', styles.userDashboardContain].join(' ')}>
               <row>
-                <h3><i className="fa fa-bolt"></i>My Brands</h3>
+                <h3><i className="fa fa-bolt" style={{marginRight: '15px'}}></i>My Brands</h3>
               </row>
 
               <hr />
@@ -75,7 +77,7 @@ class Dashboard extends Component {
           <div className="col-md-5">
             <div className={['col-md-12', styles.userDashboardContain].join(' ')}>
               <row>
-                <h3><i className="fa fa-bolt"></i>My User Settings</h3>
+                <h3><i className="fa fa-bolt" style={{marginRight: '15px'}}></i>My User Settings</h3>
               </row>
 
               <hr />
