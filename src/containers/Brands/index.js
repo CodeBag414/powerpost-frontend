@@ -65,7 +65,7 @@ class Brands extends React.Component {
     }
 
     render() {
-        console.log('this.props.brands', this.props.brands)
+        // console.log('this.props.brands', this.props.brands)
         return (
             <div>
                 <BrandsControlBar handleDialogToggle={this.handleDialogToggle} 
