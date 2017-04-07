@@ -54,7 +54,7 @@ class Dashboard extends Component {
           <div className="col-md-7">
             <div className={['col-md-12', styles.userDashboardContain].join(' ')}>
               <row>
-                <h3><i className="material-icons">flash_on</i>My Brands</h3>
+                <h3><i className="fa fa-bolt"></i>My Brands</h3>
               </row>
 
               <hr />
@@ -75,7 +75,7 @@ class Dashboard extends Component {
           <div className="col-md-5">
             <div className={['col-md-12', styles.userDashboardContain].join(' ')}>
               <row>
-                <h3><i className="material-icons">flash_on</i>My User Settings</h3>
+                <h3><i className="fa fa-bolt"></i>My User Settings</h3>
               </row>
 
               <hr />
