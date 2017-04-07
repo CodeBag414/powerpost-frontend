@@ -36,8 +36,6 @@
 // Takes care of changing the application state
  function globalReducer(state = initialState, action) {
    switch (action.type) {
-     case CHANGE_FORM:
-       return state.set('formState', action.newFormState);
      case SET_AUTH:
        return state.set('loggedIn', action.newAuthState);
      case SET_USER:

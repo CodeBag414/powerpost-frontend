@@ -192,11 +192,12 @@ export function* registerFlow() {
     const wasSuccessful = yield call(authorize, { name, email, password, isRegistering: true });
 
     // If we could register a user, we send the appropiate actions
+    /*
     if (wasSuccessful) {
       yield put({ type: SET_AUTH, newAuthState: true }); // User is logged in (authorized) after being registered
-      yield put({ type: CHANGE_FORM, newFormState: { name: '', password: '' } }); // Clear form
       forwardTo('/dashboard'); // Go to dashboard page
     }
+    */
   }
 }
 
