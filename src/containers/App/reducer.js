@@ -3,7 +3,6 @@
  */
  import { fromJS } from 'immutable';
  import {
-  CHANGE_FORM,
   SET_AUTH,
   SENDING_REQUEST,
   REQUEST_ERROR,
@@ -19,10 +18,6 @@
 
 // The initial application state
  const initialState = fromJS({
-   formState: {
-     username: '',
-     password: '',
-   },
    error: '',
    currentlySending: false,
    user: {},

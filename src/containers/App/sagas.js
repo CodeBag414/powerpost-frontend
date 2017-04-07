@@ -33,7 +33,7 @@ import {
  * @param  {object} options                Options
  * @param  {boolean} options.isRegistering Is this a register request?
  */
-export function* authorize({ name, email, password, isRegistering }) {
+export function* authorize({ name, email, password, properties, isRegistering }) {
   // We send an action that tells Redux we're sending a request
   yield put({ type: SENDING_REQUEST, sending: true });
 
@@ -48,7 +48,7 @@ export function* authorize({ name, email, password, isRegistering }) {
     // as if it's synchronous because we pause execution until the call is done
     // with `yield`!
     if (isRegistering) {
-      response = yield call(auth.register, name, email, password);
+      response = yield call(auth.register, name, email, password, properties);
     } else {
       response = yield call(auth.login, email, password);
     }
@@ -146,7 +146,6 @@ export function* loginFlow() {
       // ...we send Redux appropiate actions
       yield put({ type: SET_AUTH, newAuthState: true }); // User is logged in (authorized)
       yield put({ type: SET_USER, user: winner.auth });
-      yield put({ type: CHANGE_FORM, newFormState: { username: '', password: '' } }); // Clear form
       yield call(forwardTo, '/'); // Go to dashboard page
       // If `logout` won...
     } else if (winner.logout) {
@@ -185,19 +184,19 @@ export function* registerFlow() {
   while (true) {
     // We always listen to `REGISTER_REQUEST` actions
     const request = yield take(REGISTER_REQUEST);
-    const { name, password, email } = request.data;
+    const { name, password, email, properties } = request.data;
 
     // We call the `authorize` task with the data, telling it that we are registering a user
     // This returns `true` if the registering was successful, `false` if not
-    const wasSuccessful = yield call(authorize, { name, email, password, isRegistering: true });
+    const wasSuccessful = yield call(authorize, { name, email, password, properties, isRegistering: true });
 
     // If we could register a user, we send the appropiate actions
-    /*
     if (wasSuccessful) {
       yield put({ type: SET_AUTH, newAuthState: true }); // User is logged in (authorized) after being registered
       forwardTo('/dashboard'); // Go to dashboard page
+      yield put({ type: SET_REGISTER_INFO, registerInfo });
+      forwardTo('/signup/verification');
     }
-    */
   }
 }
 

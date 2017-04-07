@@ -16,16 +16,6 @@ class Signup extends Component {
     children: PropTypes.node,
   }
 
-  constructor(props) {
-    super(props);
-
-    this.formData = {};
-  }
-
-  saveFormData = (data) => {
-    this.formData = data;
-  }
-
   render() {
     const { children } = this.props;
     const {
@@ -56,7 +46,7 @@ class Signup extends Component {
           <Topbar />
           <FormWrapper>
             { React.cloneElement(children, {
-              saveFormData: this.saveFormData,
+
             })
             }
           </FormWrapper>
