@@ -456,6 +456,23 @@ export function createRoutes(store, auth) {
           },
         },
         {
+          path: 'verification',
+          name: 'verification',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/Signup/Verification'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+        {
           path: 'checkout',
           name: 'checkout',
           getComponent(nextState, cb) {
