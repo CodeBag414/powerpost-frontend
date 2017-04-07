@@ -436,23 +436,43 @@ export function createRoutes(store, auth) {
 
         importModules.catch(errorLoading);
       },
-    },
-    {
-      path: '/checkout',
-      name: 'checkout',
-      getComponent(nextState, cb) {
-        const importModules = Promise.all([
-          System.import('containers/Checkout'),
-        ]);
+      indexRoute: { onEnter: (nextState, replace) => replace('/signup/account') },
+      childRoutes: [
+        {
+          path: 'account',
+          name: 'account',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/Signup/Account'),
+            ]);
 
-        const renderRoute = loadModule(cb);
+            const renderRoute = loadModule(cb);
 
-        importModules.then(([component]) => {
-          renderRoute(component);
-        });
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
 
-        importModules.catch(errorLoading);
-      },
+            importModules.catch(errorLoading);
+          },
+        },
+        {
+          path: 'checkout',
+          name: 'checkout',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/Signup/Checkout'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+      ],
     },
   ];
 
