@@ -220,12 +220,16 @@ export function createRoutes(store, auth) {
             name: 'Channels',
             getComponent(nextstate, cb) {
               const importModules = Promise.all([
+                System.import('containers/Statistics/ChannelsInfo/reducer'),
+                System.import('containers/Statistics/ChannelsInfo/sagas'),
                 System.import('containers/Statistics/ChannelsInfo'),
               ]);
 
               const renderRoute = loadModule(cb);
 
-              importModules.then(([component]) => {
+              importModules.then(([reducer, sagas, component]) => {
+                injectReducer('channel', reducer.default);
+                injectSagas(sagas.default);
                 renderRoute(component);
               });
             },
@@ -408,17 +412,12 @@ export function createRoutes(store, auth) {
       name: 'login',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          System.import('containers/Login/reducer'),
-          System.import('containers/Login/sagas'),
           System.import('containers/Login'),
         ]);
 
         const renderRoute = loadModule(cb);
 
-        importModules.then(([reducer, sagas, component]) => {
-          injectReducer('login', reducer.default);
-          injectSagas(sagas.default);
-
+        importModules.then(([component]) => {
           renderRoute(component);
         });
 
@@ -430,17 +429,12 @@ export function createRoutes(store, auth) {
       name: 'signup',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          System.import('containers/Signup/reducer'),
-          System.import('containers/Signup/sagas'),
           System.import('containers/Signup'),
         ]);
 
         const renderRoute = loadModule(cb);
 
-        importModules.then(([reducer, sagas, component]) => {
-          injectReducer('signup', reducer.default);
-          injectSagas(sagas.default);
-
+        importModules.then(([component]) => {
           renderRoute(component);
         });
 
@@ -452,17 +446,12 @@ export function createRoutes(store, auth) {
       name: 'checkout',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          System.import('containers/Checkout/reducer'),
-          System.import('containers/Checkout/sagas'),
           System.import('containers/Checkout'),
         ]);
 
         const renderRoute = loadModule(cb);
 
-        importModules.then(([reducer, sagas, component]) => {
-          injectReducer('signup', reducer.default);
-          injectSagas(sagas.default);
-
+        importModules.then(([component]) => {
           renderRoute(component);
         });
 
