@@ -1,52 +1,58 @@
-@import '~globals.scss';
-
-.tabContent {
-    max-width: 500px;
-}
-
-.icon {
-    font-size: 50px;
-    float: left;
-    margin-right: 10px;
-}
-.connectionType {
-    float: left;
-    height: 50px;
-}
-.connectionName {
-    font-weight: $bold;
-    font-size: 14px;
-    line-height: 25px;
-}
-.connectionDesc {
-    font-size: 11px;
-    line-height: 15px;
-}
-.connectionTypeContainer {
-    clear: both;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    height: 50px;
-}
-.buttonContainer {
+.submit {
     float: right;
-}
-.facebook {
-  color: #4867AA;
-}
-
-.linkedin {
-  color: #0177B5;
+    button {
+        background-color: #E81C64 !important;
+    }
 }
 
-.pinterest {
-  color: #D50C22;
+.updateAvatar {
+    position: absolute !important;
+    width: 180px;
+    height: 180px !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    color: #fff !important;
+
+    &:hover {
+        background-color: rgba(0,0,0,.5) !important;
+    }
 }
 
-.twitter {
-  color: #1DA1F2;
+h1, h2, h3, h4, h5, h6, p {
+    color: #6F6F6F;
 }
 
-.wordpress {
-  color: #464646;
+.radioButton {
+    width: 33%;
+    margin-top: 20px;
+    display: inline-block;
+}
+
+.radio {
+    border: 0.2rem solid #6F6F6F;
+    &:before {
+        background-color:  #6F6F6F;
+    }
+    .ripple {
+        background-color: rgba(111, 111, 111, 0.5);
+    }
+}
+
+.text {
+    color: #6F6F6F;
+}
+
+.radioChecked {
+    border: 0.2rem solid #E81C64;
+    &:before {
+        background-color:  #E81C64;
+    }
+    .ripple {
+        background-color: rgba(232, 28, 100, 0.5);
+    }
+}
+
+.image {
+    border-radius: 0;
 }
