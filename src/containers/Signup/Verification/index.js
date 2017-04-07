@@ -24,7 +24,7 @@ class SignupVerification extends Component {
           &nbsp;<span style={{ color: theme.primaryColor }}>email@gmail.com</span>. Please click on the link to activate your account and start creating content today.
         </CenterText>
         <Center style={{ marginTop: '40px' }}>Can't find your activation email?</Center>
-        <Center style={{ marginTop: '30px' }}><PPButton type="submit" label="Sign Up" primary /></Center>
+        <Center style={{ marginTop: '30px' }}><PPButton type="submit" label="Resend Activation Email" primary /></Center>
       </div>
     );
   }
