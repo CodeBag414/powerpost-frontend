@@ -15,9 +15,9 @@ export function* fetchPlanWorker(action) {
   const { payload } = action;
 
   try {
-    const response = yield call(getData, `/payment_api/plan_info/${payload.planId}`);
-    const { data: { plan_info } = {} } = response;
-    yield put(fetchPlanSuccess(plan_info));
+    const response = yield call(getData, `/plan_info/${payload.planId}`);
+
+    yield put(fetchPlanSuccess(response));
   } catch (error) {
     yield put(fetchPlanError(error));
   }

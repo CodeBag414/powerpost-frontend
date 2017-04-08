@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -33,27 +34,26 @@ class Signup extends Component {
 
   render() {
     const { children, plan } = this.props;
+
     const {
-      planName = '14-Day Trial',
-      price = '199',
-      cycle = 'Monthly',
-      userCount = '20',
-      channelCount = '50',
-      hubCount = '1',
-    } = {};
+      title,
+      price,
+      term_length,
+      features = [],
+    } = plan.detail || {};
 
     return (
       <Wrapper>
         <LeftPane>
           <img src={imgLogo} alt="Logo" />
           <div style={{ marginTop: '120px' }}>PowerPost Business Plan</div>
-          <div style={{ marginTop: '20px', fontSize: '2.5rem' }}>{planName}</div>
+          <div style={{ marginTop: '20px', fontSize: '2.5rem' }}>{title}</div>
           <div style={{ marginTop: '15px' }}>
             <span style={{ fontSize: '1.5rem' }}>${price}</span>&nbsp;
-            <span>{cycle}</span>
+            <span>{term_length}</span>
           </div>
           <div style={{ marginTop: '15px' }}>
-            {userCount} Users. {channelCount} Channels. {hubCount} Central Content Hub.
+            { features.join('. ') }
           </div>
           <div style={{ position: 'absolute', left: 0, bottom: 0 }}>Not the plan you want, we've got you covered. View Plans</div>
         </LeftPane>

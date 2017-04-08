@@ -15,7 +15,7 @@ class SignupVerification extends Component {
   constructor(props) {
     super(props);
 
-    const userInfo = get('userInfo');
+    const userInfo = get('signup') || {};
 
     this.state = {
       name: userInfo.name,
