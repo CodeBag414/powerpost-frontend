@@ -19,14 +19,14 @@ import { push } from 'react-router-redux';
 class Login extends React.Component {
     constructor(props) {
         super(props);
-    
-       this.state = {
-           emailValue: '',
-           passwordValue: '',
-       };
-       
-       this.changeEmail = this.changeEmail.bind(this);
-       this.changePassword = this.changePassword.bind(this);
+
+        this.state = {
+            emailValue: '',
+            passwordValue: '',
+        };
+
+        this.changeEmail = this.changeEmail.bind(this);
+        this.changePassword = this.changePassword.bind(this);
     }
 
     changeEmail(value) {

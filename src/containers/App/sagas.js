@@ -8,6 +8,7 @@ import { take, call, put, race, select } from 'redux-saga/effects';
 import { browserHistory } from 'react-router';
 
 import auth from 'utils/auth';
+import { set } from 'utils/localStorage';
 import { makeSelectUser } from './selectors';
 import { toastr } from 'lib/react-redux-toastr';
 
@@ -18,7 +19,6 @@ import {
   UPDATE_REQUEST,
   SET_AUTH,
   LOGOUT,
-  CHANGE_FORM,
   REQUEST_ERROR,
   SET_USER,
   // SET_ROLES,
@@ -188,14 +188,13 @@ export function* registerFlow() {
 
     // We call the `authorize` task with the data, telling it that we are registering a user
     // This returns `true` if the registering was successful, `false` if not
-    const wasSuccessful = yield call(authorize, { name, email, password, properties, isRegistering: true });
 
-    // If we could register a user, we send the appropiate actions
-    if (wasSuccessful) {
-      yield put({ type: SET_AUTH, newAuthState: true }); // User is logged in (authorized) after being registered
-      forwardTo('/dashboard'); // Go to dashboard page
-      yield put({ type: SET_REGISTER_INFO, registerInfo });
+    try {
+      yield call(authorize, { name, email, password, properties, isRegistering: true });
+      yield call(set, 'userInfo', { name, email });
       forwardTo('/signup/verification');
+    } catch (error) {
+      console.err(error);
     }
   }
 }
@@ -218,7 +217,6 @@ export function* updateFlow() {
     if (wasSuccessful) {
       toastr.success('Success!', 'User setting is updated.');
       yield put({ type: SET_AUTH, newAuthState: true }); // User is logged in (authorized) after being registered
-      yield put({ type: CHANGE_FORM, newFormState: { name: '', password: '' } }); // Clear form
       forwardTo('/dashboard'); // Go to dashboard page
     }
   }

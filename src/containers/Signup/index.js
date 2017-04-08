@@ -4,20 +4,35 @@ import { createStructuredSelector } from 'reselect';
 
 import LeftPane from 'components/LeftPane';
 import RightPane from 'components/RightPane';
+import imgLogo from 'assets/images/logo.png';
 
 import Wrapper from './Wrapper';
 import FormWrapper from './FormWrapper';
 import Topbar from './Topbar';
 
-import imgLogo from 'assets/images/logo.png';
+import {
+  fetchPlan,
+} from './actions';
+import {
+  selectPlan,
+} from './selectors';
 
 class Signup extends Component {
   static propTypes = {
     children: PropTypes.node,
+    location: PropTypes.object,
+    plan: PropTypes.object,
+    fetchPlan: PropTypes.func,
+  }
+
+  componentWillMount() {
+    const { fetchPlan, location } = this.props;
+
+    fetchPlan(location.query.plan_id);
   }
 
   render() {
-    const { children } = this.props;
+    const { children, plan } = this.props;
     const {
       planName = '14-Day Trial',
       price = '199',
@@ -56,12 +71,12 @@ class Signup extends Component {
   }
 }
 
-export function mapDispatchToProps(dispatch) {
-  return {
-  };
-}
+export const mapStateToProps = createStructuredSelector({
+  plan: selectPlan(),
+});
 
-const mapStateToProps = createStructuredSelector({
+export const mapDispatchToProps = (dispatch) => ({
+  fetchPlan: (planId) => dispatch(fetchPlan(planId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Signup);
