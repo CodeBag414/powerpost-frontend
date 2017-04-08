@@ -3,7 +3,7 @@ import cookie from 'react-cookie';
 export const API_URL = 'https://dev2.powerpost.digital';
 
 // Post Request
-export function postData(url, isAuthReq=true,  data) {
+export function postData(url, data, isAuthReq=true) {
   const requestUrl = API_URL + url;
   let headers = {};
   let key = cookie.load('token');
@@ -20,8 +20,7 @@ export function getData(url, isAuthReq=true ) {
   const requestUrl = API_URL + url;
   let headers = {};
   let key = cookie.load('token');
-  console.log('key: ' + key);
-  console.log('url: ' + url + ' key: ' + key);
+
   if(isAuthReq) {
     headers = {headers: {'X-API-KEY': key}};
   }
@@ -30,11 +29,11 @@ export function getData(url, isAuthReq=true ) {
 }
 
 // Put Request
-export function putData(url, isAuthReq=true, data) {
+export function putData(url, data, isAuthReq=true ) {
   const requestUrl = API_URL + url;
   let headers = {};
   let key = cookie.load('token');
-  
+  console.log(data);
   if(isAuthReq) {
     headers = {headers: {'X-API-KEY': key }};
   }

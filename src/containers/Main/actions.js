@@ -11,6 +11,7 @@ import {
 } from 'containers/App/constants';
 
 export function fetchCurrentAccount(accountId) {
+  console.log('accountId: ' + accountId);
   return {
     type: FETCH_ACCOUNT,
     accountId,
