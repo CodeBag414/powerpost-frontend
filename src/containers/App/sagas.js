@@ -192,7 +192,7 @@ export function* registerFlow() {
     try {
       yield call(authorize, { name, email, password, properties, isRegistering: true });
       yield call(set, 'userInfo', { name, email });
-      forwardTo('/signup/verification');
+      yield forwardTo('/signup/verification');
     } catch (error) {
       console.err(error);
     }

@@ -1,3 +1,3 @@
 export const set = (key, value) => window.localStorage.setItem(key, JSON.stringify(value));
 
-export const get = (key) => window.localStorage.getItem(key);
+export const get = (key) => JSON.parse(window.localStorage.getItem(key));

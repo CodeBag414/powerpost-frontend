@@ -72,6 +72,7 @@ class SignupAccount extends Component {
             value: this.state.confirmPassword.value,
             error,
           },
+          error,
         });
       case 'confirmPassword':
         if (value !== this.state.password.value) {
