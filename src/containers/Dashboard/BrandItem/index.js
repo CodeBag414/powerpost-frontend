@@ -2,10 +2,12 @@ import React from 'react';
 
 import PPButton from 'elements/atm.Button';
 import withReactRouter from 'elements/hoc.withReactRouter';
+import PPTooltip from 'elements/atm.Tooltip';
 
 import styles from './styles.scss';
 
 const ReactRouterButton = withReactRouter(PPButton);
+const PPTooltipRouter = PPTooltip(ReactRouterButton);
 
 class BrandItem extends React.Component {
   render() {
@@ -44,37 +46,45 @@ class BrandItem extends React.Component {
         </ReactRouterButton>
 
         <div className={styles.brandLinks}>
-          <ReactRouterButton
+          <PPTooltipRouter
             style={themes.link}
             to={brandURL + '/list'}
             floating mini
+            tooltip='List'
+            tooltipPosition='top'
           >
             <i className="fa fa-paper-plane"></i>
-          </ReactRouterButton>
+          </PPTooltipRouter>
 
-          <ReactRouterButton
+          <PPTooltipRouter
             style={themes.link}
             to={brandURL + '/settings/connections'}
             floating mini
+            tooltip='Connections'
+            tooltipPosition='top'
           >
             <i className="fa fa-exchange"></i>
-          </ReactRouterButton>
+          </PPTooltipRouter>
 
-          <ReactRouterButton
+          <PPTooltipRouter
             style={themes.link}
             to={brandURL + '/settings/team'}
             floating mini
+            tooltip='Team'
+            tooltipPosition='top'
           >
             <i className="fa fa-users"></i>
-          </ReactRouterButton>
+          </PPTooltipRouter>
 
-          <ReactRouterButton
+          <PPTooltipRouter
             style={themes.link}
             to={brandURL + '/settings'}
             floating mini
+            tooltip='Settings'
+            tooltipPosition='top'
           >
             <i className="fa fa-cog"></i>
-          </ReactRouterButton>
+          </PPTooltipRouter>
         </div>
       </div>
     );
