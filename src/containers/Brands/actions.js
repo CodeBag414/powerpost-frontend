@@ -1,5 +1,6 @@
 import {
     SET_BRAND_FILTER,
+    CREATE_BRAND,
     SET_CONNECTIONS_LIST,
     TOGGLE_ADD_CONNECTION_DIALOG,
     CONNECTION_CALLBACK,
@@ -7,6 +8,10 @@ import {
 
 export function setBrandFilter(brandFilter) {
     return {type: SET_BRAND_FILTER, brandFilter};
+}
+
+export function createBrandRequest(brandObject) {
+    return {type: CREATE_BRAND, brandObject};
 }
 
 export function setConnectionsList(connections) {
