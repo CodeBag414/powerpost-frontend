@@ -33,9 +33,9 @@ class ConnectionsControlBar extends React.Component {
         return (
             <div className={ ['row', styles.mainBlock].join(' ') }>
                 <div
-                    className={ ['col-xs-12', 'col-sm-12', 'col-md-12', styles.noLeftPadding].join(' ') }>
+                    className={ ['col-xs-12', 'col-sm-12', 'col-md-12', styles.searchchannel].join(' ') }>
                         <PPButtonInput value={ this.props.channelFilter } type="text" hint="Search Channel" icon="search"
-                                   onChange={ this.setChannelFilter }/>
+                                   onChange={ this.setChannelFilter } style={{ 'margin-left': '2.8rem' }}/>
                 </div>
             </div>
         );

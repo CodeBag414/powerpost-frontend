@@ -208,9 +208,9 @@ export function createRoutes(store, auth) {
             const renderRoute = loadModule(cb);
 
             importModules.then(([reducer, sagas, component]) => {
-                injectReducer('connections', reducer.default);
-                injectSagas(sagas.default);
-                renderRoute(component);
+              injectReducer('connections', reducer.default);
+              injectSagas(sagas.default);
+              renderRoute(component);
             });
 
             importModules.catch(errorLoading);
@@ -220,63 +220,67 @@ export function createRoutes(store, auth) {
             name: 'Channels',
             getComponent(nextstate, cb) {
               const importModules = Promise.all([
+                System.import('containers/Statistics/ChannelsInfo/reducer'),
+                System.import('containers/Statistics/ChannelsInfo/sagas'),
                 System.import('containers/Statistics/ChannelsInfo'),
               ]);
 
               const renderRoute = loadModule(cb);
 
-              importModules.then(([component]) => {
+              importModules.then(([reducer, sagas, component]) => {
+                injectReducer('channel', reducer.default);
+                injectSagas(sagas.default);
                 renderRoute(component);
               });
             },
             childRoutes: [{
-            path: '/account(/:account_id)/statistics(/:channel_id)/tweets',
-            name: 'tweets',
-            getComponent(nextstate, cb) {
-              const importModules = Promise.all([
-                System.import('containers/Statistics/ChannelsInfo/Tweets'),
-              ]);
+              path: '/account(/:account_id)/statistics(/:channel_id)/tweets',
+              name: 'tweets',
+              getComponent(nextstate, cb) {
+                const importModules = Promise.all([
+                  System.import('containers/Statistics/ChannelsInfo/Tweets'),
+                ]);
 
-              const renderRoute = loadModule(cb);
+                const renderRoute = loadModule(cb);
 
-              importModules.then(([component]) => {
-                renderRoute(component);
-              });
+                importModules.then(([component]) => {
+                  renderRoute(component);
+                });
+              },
             },
-          },
-          {
-            path: '/account(/:account_id)/statistics(/:channel_id)/retweets',
-            name: 'tweets',
-            getComponent(nextstate, cb) {
-              const importModules = Promise.all([
-                System.import('containers/Statistics/ChannelsInfo/ReTweets'),
-              ]);
+              {
+                path: '/account(/:account_id)/statistics(/:channel_id)/retweets',
+                name: 'tweets',
+                getComponent(nextstate, cb) {
+                  const importModules = Promise.all([
+                    System.import('containers/Statistics/ChannelsInfo/ReTweets'),
+                  ]);
 
-              const renderRoute = loadModule(cb);
+                  const renderRoute = loadModule(cb);
 
-              importModules.then(([component]) => {
-                renderRoute(component);
-              });
-            },
-          },
-          {
-            path: '/account(/:account_id)/statistics(/:channel_id)/favorites',
-            name: 'tweets',
-            getComponent(nextstate, cb) {
-              const importModules = Promise.all([
-                System.import('containers/Statistics/ChannelsInfo/Favorites'),
-              ]);
+                  importModules.then(([component]) => {
+                    renderRoute(component);
+                  });
+                },
+              },
+              {
+                path: '/account(/:account_id)/statistics(/:channel_id)/favorites',
+                name: 'tweets',
+                getComponent(nextstate, cb) {
+                  const importModules = Promise.all([
+                    System.import('containers/Statistics/ChannelsInfo/Favorites'),
+                  ]);
 
-              const renderRoute = loadModule(cb);
+                  const renderRoute = loadModule(cb);
 
-              importModules.then(([component]) => {
-                renderRoute(component);
-              });
-            },
+                  importModules.then(([component]) => {
+                    renderRoute(component);
+                  });
+                },
+              },
+            ],
           },
-          ]
-          },
-          ]
+          ],
         },
         {
           path: '/account(/:account_id)/brands',

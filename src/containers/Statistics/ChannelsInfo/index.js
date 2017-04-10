@@ -1,5 +1,12 @@
 import React from 'react';
 import TabLink from 'elements/atm.TabLink';
+import {connect} from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { makeSelectCurrentChannel } from './selectors';
+import {
+    fetchCurrentChannel,
+    fetchCurrentChannelSuccess,
+} from './actions';
 
 import styles from './styles.scss';
 
@@ -8,7 +15,15 @@ class ChannelsInfo extends React.Component {
         super(props);
     }
     
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.activeChannel != this.props.activeChannel) {
+            this.props.fetchChannelInfo(nextProps.activeChannel);
+        }
+    }
+    
     render() {
+        const channelId = this.props.params.channel_id;
+        this.props.fetchChannel(channelId);
 
         return (
             <div>
@@ -43,4 +58,16 @@ class ChannelsInfo extends React.Component {
 ChannelsInfo.propTypes = {
     children: React.PropTypes.node
 };
-export default ChannelsInfo;
+
+function mapDispatchToProps(dispatch) {
+  return {
+    fetchChannel: (channelId) => dispatch(fetchCurrentChannel(channelId)),
+    fetchChannelInfo: (channel) => dispatch(fetchCurrentChannelSuccess(channel)),
+  };
+}
+
+const mapStateToProps = createStructuredSelector({
+    activeChannel: makeSelectCurrentChannel(),
+});
+
+export default (connect(mapStateToProps, mapDispatchToProps)(ChannelsInfo));

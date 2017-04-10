@@ -39,9 +39,9 @@ class settingsUser extends Component {
     this.onRadioNotify = this.onRadioNotify.bind(this);
     this.handleChange = this.handleChange.bind(this);
 
-    const user = this.props.user || null;
+    const user = props.user || null;
     const userProperties = (user && user.properties) || null;
-    const userOwnAccount = this.props.userOwnAccount || null;
+    const userOwnAccount = props.userOwnAccount || null;
     const userOwnAccountProperties = (userOwnAccount && userOwnAccount.properties) || null;
 
     this.state = {
@@ -167,6 +167,7 @@ class settingsUser extends Component {
   }
 
   render() {
+    console.log('$$$$$$$$$$$$$$$$$$$$', this.props.user);
     const inline = {
       avatar: {
         position: 'relative',
