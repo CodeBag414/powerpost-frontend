@@ -9,12 +9,14 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
 import { UserCanAccount } from 'config.routes/UserRoutePermissions';
-import PPDialog from 'elements/atm.Dialog';
 
 import { fetchCollections } from './actions';
 
 import MediaNav from './MediaNav';
 import MediaContainer from './MediaContainer.js';
+import Wrapper from './Wrapper';
+import LinkDialog from './LinkDialog';
+import LinkEditor from './LinkEditor';
 
 class MediaItemLibrary extends React.Component {
   constructor(props) {
@@ -22,6 +24,9 @@ class MediaItemLibrary extends React.Component {
 
     this.state = {
       linkDialog: false,
+      addLinkValue: '',
+      addLinkValueError: '',
+      linkEditorDialog: false,
     };
     
     this.openAddBlog = this.openAddBlog.bind(this);
@@ -29,6 +34,7 @@ class MediaItemLibrary extends React.Component {
     this.openAddRSS = this.openAddRSS.bind(this);
     this.openAddLink = this.openAddLink.bind(this);
     this.closeAllDialog = this.closeAllDialog.bind(this);
+    this.handleAddLinkValue = this.handleAddLinkValue.bind(this);
   }
 
   componentDidMount() {
@@ -52,8 +58,32 @@ class MediaItemLibrary extends React.Component {
     console.log('open add blog');
   }
   
+  openLinkEditor() {
+    this.setState({ linkEditorDialog: true });
+  }
+  
   closeAllDialog() {
-    this.setState({ linkDialog: false });  
+    this.setState({ 
+      linkDialog: false,
+      addLinkValueError: '',
+    });  
+  }
+  
+  handleAddLinkValue(event) {
+    this.setState({ addLinkValue: event.target.value });    
+  }
+  
+  handleAddLinkSubmit = () => {
+    if(this.state.addLinkValue === '') {
+      this.setState({ addLinkValueError: 'A link URL is required'});
+      return;
+    }
+    const linkItem = {
+      source: this.state.addLinkValue,
+    };
+    
+    this.setState({ addLinkValue: '', linkDialog: false });
+    console.log(linkItem);
   }
   
   render() {
@@ -62,21 +92,12 @@ class MediaItemLibrary extends React.Component {
     ];
     
     return (
-      <div>
+      <Wrapper>
         <MediaNav openAddFile={this.openAddFile} openAddRSS={this.openAddRSS} openAddLink={this.openAddLink} openAddBlog={this.openAddBlog} />
         <MediaContainer />
-        <PPDialog
-          active={this.state.linkDialog}
-          title="Insert Link URL"
-          onEscKeyDown={this.closeAllDialog}
-          onOverlayClick={this.closeAllDialog}
-          actions={actions}
-        >
-          <div style={{ marginTop: '84px' }}>
-            <h1>Test</h1>
-          </div>
-        </PPDialog>
-      </div>
+        <LinkDialog actions={actions} closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue.bind(this)} handleSubmit={this.handleAddLinkSubmit} value={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
+        <LinkEditor actions={actions} closeAllDialog={this.closeAllDialog} linkEditorDialog={this.state.linkEditorDialog} />
+      </Wrapper>
     );
   }
 }
