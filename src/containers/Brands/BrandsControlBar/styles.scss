@@ -1,0 +1,18 @@
+@import '~globals.scss';
+
+$border-color: #E6E6E6;
+
+.BrandsControlBarContainer {
+  width: 100%;
+  padding: 10px;
+  display: inline-block;
+  border: 1px solid #ddd;
+  font-size: 18px;
+  text-align: left;
+  box-shadow: 2px 2px 9px rgba(0,0,0,0.1);
+
+  div {
+    display: inline-block;
+    vertical-align: top;
+  }
+}
