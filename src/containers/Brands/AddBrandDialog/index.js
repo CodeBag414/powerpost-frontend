@@ -11,7 +11,7 @@ import TextField from 'elements/atm.TextField';
 import PPButton from 'elements/atm.Button';
 import Avatar from 'elements/atm.Avatar';
 
-import { updateRequest } from 'containers/App/actions';
+import { createBrandRequest } from '../actions';
 import {
   makeSelectUser,
   makeSelectUserAccount,
@@ -26,7 +26,7 @@ class AddBrandDialog extends React.Component {
     user: PropTypes.object,
     userOwnAccount: PropTypes.object,
     filePickerKey: PropTypes.string,
-    update: PropTypes.func,
+    create: PropTypes.func,
 
     dialogShown: PropTypes.bool,
     handleDialogToggle: PropTypes.func,
@@ -36,7 +36,7 @@ class AddBrandDialog extends React.Component {
     super(props);
 
     this.openFilePicker = this.openFilePicker.bind(this);
-    this.profileUpdate = this.profileUpdate.bind(this);
+    this.createBrand = this.createBrand.bind(this);
     this.handleChange = this.handleChange.bind(this);
 
     const user = this.props.user || null;
@@ -102,17 +102,16 @@ class AddBrandDialog extends React.Component {
     );
   }
 
-  profileUpdate(event) {
+  createBrand(event) {
     event.preventDefault();
 
     const data = {
-      avatarKey: this.state.avatarKey,
-      title: this.state.title,
-      accountID: this.props.userOwnAccount.account_id,
+      account_id: this.props.userOwnAccount.account_id,
+      display_name: this.state.title,
+      thumbnail_image_key: this.state.avatarKey,
     };
-    console.log('update data', data)
-    return;
-    this.props.update(data);
+    
+    this.props.create(data);
   }
 
   handleChange(event) {
@@ -153,12 +152,11 @@ class AddBrandDialog extends React.Component {
       }
     };
 
-    console.log('dialog user', this.props.user)
-    console.log('dialog userOwnAccount', this.props.userOwnAccount)
+    console.log('userOwnAccount', this.props.userOwnAccount)
 
     return (
       <Dialog title="Add New Brand" active={this.props.dialogShown} actions={labelActions} theme={ dialogtheme }>
-        <form onSubmit={this.profileUpdate}>
+        <form onSubmit={this.createBrand}>
           <row>
             <div>
               <TextField type="text"  name="title" floatingLabelText="Brand Name" maxLength={100} 
@@ -193,7 +191,7 @@ class AddBrandDialog extends React.Component {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    update: (data) => dispatch(updateRequest(data)),
+    create: (data) => dispatch(createBrandRequest(data)),
   };
 }
 
