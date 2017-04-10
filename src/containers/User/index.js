@@ -35,6 +35,7 @@ class settingsUser extends Component {
 
     this.openFilePicker = this.openFilePicker.bind(this);
     this.profileUpdate = this.profileUpdate.bind(this);
+    this.notificationUpdate = this.notificationUpdate.bind(this);
     this.passwordUpdate = this.passwordUpdate.bind(this);
     this.onRadioNotify = this.onRadioNotify.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -127,12 +128,23 @@ class settingsUser extends Component {
       title: this.state.title,
       email: this.state.email,
       phoneNumber: this.state.phoneNumber,
-      emailNotifications: this.state.emailNotifications,
       newPW: '*****',
       accountID: this.props.userOwnAccount.account_id,
     };
 
     this.props.update(data);
+  }
+
+  notificationUpdate(event) {
+    event.preventDefault();
+
+    const data = {
+      emailNotifications: this.state.emailNotifications,
+      newPW: '*****',
+      accountID: this.props.userOwnAccount.account_id,
+    };
+
+    this.props.update(data);  
   }
 
   passwordUpdate(event) {
@@ -185,12 +197,12 @@ class settingsUser extends Component {
         <form onSubmit={this.profileUpdate}>
           <row>
             <div className="col-md-12">
-              <h3>Profile</h3>
+              <h3 style={{ margin: '30px 0 50px' }}>Profile</h3>
             </div>
           </row>
           <row>
             <div className="col-md-3">
-              <h5 style={{ marginLeft: '0px', color: '#9d9d9d' }}>Profile Picture</h5>
+              <h5 style={{ margin: '0 0 25px', color: '#9d9d9d' }}>Profile Picture</h5>
               <br />
               <div style={inline.avatar}>
                 <Avatar
@@ -253,6 +265,18 @@ class settingsUser extends Component {
               </row>
             </div>
           </row>
+          <row>
+            <div className="col-md-12">
+              <PPRaisedButton
+                type="submit"
+                label="Save"
+                primary={!false}
+                className={styles.submit}
+              />
+            </div>
+          </row>
+        </form>
+        <form onSubmit={this.notificationUpdate}>
           <row>
             <div className="col-md-12">
               <hr />
