@@ -21,7 +21,12 @@
 }
 
 
-
+.sideTitle {
+    color: #74797b;
+    i {
+        margin-right: 15px;
+    }
+}
 
 .button {
 	color: white;
@@ -29,7 +34,7 @@
 }
 
 h1, h2, h3, h4, h5, h6, p {
-	color: #6F6F6F;
+	color: #8C9497;
 }
 
 p, div {
@@ -58,4 +63,7 @@ p, div {
 		display: inline-block;
 		width: 60px;
 	}
+    span {
+        color: #8C9497;  
+    }
 }

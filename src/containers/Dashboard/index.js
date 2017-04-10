@@ -44,13 +44,13 @@ class Dashboard extends Component {
         <div className="container">
           <row>
             <div className="col-md-12">
-              <h4>
+              <p style={{margin: '23px 0', fontSize: '23px'}}>
                 {
                   userInfo && userInfo.display_name
-                  ?  'Hello there ' + userInfo.display_name + ' !'
+                  ? 'Hello there ' + userInfo.display_name + ' !'
                   : ''
                 }
-              </h4>
+              </p>
             </div>
           </row>
 
@@ -58,14 +58,14 @@ class Dashboard extends Component {
             <div className="col-md-7">
               <div className={['col-md-12', styles.userDashboardContain].join(' ')}>
                 <row>
-                  <h3><i className="fa fa-bolt" style={{marginRight: '15px'}}></i>My Brands</h3>
+                  <h3 className={styles.sideTitle}><i className="fa fa-bolt"></i>My Brands</h3>
                 </row>
 
                 <hr />
 
                 <row>
                   <p>Easily jump into a brand to manage its posts.</p>
-                  <div style={ {padding: '10px 0 50px'} }>
+                  <div style={{padding: '10px 0 50px'}}>
                     {
                       brands
                       ? brands.map((brand, index) => <BrandItem brand={brand} key={index} />)
@@ -79,7 +79,7 @@ class Dashboard extends Component {
             <div className="col-md-5">
               <div className={['col-md-12', styles.userDashboardContain].join(' ')}>
                 <row>
-                  <h3><i className="fa fa-bolt" style={{marginRight: '15px'}}></i>My User Settings</h3>
+                  <h3 className={styles.sideTitle}><i className="fa fa-bolt"></i>My User Settings</h3>
                 </row>
 
                 <hr />
