@@ -1,6 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import {IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu';
+import withReactRouter from 'elements/hoc.withReactRouter';
+
+const ReactRouterMenuItem = withReactRouter(MenuItem);
 
 const BrandItemContainer = styled.div`
     margin: 30px 0px 0px 20px;
@@ -47,6 +50,21 @@ const BrandItemTitle = styled.div`
     }
 `;
 
+const BrandRouterMenuItem = styled(ReactRouterMenuItem)`
+  span {
+      flex-grow: 0;
+  }
+`;
+const BrandMenuItem = styled(MenuItem)`
+  span {
+      flex-grow: 0;
+  }
+`;
+
+const BrandMenuItemCaption = styled.div`
+  margin-left: 10px;
+`;
+
 class BrandsListItem extends React.Component {
     constructor(props) {
         super(props);
@@ -73,51 +91,50 @@ class BrandsListItem extends React.Component {
         return dif_minutes + ' minutes';
     }
 
-    openPosts = (e) => {
-        e.preventDefault();
-        location.href = this.state.accountpath + '/posts';
-    }
-
-    openConnections = (e) => {
-        e.preventDefault();
-        location.href = this.state.accountpath + '/settings/connections';
-    }
-
-    openSettings = (e) => {
-        e.preventDefault();
-        location.href = this.state.accountpath + '/settings';
-    }
-
-    openTeam = (e) => {
-        e.preventDefault();
-        location.href = this.state.accountpath + '/settings/team';
-    }
-
     brandDelete = (e) => {
         e.preventDefault();
-        this.props.brandDelete(this.props.brand.brand_id);
+        // this.props.brandDelete(this.props.brand.brand_id);
     }
 
     render() {
+        const brand = this.props.brand;
+        const thumbURL = (brand && brand.properties.thumb_url) ? brand.properties.thumb_url : '';
+        const groupTitle = brand && brand.group_title ? brand.group_title : '';
+        const title = brand && brand.title ? brand.title : '';
+        const accountID = brand && brand.account_id ? brand.account_id : null;
+        const brandURL = '/account/' + accountID;
+        
         const BrandNavMenu = () => (
-            <IconMenu icon='more_horiz' position='topLeft' menuRipple>
-                <MenuItem value='download' icon='send' caption='Posts' onClick={this.openPosts} />
-                <MenuItem value='help' icon='swap_horiz' caption='Connections' onClick={this.openConnections} />
-                <MenuItem value='settings' icon='group' caption='Team' onClick={this.openTeam} />
-                <MenuItem value='settings' icon='settings' caption='Settings' onClick={this.openSettings} />
-                <MenuDivider />
-                <MenuItem value='signout' icon='delete' caption='Delete' disabled onClick={this.brandDelete} />
+            <IconMenu
+              position="topLeft" icon='more_horiz' menuRipple
+            >
+              <BrandRouterMenuItem to={brandURL + '/settings/connections'}>
+                <i className="fa fa-paper-plane"></i><BrandMenuItemCaption>Posts</BrandMenuItemCaption>
+              </BrandRouterMenuItem>
+              <BrandRouterMenuItem to={brandURL + '/settings/connections'} >
+                <i className="fa fa-exchange"></i><BrandMenuItemCaption>Connections</BrandMenuItemCaption>
+              </BrandRouterMenuItem>
+              <BrandRouterMenuItem to={brandURL + '/settings/team'} >
+                <i className="fa fa-group"></i><BrandMenuItemCaption>Team</BrandMenuItemCaption>
+              </BrandRouterMenuItem>
+              <BrandRouterMenuItem to={brandURL + '/settings'} >
+                <i className="fa fa-gear"></i><BrandMenuItemCaption>Settings</BrandMenuItemCaption>
+              </BrandRouterMenuItem>
+              <MenuDivider />
+              <BrandMenuItem onClick={this.brandDelete} >
+                <i className="fa fa-trash"></i><BrandMenuItemCaption>Delete</BrandMenuItemCaption>
+              </BrandMenuItem>
             </IconMenu>
         );
 
         return (
             <BrandItemContainer>
                 <BrandImage>
-                    <img src={this.props.brand.properties.thumb_url} />
+                    <img src={thumbURL} />
                 </BrandImage>
                 <clearfix />
                 <BrandItemTitle>
-                    { this.props.brand.title }
+                    { title }
                     <br/>
                     <span>
                         Last updated {this.getLastUpdatedTime(this.props.brand.creation_time)} ago
