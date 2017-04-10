@@ -89,8 +89,8 @@ export function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
     brandFilter: makeSelectBrandFilter(),
-    // brands: makeSelectAccountBrands(),
-    brands: makeSelectSharedAccounts(),
+    brands: makeSelectAccountBrands(),
+    // brands: makeSelectSharedAccounts(),
     dialogShown: makeSelectDialogShown(),
 });
 

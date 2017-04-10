@@ -1,9 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+
 import styled from 'styled-components';
 import {IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu';
 import withReactRouter from 'elements/hoc.withReactRouter';
 
 const ReactRouterMenuItem = withReactRouter(MenuItem);
+
+import { deleteBrandRequest } from '../../actions';
 
 const BrandItemContainer = styled.div`
     margin: 30px 0px 0px 20px;
@@ -68,7 +73,8 @@ const BrandMenuItemCaption = styled.div`
 class BrandsListItem extends React.Component {
     constructor(props) {
         super(props);
-        this.brandDelete = this.brandDelete.bind(this);
+
+        this.deleteBrand = this.deleteBrand.bind(this);
 
         this.state = {
             accountpath: location.origin + '/account/' + this.props.brand.account_id
@@ -91,14 +97,22 @@ class BrandsListItem extends React.Component {
         return dif_minutes + ' minutes';
     }
 
-    brandDelete = (e) => {
-        e.preventDefault();
-        // this.props.brandDelete(this.props.brand.brand_id);
+    deleteBrand(event) {
+        event.preventDefault();
+
+        const data = {
+            account_id: this.props.brand.account_id,
+        };
+        
+        this.props.delete(data);
     }
 
     render() {
         const brand = this.props.brand;
-        const thumbURL = (brand && brand.properties.thumb_url) ? brand.properties.thumb_url : '';
+        console.log('item brand', brand)
+        // const thumbURL = (brand && brand.properties!=null) ? brand.properties.thumb_url : '';
+        const thumbnail_image_key = (brand && brand.properties!=null) ? brand.properties.thumbnail_image_key : '';
+        const thumbURL = "https://s3.amazonaws.com/powerpost/" + thumbnail_image_key;
         const groupTitle = brand && brand.group_title ? brand.group_title : '';
         const title = brand && brand.title ? brand.title : '';
         const accountID = brand && brand.account_id ? brand.account_id : null;
@@ -106,7 +120,7 @@ class BrandsListItem extends React.Component {
         
         const BrandNavMenu = () => (
             <IconMenu
-              position="topLeft" icon='more_horiz' menuRipple
+              position="bottomRight" icon='more_horiz' menuRipple
             >
               <BrandRouterMenuItem to={brandURL + '/settings/connections'}>
                 <i className="fa fa-paper-plane"></i><BrandMenuItemCaption>Posts</BrandMenuItemCaption>
@@ -121,7 +135,7 @@ class BrandsListItem extends React.Component {
                 <i className="fa fa-gear"></i><BrandMenuItemCaption>Settings</BrandMenuItemCaption>
               </BrandRouterMenuItem>
               <MenuDivider />
-              <BrandMenuItem onClick={this.brandDelete} >
+              <BrandMenuItem onClick={this.deleteBrand} >
                 <i className="fa fa-trash"></i><BrandMenuItemCaption>Delete</BrandMenuItemCaption>
               </BrandMenuItem>
             </IconMenu>
@@ -149,4 +163,14 @@ class BrandsListItem extends React.Component {
 
 BrandsListItem.propTypes = {children: React.PropTypes.node};
 
-export default BrandsListItem;
+export function mapDispatchToProps(dispatch) {
+  return {
+    delete: (data) => dispatch(deleteBrandRequest(data)),
+  };
+}
+
+const mapStateToProps = createStructuredSelector({
+  
+});
+
+export default (connect(mapStateToProps, mapDispatchToProps)(BrandsListItem));

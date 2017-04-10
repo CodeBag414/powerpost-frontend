@@ -9,6 +9,7 @@ import { toastr } from 'lib/react-redux-toastr';
 
 import {
   CREATE_BRAND,
+  DELETE_BRAND
 } from './constants';
 
 import {
@@ -16,7 +17,7 @@ import {
 } from './actions';
 
 import {
-    postData
+    postData, putData
 } from 'utils/request.js';
 
 export function* authorize({ account_id, display_name, thumbnail_image_key }) {
@@ -33,7 +34,7 @@ export function* authorize({ account_id, display_name, thumbnail_image_key }) {
   const requestURL = `/account_api/subaccount`;
 
   try {
-    const account = yield call(postData, requestURL, true, data);
+    const account = yield call(postData, requestURL,data);
     console.log('create account', account)
     return
     if (account.data.error) {
@@ -67,8 +68,37 @@ export function* registerFlow() {
   }
 }
 
+export function* deleteFlow() {
+  while (true) {
+    const request = yield take(DELETE_BRAND);
+    const { account_id } = request.brandObject;
+    const data = {
+      payload: {
+        account_id: account_id,
+        status: 0
+    }};
+
+    const requestUrl = `/account_api/account`;
+
+    try {
+      const account = yield call(putData, requestUrl, data, true);
+      console.log('delete account', account)
+      return
+      if (account.data.error) {
+        yield put({ type: CREATE_BRAND, account });
+      } else {
+        yield put({ type: FETCH_ACCOUNT_SUCCESS, account });
+      }
+    } catch (error) {
+      console.log('delete catch error', error)
+      // yield put({ type: FETCH_ACCOUNT_ERROR, error });
+    }
+  }
+}
+
 export default [
-    registerFlow
+    registerFlow,
+    deleteFlow
 ];
 
 const serialize = function(obj, prefix) {

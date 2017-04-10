@@ -25,7 +25,7 @@ const BrandsControlButtons = styled.div`
 const BrandsControlSearch = styled.div`
     display: inline-block;
     vertical-align: top;
-    margin-top: 0px;
+    margin-top: 6px;
 
     div {
         margin-left: 10px  !important;

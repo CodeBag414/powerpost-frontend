@@ -11,7 +11,8 @@ export function postData(url, data, isAuthReq=true) {
   if(isAuthReq) {
     headers = {headers: {'X-API-KEY': key}};
   }
-
+  console.log('postData url', url)
+  console.log('postData data', data)
   return axios.post(requestUrl, data, headers);
 }
 
@@ -33,7 +34,7 @@ export function putData(url, data, isAuthReq=true ) {
   const requestUrl = API_URL + url;
   let headers = {};
   let key = cookie.load('token');
-  console.log(data);
+
   if(isAuthReq) {
     headers = {headers: {'X-API-KEY': key }};
   }
