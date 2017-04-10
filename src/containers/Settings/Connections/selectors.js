@@ -27,10 +27,28 @@ const makeSelectSocialUrls = () => createSelector(
     (connections) => connections.get('socialUrls')
 );
 
+const makeSelectSubCallback = () => createSelector(
+    selectConnections,
+    (connections) => connections.get('subCallback')
+);
+
+const makeSelectSubChannel = () => createSelector(
+    selectConnections,
+    (connections) => connections.get('subChannel')
+);
+
+const makeSelectSubChannels = () => createSelector(
+    selectConnections,
+    (connections) => connections.get('subChannels')
+);
+
 export {
     makeSelectChannelFilter,
     makeSelectChannelType,
     makeSelectConnections,
     makeSelectDialogShown,
     makeSelectSocialUrls,
+    makeSelectSubCallback,
+    makeSelectSubChannel,
+    makeSelectSubChannels,
 };
