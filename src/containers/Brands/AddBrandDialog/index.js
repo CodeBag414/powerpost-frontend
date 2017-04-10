@@ -123,10 +123,6 @@ class AddBrandDialog extends React.Component {
   }
 
   render() {
-    const labelActions = [
-      { label: 'Cancel', onClick: this.props.handleDialogToggle }
-    ];
-
     const inline = {
       avatar: {
         position: 'relative',
@@ -155,7 +151,7 @@ class AddBrandDialog extends React.Component {
     console.log('userOwnAccount', this.props.userOwnAccount)
 
     return (
-      <Dialog title="Add New Brand" active={this.props.dialogShown} actions={labelActions} theme={ dialogtheme }>
+      <Dialog title="Add New Brand" active={this.props.dialogShown} theme={ dialogtheme }>
         <form onSubmit={this.createBrand}>
           <row>
             <div>
@@ -181,6 +177,7 @@ class AddBrandDialog extends React.Component {
           <row>
             <div>
               <PPButton type="submit" label="Add Brand" primary={!false} className={styles.submit} />
+              <PPButton label="Cancel" primary className={styles.cancel} onClick={this.props.handleDialogToggle} />
             </div>
           </row>
         </form>

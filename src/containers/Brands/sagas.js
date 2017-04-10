@@ -20,9 +20,6 @@ import {
 } from 'utils/request.js';
 
 export function* authorize({ account_id, display_name, thumbnail_image_key }) {
-  // We send an action that tells Redux we're sending a request
-  // yield put({ type: SENDING_REQUEST, sending: true });
-  // We then try to register or log in the user, depending on the request
   const data = {
     payload: {
       account_id: account_id,
@@ -31,11 +28,11 @@ export function* authorize({ account_id, display_name, thumbnail_image_key }) {
         thumbnail_image_key: thumbnail_image_key
       }
   }};
-  const params = serialize(data);
-  console.log('params', params)
+  // const params = serialize(data);
+
   const requestURL = `/account_api/subaccount`;
+
   try {
-    
     const account = yield call(postData, requestURL, true, data);
     console.log('create account', account)
     return
@@ -45,9 +42,10 @@ export function* authorize({ account_id, display_name, thumbnail_image_key }) {
       yield put({ type: FETCH_ACCOUNT_SUCCESS, account });
     }
   } catch (error) {
-    yield put({ type: FETCH_ACCOUNT_ERROR, error });
+    console.log('authorize catch error', error)
+    // yield put({ type: FETCH_ACCOUNT_ERROR, error });
   }
-  
+
 }
 
 export function* registerFlow() {

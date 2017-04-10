@@ -136,10 +136,7 @@ class Sidebar extends React.Component {
                 { this.props.accountPermissions && this.props.accountPermissions.indexOf('team') > -1 &&
                 <ReactRouterMenuItem caption="Team" isSidebar icon={<FontIcon>people</FontIcon>} to={`/account/${this.props.accountId}/settings/team`} />
                                 }
-                {/*{ (this.props.activeBrand.account_type_id == 2 || this.props.activeBrand.account_type_id == 7) &&
-                <ReactRouterMenuItem caption="Brands" isSidebar icon={<FontIcon>library_add</FontIcon>} to={`/account/${this.props.accountId}/brands`} />
-                                }*/}
-                { 
+                { (this.props.activeBrand.account_type_id == 2 || this.props.activeBrand.account_type_id == 7) &&
                 <ReactRouterMenuItem caption="Brands" isSidebar icon={<FontIcon>library_add</FontIcon>} to={`/account/${this.props.accountId}/brands`} />
                                 }
                 { this.props.activeBrand.connections &&
