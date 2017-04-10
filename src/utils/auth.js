@@ -73,13 +73,14 @@ let auth = {
       * Registers a user then logs them in
       * 
       */
-     register(name, email, password) {
+     register(name, email, password, properties) {
         const data = {
             payload: {
                 display_name: name,
                 password: password,
-                email: email
-            }
+                email: email,
+                properties,
+            },
         };
         
         const url = API_URL + '/account_api/create';

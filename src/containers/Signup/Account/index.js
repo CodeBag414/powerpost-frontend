@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
 import { registerRequest } from 'containers/App/actions';
-import { makeSelectAuthError, selectAuth } from 'containers/App/selectors';
+import { makeSelectAuthError } from 'containers/App/selectors';
 
 import PPTextField from 'elements/atm.TextField';
 import PPButton from 'elements/atm.Button';
@@ -13,7 +13,8 @@ import PPLink from 'elements/atm.Link';
 
 class SignupAccount extends Component {
   static propTypes = {
-    saveFormData: PropTypes.func.isRequired,
+    authError: PropTypes.string,
+    register: PropTypes.func,
   }
 
   constructor(props) {
@@ -40,21 +41,22 @@ class SignupAccount extends Component {
         value: '',
         error: '',
       },
+      error: null,
     };
   }
 
   onFormSubmit = (event) => {
     event.preventDefault();
-
-    this.props.saveFormData({
-      display_name: this.state.name.value,
-      email: this.state.email.value,
-      password: this.state.password.value,
-    });
+    if (!this.state.error) {
+      this.props.register(this.state.name.value, this.state.email.value, this.state.password.value, {
+        phone_number: this.state.phone.value,
+        selected_plan: '',
+      });
+    }
   }
 
   onFieldChange = (ev) => {
-    let { name, value } = ev.target;
+    const { name, value } = ev.target;
     let error;
 
     switch (name) {
@@ -62,16 +64,15 @@ class SignupAccount extends Component {
         if (value !== this.state.confirmPassword.value) {
           error = 'Password does not match';
         }
-        break;
-        // return this.setState({
-        //   password: {
-        //     value,
-        //   },
-        //   confirmPassword: {
-        //     value: this.state.confirmPassword.value,
-        //     error,
-        //   },
-        // });
+        return this.setState({
+          password: {
+            value,
+          },
+          confirmPassword: {
+            value: this.state.confirmPassword.value,
+            error,
+          },
+        });
       case 'confirmPassword':
         if (value !== this.state.password.value) {
           error = 'Password does not match';
@@ -86,10 +87,16 @@ class SignupAccount extends Component {
         value,
         error,
       },
+      error,
     });
   }
 
   render() {
+    const { authError } = this.props;
+    if (authError) {
+      alert('Signup Failed. Try again!');
+    }
+
     return (
       <div>
         <Title>Become a Power Publisher</Title>
@@ -141,7 +148,7 @@ class SignupAccount extends Component {
             errorText={this.state.confirmPassword.error}
             onChange={this.onFieldChange}
           />
-          <Center style={{ marginTop: '30px' }}><PPButton type="submit" label="Sign Up" primary /></Center>
+          <Center style={{ marginTop: '30px' }}><PPButton type="submit" label="Sign Up" primary disabled={!!this.state.error} /></Center>
           <Center style={{ marginTop: '30px' }}>By clicking Sign Up, I accept PowerPost's&nbsp;<PPLink to="/terms">Licence Terms</PPLink></Center>
         </form>
       </div>
@@ -151,11 +158,12 @@ class SignupAccount extends Component {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    register: (name, email, password) => dispatch(registerRequest({ name, email, password })),
+    register: (name, email, password, properties) => dispatch(registerRequest({ name, email, password, properties })),
   };
 }
 
 const mapStateToProps = createStructuredSelector({
+  authError: makeSelectAuthError(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignupAccount);
