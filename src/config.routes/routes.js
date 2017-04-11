@@ -425,12 +425,16 @@ export function createRoutes(store, auth) {
       name: 'signup',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
+          System.import('containers/Signup/reducer'),
+          System.import('containers/Signup/sagas'),
           System.import('containers/Signup'),
         ]);
 
         const renderRoute = loadModule(cb);
 
-        importModules.then(([component]) => {
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('signup', reducer.default);
+          injectSagas(sagas.default);
           renderRoute(component);
         });
 
@@ -444,6 +448,23 @@ export function createRoutes(store, auth) {
           getComponent(nextState, cb) {
             const importModules = Promise.all([
               System.import('containers/Signup/Account'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+        {
+          path: 'verification',
+          name: 'verification',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/Signup/Verification'),
             ]);
 
             const renderRoute = loadModule(cb);
@@ -473,6 +494,27 @@ export function createRoutes(store, auth) {
           },
         },
       ],
+    },
+    {
+      path: 'redeem/token/:token',
+      name: 'redeem',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          System.import('containers/Redeem/reducer'),
+          System.import('containers/Redeem/sagas'),
+          System.import('containers/Redeem'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('redeem', reducer.default);
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
     },
   ];
 
