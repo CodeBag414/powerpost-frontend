@@ -8,7 +8,7 @@ import { makeSelectAuthError, selectAuth } from 'containers/App/selectors';
 import moment from 'moment';
 import { range } from 'lodash';
 
-import PPDropdown from 'elements/atm.DropDown';
+import PPDropdown from 'elements/atm.Dropdown';
 import PPTextField from 'elements/atm.TextField';
 import PPButton from 'elements/atm.Button';
 import Title from 'elements/atm.Title';
@@ -94,10 +94,10 @@ class SignupCheckout extends Component {
           />
           <div className="row">
             <div className="col-sm-12 col-md-8">
-              <PPDropdown auto value={ this.state.expirationMonth } source={monthOptions} onChange={ this.onMonthChange } />
+              <PPDropdown value={ this.state.expirationMonth } options={monthOptions} onChange={ this.onMonthChange } />
             </div>
             <div className="col-sm-12 col-md-4">
-              <PPDropdown auto value={ this.state.expirationYear } source={yearOptions} onChange={ this.onYearChange } />
+              <PPDropdown value={ this.state.expirationYear } options={yearOptions} onChange={ this.onYearChange } />
             </div>
           </div>
           <div className="row">
