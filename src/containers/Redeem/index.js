@@ -6,37 +6,41 @@ import {
   redeemToken,
 } from './actions';
 import {
-  selectRedemption,
+  selectRedeem,
 } from './selectors';
 
 import Wrapper from './Wrapper';
 
 class Redeem extends Component {
   static propTypes = {
-    location: PropTypes.object,
-    redeemToken: PropTypes.object,
-    selectRedemption: PropTypes.func,
+    params: PropTypes.object,
+    redeem: PropTypes.object,
+    redeemToken: PropTypes.func,
   }
 
   componentWillMount() {
-    const { redeemToken, location } = this.props;
-    console.log('*****', this.props);
-    // redeemToken(location.query.plan_id);
+    const { redeemToken, params } = this.props;
+    redeemToken(params.token);
   }
 
   render() {
-    const { redemption } = this.props;
+    const { redeem } = this.props;
 
     return (
-      <Wrapper>
-        Redeeming!
-      </Wrapper>
+      redeem.error ?
+        <Wrapper>
+          Redemption Failed. Please Try Again!
+        </Wrapper>
+        :
+        <Wrapper>
+          Redeeming!
+        </Wrapper>
     );
   }
 }
 
 export const mapStateToProps = createStructuredSelector({
-  redemption: selectRedemption(),
+  redeem: selectRedeem,
 });
 
 export const mapDispatchToProps = (dispatch) => ({

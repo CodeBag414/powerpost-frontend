@@ -1,37 +1,32 @@
 import { fromJS } from 'immutable';
 
 import {
-  FETCH_PLAN,
-  FETCH_PLAN_SUCCESS,
-  FETCH_PLAN_ERROR,
+  REDEEM_TOKEN,
+  REDEEM_TOKEN_SUCCESS,
+  REDEEM_TOKEN_ERROR,
 } from './constants';
 
 const initialState = fromJS({
-  plan: {
-    detail: {},
-    error: null,
-  },
+  detail: {},
+  error: null,
 });
 
-export default function singupReducer(state = initialState, action) {
+export default function (state = initialState, action) {
   const { payload } = action;
 
   switch (action.type) {
-    case FETCH_PLAN:
-      return state.set('plan', {
-        detail: {},
-        error: null,
-      });
-    case FETCH_PLAN_SUCCESS:
-      return state.set('plan', {
-        detail: payload,
-        error: null,
-      });
-    case FETCH_PLAN_ERROR:
-      return state.set('plan', {
-        detail: {},
-        error: payload,
-      });
+    case REDEEM_TOKEN:
+      return state
+        .set('detail', {})
+        .set('error', null);
+    case REDEEM_TOKEN_SUCCESS:
+      return state
+        .set('detail', payload)
+        .set('error', null);
+    case REDEEM_TOKEN_ERROR:
+      return state
+        .set('detail', {})
+        .set('error', payload);
     default:
       return state;
   }

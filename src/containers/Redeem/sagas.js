@@ -1,32 +1,32 @@
 import { takeLatest, call, put } from 'redux-saga/effects';
 
-import { getData } from 'utils/request';
+import { postData } from 'utils/request';
 
 import {
-  FETCH_PLAN,
+  REDEEM_TOKEN,
 } from './constants';
 
 import {
-  fetchPlanSuccess,
-  fetchPlanError,
+  redeemTokenSuccess,
+  redeemTokenError,
 } from './actions';
 
-export function* fetchPlanWorker(action) {
+export function* redeemTokenWorker(action) {
   const { payload } = action;
 
   try {
-    const response = yield call(getData, `/plan_info/${payload.planId}`);
+    const response = yield call(postData, `/account_api/redeem_token/${payload.token}`);
 
-    yield put(fetchPlanSuccess(response));
+    yield put(redeemTokenSuccess(response));
   } catch (error) {
-    yield put(fetchPlanError(error));
+    yield put(redeemTokenError(error));
   }
 }
 
-export function* signupSaga() {
-  yield takeLatest(FETCH_PLAN, fetchPlanWorker);
+export function* redeemSaga() {
+  yield takeLatest(REDEEM_TOKEN, redeemTokenWorker);
 }
 
 export default [
-  signupSaga,
+  redeemSaga,
 ];

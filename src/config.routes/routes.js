@@ -495,6 +495,27 @@ export function createRoutes(store, auth) {
         },
       ],
     },
+    {
+      path: 'redeem/token/:token',
+      name: 'redeem',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          System.import('containers/Redeem/reducer'),
+          System.import('containers/Redeem/sagas'),
+          System.import('containers/Redeem'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('redeem', reducer.default);
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
   ];
 
   return {

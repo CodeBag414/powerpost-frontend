@@ -1,28 +1,28 @@
 import {
-  FETCH_PLAN,
-  FETCH_PLAN_SUCCESS,
-  FETCH_PLAN_ERROR,
+  REDEEM_TOKEN,
+  REDEEM_TOKEN_SUCCESS,
+  REDEEM_TOKEN_ERROR,
 } from './constants';
 
-export function fetchPlan(planId) {
+export function redeemToken(token) {
   return {
-    type: FETCH_PLAN,
+    type: REDEEM_TOKEN,
     payload: {
-      planId,
+      token,
     },
   };
 }
 
-export function fetchPlanSuccess(payload) {
+export function redeemTokenSuccess(payload) {
   return {
-    type: FETCH_PLAN_SUCCESS,
+    type: REDEEM_TOKEN_SUCCESS,
     payload,
   };
 }
 
-export function fetchPlanError(payload) {
+export function redeemTokenError(payload) {
   return {
-    type: FETCH_PLAN_ERROR,
+    type: REDEEM_TOKEN_ERROR,
     payload,
   };
 }

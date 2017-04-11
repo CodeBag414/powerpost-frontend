@@ -1,13 +1,5 @@
-import { createSelector } from 'reselect';
-
-const selectSignup = (state) => state.get('signup');
-
-const selectPlan = () => createSelector(
-  selectSignup,
-  (signup) => signup.get('plan')
-);
+const selectRedeem = (state) => state.get('redeem');
 
 export {
-  selectSignup,
-  selectPlan,
+  selectRedeem,
 };
