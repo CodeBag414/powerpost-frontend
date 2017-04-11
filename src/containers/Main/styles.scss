@@ -1,5 +1,7 @@
 .viewContent {
     margin-top: 60px;
+    overflow: auto;
+    position: relative;
 
     transition: transform .3s ease-in-out,margin .3s ease-in-out;
 }

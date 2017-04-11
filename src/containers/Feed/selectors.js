@@ -7,6 +7,12 @@ const makeSelectSocialFeed = () => createSelector(
     (feed) => feed.get('feed')
 );
 
+const makeSelectConnection = () => createSelector(
+    selectFeed,
+    (feed) => feed.get('connection')
+);
+
 export {
     makeSelectSocialFeed,
+    makeSelectConnection,
 };

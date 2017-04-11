@@ -10,6 +10,7 @@ import {
 
 import {
   setSocialFeed,
+  setConnection,
 } from './actions';
 
 function* getSocialFeed({ connectionId }) {
@@ -18,7 +19,9 @@ function* getSocialFeed({ connectionId }) {
   const response = yield call(getData, requestUrl);
   if (response.data.result === 'success') {
     const feed = response.data.posts;
+    const connection = response.data.connection;
     yield put(setSocialFeed(feed));
+    yield put(setConnection(connection));
   } else {
     console.log(response);
   }
