@@ -11,6 +11,7 @@ import auth from 'utils/auth';
 import { set } from 'utils/localStorage';
 import { makeSelectUser } from './selectors';
 import { toastr } from 'lib/react-redux-toastr';
+import { postData } from 'utils/request';
 
 import {
   SENDING_REQUEST,
@@ -24,7 +25,13 @@ import {
   // SET_ROLES,
   CHECK_USER_OBJECT,
   CLEAR_USER,
+  CREATE_PAYMENT_SOURCE,
 } from './constants';
+
+import {
+  createPaymentSuccess,
+  createPaymentError,
+} from './actions';
 
 /**
  * Effect to handle authorization
@@ -232,6 +239,21 @@ export function* userExistsFlow() {
     }
   }
 }
+
+export function* createPaymentSourceFlow() {
+  while (true) {
+    const { payload } = yield take(CREATE_PAYMENT_SOURCE);
+
+    try {
+      const response = yield call(postData, payload);
+      console.log('-- payment create saga --', response);
+      yield put(createPaymentSuccess(response));
+    } catch (error) {
+      yield put(createPaymentError(error));
+    }
+  }
+}
+
 // The root saga is what we actually send to Redux's middleware. In here we fork
 // each saga so that they are all "active" and listening.
 // Sagas are fired once at the start of an app and can be thought of as processes running
@@ -242,6 +264,7 @@ export default [
   registerFlow,
   updateFlow,
   userExistsFlow,
+  createPaymentSourceFlow,
 ];
 
 // Little helper function to abstract going to different pages

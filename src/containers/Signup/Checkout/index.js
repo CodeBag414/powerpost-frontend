@@ -1,12 +1,16 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-
-import { registerRequest } from 'containers/App/actions';
-import { makeSelectAuthError, selectAuth } from 'containers/App/selectors';
-
 import moment from 'moment';
 import { range } from 'lodash';
+
+import {
+  createPaymentSource,
+} from 'containers/App/actions';
+
+import {
+  selectPaymentSource,
+} from 'containers/App/selectors';
 
 import PPDropdown from 'elements/atm.DropDown';
 import PPTextField from 'elements/atm.TextField';
@@ -31,6 +35,11 @@ const yearOptions = range(2018, 2033).map((year) => ({
 }));
 
 class SignupCheckout extends Component {
+  static propTypes = {
+    paymentSource: PropTypes.object,
+    createPaymentSource: PropTypes.func,
+  }
+
   constructor(props) {
     super(props);
 
@@ -55,11 +64,13 @@ class SignupCheckout extends Component {
   onFormSubmit = (event) => {
     event.preventDefault();
 
-    if (this.state.validPassword) {
-      this.props.register(this.state.nameValue, this.state.emailValue, this.state.passwordValue);
-    } else {
-      this.setState({ errorText: 'Passwords do not match' });
-    }
+    Stripe.card.createToken({
+      number: this.state.cardNumber.value,
+      cvc: this.state.cvc.value,
+      exp_month: this.state.expirationMonth,
+      exp_year: this.state.expirationYear,
+      name: this.state.nameOnCard.value,
+    }, this.handleStripeResponse);
   }
 
   onMonthChange = (value) => {
@@ -75,6 +86,18 @@ class SignupCheckout extends Component {
     this.setState({
       [name]: value,
     });
+  }
+
+  handleStripeResponse = (status, response) => {
+    console.log('/////', status, response);
+    if (response.error) {
+      alert(response.error.message);
+    } else {
+      this.props.createPaymentSource({
+        account_id: '100',
+        stripe_token: response.id,
+      });
+    }
   }
 
   render() {
@@ -94,10 +117,10 @@ class SignupCheckout extends Component {
           />
           <div className="row">
             <div className="col-sm-12 col-md-8">
-              <PPDropdown auto value={ this.state.expirationMonth } source={monthOptions} onChange={ this.onMonthChange } />
+              <PPDropdown auto value={this.state.expirationMonth} source={monthOptions} onChange={this.onMonthChange} />
             </div>
             <div className="col-sm-12 col-md-4">
-              <PPDropdown auto value={ this.state.expirationYear } source={yearOptions} onChange={ this.onYearChange } />
+              <PPDropdown auto value={this.state.expirationYear} source={yearOptions} onChange={this.onYearChange} />
             </div>
           </div>
           <div className="row">
@@ -134,11 +157,12 @@ class SignupCheckout extends Component {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    register: (name, email, password) => dispatch(registerRequest({ name, email, password })),
+    createPaymentSource: (payload) => dispatch(createPaymentSource(payload)),
   };
 }
 
 const mapStateToProps = createStructuredSelector({
+  paymentSource: selectPaymentSource(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignupCheckout);

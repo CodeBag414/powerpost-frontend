@@ -11,7 +11,9 @@
   SET_USER,
   // CHECK_USER_OBJECT,
   CLEAR_USER,
-
+  CREATE_PAYMENT_SOURCE,
+  CREATE_PAYMENT_SOURCE_SUCCESS,
+  CREATE_PAYMENT_SOURCE_ERROR,
 } from './constants';
 
  import auth from 'utils/auth';
@@ -26,6 +28,10 @@
    subAccounts: [],
    loggedIn: auth.loggedIn(),
    filePickerKey: 'A6Upb4pDFTFu9uXIjmV8Oz',
+   paymentSource: {
+     details: {},
+     error: null,
+   },
  });
 
 // Takes care of changing the application state
@@ -53,6 +59,24 @@
         .set('sharedAccounts', [])
         .set('userAccount', {})
         .set('subAccounts', []);
+     case CREATE_PAYMENT_SOURCE:
+       return state
+         .set('paymentSource', {
+           details: {},
+           error: null,
+         });
+     case CREATE_PAYMENT_SOURCE_SUCCESS:
+       return state
+         .set('paymentSource', {
+           details: action.payload,
+           error: null,
+         });
+     case CREATE_PAYMENT_SOURCE_ERROR:
+       return state
+         .set('paymentSource', {
+           details: null,
+           error: action.payload,
+         });
      default:
        return state;
    }
