@@ -20,8 +20,8 @@ function* getSocialFeed({ connectionId }) {
   if (response.data.result === 'success') {
     const feed = response.data.posts;
     const connection = response.data.connection;
-    yield put(setSocialFeed(feed));
     yield put(setConnection(connection));
+    yield put(setSocialFeed(feed));
   } else {
     console.log(response);
   }

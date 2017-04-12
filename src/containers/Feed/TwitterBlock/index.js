@@ -22,7 +22,7 @@ moment.updateLocale('en', {
 
 function getFormattedTime(time) {
   const postTime = moment(time);
-  const nowTime = moment(Date());
+  const nowTime = moment(new Date());
   const diff = nowTime.diff(postTime, 'days');
   if (diff > 0) {
     return postTime.format('MMM D');
@@ -101,7 +101,7 @@ function TwitterBlock({ post, index }) {
 
 TwitterBlock.propTypes = {
   post: PropTypes.object,
-  index: PropTypes.number,
+  index: PropTypes.string,
 };
 
 export default TwitterBlock;
