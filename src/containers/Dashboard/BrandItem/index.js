@@ -1,10 +1,10 @@
 import React from 'react';
 
 import PPButton from 'elements/atm.Button';
-import withReactRouter from 'elements/hoc.withReactRouter';
 import PPTooltip from 'elements/atm.Tooltip';
+import withReactRouter from 'elements/hoc.withReactRouter';
 
-import styles from './styles.scss';
+import Wrapper from './Wrapper';
 
 const ReactRouterButton = withReactRouter(PPButton);
 const PPTooltipRouter = PPTooltip(ReactRouterButton);
@@ -19,35 +19,24 @@ class BrandItem extends React.Component {
     const accountID = brand && brand.account_id ? brand.account_id : null;
     const brandURL = '/account/' + accountID;
 
-    const themes = {
-      link: {
-        width: '40px',
-        height: '40px',
-        background: 'transparent',
-        display: 'inline-block',
-        marginLeft: '15px',
-        marginTop: '5px',
-      },
-    };
-
     return (
-      <div className={styles.brandItem}>
+      <Wrapper>
         <ReactRouterButton
-          style={ {width: '100%', height: '100%', background: 'transparent'} }
+          className="brand"
           to={brandURL}
         >
-          <div className={styles.brand}>
+          <div className="item">
             <img src={thumbURL} alt="Brand" />
-            <div className="role">
-              <p><b>{title}</b></p>
+            <div>
+              <p className="itemTitle">{title}</p>
               <p>{groupTitle}</p>
             </div>
           </div>
         </ReactRouterButton>
 
-        <div className={styles.brandLinks}>
+        <div className="itemLink">
           <PPTooltipRouter
-            style={themes.link}
+            className="link"
             to={brandURL + '/list'}
             floating mini
             tooltip='List'
@@ -57,7 +46,7 @@ class BrandItem extends React.Component {
           </PPTooltipRouter>
 
           <PPTooltipRouter
-            style={themes.link}
+            className="link"
             to={brandURL + '/settings/connections'}
             floating mini
             tooltip='Connections'
@@ -67,7 +56,7 @@ class BrandItem extends React.Component {
           </PPTooltipRouter>
 
           <PPTooltipRouter
-            style={themes.link}
+            className="link"
             to={brandURL + '/settings/team'}
             floating mini
             tooltip='Team'
@@ -77,7 +66,7 @@ class BrandItem extends React.Component {
           </PPTooltipRouter>
 
           <PPTooltipRouter
-            style={themes.link}
+            className="link"
             to={brandURL + '/settings'}
             floating mini
             tooltip='Settings'
@@ -86,7 +75,7 @@ class BrandItem extends React.Component {
             <i className="fa fa-cog"></i>
           </PPTooltipRouter>
         </div>
-      </div>
+      </Wrapper>
     );
   }
 }
