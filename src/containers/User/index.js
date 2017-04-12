@@ -60,7 +60,43 @@ class settingsUser extends Component {
       newPW: '',
       confirmNewPW: '',
       confirmPWError: '',
+      user: user,
+      userOwnAccount: userOwnAccount,
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    let user = this.state.user;
+    let userOwnAccount = this.state.userOwnAccount;
+    if (user != nextProps.user) {
+      user = nextProps.user ? nextProps.user : user;
+    }
+
+    if (userOwnAccount != nextProps.userOwnAccount) {
+      userOwnAccount = nextProps.userOwnAccount ? nextProps.userOwnAccount : userOwnAccount;
+    }
+
+    const userProperties = (user && user.properties) || null;
+    const userOwnAccountProperties = (userOwnAccount && userOwnAccount.properties) || null;
+
+    this.setState({
+      avatar: (userProperties && userProperties.thumb_url) || '',
+      avatarKey: '',
+      email: user.email || '',
+      name: user.display_name || '',
+
+      dailySnapshot: (userProperties && userProperties.daily_snapshot) || false,
+      emailNotifications: (userProperties && userProperties.receive_notifications) || 'none',
+
+      title: (userOwnAccount && userOwnAccount.title) || '',
+      phoneNumber: (userOwnAccountProperties && userOwnAccountProperties.phone_number) || '',
+
+      newPW: '',
+      confirmNewPW: '',
+      confirmPWError: '',
+      user: user,
+      userOwnAccount: userOwnAccount,
+    });
   }
 
   onRadioNotify(value) {
