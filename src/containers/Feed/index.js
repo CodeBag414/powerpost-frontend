@@ -123,7 +123,7 @@ class Feed extends Component {
       case 'twitter':
         return (<TwitterBlock key={post.id} post={post} connection={connection} index={index} />);
       case 'linkedin':
-        return (<LinkedInBlock key={post.id} post={post} connection={connection} />);
+        return (<LinkedInBlock key={post.updateKey} post={post} connection={connection} />);
       case 'pinterest':
         return (<PinterestBlock key={post.id} post={post} connection={connection} />);
       default:
