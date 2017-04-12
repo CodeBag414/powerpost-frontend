@@ -84,7 +84,7 @@ class Feed extends Component {
         url = `//twitter.com/${feed[0].user.screen_name}`;
         break;
       case 'linkedin':
-        // url = `//linkedin.com/${connection.channel_uid}`;
+        url = `//linkedin.com/company-beta/${connection.connection_uid}`;
         break;
       case 'pinterest':
         url = feed[0].board.url;
@@ -101,8 +101,6 @@ class Feed extends Component {
 
   renderFeedBlocks = () => {
     const { feed, connection } = this.props;
-
-    // console.log('feed----', feed);
 
     if (!feed || feed.length === 0) {
       return <img className="feed-loading" src={loadingImage} alt="Loading..." />;

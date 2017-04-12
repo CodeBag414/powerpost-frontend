@@ -2,25 +2,30 @@ import styled from 'styled-components';
 
 const Header = styled.div`
 
-  .fb-header-avatar img {
-    width: 40px;
-    margin-right: 8px;
+  .ln-header-avatar {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+    font-size: 36px;
+    line-height: 36px;
+
+    i {
+      color: #b3b6b9;
+    }
   }
 
-  .fb-header-channel-name {
+  .ln-header-channel-name {
     display: block;
+    font-size: 14px;
+    line-height: 12px;
+    font-weight: 500;
+    color: rgba(0,0,0,.85);
   }
 
   div {
     display: inline-block;
     vertical-align: middle;
-  }
-
-  a {
-    vertical-align: middle;
-    font-size: 14px;
-    line-height: 1.38;
-    color: #365899;
+    margin-top: 3px;
   }
 
   span {

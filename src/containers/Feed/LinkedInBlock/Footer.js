@@ -1,20 +1,26 @@
 import styled from 'styled-components';
 
 const Footer = styled.div`
-  margin: -12px;
-  margin-top: 12px;
-  padding: 12px;
-  background: #f6f7f8;
-  font-size: 12px;
-  border-top: 1px solid #e5e5e5;
+  margin-top: 10px;
 
-  .fb-likes {
-    margin-right: 10px;
-  }
+  .ln-comment-details {
+    display: inline-block;
 
-  a {
-    text-decoration: none;
-    float: right;
+    .ln-comment-detail {
+      display: inline-block;
+      vertical-align: middle;
+      color: rgba(0,0,0,.55);
+      font-size: 13px;
+      font-weight: 400;
+    }
+
+    .ln-comment-dot {
+      margin-left: 4px;
+      margin-right: 4px;
+      &::before {
+        content: "\\00b7";
+      }
+    }
   }
 `;
 
