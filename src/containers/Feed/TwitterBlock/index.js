@@ -14,8 +14,11 @@ moment.updateLocale('en', {
   relativeTime: {
     future: 'in %s',
     past: '%s ago',
+    s: '1m',
     ss: '1m',
+    m: '1m',
     mm: '%dm',
+    h: '1h',
     hh: '%dh',
   },
 });
