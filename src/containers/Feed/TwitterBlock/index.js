@@ -95,7 +95,7 @@ function TwitterBlock({ post, index }) {
             <i className="fa fa-heart" aria-hidden="true"></i>
             <span className="tw-footer-value">{post.favorite_count}</span>
           </div>
-          <Link className="post-view-button" href={`//www.facebook.com/${post.id}`} target="_blank" label="View" icon="open_in_new" />
+          <Link className="post-view-button" href={`//twitter.com/${post.user.screen_name}/status/${post.id_str}`}target="_blank" label="View" icon="open_in_new" />
         </Footer>
       </ContentWrapper>
     </Wrapper>
