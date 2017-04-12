@@ -1,106 +1,82 @@
-/*
- * Signup View
- *
- * 
- */
-
-import React from 'react';
-import PPInput from 'elements/atm.Input';
-import PPRaisedButton from 'elements/atm.RaisedButton';
-import {connect} from 'react-redux';
+/* eslint-disable camelcase */
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import {Link} from 'react-router';
 
-import {registerRequest} from 'containers/App/actions';
-import {makeSelectAuthError, selectAuth} from 'containers/App/selectors';
+import LeftPane from 'components/LeftPane';
+import RightPane from 'components/RightPane';
+import imgLogo from 'assets/images/logo.png';
 
-class Signup extends React.Component {
-    constructor(props) {
-        super(props);
-        const initialState = {
-            nameValue: '',
-            nameError: '',
-            emailValue: '',
-            emailError: '',
-            passwordValue: '',
-            passwordConfirmValue: '',
-            passwordConfirmError: '',
-            passwordError: '',
-            validPassword: false,
-            errorText: this.props.error || '',
-        };
-        
-        this.state = initialState;
-        
-        this.onFormSubmit = this.onFormSubmit.bind(this);
-        this.onNameChange = this.onNameChange.bind(this);
-        this.onEmailChange = this.onEmailChange.bind(this);
-        this.onPasswordChange = this.onPasswordChange.bind(this);
-        this.onPasswordConfirmChange = this.onPasswordConfirmChange.bind(this);
-    }
-    
-    onFormSubmit(event) {
-        event.preventDefault();
-        
-        if(this.state.validPassword) {
-            this.props.register(this.state.nameValue, this.state.emailValue, this.state.passwordValue);       
-        }else {
-            this.setState({ errorText: 'Passwords do not match' });
-        }
-    }
-    
-    onNameChange(value) {
-        this.setState({ nameValue: value });
-    }
-    
-    onEmailChange(value) {
-        this.setState({ emailValue: value });        
-    }
-    
-    onPasswordChange(value) {
-        this.setState({ passwordValue: value });        
-    }
-    
-    onPasswordConfirmChange(value) {
-        this.setState({ passwordConfirmValue: value });
-        if(value == this.state.passwordValue) {
-            this.setState({ validPassword: true, passwordConfirmError: '' });
-        } else if(this.state.validPassword) {
-            this.setState({ validPassword: false });
-        }
-        
-        if(value != this.state.passwordValue) {
-            this.setState({ passwordConfirmError: 'Password does not match previous password'});
-        }
-    }
-    render() {
-        return (
-            <div>
-                in signup view
-                <Link to="/login">Back to login</Link>
-                <form onSubmit={ this.onFormSubmit } >
-                    <PPInput type='text' error={ this.state.nameError } value={ this.state.nameValue } label="Display Name" onChange={ this.onNameChange }/>
-                    <PPInput type="email" error={ this.state.emailError } value={ this.state.emailValue } label="Email" onChange={ this.onEmailChange }/>
-                    
-                    <PPInput type="password" error={ this.state.passwordError } value={ this.state.passwordValue } label="Password" onChange={ this.onPasswordChange }/>
-                    <PPInput type="password" error={ this.state.passwordConfirmError } value={ this.state.passwordConfirmValue } label="Confirm Password" onChange={ this.onPasswordConfirmChange }/>
-                    
-                    <PPRaisedButton type="submit" label="Sign Up" primary={ true } />
-                </form>
-                <div> { this.state.errorText }</div>
-            </div>
-        );
-    }
+import Wrapper from './Wrapper';
+import FormWrapper from './FormWrapper';
+import Topbar from './Topbar';
+
+import {
+  fetchPlan,
+} from './actions';
+import {
+  selectPlan,
+} from './selectors';
+
+class Signup extends Component {
+  static propTypes = {
+    children: PropTypes.node,
+    location: PropTypes.object,
+    plan: PropTypes.object,
+    fetchPlan: PropTypes.func,
+  }
+
+  componentWillMount() {
+    const { fetchPlan, location } = this.props;
+
+    fetchPlan(location.query.plan_id);
+  }
+
+  render() {
+    const { children, plan } = this.props;
+
+    const {
+      title,
+      price,
+      term_length,
+      features = [],
+    } = plan.detail || {};
+
+    return (
+      <Wrapper>
+        <LeftPane>
+          <img src={imgLogo} alt="Logo" />
+          <div style={{ marginTop: '120px' }}>PowerPost Business Plan</div>
+          <div style={{ marginTop: '20px', fontSize: '2.5rem' }}>{title}</div>
+          <div style={{ marginTop: '15px' }}>
+            <span style={{ fontSize: '1.5rem' }}>${price}</span>&nbsp;
+            <span>{term_length}</span>
+          </div>
+          <div style={{ marginTop: '15px' }}>
+            { features.join('. ') }
+          </div>
+          <div style={{ position: 'absolute', left: 0, bottom: 0 }}>Not the plan you want, we've got you covered. View Plans</div>
+        </LeftPane>
+        <RightPane>
+          <Topbar />
+          <FormWrapper>
+            { React.cloneElement(children, {
+
+            })
+            }
+          </FormWrapper>
+        </RightPane>
+      </Wrapper>
+    );
+  }
 }
 
-export function mapDispatchToProps(dispatch) {
-  return {
-    register: (name, email, password) => dispatch(registerRequest({name, email, password})),
-  };
-}
+export const mapStateToProps = createStructuredSelector({
+  plan: selectPlan(),
+});
 
-const mapStateToProps = createStructuredSelector({
-   // error: selectAuth()
+export const mapDispatchToProps = (dispatch) => ({
+  fetchPlan: (planId) => dispatch(fetchPlan(planId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Signup);

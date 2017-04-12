@@ -142,11 +142,21 @@ class Sidebar extends React.Component {
                 { this.props.activeBrand.connections &&
                 <Subheader style={{ color: '#C9C6Cf' }}>Social Feeds</Subheader>
                                 }
-                { this.props.activeBrand.connections && this.props.activeBrand.connections.map((connection) =>
-                  <ReactRouterMenuItem key={connection.connection_id + Date.now()} caption={connection.display_name} isSidebar icon={<i className={connection.channel_icon} />} to={`/account/${this.props.accountId}/feed/${connection.connection_id}`} />
-                                    )
-                                }
 
+                {this.props.activeBrand.connections &&
+                  this.props.activeBrand.connections.map((connection) =>
+                    connection.channel !== 'wordpress' &&
+                      <ReactRouterMenuItem
+                        key={connection.connection_id + Date.now()}
+                        caption={connection.display_name}
+                        title={connection.display_name}
+                        isSidebar
+                        icon={<i className={connection.channel_icon} />}
+                        to={`/account/${this.props.accountId}/feed/${connection.connection_id}`}
+                        selected={this.props.location.pathname.match(`/feed/${connection.connection_id}`) != null}
+                      />
+                  )
+                }
 
               </PPMenu>
             </div>
