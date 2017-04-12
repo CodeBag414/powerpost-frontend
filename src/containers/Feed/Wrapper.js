@@ -29,6 +29,10 @@ const Wrapper = styled.div`
       margin-bottom: 20px;
       padding-left: 30px;
     }
+
+    @media (max-width: 768px) {
+      padding: 60px 20px 10px;
+    }
   }
 
   img.feed-loading {
@@ -42,6 +46,10 @@ const Wrapper = styled.div`
     text-decoration: none;
     padding: 0 70px 50px;
     display: block;
+
+    @media (max-width: 768px) {
+      padding: 0 20px 20px;
+    }
   }
 
   a.post-view-button {
