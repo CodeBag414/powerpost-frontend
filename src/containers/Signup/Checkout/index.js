@@ -3,11 +3,14 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import moment from 'moment';
 import { range } from 'lodash';
+import cookie from 'react-cookie';
+import { browserHistory } from 'react-router';
+
+import { get } from 'utils/localStorage';
 
 import {
   createPaymentSource,
 } from 'containers/App/actions';
-
 import {
   selectPaymentSource,
 } from 'containers/App/selectors';
@@ -18,6 +21,10 @@ import PPButton from 'elements/atm.Button';
 import Title from 'elements/atm.Title';
 import Center from 'elements/atm.Center';
 import PPLink from 'elements/atm.Link';
+
+import {
+  selectPlan,
+} from '../selectors';
 
 const monthOptions = moment.months().map((month, index) => {
   let mm = index + 1;
@@ -36,6 +43,7 @@ const yearOptions = range(2018, 2033).map((year) => ({
 
 class SignupCheckout extends Component {
   static propTypes = {
+    plan: PropTypes.object,
     paymentSource: PropTypes.object,
     createPaymentSource: PropTypes.func,
   }
@@ -43,7 +51,10 @@ class SignupCheckout extends Component {
   constructor(props) {
     super(props);
 
+    const userInfo = get('signup') || {};
+
     this.state = {
+      name: userInfo.name,
       expirationYear: 2018,
       expirationMonth: 1,
       nameOnCard: {
@@ -59,6 +70,15 @@ class SignupCheckout extends Component {
         error: '',
       },
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.plan !== nextProps.plan) {
+      const detail = nextProps.plan.detail;
+      if (!detail.requires_payment) {
+        browserHistory.push('/');
+      }
+    }
   }
 
   onFormSubmit = (event) => {
@@ -84,17 +104,18 @@ class SignupCheckout extends Component {
   onFieldChange = (event) => {
     const { name, value } = event.target;
     this.setState({
-      [name]: value,
+      [name]: {
+        value,
+      },
     });
   }
 
   handleStripeResponse = (status, response) => {
-    console.log('/////', status, response);
     if (response.error) {
       alert(response.error.message);
     } else {
       this.props.createPaymentSource({
-        account_id: '100',
+        account_id: cookie.load('account_id'),
         stripe_token: response.id,
       });
     }
@@ -103,7 +124,7 @@ class SignupCheckout extends Component {
   render() {
     return (
       <div>
-        <Title>Hi Name</Title>
+        <Title>Hi {this.state.name}</Title>
         <Center>Please provide your billing information below.</Center>
         <form onSubmit={this.onFormSubmit} style={{ marginTop: '40px' }}>
           <PPTextField
@@ -162,6 +183,7 @@ export function mapDispatchToProps(dispatch) {
 }
 
 const mapStateToProps = createStructuredSelector({
+  plan: selectPlan(),
   paymentSource: selectPaymentSource(),
 });
 

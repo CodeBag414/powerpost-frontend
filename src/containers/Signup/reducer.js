@@ -17,11 +17,6 @@ export default function singupReducer(state = initialState, action) {
   const { payload } = action;
 
   switch (action.type) {
-    case FETCH_PLAN:
-      return state.set('plan', {
-        detail: {},
-        error: null,
-      });
     case FETCH_PLAN_SUCCESS:
       return state.set('plan', {
         detail: payload,

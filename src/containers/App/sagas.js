@@ -29,8 +29,8 @@ import {
 } from './constants';
 
 import {
-  createPaymentSuccess,
-  createPaymentError,
+  createPaymentSourceSuccess,
+  createPaymentSourceError,
 } from './actions';
 
 /**
@@ -245,11 +245,12 @@ export function* createPaymentSourceFlow() {
     const { payload } = yield take(CREATE_PAYMENT_SOURCE);
 
     try {
-      const response = yield call(postData, payload);
-      console.log('-- payment create saga --', response);
-      yield put(createPaymentSuccess(response));
+      const response = yield call(postData, '/payment_api/source', { payload });
+
+      yield put(createPaymentSourceSuccess(response));
+      browserHistory.push('/');
     } catch (error) {
-      yield put(createPaymentError(error));
+      yield put(createPaymentSourceError(error));
     }
   }
 }
