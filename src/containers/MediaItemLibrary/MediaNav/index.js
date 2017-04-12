@@ -5,7 +5,7 @@ import MediaNavContainer from './MediaNavContainer';
 import ButtonMenu from 'elements/mol.ButtonMenu';
 import MenuItem from 'elements/atm.MenuItem';
 import TextField from 'elements/atm.TextField';
-import PPSelectField from 'elements/atm.SelectField';
+import Dropdown from 'elements/atm.Dropdown';
 
 import styles from './styles.scss';
 
@@ -19,19 +19,15 @@ const MediaNav = (props) => (
         <MenuItem caption="Add Link" onClick={props.openAddLink} />
       </ButtonMenu>
     </div>
-    <div className="col-md-2"style={{ height: '100%'}}>
+    <div className="col-md-3"style={{ height: '100%'}}>
       <TextField iconClass="fa fa-search" hintText="Search Title" style={{float: 'left'}} />
     </div>
-    <div className="col-md-4"></div>
+    <div className="col-md-3"></div>
     <div className="col-md-2">
-      <PPSelectField floatingLabelText="Filter by" style={{float: 'right'}} >
-        <MenuItem caption="PNG" />
-      </PPSelectField>
+      <Dropdown label="Filter by" style={{float: 'right'}} options={[{ value: 'PNG', label: 'PNG'}]}/>
     </div>
     <div className="col-md-2">
-      <PPSelectField floatingLabelText="Date Added" style={{float: 'right'}}>
-        <MenuItem caption="PNG" />
-      </PPSelectField>
+      <Dropdown label="Date Added" style={{float: 'right'}} options={[]} />
     </div>
   </MediaNavContainer>
 );
