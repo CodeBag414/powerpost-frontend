@@ -28,6 +28,8 @@ import Wrapper from './Wrapper';
 import Header from './Header';
 import Pane from './Pane';
 
+import PPBKImage from '../../assets/images/user_dashboard_bg.png';
+
 const ReactRouterButton = withReactRouter(PPButton);
 
 class Dashboard extends Component {
@@ -43,7 +45,7 @@ class Dashboard extends Component {
 
     return (
       <Wrapper>
-        <Background image="../../assets/images/user_dashboard_bg.png" />
+        <Background image={PPBKImage} />
         <div className="container">
           <div className="col-md-12">
             <Header>

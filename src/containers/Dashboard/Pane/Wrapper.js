@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export default styled.div`
 	border-radius: 4px;
 	margin-bottom: 30px;
-	box-shadow: 0px 2px 10px #888888;
+	box-shadow: 0px 1px 4px #bbb;
   background-color: #fff;
 
   h3.paneTitle {
