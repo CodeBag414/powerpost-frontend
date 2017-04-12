@@ -109,7 +109,6 @@ class BrandsListItem extends React.Component {
 
     render() {
         const brand = this.props.brand;
-        console.log('item brand', brand)
         // const thumbURL = (brand && brand.properties!=null) ? brand.properties.thumb_url : '';
         const thumbnail_image_key = (brand && brand.properties!=null) ? brand.properties.thumbnail_image_key : '';
         const thumbURL = "https://s3.amazonaws.com/powerpost/" + thumbnail_image_key;
@@ -144,7 +143,7 @@ class BrandsListItem extends React.Component {
         return (
             <BrandItemContainer>
                 <BrandImage>
-                    <img src={thumbURL} />
+                    {thumbnail_image_key!='' ? <img src={thumbURL} /> : <img />}
                 </BrandImage>
                 <clearfix />
                 <BrandItemTitle>

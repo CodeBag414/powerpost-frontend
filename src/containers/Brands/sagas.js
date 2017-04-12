@@ -9,7 +9,8 @@ import { toastr } from 'lib/react-redux-toastr';
 
 import {
   CREATE_BRAND,
-  DELETE_BRAND
+  DELETE_BRAND,
+  SET_NEW_BRAND
 } from './constants';
 
 import {
@@ -49,26 +50,46 @@ export function* authorize({ account_id, display_name, thumbnail_image_key }) {
 
 }
 
-export function* registerFlow() {
+//create Brand (subaccount)
+export function* createBrand() {
   while (true) {
     // We always listen to `CREATE_BRAND` actions
     const request = yield take(CREATE_BRAND);
     const { account_id, display_name, thumbnail_image_key } = request.brandObject;
-    // We call the `authorize` task with the data, telling it that we are registering a user
-    // This returns `true` if the registering was successful, `false` if not
-    const wasSuccessful = yield call(authorize, { account_id, display_name, thumbnail_image_key });
-    console.log('registerFlow', wasSuccessful)
-    return;
-    // If we could register a user, we send the appropiate actions
-    if (wasSuccessful) {
-      yield put({ type: SET_AUTH, newAuthState: true }); // User is logged in (authorized) after being registered
-      yield put({ type: CHANGE_FORM, newFormState: { name: '', password: '' } }); // Clear form
-      forwardTo('/dashboard'); // Go to dashboard page
+    const data = {
+      payload: {
+        account_id: account_id,
+        display_name: display_name,
+        properties: {
+          thumbnail_image_key: thumbnail_image_key
+        }
+    }};
+    // const params = serialize(data);
+
+    const requestUrl = `/account_api/subaccount`;
+
+    try {
+      const response = yield call(postData, requestUrl, data);
+      console.log('postdata response', response)
+      if (response.data.status === 'success') {
+        toastr.success('Success!', 'Created Brand');
+        let brand = response.data.subaccount;
+        
+        yield put({ type: SET_NEW_BRAND, brand });
+      } else {
+        toastr.fail('Error!', 'Something went wrong, please try again.');
+        yield put({ type: FETCH_ACCOUNT_ERROR, response });
+      }
+    } catch (error) {
+      console.log('create brand error', error)
+      // yield put({ type: FETCH_ACCOUNT_ERROR, error });
     }
+    
   }
 }
 
-export function* deleteFlow() {
+//delete brand (subaccount)
+export function* deleteBrand() {
   while (true) {
     const request = yield take(DELETE_BRAND);
     const { account_id } = request.brandObject;
@@ -97,8 +118,8 @@ export function* deleteFlow() {
 }
 
 export default [
-    registerFlow,
-    deleteFlow
+    createBrand,
+    deleteBrand
 ];
 
 const serialize = function(obj, prefix) {

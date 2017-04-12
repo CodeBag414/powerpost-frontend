@@ -16,6 +16,7 @@ import {
 
 import {
     makeSelectBrandFilter,
+    makeSelectNewBrand,
     makeSelectDialogShown,
 } from './selectors';
 
@@ -36,14 +37,6 @@ class Brands extends React.Component {
         this.setBrandFilter = this.setBrandFilter.bind(this);
     }
     
-    componentDidMount() {
-        
-    }
-    
-    componentDidUpdate() {
-       
-    }
-
     handleDialogToggle() {
         this.props.toggleDialogShown(!this.props.dialogShown);
     }
@@ -65,13 +58,23 @@ class Brands extends React.Component {
     }
 
     render() {
-        // console.log('this.props.brands', this.props.brands)
+        console.log('this.props.brands', this.props.brands)
+        console.log('this.props.newBrand', this.props.newBrand)
         return (
             <div>
-                <BrandsControlBar handleDialogToggle={this.handleDialogToggle} 
-                            setBrandFilter={this.setBrandFilter} brandFilter={'this.props.brand', this.props.brandFilter}/>
-                <BrandsList brands={this.getFilteredBrands()} /> 
-                <AddBrandDialog handleDialogToggle={this.handleDialogToggle} dialogShown={this.props.dialogShown} />
+                <BrandsControlBar 
+                    handleDialogToggle={this.handleDialogToggle} 
+                    setBrandFilter={this.setBrandFilter} 
+                    brandFilter={'this.props.brand', this.props.brandFilter}
+                />
+                <BrandsList 
+                    brands={this.getFilteredBrands()}
+                    newBrand={this.props.newBrand}
+                /> 
+                <AddBrandDialog 
+                    handleDialogToggle={this.handleDialogToggle} 
+                    dialogShown={this.props.dialogShown} 
+                />
             </div>
         );
     }
@@ -89,8 +92,9 @@ export function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
     brandFilter: makeSelectBrandFilter(),
-    brands: makeSelectAccountBrands(),
     // brands: makeSelectSharedAccounts(),
+    brands: makeSelectAccountBrands(),
+    newBrand: makeSelectNewBrand(),
     dialogShown: makeSelectDialogShown(),
 });
 

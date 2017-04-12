@@ -7,6 +7,11 @@ const makeSelectBrandFilter = () => createSelector(
     (brands) => brands.get('brandFilter')
 );
 
+const makeSelectNewBrand = () => createSelector(
+    selectBrands,
+    (brands) => brands.get('newBrand')
+);
+
 const makeSelectDialogShown = () => createSelector(
     selectBrands,
     (brands) => brands.get('dialogShown')
@@ -14,5 +19,6 @@ const makeSelectDialogShown = () => createSelector(
 
 export {
     makeSelectBrandFilter,
+    makeSelectNewBrand,
     makeSelectDialogShown,
 };
