@@ -133,42 +133,58 @@ class Favorites extends React.Component {
                 case 'pinterest':
                     keys = Object.keys(channelInfo.pins_by_month);
                     last = keys[0];
-                    channelInfo.pins_by_month[last].top_pins_by_engagement.map((topPin, index) => {
-                        TopTweetsList.push(
-                            <TopPinListItem topTweet={topPin} key={ this.props.params.channel_id - index - 1200 + 'bc' } likes={ channelInfo.pins_by_month[last].likes } comments={ channelInfo.pins_by_month[last].comments }
-                            repins={ channelInfo.pins_by_month[last].repins } />
-                        );
-                    });
+                    if( last != null ) {
+                        channelInfo.pins_by_month[last].top_pins_by_engagement.map((topPin, index) => {
+                            TopTweetsList.push(
+                                <TopPinListItem topTweet={topPin} key={ this.props.params.channel_id - index - 1200 + 'bc' } likes={ channelInfo.pins_by_month[last].likes } comments={ channelInfo.pins_by_month[last].comments }
+                                repins={ channelInfo.pins_by_month[last].repins } />
+                            );
+                        });
+                    } else {
+                        TopTweetsList = "You Currently have no Posts.";
+                    }
                     break;
                 case 'twitter':
                     keys = Object.keys(channelInfo.tweets_by_month);
                     last = keys[0];
-                    channelInfo.tweets_by_month[last].top_tweets_by_engagement.map((topTweet, index) => {
-                        TopTweetsList.push(
-                            <TopTweetListItem topTweet={topTweet} key={ this.props.params.channel_id - index - 1200 + 'bc' } tweets={ channelInfo.tweets_by_month[last].tweet_count }
-                            favorites={ channelInfo.tweets_by_month[last].favorite_count } retweets={ channelInfo.tweets_by_month[last].retweet_count } />
-                        );
-                    });
+                    if( last != null ) {
+                        channelInfo.tweets_by_month[last].top_tweets_by_engagement.map((topTweet, index) => {
+                            TopTweetsList.push(
+                                <TopTweetListItem topTweet={topTweet} key={ this.props.params.channel_id - index - 1200 + 'bc' } tweets={ channelInfo.tweets_by_month[last].tweet_count }
+                                favorites={ channelInfo.tweets_by_month[last].favorite_count } retweets={ channelInfo.tweets_by_month[last].retweet_count } />
+                            );
+                        });
+                    } else {
+                        TopTweetsList = "You Currently have no Posts.";
+                    }
                     break;
                 case 'linkedin':
                     keys = Object.keys(channelInfo.posts_by_month);
                     last = keys[0];
-                    channelInfo.posts_by_month[last].top_posts_by_engagement.map((topPost, index) => {
-                        TopTweetsList.push(
-                            <TopPostListItem topTweet={topPost} key={ this.props.params.channel_id - index - 1200 + 'bc' } likes={ channelInfo.posts_by_month[last].likes }
-                            comments={ channelInfo.posts_by_month[last].comments } posts={ channelInfo.posts_by_month[last].post_count } />
-                        );
-                    });
+                    if( last != null ) {
+                        channelInfo.posts_by_month[last].top_posts_by_engagement.map((topPost, index) => {
+                            TopTweetsList.push(
+                                <TopPostListItem topTweet={topPost} key={ this.props.params.channel_id - index - 1200 + 'bc' } likes={ channelInfo.posts_by_month[last].likes }
+                                comments={ channelInfo.posts_by_month[last].comments } posts={ channelInfo.posts_by_month[last].post_count } />
+                            );
+                        });
+                    } else {
+                        TopTweetsList = "You Currently have no Posts.";
+                    }
                     break;
                 case 'facebook':
                     keys = Object.keys(channelInfo.posts_by_month);
                     last = keys[0];
-                    channelInfo.posts_by_month[last].top_posts_by_engagement.map((topPost, index) => {
-                        TopTweetsList.push(
-                            <TopFaceListItem topTweet={topPost} key={ this.props.params.channel_id - index - 1200 + 'bc' } likes={ channelInfo.posts_by_month[last].likes }
-                            comments={ channelInfo.posts_by_month[last].comments } posts={ channelInfo.posts_by_month[last].post_count } />
-                        );
-                    });
+                    if( last != null ) {
+                        channelInfo.posts_by_month[last].top_posts_by_engagement.map((topPost, index) => {
+                            TopTweetsList.push(
+                                <TopFaceListItem topTweet={topPost} key={ this.props.params.channel_id - index - 1200 + 'bc' } likes={ channelInfo.posts_by_month[last].likes }
+                                comments={ channelInfo.posts_by_month[last].comments } posts={ channelInfo.posts_by_month[last].post_count } />
+                            );
+                        });
+                    } else {
+                        TopTweetsList = "You Currently have no Posts.";
+                    }
                     break;
                 default:
                     TopTweetsList = "You Currently have no Channels.";
