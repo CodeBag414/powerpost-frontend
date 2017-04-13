@@ -80,8 +80,6 @@ class Brands extends React.Component {
 
     getBrandsRemaining () {
         this.getFilteredBrands()
-        console.log('this.state.brands', this.state.brands)
-        console.log('this.state.brands.length', this.state.brands.length)
         return this.state.brands.length
     }
 

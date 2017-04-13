@@ -2,6 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
+import styled from 'styled-components';
 import Dialog from 'react-toolbox/lib/dialog';
 import FlatButton from 'material-ui/FlatButton';
 import filepicker from 'filepicker-js';
@@ -20,6 +21,20 @@ import {
 
 import dialogtheme from './dialog-styles.scss';
 import styles from './styles.scss';
+
+const InviteTeamMembers = styled.div`
+    display: inline-block;
+    vertical-align: top;
+    margin: 15px 0px 0px 0px;
+    font-size: 14px;
+    font-weight: bold;
+    float: left;
+    color: #999;
+
+    span {
+      margin-left: 6px;
+    }
+`;
 
 class AddBrandDialog extends React.Component {
   static propTypes = {
@@ -121,7 +136,7 @@ class AddBrandDialog extends React.Component {
       [name]: value,
     });
   }
-
+  
   render() {
     const inline = {
       avatar: {
@@ -147,8 +162,6 @@ class AddBrandDialog extends React.Component {
         verticalAlign: 'top'
       }
     };
-
-    console.log('userOwnAccount', this.props.userOwnAccount)
 
     return (
       <Dialog title="Add New Brand" active={this.props.dialogShown} theme={ dialogtheme }>
@@ -176,6 +189,10 @@ class AddBrandDialog extends React.Component {
           </row>
           <row>
             <div>
+              <InviteTeamMembers>
+                <i className="fa fa-user-plus"></i>
+                <span>Invite Team Members</span>
+              </InviteTeamMembers>
               <PPButton type="submit" label="Add Brand" primary={!false} className={styles.submit} />
               <PPButton label="Cancel" primary className={styles.cancel} onClick={this.props.handleDialogToggle} />
             </div>
