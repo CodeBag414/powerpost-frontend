@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
+import Dialog from 'react-toolbox/lib/dialog';
+
 import styled from 'styled-components';
 import {IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu';
 import withReactRouter from 'elements/hoc.withReactRouter';
@@ -77,7 +79,9 @@ class BrandsListItem extends React.Component {
         this.deleteBrand = this.deleteBrand.bind(this);
 
         this.state = {
-            accountpath: location.origin + '/account/' + this.props.brand.account_id
+            accountpath: location.origin + '/account/' + this.props.brand.account_id,
+            active: false,
+            deleteFlag: false
         }
     }
 
@@ -99,13 +103,43 @@ class BrandsListItem extends React.Component {
 
     deleteBrand(event) {
         event.preventDefault();
+        this.setState({active: !this.state.active});
+        // const data = {
+        //     account_id: this.props.brand.account_id,
+        // };
+        
+        // if ( this.state.deleteFlag === true ) {
+        //     this.props.delete(data);
+        //     this.setState({deleteFlag: false});
+        // }
+    }
+
+    handleToggleYes = () => {
+        this.setState({deleteFlag: true});
 
         const data = {
             account_id: this.props.brand.account_id,
         };
         
-        this.props.delete(data);
+        if ( this.state.deleteFlag == true ) {
+            console.log('yes')
+            this.props.delete(data);
+            // this.setState({deleteFlag: false});
+        }
+
+        this.setState({active: !this.state.active});
     }
+
+    handleToggleCancel = () => {
+        console.log('cancel')
+        this.setState({deleteFlag: false});
+        this.setState({active: !this.state.active});
+    }
+
+    actions = [
+        { label: "Cancel", onClick: this.handleToggleCancel },
+        { label: "Yes, Delete It!", onClick: this.handleToggleYes }
+    ];
 
     render() {
         const brand = this.props.brand;
@@ -119,7 +153,7 @@ class BrandsListItem extends React.Component {
         
         const BrandNavMenu = () => (
             <IconMenu
-              position="bottomRight" icon='more_horiz' menuRipple
+              position="topLeft" icon='more_horiz' menuRipple
             >
               <BrandRouterMenuItem to={brandURL + '/settings/connections'}>
                 <i className="fa fa-paper-plane"></i><BrandMenuItemCaption>Posts</BrandMenuItemCaption>
@@ -140,6 +174,18 @@ class BrandsListItem extends React.Component {
             </IconMenu>
         );
 
+        const DeleteDialog = () => (
+            <Dialog
+                actions={this.actions}
+                active={this.state.active}
+                onEscKeyDown={this.handleToggleCancel}
+                onOverlayClick={this.handleToggleCancel}
+                title='Delete a brand'
+            >
+                <p>Are you sure? You will not be able to recover this Brand and all of its posts.</p>
+            </Dialog>
+        );
+
         return (
             <BrandItemContainer>
                 <BrandImage>
@@ -154,8 +200,8 @@ class BrandsListItem extends React.Component {
                     </span>
                 </BrandItemTitle>
                 <BrandNavMenu />
+                <DeleteDialog />
             </BrandItemContainer>
-            
         );
     }
 }

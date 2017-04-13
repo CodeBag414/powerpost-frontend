@@ -11,8 +11,7 @@ export function postData(url, data, isAuthReq=true) {
   if(isAuthReq) {
     headers = {headers: {'X-API-KEY': key}};
   }
-  console.log('postData url', url)
-  console.log('postData data', data)
+
   return axios.post(requestUrl, data, headers);
 }
 

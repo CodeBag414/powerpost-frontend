@@ -17,6 +17,7 @@ import {
 import {
     makeSelectBrandFilter,
     makeSelectNewBrand,
+    makeSelectDeleteBrandID,
     makeSelectDialogShown,
 } from './selectors';
 
@@ -32,6 +33,10 @@ import {
 class Brands extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            brands: [],
+        }
         
         this.handleDialogToggle = this.handleDialogToggle.bind(this);
         this.setBrandFilter = this.setBrandFilter.bind(this);
@@ -46,7 +51,26 @@ class Brands extends React.Component {
     }
 
     getFilteredBrands () {
-        return this.props.brands.filter(brand => {
+        console.log('props brands 111', this.props.brands)
+        
+        this.state.brands = this.props.brands;
+        if (this.props.newBrand.account_id !== undefined) {
+            this.state.brands = [...this.state.brands, this.props.newBrand]
+        }
+        
+        if (this.props.deleteBrandID !== '') {
+            let tmpBrands = [];
+            this.state.brands.map((brand, index) => {
+                if ( brand.account_id !== this.props.deleteBrandID ) {
+                    tmpBrands.push(brand);
+                }                
+            });
+            this.state.brands = tmpBrands
+        }
+        
+        console.log('props brands 222', this.props.brands)
+    
+        return this.state.brands.filter(brand => {
             let matched = true;
 
             if(this.props.brandFilter) {
@@ -58,8 +82,6 @@ class Brands extends React.Component {
     }
 
     render() {
-        console.log('this.props.brands', this.props.brands)
-        console.log('this.props.newBrand', this.props.newBrand)
         return (
             <div>
                 <BrandsControlBar 
@@ -69,7 +91,6 @@ class Brands extends React.Component {
                 />
                 <BrandsList 
                     brands={this.getFilteredBrands()}
-                    newBrand={this.props.newBrand}
                 /> 
                 <AddBrandDialog 
                     handleDialogToggle={this.handleDialogToggle} 
@@ -95,6 +116,7 @@ const mapStateToProps = createStructuredSelector({
     // brands: makeSelectSharedAccounts(),
     brands: makeSelectAccountBrands(),
     newBrand: makeSelectNewBrand(),
+    deleteBrandID: makeSelectDeleteBrandID(),
     dialogShown: makeSelectDialogShown(),
 });
 

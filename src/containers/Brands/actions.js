@@ -3,9 +3,8 @@ import {
     CREATE_BRAND,
     DELETE_BRAND,
     SET_NEW_BRAND,
-    SET_CONNECTIONS_LIST,
+    SET_DELETE_BRAND,
     TOGGLE_ADD_CONNECTION_DIALOG,
-    CONNECTION_CALLBACK,
 } from './constants';
 
 export function setBrandFilter(brandFilter) {
@@ -24,14 +23,6 @@ export function deleteBrandRequest(brandObject) {
 //     return {type: SET_NEW_BRAND, brandObject};
 // }
 
-export function setConnectionsList(connections) {
-    return {type: SET_CONNECTIONS_LIST, connections};
-}
-
 export function toggleDialog(shown) {
     return {type: TOGGLE_ADD_CONNECTION_DIALOG, shown};
-}
-
-export function connectionCallback(channelObject) {
-    return {type: CONNECTION_CALLBACK, channelObject};
 }

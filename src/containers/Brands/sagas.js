@@ -10,7 +10,8 @@ import { toastr } from 'lib/react-redux-toastr';
 import {
   CREATE_BRAND,
   DELETE_BRAND,
-  SET_NEW_BRAND
+  SET_NEW_BRAND,
+  SET_DELETE_BRAND
 } from './constants';
 
 import {
@@ -65,12 +66,11 @@ export function* createBrand() {
         }
     }};
     // const params = serialize(data);
-
     const requestUrl = `/account_api/subaccount`;
 
     try {
       const response = yield call(postData, requestUrl, data);
-      console.log('postdata response', response)
+
       if (response.data.status === 'success') {
         toastr.success('Success!', 'Created Brand');
         let brand = response.data.subaccount;
@@ -78,11 +78,11 @@ export function* createBrand() {
         yield put({ type: SET_NEW_BRAND, brand });
       } else {
         toastr.fail('Error!', 'Something went wrong, please try again.');
-        yield put({ type: FETCH_ACCOUNT_ERROR, response });
+        console.log('create brand error', response)
       }
     } catch (error) {
+      toastr.fail('Error!', 'Something went wrong, please try again.');
       console.log('create brand error', error)
-      // yield put({ type: FETCH_ACCOUNT_ERROR, error });
     }
     
   }
@@ -102,17 +102,19 @@ export function* deleteBrand() {
     const requestUrl = `/account_api/account`;
 
     try {
-      const account = yield call(putData, requestUrl, data, true);
-      console.log('delete account', account)
-      return
-      if (account.data.error) {
-        yield put({ type: CREATE_BRAND, account });
+      const response = yield call(putData, requestUrl, data, true);
+
+      if (response.data.status === 'success') {
+        toastr.success('Success!', 'Deleted Brand');
+
+        yield put({ type: SET_DELETE_BRAND, deleteBrandID: account_id });
       } else {
-        yield put({ type: FETCH_ACCOUNT_SUCCESS, account });
+        toastr.fail('Error!', 'Something went wrong, please try again.');
+        console.log('delete brand error', response)
       }
     } catch (error) {
-      console.log('delete catch error', error)
-      // yield put({ type: FETCH_ACCOUNT_ERROR, error });
+      toastr.fail('Error!', 'Something went wrong, please try again.');
+      console.log('delete brand error', error)
     }
   }
 }

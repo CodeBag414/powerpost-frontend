@@ -9,22 +9,15 @@ class BrandsList extends React.Component {
     
     render() {
         let brandsList = [];
-
+        console.log('last brands', this.props.brands)
+        
         if((this.props.brands !== undefined) && (this.props.brands.length > 0)) {
             this.props.brands.map((brand, index) => {
                 brandsList.push(
                     <BrandsListItem key={index} brand={brand} remove={this.props.removeBrand}/>
                 );
             });
-        } 
-        if((this.props.newBrand !== undefined) && (this.props.newBrand.account_id !== undefined)) {
-            console.log('brandsList.length', brandsList.length)
-            brandsList.push(
-                <BrandsListItem key={brandsList.length} brand={this.props.newBrand} remove={this.props.removeBrand}/>
-            );
-        } 
-        
-        if (brandsList.length === 0) {
+        } else {
             brandsList = 'You currently have no brands';
         }
 

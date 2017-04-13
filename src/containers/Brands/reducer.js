@@ -3,17 +3,16 @@ import { fromJS } from 'immutable';
 import {
     SET_BRAND_FILTER,
     SET_NEW_BRAND,
-    SET_CONNECTIONS_LIST,
+    SET_DELETE_BRAND,
     TOGGLE_ADD_CONNECTION_DIALOG,
 } from './constants';
 
 let initialState = fromJS({
     brandFilter: '',
     newBrand: {},
+    deleteBrandID: '',
     channelType: '',
     dialogShown: false,
-    connections: [],
-    socialUrls: {},
 });
 
 function brandsReducer (state = initialState, action) {
@@ -24,9 +23,9 @@ function brandsReducer (state = initialState, action) {
       case SET_NEW_BRAND:
           return state
             .set('newBrand', action.brand);
-      case SET_CONNECTIONS_LIST:
+      case SET_DELETE_BRAND:
           return state
-            .set('connections', action.connections);
+            .set('deleteBrandID', action.deleteBrandID);
       case TOGGLE_ADD_CONNECTION_DIALOG:
           return state
             .set('dialogShown', action.shown);
