@@ -5,14 +5,9 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import filepicker from 'filepicker-js';
-import Avatar from 'elements/atm.Avatar';
-import FlatButton from 'material-ui/FlatButton';
 import PPTextField from 'elements/atm.TextField';
-import PPRaisedButton from 'elements/atm.RaisedButton';
-import {
-  RadioGroup,
-  RadioButton,
-} from 'react-toolbox/lib/radio';
+import PPButton from 'elements/atm.Button';
+import PPRadioButton from 'elements/atm.RadioButton'
 
 import { updateRequest } from 'containers/App/actions';
 import {
@@ -20,7 +15,11 @@ import {
   makeSelectUserAccount,
   makeSelectFilePickerKey,
 } from 'containers/App/selectors';
-import styles from './styles.scss';
+
+import Wrapper from './Wrapper';
+import Content from './Content';
+import Header from './Header';
+import Avatar from './Avatar';
 
 class settingsUser extends Component {
   static propTypes = {
@@ -99,7 +98,8 @@ class settingsUser extends Component {
     });
   }
 
-  onRadioNotify(value) {
+  onRadioNotify(event) {
+    const value = event.target.value;
     this.setState({
       emailNotifications: value,
     });
@@ -215,48 +215,27 @@ class settingsUser extends Component {
   }
 
   render() {
-    const inline = {
-      avatar: {
-        position: 'relative',
-        top: '-25px',
-      },
-      avatarImg: {
-        left: '0px',
-        width: '180px',
-        height: '180px',
-        borderRadius: '0',
-      },
-    };
 
     return (
-      <div className="container" style={styles}>
-        <form onSubmit={this.profileUpdate}>
-          <row>
-            <div className="col-md-12">
-              <h3 style={{ margin: '30px 0 50px' }}>Profile</h3>
-            </div>
-          </row>
-          <row>
-            <div className="col-md-3">
-              <h5 style={{ margin: '0 0 25px', color: '#9d9d9d' }}>Profile Picture</h5>
-              <br />
-              <div style={inline.avatar}>
-                <Avatar
-                  image={this.state.avatar}
-                  style={inline.avatarImg}
-                  theme={styles}
-                  onClick={this.openFilePicker}
-                />
-                <FlatButton
-                  label="Update Photo"
-                  className={styles.updateAvatar}
-                  onClick={this.openFilePicker}
-                />
+      <Wrapper>
+        <div className="container">
+          <Header>Profile</Header>
+          <form onSubmit={this.profileUpdate}>
+            <Content>
+              <div className="head">
+                <Avatar>
+                  <h5>Profile Picture</h5>
+                  <div className="avatar" onClick={this.openFilePicker}>
+                    <img src={this.state.avatar} />
+                    <div className="avatar-txt">
+                      <i className="fa fa-camera"></i>
+                      <p>Update Your <br /> Profile Photo</p>
+                    </div>
+                  </div>
+                </Avatar>
               </div>
-            </div>
-            <div className="col-md-9">
-              <row>
-                <div className="col-md-6">
+              <div className="body">
+                <div className="col">
                   <PPTextField
                     type="text"
                     name="name"
@@ -264,10 +243,8 @@ class settingsUser extends Component {
                     maxLength={200}
                     value={this.state.name}
                     onChange={this.handleChange}
-                    style={{ margin: 0 }}
                     required
                   />
-                  <br />
                   <PPTextField
                     type="text"
                     name="title"
@@ -275,19 +252,16 @@ class settingsUser extends Component {
                     maxLength={100}
                     value={this.state.title}
                     onChange={this.handleChange}
-                    style={{ margin: 0 }}
                   />
                 </div>
-                <div className="col-md-6">
+                <div className="col">
                   <PPTextField
                     type="email"
                     name="email"
                     floatingLabelText="Email"
                     value={this.state.email}
                     onChange={this.handleChange}
-                    style={{ margin: 0 }}
                   />
-                  <br />
                   <PPTextField
                     type="tel"
                     name="phoneNumber"
@@ -295,86 +269,70 @@ class settingsUser extends Component {
                     maxLength={100}
                     value={this.state.phoneNumber}
                     onChange={this.handleChange}
-                    style={{ margin: 0 }}
                   />
                 </div>
-              </row>
-            </div>
-          </row>
-          <row>
-            <div className="col-md-12">
-              <PPRaisedButton
-                type="submit"
-                label="Save"
-                primary={!false}
-                className={styles.submit}
-              />
-            </div>
-          </row>
-        </form>
-        <form onSubmit={this.notificationUpdate}>
-          <row>
-            <div className="col-md-12">
-              <hr />
-            </div>
-          </row>
-          <row>
-            <div className="col-md-12">
-              <h3>Email Notifications</h3>
-            </div>
-          </row>
-          <row>
-            <div className="col-md-3">
-              <h4>Frequency</h4>
-              <p>Send me email notifications:</p>
-            </div>
-            <div className="col-md-9">
-              <RadioGroup name="digest" onChange={this.onRadioNotify} value={this.state.emailNotifications}>
-                <RadioButton
-                  theme={styles}
-                  className={styles.radioButton}
-                  value="none"
-                  label="None"
+              </div>
+            
+              <div className="foot">
+                <PPButton
+                  type="submit"
+                  label="Save"
+                  primary={!false}
                 />
-                <RadioButton
-                  theme={styles}
-                  className={styles.radioButton}
-                  value="hourly_digest"
-                  label="Hourly"
+              </div>
+            </Content>
+          </form>
+          <form onSubmit={this.notificationUpdate}>
+            <Content>
+              <h3 style={{ paddingLeft: 10}}>Email Notifications</h3>
+              <div className="head">
+                <h5>Frequency</h5>
+                <p>Send me email notifications:</p>
+              </div>
+              <div className="body">
+                <div className="radio-group">
+                  <PPRadioButton
+                    className="email-radio"
+                    name="digest"
+                    value="none"
+                    label="None"
+                    onChange={this.onRadioNotify}
+                    checked={this.state.emailNotifications == "none"}
+                  />
+                  <PPRadioButton
+                    className="email-radio"
+                    name="digest"
+                    value="hourly_digest"
+                    label="Hourly"
+                    onChange={this.onRadioNotify}
+                    checked={this.state.emailNotifications == "hourly_digest"}
+                  />
+                  <PPRadioButton
+                    className="email-radio"
+                    name="digest"
+                    value="daily_digest"
+                    label="Daily"
+                    onChange={this.onRadioNotify}
+                    checked={this.state.emailNotifications == "daily_digest"}
+                  />
+                </div>
+              </div>
+              <div className="foot">
+                <PPButton
+                  type="submit"
+                  label="Save"
+                  primary={!false}
                 />
-                <RadioButton
-                  theme={styles}
-                  className={styles.radioButton}
-                  value="daily_digest"
-                  label="Daily"
-                />
-              </RadioGroup>
-            </div>
-          </row>
-          <row>
-            <div className="col-md-12">
-              <PPRaisedButton
-                type="submit"
-                label="Save"
-                primary={!false}
-                className={styles.submit}
-              />
-            </div>
-          </row>
-        </form>
-        <form onSubmit={this.passwordUpdate}>
-          <row>
-            <div className="col-md-12">
-              <hr />
-            </div>
-          </row>
-          <row>
-            <div className="col-md-3">
-              <h3>Security</h3>
-            </div>
-            <div className="col-md-9">
-              <row>
-                <div className="col-md-6">
+              </div>
+            </Content>
+          </form>
+          <form onSubmit={this.passwordUpdate}>
+            <Content last>
+              <div className="head">
+                <h3>Security</h3>
+              </div>
+              <div className="body">
+                <div className="col">
                   <PPTextField
                     type="password"
                     name="newPW"
@@ -382,10 +340,9 @@ class settingsUser extends Component {
                     maxLength={45}
                     value={this.state.newPW}
                     onChange={this.handleChange}
-                    style={{ margin: 0 }}
                   />
                 </div>
-                <div className="col-md-6">
+                <div className="col">
                   <PPTextField
                     type="password"
                     name="confirmNewPW"
@@ -393,25 +350,21 @@ class settingsUser extends Component {
                     maxLength={45}
                     value={this.state.confirmNewPW}
                     onChange={this.handleChange}
-                    style={{ margin: 0 }}
                     errorText={this.state.confirmPWError}
                   />
                 </div>
-              </row>
-            </div>
-          </row>
-          <row>
-            <div className="col-md-12">
-              <PPRaisedButton
-                type="submit"
-                label="Save"
-                primary={!false}
-                className={styles.submit}
-              />
-            </div>
-          </row>
-        </form>
-      </div>
+              </div>
+              <div className="foot">
+                <PPButton
+                  type="submit"
+                  label="Save"
+                  primary={!false}
+                />
+              </div>
+            </Content>
+          </form>
+        </div>
+      </Wrapper>
     );
   }
 }
