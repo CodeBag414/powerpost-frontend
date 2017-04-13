@@ -11,10 +11,10 @@ const Content = styled.div`
   }
 
   div.head {
-  	width: 200px;
-  	padding-left: 10px;
-  	display: inline-block;
-  	vertical-align: top;
+    width: 200px;
+    padding-left: 10px;
+    display: inline-block;
+    vertical-align: top;
 
     h5, p {
       color: #8C9497;
@@ -22,19 +22,19 @@ const Content = styled.div`
   }
 
   div.body {
-  	width: calc(100% - 200px);
-  	display: inline-block;
+    width: calc(100% - 200px);
+    display: inline-block;
 
-  	div.col {
-  		padding: 0 10px;
-  		width: 50%;
-  		display: inline-block;
+    div.col {
+      padding: 0 10px;
+      width: 50%;
+      display: inline-block;
 
       @media (max-width: 768px) {
         width: 100%;
         display: block;
       }
-  	}
+    }
 
     .radio-group {
       margin-top: 30px;
@@ -59,9 +59,9 @@ const Content = styled.div`
   }
 
   div.foot {
-  	padding: 0 10px;
-  	width: 100%;
-  	min-height: 40px;
+    padding: 0 10px;
+    width: 100%;
+    min-height: 40px;
     button {
       float: right;
       height: 30px;
