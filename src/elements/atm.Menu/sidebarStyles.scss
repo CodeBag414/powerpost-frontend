@@ -2,6 +2,11 @@
     width: 100%;
 }
 
+.menuInner {
+    overflow: auto;
+    height: calc(100vh - 45px);
+}
+
 .outline {
     display: none;
 }
