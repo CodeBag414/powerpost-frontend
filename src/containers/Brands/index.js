@@ -50,7 +50,9 @@ class Brands extends React.Component {
         this.props.setBrandFilter(brandFilter);
     }
 
-    getFilteredBrands () {        
+    getFilteredBrands () {
+        console.log('props brands 111', this.props.brands)
+        
         this.state.brands = this.props.brands;
         if (this.props.newBrand.account_id !== undefined) {
             this.state.brands = [...this.state.brands, this.props.newBrand]
@@ -64,9 +66,10 @@ class Brands extends React.Component {
                 }                
             });
             this.state.brands = tmpBrands
-            // this.setState({brands: this.state.brands})
         }
-            
+        
+        console.log('props brands 222', this.props.brands)
+    
         return this.state.brands.filter(brand => {
             let matched = true;
 
@@ -77,6 +80,7 @@ class Brands extends React.Component {
             return matched;
         });
     }
+
 
     getBrandsRemaining () {
         this.getFilteredBrands()
@@ -90,7 +94,6 @@ class Brands extends React.Component {
                     handleDialogToggle={this.handleDialogToggle} 
                     setBrandFilter={this.setBrandFilter} 
                     brandFilter={'this.props.brand', this.props.brandFilter}
-                    brandsRemaining={this.getBrandsRemaining()}
                 />
                 <BrandsList 
                     brands={this.getFilteredBrands()}

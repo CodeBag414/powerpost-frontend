@@ -81,6 +81,7 @@ class BrandsListItem extends React.Component {
         this.state = {
             accountpath: location.origin + '/account/' + this.props.brand.account_id,
             active: false,
+            deleteFlag: false
         }
     }
 
@@ -103,18 +104,35 @@ class BrandsListItem extends React.Component {
     deleteBrand(event) {
         event.preventDefault();
         this.setState({active: !this.state.active});
+        // const data = {
+        //     account_id: this.props.brand.account_id,
+        // };
+        
+        // if ( this.state.deleteFlag === true ) {
+        //     this.props.delete(data);
+        //     this.setState({deleteFlag: false});
+        // }
     }
 
     handleToggleYes = () => {
+        this.setState({deleteFlag: true});
+
         const data = {
             account_id: this.props.brand.account_id,
         };
+        
+        if ( this.state.deleteFlag == true ) {
+            console.log('yes')
+            this.props.delete(data);
+            // this.setState({deleteFlag: false});
+        }
 
-        this.props.delete(data);
         this.setState({active: !this.state.active});
     }
 
     handleToggleCancel = () => {
+        console.log('cancel')
+        this.setState({deleteFlag: false});
         this.setState({active: !this.state.active});
     }
 
