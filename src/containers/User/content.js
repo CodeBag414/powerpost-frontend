@@ -29,18 +29,32 @@ const Content = styled.div`
   		padding: 0 10px;
   		width: 50%;
   		display: inline-block;
+
+      @media (max-width: 768px) {
+        width: 100%;
+        display: block;
+      }
   	}
 
     .radio-group {
       margin-top: 30px;
       .email-radio {
+        padding: 0 10px;
         width: 150px;
         display: inline-block;
-      }   
+      }
+      @media (max-width: 768px) {
+        margin-top: 0px;
+      }
     }
     .email-radio {
       width: 150px;
       display: inline-block;
+    }
+
+    @media (max-width: 768px) {
+      width: 100%;
+      display: block;
     }
   }
 
