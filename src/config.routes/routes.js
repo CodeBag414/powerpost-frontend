@@ -225,12 +225,16 @@ export function createRoutes(store, auth) {
             name: 'Channels',
             getComponent(nextstate, cb) {
               const importModules = Promise.all([
+                System.import('containers/Statistics/ChannelsInfo/reducer'),
+                System.import('containers/Statistics/ChannelsInfo/sagas'),
                 System.import('containers/Statistics/ChannelsInfo'),
               ]);
 
               const renderRoute = loadModule(cb);
 
-              importModules.then(([component]) => {
+              importModules.then(([reducer, sagas, component]) => {
+                injectReducer('channel', reducer.default);
+                injectSagas(sagas.default);
                 renderRoute(component);
               });
             },
