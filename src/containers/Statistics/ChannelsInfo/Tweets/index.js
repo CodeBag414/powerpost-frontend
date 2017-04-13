@@ -32,37 +32,45 @@ class Tweets extends React.Component {
                 totalInfo = this.props.activeChannel.analytics.pins_by_weeks_ago;
                 keys = Object.keys(totalInfo);
                 last = keys[0];
-                total = totalInfo[last].pin_count != null ? totalInfo[last].pin_count : '0';
-                tweet = totalInfo[last].repins + " Repins";
-                contents = total + " Pins";
-                content = "Pins";
+                if( last != null ) {
+                    total = totalInfo[last].pin_count != null ? totalInfo[last].pin_count : '0';
+                    tweet = totalInfo[last].repins + " Repins";
+                    contents = total + " Pins";
+                    content = "Pins";
+                }
                 break;
             case 'twitter':
                 totalInfo = this.props.activeChannel.analytics.tweets_by_weeks_ago;
                 keys = Object.keys(totalInfo);
                 last = keys[0];
-                total = totalInfo[last].tweet_count != null ? totalInfo[last].tweet_count : '0';
-                tweet = totalInfo[last].retweet_count + " Retweets";
-                contents = total + " Tweets";
-                content = "Tweets";
+                if( last != null ) {
+                    total = totalInfo[last].tweet_count != null ? totalInfo[last].tweet_count : '0';
+                    tweet = totalInfo[last].retweet_count + " Retweets";
+                    contents = total + " Tweets";
+                    content = "Tweets";
+                }
                 break;
             case 'facebook':
                 totalInfo = this.props.activeChannel.analytics.extended.page_fans_by_weeks_ago;
                 keys = Object.keys(totalInfo);
                 last = keys[0];
-                total = totalInfo[last] != null ? totalInfo[last] : '0';
-                tweet = "2 Likes";
-                contents = total + " Fans";
-                content = "Fans";
+                if( last != null ) {
+                    total = totalInfo[last] != null ? totalInfo[last] : '0';
+                    tweet = "2 Likes";
+                    contents = total + " Fans";
+                    content = "Fans";
+                }
                 break;
             case 'linkedin':
                 totalInfo = this.props.activeChannel.analytics.total_followers_by_weeks_ago;
                 keys = Object.keys(totalInfo);
                 last = keys[0];
-                total = totalInfo[last] != null ? totalInfo[last] : '0';
-                tweet = "3 Likes";
-                contents = total + " Posts";
-                content = "Posts";
+                if( last != null ) {
+                    total = totalInfo[last] != null ? totalInfo[last] : '0';
+                    tweet = "3 Likes";
+                    contents = total + " Posts";
+                    content = "Posts";
+                }
                 break;
             default:
                 break;
