@@ -9,7 +9,6 @@ class BrandsList extends React.Component {
     
     render() {
         let brandsList = [];
-        console.log('last brands', this.props.brands)
         
         if((this.props.brands !== undefined) && (this.props.brands.length > 0)) {
             this.props.brands.map((brand, index) => {

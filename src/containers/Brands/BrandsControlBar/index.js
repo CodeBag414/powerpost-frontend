@@ -32,6 +32,14 @@ const BrandsControlSearch = styled.div`
     }
 `;
 
+const BrandsRemain = styled.div`
+    display: inline-block;
+    vertical-align: top;
+    margin: 16px 16px 0px 0px;
+    float: right;
+    color: #999;
+`;
+
 class BrandsControlBar extends React.Component {
     constructor(props) {
         super(props);
@@ -43,7 +51,6 @@ class BrandsControlBar extends React.Component {
     }
 
     render() {
-
         return (
             <BrandsControlBarContainer>
                 <BrandsControlButtons>
@@ -54,6 +61,9 @@ class BrandsControlBar extends React.Component {
                 <BrandsControlSearch>
                   <PPButtonInput value={ this.props.brandFilter } type="text" hint="Search" icon="search" onChange={ this.setBrandFilter }/>
                 </BrandsControlSearch>
+                <BrandsRemain>
+                  {this.props.brandsRemaining} of 20 Brands Remaining
+                </BrandsRemain>
             </BrandsControlBarContainer>
         );
     }
