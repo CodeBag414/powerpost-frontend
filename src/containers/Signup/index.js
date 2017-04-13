@@ -46,13 +46,13 @@ class Signup extends Component {
       <Wrapper>
         <LeftPane>
           <img src={imgLogo} alt="Logo" />
-          <div style={{ marginTop: '120px' }}>PowerPost Business Plan</div>
-          <div style={{ marginTop: '20px', fontSize: '2.5rem' }}>{title}</div>
-          <div style={{ marginTop: '15px' }}>
-            <span style={{ fontSize: '1.5rem' }}>${price}</span>&nbsp;
+          <div style={{ marginTop: '120px', fontSize: '2rem' }}>PowerPost Business Plan</div>
+          <div style={{ marginTop: '10px', fontSize: '4.5rem' }}>{title}</div>
+          <div style={{ marginTop: '15px', fontSize: '1.5rem' }}>
+            <span style={{ fontSize: '2rem' }}>${price}</span>&nbsp;
             <span>{term_length}</span>
           </div>
-          <div style={{ marginTop: '15px' }}>
+          <div style={{ marginTop: '15px', fontSize: '1.5rem' }}>
             { features.join('. ') }
           </div>
           <div style={{ position: 'absolute', left: 0, bottom: 0 }}>Not the plan you want, we've got you covered. View Plans</div>
