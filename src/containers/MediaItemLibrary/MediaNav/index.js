@@ -27,7 +27,7 @@ const MediaNav = (props) => (
       <Dropdown label="Filter by" style={{float: 'right'}} options={[{ value: 'PNG', label: 'PNG'}]}/>
     </div>
     <div className="col-md-2">
-      <Dropdown label="Date Added" style={{float: 'right'}} options={[]} />
+      <Dropdown label="Date Added" style={{float: 'right'}} options={[{value: 'Now', label: 'Now'}]} />
     </div>
   </MediaNavContainer>
 );

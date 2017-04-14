@@ -6,6 +6,9 @@ import {
    FETCH_COLLECTIONS_SUCCESS,
    FETCH_MEDIA_ITEMS_SUCCESS,
    FETCH_MEDIA_ITEMS_ERROR,
+   MEDIA_ERROR,
+   FETCH_URL_CONTENT_SUCCESS,
+   CLEAR_URL_CONTENT,
 } from './constants';
 
 // The initial application state
@@ -16,7 +19,7 @@ const initialState = fromJS({
   isFetching: true,
   error: false,
   searchResults: [],
-  urlContent: { images: [] },
+  urlContent: {},
   collections: [{}],
   activeCollection: {
     collection_id: false,
@@ -30,7 +33,7 @@ const initialState = fromJS({
     title: false,
     parent_collection_id: false,
   },
-  mediaItems: [{}],
+  mediaItems: [],
 });
 
 // Takes care of changing the application state
@@ -38,14 +41,23 @@ function mediaLibraryReducer(state = initialState, action) {
   switch (action.type) {
     case FETCH_COLLECTIONS_SUCCESS:
       return state
-            .set('collections', action.collections.data.collections)
-            .set('activeCollection', action.collections.data.collections.map((coll) => (coll.parent_collection_id == null) && coll)[0]);
+        .set('collections', action.collections.data.collections)
+        .set('activeCollection', action.collections.data.collections.map((coll) => (coll.parent_collection_id == null) && coll)[0]);
     case FETCH_MEDIA_ITEMS_SUCCESS:
       return state
-            .set('mediaItems', action.mediaItems.data.collection.media_items);
+        .set('mediaItems', action.mediaItems.data.collection.media_items);
     case FETCH_MEDIA_ITEMS_ERROR:
       return state
-            .set('error', action.mediaItems.data.message);
+        .set('error', action.mediaItems.data.message);
+    case MEDIA_ERROR:
+      return state
+        .set('error', action.error);
+    case FETCH_URL_CONTENT_SUCCESS:
+      return state
+        .set('urlContent', action.urlData);
+    case CLEAR_URL_CONTENT:
+      return state
+        .set('urlContent', {});
     default:
       return state;
   }
