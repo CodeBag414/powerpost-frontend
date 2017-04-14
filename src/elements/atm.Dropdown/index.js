@@ -11,6 +11,7 @@ const DropdownWrapper = styled.div`
 
 const DropdownLabel = styled.div`
   color: #8C9497;
+  min-height: 25px;
 `;
 
 const DropdownControl = styled.div`
@@ -192,7 +193,7 @@ export default class Dropdown extends React.Component {
 
     return (
       <DropdownWrapper>
-        {this.props.label && <DropdownLabel>{this.props.label}</DropdownLabel>}
+        {this.props.label !== undefined && <DropdownLabel>{this.props.label}</DropdownLabel>}
         <DropdownControl isOpen={this.state.isOpen} onMouseDown={this.handleMouseDown.bind(this)} onTouchEnd={this.handleMouseDown.bind(this)}>
           {value}
           <DropdownArrow isOpen={this.state.isOpen}>
