@@ -38,6 +38,7 @@ class settingsUser extends Component {
     this.passwordUpdate = this.passwordUpdate.bind(this);
     this.onRadioNotify = this.onRadioNotify.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.passwordChange = this.passwordChange.bind(this);
 
     const user = this.props.user || null;
     const userProperties = (user && user.properties) || null;
@@ -214,6 +215,50 @@ class settingsUser extends Component {
     });
   }
 
+  passwordChange(event) {
+    const name = event.target.name;
+    const value = event.target.value;
+
+    switch (name) {
+      case 'newPW':
+        this.setState({
+          newPW: value, 
+        });
+        if (value !== this.state.confirmNewPW) {
+          this.setState({
+            confirmPWError: 'Password does not match the confirm password.',
+          });
+        } else if (value.length >= 6 && value.length <= 45) {
+          this.setState({
+            confirmPWError: '',
+          });
+        } else {
+          this.setState({
+            confirmPWError: 'Password must be between 6 and 45 characters',
+          });
+        }
+      break;
+      case 'confirmNewPW':
+        this.setState({
+          confirmNewPW: value, 
+        });
+        if (value !== this.state.newPW) {
+          this.setState({
+            confirmPWError: 'Password does not match the confirm password.',
+          });
+        } else if (value.length >= 6 && value.length <= 45) {
+          this.setState({
+            confirmPWError: '',
+          });
+        } else {
+          this.setState({
+            confirmPWError: 'Password must be between 6 and 45 characters',
+          });
+        }
+      break;
+    }
+  }
+
   render() {
 
     return (
@@ -339,7 +384,7 @@ class settingsUser extends Component {
                     floatingLabelText="New Password"
                     maxLength={45}
                     value={this.state.newPW}
-                    onChange={this.handleChange}
+                    onChange={this.passwordChange}
                   />
                 </div>
                 <div className="col">
@@ -349,7 +394,7 @@ class settingsUser extends Component {
                     floatingLabelText="Confirm New Password"
                     maxLength={45}
                     value={this.state.confirmNewPW}
-                    onChange={this.handleChange}
+                    onChange={this.passwordChange}
                     errorText={this.state.confirmPWError}
                   />
                 </div>
@@ -358,6 +403,7 @@ class settingsUser extends Component {
                 <PPButton
                   type="submit"
                   label="Save"
+                  disabled={!!this.state.confirmPWError}
                   primary={!false}
                 />
               </div>
