@@ -1,5 +1,4 @@
 import {
-  CHANGE_FORM,
   SET_AUTH,
   SENDING_REQUEST,
   LOGIN_REQUEST,
@@ -10,16 +9,6 @@ import {
   CLEAR_ERROR,
   // CHECK_USER_OBJECT,
 } from './constants';
-
-/**
- * Sets the form state
- * @param  {object} newFormState          The new state of the form
- * @param  {string} newFormState.username The new text of the username input field of the form
- * @param  {string} newFormState.password The new text of the password input field of the form
- */
-export function changeForm(newFormState) {
-  return { type: CHANGE_FORM, newFormState };
-}
 
 /**
  * Sets the authentication state of the application

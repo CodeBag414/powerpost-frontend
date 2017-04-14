@@ -3,7 +3,6 @@
  */
  import { fromJS } from 'immutable';
  import {
-  CHANGE_FORM,
   SET_AUTH,
   SENDING_REQUEST,
   REQUEST_ERROR,
@@ -19,10 +18,6 @@
 
 // The initial application state
  const initialState = fromJS({
-   formState: {
-     username: '',
-     password: '',
-   },
    error: '',
    currentlySending: false,
    user: {},
@@ -36,8 +31,6 @@
 // Takes care of changing the application state
  function globalReducer(state = initialState, action) {
    switch (action.type) {
-     case CHANGE_FORM:
-       return state.set('formState', action.newFormState);
      case SET_AUTH:
        return state.set('loggedIn', action.newAuthState);
      case SET_USER:
