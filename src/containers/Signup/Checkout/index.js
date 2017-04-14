@@ -34,10 +34,10 @@ const monthOptions = moment.months().map((month, index) => {
     mm = `0${mm}`;
   }
 
-  return { value: index + 1, label: `${mm} - ${month}` };
+  return { value: (index + 1).toString(), label: `${mm} - ${month}` };
 });
 const yearOptions = range(2018, 2033).map((year) => ({
-  value: year,
+  value: year.toString(),
   label: year,
 }));
 
@@ -55,8 +55,8 @@ class SignupCheckout extends Component {
 
     this.state = {
       name: userInfo.name,
-      expirationYear: 2018,
-      expirationMonth: 1,
+      expirationYear: null,
+      expirationMonth: null,
       nameOnCard: {
         value: '',
         error: '',
@@ -87,18 +87,18 @@ class SignupCheckout extends Component {
     Stripe.card.createToken({
       number: this.state.cardNumber.value,
       cvc: this.state.cvc.value,
-      exp_month: this.state.expirationMonth,
-      exp_year: this.state.expirationYear,
+      exp_month: this.state.expirationMonth.value,
+      exp_year: this.state.expirationYear.value,
       name: this.state.nameOnCard.value,
     }, this.handleStripeResponse);
   }
 
-  onMonthChange = (value) => {
-    this.setState({ expirationMonth: value });
+  onMonthChange = (option) => {
+    this.setState({ expirationMonth: option });
   }
 
-  onYearChange = (value) => {
-    this.setState({ expirationYear: value });
+  onYearChange = (option) => {
+    this.setState({ expirationYear: option });
   }
 
   onFieldChange = (event) => {
@@ -138,13 +138,13 @@ class SignupCheckout extends Component {
           />
           <div className="row">
             <div className="col-sm-12 col-md-8">
-              <PPDropdown auto value={this.state.expirationMonth} source={monthOptions} onChange={this.onMonthChange} />
+              <PPDropdown label="Credit Card Expiration Date" value={this.state.expirationMonth} options={monthOptions} onChange={this.onMonthChange} />
             </div>
             <div className="col-sm-12 col-md-4">
-              <PPDropdown auto value={this.state.expirationYear} source={yearOptions} onChange={this.onYearChange} />
+              <PPDropdown label="" value={this.state.expirationYear} options={yearOptions} onChange={this.onYearChange} />
             </div>
           </div>
-          <div className="row">
+          <div className="row" style={{ marginTop: '15px' }}>
             <div className="col-sm-12 col-md-9">
               <PPTextField
                 type="text"
