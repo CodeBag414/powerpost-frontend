@@ -39,6 +39,7 @@ const Avatar = styled.div`
         margin-top: 70px;
         vertical-align: super;
         font-size: 20px;
+        font-family: FontAwesome;
       }
 
       &:hover {
