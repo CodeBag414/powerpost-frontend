@@ -95,13 +95,13 @@ class Dashboard extends Component {
 
                     <div className="userInfo">
                       <div>
-                        <p>Name</p>
-                        <span> {userInfo.display_name || ''} </span>
+                        <h6>Name</h6>
+                        <p> {userInfo.display_name || ''} </p>
                       </div>
 
                       <div>
-                        <p>Email</p>
-                        <span> {userInfo.email || ''} </span>
+                        <h6>Email</h6>
+                        <p> {userInfo.email || ''} </p>
                       </div>
                     </div>
                   </div>
