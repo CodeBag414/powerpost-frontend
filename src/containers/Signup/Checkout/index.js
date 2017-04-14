@@ -37,7 +37,7 @@ const monthOptions = moment.months().map((month, index) => {
   return { value: (index + 1).toString(), label: `${mm} - ${month}` };
 });
 
-const yearOptions = range(2018, 2033).map((year) => ({
+const yearOptions = range(2017, 2033).map((year) => ({
   value: year.toString(),
   label: year,
 }));
@@ -142,7 +142,7 @@ class SignupCheckout extends Component {
               <Dropdown label="Credit Card Expiration Date" value={this.state.expirationMonth} options={monthOptions} onChange={this.onMonthChange} />
             </div>
             <div className="col-sm-12 col-md-4">
-              <Dropdown label="Year" value={this.state.expirationYear} options={yearOptions} onChange={this.onYearChange} />
+              <Dropdown label="" value={this.state.expirationYear} options={yearOptions} onChange={this.onYearChange} />
             </div>
           </div>
           <div className="row" style={{ marginTop: '15px' }}>

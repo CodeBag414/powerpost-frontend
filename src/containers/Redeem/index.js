@@ -17,6 +17,7 @@ import Wrapper from './Wrapper';
 class Redeem extends Component {
   static propTypes = {
     params: PropTypes.object,
+    location: PropTypes.object,
     redeem: PropTypes.object,
     redeemToken: PropTypes.func,
   }
@@ -27,7 +28,7 @@ class Redeem extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { redeem } = nextProps;
+    const { location: { query }, redeem } = nextProps;
 
     if (this.props.redeem !== redeem) {
       const error = redeem.get('error');
@@ -39,21 +40,23 @@ class Redeem extends Component {
       } else {
         const detail = redeem.get('detail');
 
-        const selectedPlan = get(detail, 'user_own_account.properties.selected_plan');
-        const accountTypeId = get(detail, 'user_own_account.account_type_id');
+        if (query.type === 'new_user') {
+          const selectedPlan = get(detail, 'user_own_account.properties.selected_plan');
+          const accountTypeId = get(detail, 'user_own_account.account_type_id');
 
-        if (!detail.api_key) {
-          alert('Something is wrong with returned api_key');
-          return;
-        }
+          if (!detail.api_key) {
+            alert('Something is wrong with returned api_key');
+            return;
+          }
 
-        cookie.save('token', detail.api_key, { path: '/' });
-        cookie.save('account_id', detail.user_own_account.account_id, { path: '/' });
+          cookie.save('token', detail.api_key, { path: '/' });
+          cookie.save('account_id', detail.user_own_account.account_id, { path: '/' });
 
-        if (accountTypeId === '5' && selectedPlan) {
-          browserHistory.push(`/signup/checkout?plan_id=${selectedPlan}`);
-        } else {
-          browserHistory.push('/');
+          if (accountTypeId === '5' && selectedPlan) {
+            browserHistory.push(`/signup/checkout?plan_id=${selectedPlan}`);
+          } else {
+            browserHistory.push('/');
+          }
         }
       }
     }
@@ -61,11 +64,13 @@ class Redeem extends Component {
 
   render() {
     const { redeem } = this.props;
+    const error = redeem.get('error');
 
     return (
-      redeem.error ?
+      error ?
         <Wrapper>
           Redemption Failed. Please Try Again!
+          { JSON.stringify(error) }
         </Wrapper>
         :
         <Wrapper>
