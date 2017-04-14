@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 
 const Avatar = styled.div`
-  h5 {
-    margin: 5px 0 10px;
-    color: #9d9d9d;
+  h6 {
+    margin: 10px 0 6px;
+    font-weight: bold;
   }
   .avatar {
     display: table;
@@ -32,11 +32,12 @@ const Avatar = styled.div`
         padding: 10px;
         color: white;
         display: inline-block;
+        font-weight: 900;
       }
 
       i {
         margin-top: 70px;
-        vertical-align: text-bottom;
+        vertical-align: super;
         font-size: 20px;
       }
 

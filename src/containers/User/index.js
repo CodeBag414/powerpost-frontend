@@ -256,7 +256,7 @@ class settingsUser extends Component {
             <Content>
               <div className="head">
                 <Avatar>
-                  <h5>Profile Picture</h5>
+                  <h6>Profile Picture</h6>
                   <div className="avatar" onClick={this.openFilePicker}>
                     <img src={this.state.avatar} />
                     <div className="avatar-txt">
@@ -316,7 +316,7 @@ class settingsUser extends Component {
           </form>
           <form onSubmit={this.notificationUpdate}>
             <Content>
-              <h3 style={{ paddingLeft: 10}}>Email Notifications</h3>
+              <h3 style={{ paddingLeft: 10, fontWeight: 900}}>Email Notifications</h3>
               <div className="head">
                 <h5>Frequency</h5>
                 <p>Send me email notifications:</p>

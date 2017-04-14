@@ -2,9 +2,9 @@ import styled from 'styled-components';
 
 const Content = styled.div`
   width: 100%;
-  border-bottom: ${props => props.last ? 'none' : '1px solid #C8CED0'};
-  padding-bottom: 30px;
-  margin-bottom: 30px;
+  border-bottom: ${props => props.last ? 'none' : '1px solid #CFD8DC'};
+  padding-bottom: 32px;
+  margin-bottom: 32px;
 
   h3 {
     color: #8C9497;
@@ -16,8 +16,17 @@ const Content = styled.div`
     display: inline-block;
     vertical-align: top;
 
-    h5, p {
-      color: #8C9497;
+    h3 {
+      font-weight: 900;
+    }
+    h5 {
+      font-size: 13px;
+      font-weight: bold;
+      margin: 20px 0 0;
+    }
+    p {
+      font-size: 12px;
+      font-weight: 300;
     }
   }
 
@@ -65,9 +74,9 @@ const Content = styled.div`
     min-height: 40px;
     button {
       float: right;
-      height: 30px;
-      min-width: 80px;
-      line-height: 30px;
+      height: 29px;
+      min-width: 60px;
+      line-height: 29px;
     }
   }
 `;
