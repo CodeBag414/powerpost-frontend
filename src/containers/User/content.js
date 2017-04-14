@@ -29,6 +29,7 @@ const Content = styled.div`
       padding: 0 10px;
       width: 50%;
       display: inline-block;
+      vertical-align: top;
 
       @media (max-width: 768px) {
         width: 100%;
