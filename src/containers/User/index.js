@@ -187,24 +187,11 @@ class settingsUser extends Component {
   passwordUpdate(event) {
     event.preventDefault();
 
-    if (this.state.newPW !== this.state.confirmNewPW) {
-      this.setState({
-        confirmPWError: 'Password does not match the confirm password.',
-      });
-    } else if (this.state.confirmNewPW.length >= 6 && this.state.confirmNewPW.length <= 45) {
-      this.setState({
-        confirmPWError: '',
-      });
-      const data = {
-        accountID: this.props.userOwnAccount.account_id,
-        newPW: this.state.newPW,
-      };
-      this.props.update(data);
-    } else {
-      this.setState({
-        confirmPWError: 'Password must be between 6 and 45 characters',
-      });
-    }
+    const data = {
+      accountID: this.props.userOwnAccount.account_id,
+      newPW: this.state.newPW,
+    };
+    this.props.update(data);
   }
 
   handleChange(event) {
@@ -228,7 +215,7 @@ class settingsUser extends Component {
           this.setState({
             confirmPWError: 'Password does not match the confirm password.',
           });
-        } else if (value.length >= 6 && value.length <= 45) {
+        } else if (value.length >= 6 && value.length <= 45 || value.length == 0) {
           this.setState({
             confirmPWError: '',
           });
@@ -403,7 +390,7 @@ class settingsUser extends Component {
                 <PPButton
                   type="submit"
                   label="Save"
-                  disabled={!!this.state.confirmPWError}
+                  disabled={!!this.state.confirmPWError || !this.state.newPW}
                   primary={!false}
                 />
               </div>
