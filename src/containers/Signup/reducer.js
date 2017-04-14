@@ -1,7 +1,6 @@
 import { fromJS } from 'immutable';
 
 import {
-  FETCH_PLAN,
   FETCH_PLAN_SUCCESS,
   FETCH_PLAN_ERROR,
 } from './constants';
