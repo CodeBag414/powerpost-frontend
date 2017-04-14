@@ -101,10 +101,14 @@ export default class Dropdown extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
+    console.log('in new props');
+    console.log(newProps);
     if (newProps.value && newProps.value !== this.state.selected) {
       this.setState({ selected: newProps.value });
     } else if (!newProps.value && newProps.placeholder) {
       this.setState({ selected: { label: newProps.placeholder, value: '' } });
+    } else if (newProps.value === this.state.selected) {
+      
     } else {
       this.setState({ selected: { label: PLACEHOLDER_STRING, value: '' } });
     }
@@ -210,7 +214,7 @@ Dropdown.propTypes = {
   label: React.PropTypes.string,
   options: React.PropTypes.array,
   onChange: React.PropTypes.func,
-  value: React.PropTypes.string,
+  value: React.PropTypes.any,
   placeholder: React.PropTypes.string,
   disabled: React.PropTypes.bool,
 };

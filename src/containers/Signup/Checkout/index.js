@@ -15,7 +15,7 @@ import {
   selectPaymentSource,
 } from 'containers/App/selectors';
 
-import PPDropdown from 'elements/atm.DropDown';
+import Dropdown from 'elements/atm.Dropdown';
 import PPTextField from 'elements/atm.TextField';
 import PPButton from 'elements/atm.Button';
 import Title from 'elements/atm.Title';
@@ -36,6 +36,7 @@ const monthOptions = moment.months().map((month, index) => {
 
   return { value: (index + 1).toString(), label: `${mm} - ${month}` };
 });
+
 const yearOptions = range(2018, 2033).map((year) => ({
   value: year.toString(),
   label: year,
@@ -138,10 +139,10 @@ class SignupCheckout extends Component {
           />
           <div className="row">
             <div className="col-sm-12 col-md-8">
-              <PPDropdown label="Credit Card Expiration Date" value={this.state.expirationMonth} options={monthOptions} onChange={this.onMonthChange} />
+              <Dropdown label="Credit Card Expiration Date" value={this.state.expirationMonth} options={monthOptions} onChange={this.onMonthChange} />
             </div>
             <div className="col-sm-12 col-md-4">
-              <PPDropdown label="" value={this.state.expirationYear} options={yearOptions} onChange={this.onYearChange} />
+              <Dropdown label="Year" value={this.state.expirationYear} options={yearOptions} onChange={this.onYearChange} />
             </div>
           </div>
           <div className="row" style={{ marginTop: '15px' }}>
