@@ -502,7 +502,7 @@ export function createRoutes(store, auth) {
       ],
     },
     {
-      path: 'redeem/token/:token',
+      path: 'redeem/:token',
       name: 'redeem',
       getComponent(nextState, cb) {
         const importModules = Promise.all([

@@ -15,11 +15,11 @@ export function* redeemTokenWorker(action) {
   const { payload } = action;
 
   try {
-    const response = yield call(postData, `/account_api/redeem_token/${payload.token}`);
+    const response = yield call(postData, `/account_api/redeem_token/${payload.token}`, false);
 
-    yield put(redeemTokenSuccess(response));
+    yield put(redeemTokenSuccess(response.data));
   } catch (error) {
-    yield put(redeemTokenError(error));
+    yield put(redeemTokenError(error.response.data));
   }
 }
 
