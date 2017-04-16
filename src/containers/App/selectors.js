@@ -37,6 +37,11 @@ const makeSelectFilePickerKey = () => createSelector(
     (auth) => auth.get('filePickerKey')
 );
 
+const selectPaymentSource = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('paymentSource')
+);
+
 export {
     selectAuth,
     makeSelectAuthError,
@@ -46,5 +51,5 @@ export {
     makeSelectSharedAccounts,
     makeSelectUserAvatar,
     makeSelectFilePickerKey,
-
+    selectPaymentSource,
 };

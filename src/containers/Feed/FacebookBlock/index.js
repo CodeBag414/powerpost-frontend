@@ -2,6 +2,7 @@
 import React, { Component, PropTypes } from 'react';
 import moment from 'moment';
 import Link from 'react-toolbox/lib/link';
+import Linkify from 'react-linkify';
 
 import Wrapper from './Wrapper';
 import Header from './Header';
@@ -37,7 +38,9 @@ class FacebookBlock extends Component {
           </div>
         </Header>
         <Content>
-          <span className={`fb-message ${post.type === 'status' && 'large'}`}>{post.message}</span>
+          <Linkify properties={{ target: '_blank' }}>
+            <span className={`fb-message ${post.type === 'status' && 'large'}`}>{post.message}</span>
+          </Linkify>
 
           { post.type === 'photo' &&
             <img className="fb-image" src={post.full_picture} alt="feed" />

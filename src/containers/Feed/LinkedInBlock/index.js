@@ -4,6 +4,7 @@
 import React, { PropTypes } from 'react';
 import moment from 'moment';
 import Link from 'react-toolbox/lib/link';
+import Linkify from 'react-linkify';
 
 import Wrapper from './Wrapper';
 import Header from './Header';
@@ -59,7 +60,9 @@ function LinkedInBlock({ post, connection }) {
         </div>
       </Header>
       <Content>
-        <div className="ln-comment" dangerouslySetInnerHTML={{ __html: processLinkedinText(post) }} />
+        <Linkify properties={{ target: '_blank' }}>
+          <div className="ln-comment" dangerouslySetInnerHTML={{ __html: processLinkedinText(post) }} />
+        </Linkify>
       </Content>
       <Footer>
         <div className="ln-comment-details">
