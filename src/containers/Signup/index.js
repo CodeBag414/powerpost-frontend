@@ -26,21 +26,45 @@ class Signup extends Component {
     fetchPlan: PropTypes.func,
   }
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      amountOff: null,
+      percentOff: null,
+    };
+  }
+
   componentWillMount() {
     const { fetchPlan, location } = this.props;
 
     fetchPlan(location.query.plan_id);
   }
 
+  discount = (amountOff, percentOff) => {
+    this.setState({
+      amountOff,
+      percentOff,
+    });
+  }
+
   render() {
     const { children, plan } = this.props;
+    const { amountOff, percentOff } = this.state;
 
     const {
       title,
       price,
       term_length,
       features = [],
-    } = plan.detail || {};
+    } = plan.details || {};
+    let newPrice = price;
+
+    if (amountOff) {
+      newPrice -= amountOff / 100;
+    } else if (percentOff) {
+      newPrice *= (100 - percentOff) / 100;
+    }
 
     return (
       <Wrapper>
@@ -49,7 +73,7 @@ class Signup extends Component {
           <div style={{ marginTop: '120px', fontSize: '2rem' }}>PowerPost Business Plan</div>
           <div style={{ marginTop: '10px', fontSize: '4.5rem' }}>{title}</div>
           <div style={{ marginTop: '15px', fontSize: '1.5rem' }}>
-            <span style={{ fontSize: '2rem' }}>${price}</span>&nbsp;
+            <span style={{ fontSize: '2rem' }}>${parseInt(newPrice)}</span>&nbsp;
             <span>{term_length}</span>
           </div>
           <div style={{ marginTop: '15px', fontSize: '1.5rem' }}>
@@ -61,7 +85,7 @@ class Signup extends Component {
           <Topbar />
           <FormWrapper>
             { React.cloneElement(children, {
-
+              discount: this.discount,
             })
             }
           </FormWrapper>

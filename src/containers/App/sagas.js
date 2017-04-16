@@ -11,7 +11,7 @@ import auth from 'utils/auth';
 import { set } from 'utils/localStorage';
 import { makeSelectUser } from './selectors';
 import { toastr } from 'lib/react-redux-toastr';
-import { postData } from 'utils/request';
+import { getData, postData } from 'utils/request';
 
 import {
   SENDING_REQUEST,
@@ -26,11 +26,17 @@ import {
   CHECK_USER_OBJECT,
   CLEAR_USER,
   CREATE_PAYMENT_SOURCE,
+  APPLY_COUPON,
+  POST_SUBSCRIPTION,
 } from './constants';
 
 import {
   createPaymentSourceSuccess,
   createPaymentSourceError,
+  applyCouponSuccess,
+  applyCouponError,
+  postSubscriptionSuccess,
+  postSubscriptionError,
 } from './actions';
 
 /**
@@ -255,6 +261,41 @@ export function* createPaymentSourceFlow() {
   }
 }
 
+export function* applyCouponFlow() {
+  while (true) {
+    const { payload } = yield take(APPLY_COUPON);
+
+    try {
+      const response = yield call(getData, `/payment_api/coupon/${payload}`);
+      const { data } = response;
+
+      if (data.coupon) {
+        yield put(applyCouponSuccess(data.coupon));
+      } else {
+        throw data.message;
+      }
+    } catch (error) {
+      yield put(applyCouponError(error));
+    }
+  }
+}
+
+export function* postSubscriptionFlow() {
+  while (true) {
+    const { payload } = yield take(POST_SUBSCRIPTION);
+
+    try {
+      const response = yield call(postData, '/payment_api/subscription', { payload });
+      const { data: { subscriptions } = {} } = response;
+      console.log('////////', response);
+      yield put(postSubscriptionSuccess(subscriptions));
+    } catch (error) {
+      yield put(postSubscriptionError(error));
+    }
+  }
+}
+
+
 // The root saga is what we actually send to Redux's middleware. In here we fork
 // each saga so that they are all "active" and listening.
 // Sagas are fired once at the start of an app and can be thought of as processes running
@@ -266,6 +307,8 @@ export default [
   updateFlow,
   userExistsFlow,
   createPaymentSourceFlow,
+  applyCouponFlow,
+  postSubscriptionFlow,
 ];
 
 // Little helper function to abstract going to different pages

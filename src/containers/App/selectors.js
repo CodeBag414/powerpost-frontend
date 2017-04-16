@@ -42,6 +42,16 @@ const selectPaymentSource = () => createSelector(
     (auth) => auth.get('paymentSource')
 );
 
+const selectCoupon = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('coupon')
+);
+
+const selectSubscription = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('subscription')
+);
+
 export {
     selectAuth,
     makeSelectAuthError,
@@ -52,4 +62,6 @@ export {
     makeSelectUserAvatar,
     makeSelectFilePickerKey,
     selectPaymentSource,
+    selectCoupon,
+    selectSubscription,
 };

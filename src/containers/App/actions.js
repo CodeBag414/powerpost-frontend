@@ -10,6 +10,12 @@ import {
   CREATE_PAYMENT_SOURCE,
   CREATE_PAYMENT_SOURCE_SUCCESS,
   CREATE_PAYMENT_SOURCE_ERROR,
+  APPLY_COUPON,
+  APPLY_COUPON_SUCCESS,
+  APPLY_COUPON_ERROR,
+  POST_SUBSCRIPTION,
+  POST_SUBSCRIPTION_SUCCESS,
+  POST_SUBSCRIPTION_ERROR,
   // CHECK_USER_OBJECT,
 } from './constants';
 
@@ -102,6 +108,48 @@ export function createPaymentSourceSuccess(payload) {
 export function createPaymentSourceError(payload) {
   return {
     type: CREATE_PAYMENT_SOURCE_ERROR,
+    payload,
+  };
+}
+
+export function applyCoupon(payload) {
+  return {
+    type: APPLY_COUPON,
+    payload,
+  };
+}
+
+export function applyCouponSuccess(payload) {
+  return {
+    type: APPLY_COUPON_SUCCESS,
+    payload,
+  };
+}
+
+export function applyCouponError(payload) {
+  return {
+    type: APPLY_COUPON_ERROR,
+    payload,
+  };
+}
+
+export function postSubscription(payload) {
+  return {
+    type: POST_SUBSCRIPTION,
+    payload,
+  };
+}
+
+export function postSubscriptionSuccess(payload) {
+  return {
+    type: POST_SUBSCRIPTION_SUCCESS,
+    payload,
+  };
+}
+
+export function postSubscriptionError(payload) {
+  return {
+    type: POST_SUBSCRIPTION_ERROR,
     payload,
   };
 }

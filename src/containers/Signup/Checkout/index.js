@@ -10,9 +10,13 @@ import { get } from 'utils/localStorage';
 
 import {
   createPaymentSource,
+  applyCoupon,
+  postSubscription,
 } from 'containers/App/actions';
 import {
   selectPaymentSource,
+  selectCoupon,
+  selectSubscription,
 } from 'containers/App/selectors';
 
 import Dropdown from 'elements/atm.Dropdown';
@@ -46,7 +50,12 @@ class SignupCheckout extends Component {
   static propTypes = {
     plan: PropTypes.object,
     paymentSource: PropTypes.object,
+    coupon: PropTypes.object,
+    subscription: PropTypes.object,
     createPaymentSource: PropTypes.func,
+    applyCoupon: PropTypes.func,
+    postSubscription: PropTypes.func,
+    discount: PropTypes.func,
   }
 
   constructor(props) {
@@ -70,14 +79,35 @@ class SignupCheckout extends Component {
         value: '',
         error: '',
       },
+      coupon: {
+        value: '',
+        error: '',
+      },
+      couponViewType: 0,
     };
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.plan !== nextProps.plan) {
-      const detail = nextProps.plan.detail;
-      if (!detail.requires_payment) {
+      const { details } = nextProps.plan;
+      if (!details.requires_payment) {
         browserHistory.push('/');
+      }
+    } else if (this.props.coupon !== nextProps.coupon) {
+      const { details, error } = nextProps.coupon;
+      if (!error) {
+        this.props.discount(details.amount_off, details.percent_off);
+
+        this.setState({
+          couponViewType: 2,
+        });
+      } else {
+        this.setState({
+          coupon: {
+            value: this.state.coupon.value,
+            error,
+          },
+        });
       }
     }
   }
@@ -108,6 +138,75 @@ class SignupCheckout extends Component {
       [name]: {
         value,
       },
+    });
+  }
+
+  getCouponView = () => {
+    const { couponViewType } = this.state;
+    switch (couponViewType) {
+      case 0:
+        return <Center style={{ marginTop: '30px' }}><PPLink onClick={this.showCouponView} >Add Coupon Code</PPLink></Center>;
+      case 1:
+        return (
+          <div className="row">
+            <div className="col-sm-12 col-md-9">
+              <PPTextField
+                type="text"
+                name="coupon"
+                floatingLabelText="Coupon Code"
+                value={this.state.coupon.value}
+                errorText={this.state.coupon.error}
+                onChange={this.onFieldChange}
+              />
+            </div>
+            <div className="col-sm-12 col-md-3">
+              <PPButton label="Apply Coupon" primary style={{ marginTop: '30px' }} onClick={this.applyCoupon} />
+            </div>
+          </div>
+        );
+      case 2:
+        return (
+          <div
+            style={{
+              background: 'green',
+              padding: '10px 20px',
+              color: 'white',
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            Your coupon code has been applied!
+            <a
+              style={{ color: 'white' }}
+              onClick={this.removeCoupon}
+            >
+              Remove
+            </a>
+          </div>
+        );
+      default:
+        return null;
+    }
+  }
+
+  applyCoupon = () => {
+    this.props.applyCoupon(this.state.coupon.value);
+  }
+
+  removeCoupon = (event) => {
+    event.preventDefault();
+    this.props.discount(null, null);
+    this.setState({
+      couponViewType: 0,
+      coupon: {
+        value: '',
+      },
+    });
+  }
+
+  showCouponView = () => {
+    this.setState({
+      couponViewType: 1,
     });
   }
 
@@ -169,7 +268,7 @@ class SignupCheckout extends Component {
               />
             </div>
           </div>
-          <Center style={{ marginTop: '30px' }}><PPLink to="/coupon">Add Coupon Code</PPLink></Center>
+          { this.getCouponView() }
           <Center style={{ marginTop: '30px' }}><PPButton type="submit" label="Thanks, now get started" primary /></Center>
         </form>
       </div>
@@ -180,12 +279,16 @@ class SignupCheckout extends Component {
 export function mapDispatchToProps(dispatch) {
   return {
     createPaymentSource: (payload) => dispatch(createPaymentSource(payload)),
+    applyCoupon: (payload) => dispatch(applyCoupon(payload)),
+    postSubscription: (payload) => dispatch(postSubscription(payload)),
   };
 }
 
 const mapStateToProps = createStructuredSelector({
   plan: selectPlan(),
   paymentSource: selectPaymentSource(),
+  coupon: selectCoupon(),
+  subscription: selectSubscription(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignupCheckout);
