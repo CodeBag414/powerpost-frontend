@@ -11,7 +11,13 @@ import theme from 'theme';
 
 import { get } from 'utils/localStorage';
 
+import { resendActivationEmail } from '../actions';
+
 class SignupVerification extends Component {
+  static propTypes = {
+    resendActivationEmail: PropTypes.func,
+  }
+
   constructor(props) {
     super(props);
 
@@ -21,6 +27,10 @@ class SignupVerification extends Component {
       name: userInfo.name,
       email: userInfo.email,
     };
+  }
+
+  resendActivationEmail = () => {
+    this.props.resendActivationEmail(this.state.email);
   }
 
   render() {
@@ -33,7 +43,7 @@ class SignupVerification extends Component {
           &nbsp;<span style={{ color: theme.primaryColor }}>{email}</span>. Please click on the link to activate your account and start creating content today.
         </CenterText>
         <Center style={{ marginTop: '40px' }}>Can't find your activation email?</Center>
-        <Center style={{ marginTop: '30px' }}><PPButton type="submit" label="Resend Activation Email" primary /></Center>
+        <Center style={{ marginTop: '30px' }}><PPButton type="submit" label="Resend Activation Email" primary onClick={this.resendActivationEmail} /></Center>
       </div>
     );
   }
@@ -41,6 +51,7 @@ class SignupVerification extends Component {
 
 export function mapDispatchToProps(dispatch) {
   return {
+    resendActivationEmail: (email) => dispatch(resendActivationEmail(email)),
   };
 }
 

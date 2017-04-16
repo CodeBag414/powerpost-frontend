@@ -7,6 +7,9 @@ import {
   LOGOUT,
   REQUEST_ERROR,
   CLEAR_ERROR,
+  CREATE_PAYMENT_SOURCE,
+  CREATE_PAYMENT_SOURCE_SUCCESS,
+  CREATE_PAYMENT_SOURCE_ERROR,
   // CHECK_USER_OBJECT,
 } from './constants';
 
@@ -80,4 +83,25 @@ export function requestError(error) {
  */
 export function clearError() {
   return { type: CLEAR_ERROR };
+}
+
+export function createPaymentSource(payload) {
+  return {
+    type: CREATE_PAYMENT_SOURCE,
+    payload,
+  };
+}
+
+export function createPaymentSourceSuccess(payload) {
+  return {
+    type: CREATE_PAYMENT_SOURCE_SUCCESS,
+    payload,
+  };
+}
+
+export function createPaymentSourceError(payload) {
+  return {
+    type: CREATE_PAYMENT_SOURCE_ERROR,
+    payload,
+  };
 }
