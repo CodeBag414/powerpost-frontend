@@ -14,7 +14,8 @@ export default styled.div`
     margin: 0;
     border-bottom: 1px solid #CFD8DC;
     i {
-        margin-right: 15px;
+      font-family: FontAwesome;
+      margin-right: 15px;
     }
   }
   div.paneContent {

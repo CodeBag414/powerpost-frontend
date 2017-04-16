@@ -70,6 +70,7 @@ export default styled.div`
     }
 
     i {
+      font-family: FontAwesome;
       text-align: center;
       width: 100%;
     }
