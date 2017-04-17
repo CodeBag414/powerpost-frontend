@@ -213,7 +213,7 @@ class settingsUser extends Component {
         });
         if (value !== this.state.confirmNewPW) {
           this.setState({
-            confirmPWError: 'Password does not match the confirm password.',
+            confirmPWError: 'Password does not match with the confirm password.',
           });
         } else if ((value.length >= 6 && value.length <= 45) || value.length === 0) {
           this.setState({
@@ -231,7 +231,7 @@ class settingsUser extends Component {
         });
         if (value !== this.state.newPW) {
           this.setState({
-            confirmPWError: 'Password does not match the confirm password.',
+            confirmPWError: 'Password does not match with the confirm password.',
           });
         } else if ((value.length >= 6 && value.length <= 45) || value.length === 0) {
           this.setState({
