@@ -3,7 +3,7 @@
  *
  *
  */
-import React, { PropTypes, Component } from 'react';
+import React from 'react';
 
 import {
   connect,
@@ -32,88 +32,86 @@ import PPBKImage from '../../assets/images/user_dashboard_bg.png';
 
 const ReactRouterButton = withReactRouter(PPButton);
 
-class Dashboard extends Component {
-  static propTypes = {
-    user: PropTypes.object,
-    brands: PropTypes.any,
-  }
+const Dashboard = (props) => {
+  const brands = props.brands || null;
+  const userInfo = props.user || null;
+  const avatarUrl = (userInfo && userInfo.properties && userInfo.properties.thumb_url) ? userInfo.properties.thumb_url : null;
 
-  render() {
-    const brands = this.props.brands || null;
-    const userInfo = this.props.user || null;
-    const avatarUrl = (userInfo && userInfo.properties && userInfo.properties.thumb_url) ? userInfo.properties.thumb_url : null;
+  return (
+    <Wrapper>
+      <Background image={PPBKImage} />
+      <div className="container">
+        <div className="col-md-12">
+          <Header>
+            { userInfo && userInfo.display_name
+              ? `Hello there ${userInfo.display_name}!`
+              : ''
+            }
+          </Header>
+        </div>
 
-    return (
-      <Wrapper>
-        <Background image={PPBKImage} />
-        <div className="container">
-          <div className="col-md-12">
-            <Header>
-              { userInfo && userInfo.display_name
-                ? 'Hello there ' + userInfo.display_name + '!'
-                : ''
-              }
-            </Header>
+        <row>
+          <div className="col-md-7">
+            <Pane>
+              <h3 className="paneTitle"><i className="fa fa-bolt"></i>My Brands</h3>
+              <div className="paneContent">
+                <p>Easily jump into a brand to manage its posts.</p>
+                <div style={{ padding: '10px 0' }}>
+                  {
+                    brands
+                    ? brands.map((brand, index) => <BrandItem brand={brand} key={index} />)
+                    : null
+                  }
+                </div>
+              </div>
+            </Pane>
           </div>
 
-          <row>
-            <div className="col-md-7">
-              <Pane>
-                <h3 className="paneTitle"><i className="fa fa-bolt"></i>My Brands</h3>
-                <div className="paneContent">
-                  <p>Easily jump into a brand to manage its posts.</p>
-                  <div style={{padding: '10px 0'}}>
-                    {
-                      brands
-                      ? brands.map((brand, index) => <BrandItem brand={brand} key={index} />)
-                      : null
-                    }
-                  </div>
+          <div className="col-md-5">
+            <Pane>
+              <h3 className="paneTitle"><i className="fa fa-bolt"></i>My User Settings</h3>
+              <div className="paneContent">
+                <div className="profileButton">
+                  <p>Go here to manage all of your user info.</p>
+                  <ReactRouterButton
+                    className="setting"
+                    label="Go to Settings"
+                    primary
+                    to={'/user/settings'}
+                  />
                 </div>
-              </Pane>
-            </div>
+                <div className="profile">
+                  <img
+                    src={avatarUrl}
+                    className="avatar"
+                    alt="Profile"
+                  />
 
-            <div className="col-md-5">
-              <Pane>
-                <h3 className="paneTitle"><i className="fa fa-bolt"></i>My User Settings</h3>
-                <div className="paneContent">
-                  <div className="profileButton">
-                    <p>Go here to manage all of your user info.</p>
-                    <ReactRouterButton
-                      className="setting"
-                      label="Go to Settings"
-                      primary
-                      to={'/user/settings'}
-                    />
-                  </div>
-                  <div className="profile">
-                    <img
-                      src={avatarUrl}
-                      className="avatar"
-                      alt="Profile"
-                    />
+                  <div className="userInfo">
+                    <div>
+                      <h6>Name</h6>
+                      <p> {userInfo.display_name || ''} </p>
+                    </div>
 
-                    <div className="userInfo">
-                      <div>
-                        <h6>Name</h6>
-                        <p> {userInfo.display_name || ''} </p>
-                      </div>
-
-                      <div>
-                        <h6>Email</h6>
-                        <p> {userInfo.email || ''} </p>
-                      </div>
+                    <div>
+                      <h6>Email</h6>
+                      <p> {userInfo.email || ''} </p>
                     </div>
                   </div>
                 </div>
-              </Pane>
-            </div>
-          </row>
-        </div>
-      </Wrapper>
-    );
-  }
-}
+              </div>
+            </Pane>
+          </div>
+        </row>
+      </div>
+    </Wrapper>
+  );
+};
+
+Dashboard.propTypes = {
+  brands: React.PropTypes.any,
+  user: React.PropTypes.object,
+};
 
 const mapStateToProps = createStructuredSelector({
   user: makeSelectUser(),
@@ -121,3 +119,4 @@ const mapStateToProps = createStructuredSelector({
 });
 
 export default UserCanAccount(connect(mapStateToProps)(Dashboard));
+

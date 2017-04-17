@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export default styled.div`
-  background: url(${props => props.image}) no-repeat center center fixed; 
+  background: url(${(props) => props.image}) no-repeat center center fixed; 
   -webkit-background-size: cover;
      -moz-background-size: cover;
        -o-background-size: cover;
@@ -15,3 +15,4 @@ export default styled.div`
   left: 0;
   z-index: -1;
 `;
+

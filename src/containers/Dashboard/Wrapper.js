@@ -4,6 +4,6 @@ export default styled.div`
   height: 100%;
 
   * {
-  	font-family: 'Lato', sans-serif;
+    font-family: 'Lato', sans-serif;
   }
 `;
