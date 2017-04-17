@@ -7,7 +7,7 @@ const Content = styled.div`
   margin-bottom: 32px;
 
   h3 {
-    color: #8C9497;
+    color: #888888;
   }
 
   div.head {
@@ -18,6 +18,7 @@ const Content = styled.div`
 
     h3 {
       font-weight: 900;
+      color: #888888;
     }
     h5 {
       font-size: 13px;
