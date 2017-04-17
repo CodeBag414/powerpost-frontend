@@ -17,9 +17,9 @@ import {
 } from 'containers/App/selectors';
 
 import Wrapper from './Wrapper';
-import Content from './Content';
+import Content from './content';
 import Header from './Header';
-import Avatar from './Avatar';
+import Avatar from './avatar';
 
 class settingsUser extends Component {
   static propTypes = {
