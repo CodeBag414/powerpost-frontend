@@ -7,7 +7,7 @@ import { createStructuredSelector } from 'reselect';
 import filepicker from 'filepicker-js';
 import PPTextField from 'elements/atm.TextField';
 import PPButton from 'elements/atm.Button';
-import PPRadioButton from 'elements/atm.RadioButton'
+import PPRadioButton from 'elements/atm.RadioButton';
 
 import { updateRequest } from 'containers/App/actions';
 import {
@@ -60,19 +60,19 @@ class settingsUser extends Component {
       newPW: '',
       confirmNewPW: '',
       confirmPWError: '',
-      user: user,
-      userOwnAccount: userOwnAccount,
+      user: user || null,
+      userOwnAccount: userOwnAccount || null,
     };
   }
 
   componentWillReceiveProps(nextProps) {
     let user = this.state.user;
     let userOwnAccount = this.state.userOwnAccount;
-    if (user != nextProps.user) {
+    if (user !== nextProps.user) {
       user = nextProps.user ? nextProps.user : user;
     }
 
-    if (userOwnAccount != nextProps.userOwnAccount) {
+    if (userOwnAccount !== nextProps.userOwnAccount) {
       userOwnAccount = nextProps.userOwnAccount ? nextProps.userOwnAccount : userOwnAccount;
     }
 
@@ -94,8 +94,8 @@ class settingsUser extends Component {
       newPW: '',
       confirmNewPW: '',
       confirmPWError: '',
-      user: user,
-      userOwnAccount: userOwnAccount,
+      user: user || null,
+      userOwnAccount: userOwnAccount || null,
     });
   }
 
@@ -181,7 +181,7 @@ class settingsUser extends Component {
       accountID: this.props.userOwnAccount.account_id,
     };
 
-    this.props.update(data);  
+    this.props.update(data);
   }
 
   passwordUpdate(event) {
@@ -209,13 +209,13 @@ class settingsUser extends Component {
     switch (name) {
       case 'newPW':
         this.setState({
-          newPW: value, 
+          newPW: value,
         });
         if (value !== this.state.confirmNewPW) {
           this.setState({
             confirmPWError: 'Password does not match the confirm password.',
           });
-        } else if (value.length >= 6 && value.length <= 45 || value.length == 0) {
+        } else if ((value.length >= 6 && value.length <= 45) || value.length === 0) {
           this.setState({
             confirmPWError: '',
           });
@@ -224,16 +224,16 @@ class settingsUser extends Component {
             confirmPWError: 'Password must be between 6 and 45 characters',
           });
         }
-      break;
+        break;
       case 'confirmNewPW':
         this.setState({
-          confirmNewPW: value, 
+          confirmNewPW: value,
         });
         if (value !== this.state.newPW) {
           this.setState({
             confirmPWError: 'Password does not match the confirm password.',
           });
-        } else if (value.length >= 6 && value.length <= 45) {
+        } else if ((value.length >= 6 && value.length <= 45) || value.length === 0) {
           this.setState({
             confirmPWError: '',
           });
@@ -242,12 +242,13 @@ class settingsUser extends Component {
             confirmPWError: 'Password must be between 6 and 45 characters',
           });
         }
-      break;
+        break;
+      default:
+        break;
     }
   }
 
   render() {
-
     return (
       <Wrapper>
         <div className="container">
@@ -257,13 +258,13 @@ class settingsUser extends Component {
               <div className="head">
                 <Avatar>
                   <h6>Profile Picture</h6>
-                  <div className="avatar" onClick={this.openFilePicker}>
-                    <img src={this.state.avatar} />
+                  <button className="avatar" onClick={this.openFilePicker}>
+                    <img src={this.state.avatar} alt="avatar" />
                     <div className="avatar-txt">
                       <i className="fa fa-camera"></i>
                       <p>Update Your <br /> Profile Photo</p>
                     </div>
-                  </div>
+                  </button>
                 </Avatar>
               </div>
               <div className="body">
@@ -304,7 +305,6 @@ class settingsUser extends Component {
                   />
                 </div>
               </div>
-            
               <div className="foot">
                 <PPButton
                   type="submit"
@@ -316,7 +316,7 @@ class settingsUser extends Component {
           </form>
           <form onSubmit={this.notificationUpdate}>
             <Content>
-              <h3 style={{ paddingLeft: 10, fontWeight: 900}}>Email Notifications</h3>
+              <h3 style={{ paddingLeft: 10, fontWeight: 900 }}>Email Notifications</h3>
               <div className="head">
                 <h5>Frequency</h5>
                 <p>Send me email notifications:</p>
@@ -329,7 +329,7 @@ class settingsUser extends Component {
                     value="none"
                     label="None"
                     onChange={this.onRadioNotify}
-                    checked={this.state.emailNotifications == "none"}
+                    checked={this.state.emailNotifications === 'none'}
                   />
                   <PPRadioButton
                     className="email-radio"
@@ -337,7 +337,7 @@ class settingsUser extends Component {
                     value="hourly_digest"
                     label="Hourly"
                     onChange={this.onRadioNotify}
-                    checked={this.state.emailNotifications == "hourly_digest"}
+                    checked={this.state.emailNotifications === 'hourly_digest'}
                   />
                   <PPRadioButton
                     className="email-radio"
@@ -345,7 +345,7 @@ class settingsUser extends Component {
                     value="daily_digest"
                     label="Daily"
                     onChange={this.onRadioNotify}
-                    checked={this.state.emailNotifications == "daily_digest"}
+                    checked={this.state.emailNotifications === 'daily_digest'}
                   />
                 </div>
               </div>
@@ -415,3 +415,4 @@ const mapStateToProps = createStructuredSelector({
 });
 
 export default (connect(mapStateToProps, mapDispatchToProps)(settingsUser));
+

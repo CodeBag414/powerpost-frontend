@@ -8,6 +8,9 @@ const Avatar = styled.div`
   .avatar {
     display: table;
     position: relative;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
 
     img {
       left: 0px;
@@ -52,4 +55,3 @@ const Avatar = styled.div`
 `;
 
 export default Avatar;
-

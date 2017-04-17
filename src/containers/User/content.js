@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const Content = styled.div`
   width: 100%;
-  border-bottom: ${props => props.last ? 'none' : '1px solid #CFD8DC'};
+  border-bottom: ${(props) => props.last ? 'none' : '1px solid #CFD8DC'};
   padding-bottom: 32px;
   margin-bottom: 32px;
 
