@@ -92,12 +92,13 @@ export function* authorizeUpdate(data) {
     // as if it's synchronous because we pause execution until the call is done
     // with `yield`!
 
-    const responseUser = yield call(auth.updateUser, data);
-    const responseAccount = yield call(auth.updateAccount, data);
-    if (responseUser && responseAccount) {
-      return true;
-    }
-    return responseUser || responseAccount;
+    yield call(auth.updateUser, data);
+    yield call(auth.updateAccount, data);
+
+    const currentUser = yield call(auth.getCurrentUser);
+    yield put({ type: SET_USER, user: currentUser });
+
+    return true;
   } catch (error) {
     console.log('hi');
     // If we get an error we send Redux the appropiate action and return
