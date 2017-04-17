@@ -9,6 +9,7 @@ const Avatar = styled.div`
     display: table;
     position: relative;
     padding: 0;
+    outline: none;
     border: none;
     border-radius: 4px;
 

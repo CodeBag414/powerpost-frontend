@@ -258,7 +258,7 @@ class settingsUser extends Component {
               <div className="head">
                 <Avatar>
                   <h6>Profile Picture</h6>
-                  <button className="avatar" onClick={this.openFilePicker}>
+                  <button className="avatar" onClick={this.openFilePicker} type="button">
                     <img src={this.state.avatar} alt="avatar" />
                     <div className="avatar-txt">
                       <i className="fa fa-camera"></i>
