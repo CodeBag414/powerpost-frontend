@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -6,14 +7,25 @@ import { range } from 'lodash';
 import cookie from 'react-cookie';
 import { browserHistory } from 'react-router';
 
+import theme from 'theme';
 import { get } from 'utils/localStorage';
+
+import { toastr } from 'lib/react-redux-toastr';
 
 import {
   createPaymentSource,
+  applyCoupon,
+  postSubscription,
+  fetchCurrentPlan,
 } from 'containers/App/actions';
 import {
   selectPaymentSource,
+  selectCoupon,
+  selectSubscription,
+  selectCurrentPlan,
 } from 'containers/App/selectors';
+
+import Loading from 'components/Loading';
 
 import Dropdown from 'elements/atm.Dropdown';
 import PPTextField from 'elements/atm.TextField';
@@ -46,7 +58,15 @@ class SignupCheckout extends Component {
   static propTypes = {
     plan: PropTypes.object,
     paymentSource: PropTypes.object,
+    coupon: PropTypes.object,
+    subscription: PropTypes.object,
+    location: PropTypes.object,
+    currentPlan: PropTypes.object,
     createPaymentSource: PropTypes.func,
+    applyCoupon: PropTypes.func,
+    postSubscription: PropTypes.func,
+    discount: PropTypes.func,
+    fetchCurrentPlan: PropTypes.func,
   }
 
   constructor(props) {
@@ -70,14 +90,90 @@ class SignupCheckout extends Component {
         value: '',
         error: '',
       },
+      coupon: {
+        value: '',
+        error: '',
+      },
+      couponViewType: 0,
+      loading: false,
     };
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.plan !== nextProps.plan) {
-      const detail = nextProps.plan.detail;
-      if (!detail.requires_payment) {
+      const { details } = nextProps.plan;
+      if (!details.requires_payment) {
         browserHistory.push('/');
+      }
+    } else if (this.props.coupon !== nextProps.coupon) {
+      const { details, error } = nextProps.coupon;
+      if (!error) {
+        this.props.discount(details.amount_off, details.percent_off);
+
+        this.setState({
+          couponViewType: 2,
+        });
+      } else {
+        this.setState({
+          coupon: {
+            value: this.state.coupon.value,
+            error,
+          },
+        });
+      }
+    } else if (this.props.paymentSource !== nextProps.paymentSource) {
+      const { fetching, error } = nextProps.paymentSource;
+
+      if (!fetching) {
+        if (!error) {     // Create Source Succeeded
+          let payload = {
+            account_id: cookie.load('account_id'),
+            plan_id: nextProps.location.query.plan_id,
+          };
+          if (this.state.couponViewType === 2) {
+            payload = {
+              ...payload,
+              coupon: this.state.coupon.value,
+            };
+          }
+          this.props.postSubscription(payload);
+        } else {
+          toastr.error(error.toString());
+          this.setState({
+            loading: false,
+          });
+        }
+      } else {
+        this.setState({
+          loading: true,
+        });
+      }
+    } else if (this.props.subscription !== nextProps.subscription) {
+      const { fetching, error } = nextProps.subscription;
+
+      if (!fetching) {
+        if (!error) {
+          this.props.fetchCurrentPlan({
+            accountId: cookie.load('account_id'),
+            selectedPlan: nextProps.location.query.plan_id,
+          });
+        } else {
+          toastr.error(error.toString());
+          this.setState({
+            loading: false,
+          });
+        }
+      }
+    } else if (this.props.currentPlan !== nextProps.currentPlan) {
+      const { fetching, error } = nextProps.subscription;
+
+      if (!fetching) {
+        if (error) {
+          toastr.error(error.toString());
+          this.setState({
+            loading: false,
+          });
+        }
       }
     }
   }
@@ -111,6 +207,75 @@ class SignupCheckout extends Component {
     });
   }
 
+  getCouponView = () => {
+    const { couponViewType } = this.state;
+    switch (couponViewType) {
+      case 0:
+        return <Center style={{ marginTop: '30px' }}><PPLink onClick={this.showCouponView} >Add Coupon Code</PPLink></Center>;
+      case 1:
+        return (
+          <div className="row">
+            <div className="col-sm-12 col-md-9">
+              <PPTextField
+                type="text"
+                name="coupon"
+                floatingLabelText="Coupon Code"
+                value={this.state.coupon.value}
+                errorText={this.state.coupon.error}
+                onChange={this.onFieldChange}
+              />
+            </div>
+            <div className="col-sm-12 col-md-3">
+              <PPButton label="Apply Coupon" primary style={{ marginTop: '30px' }} onClick={this.applyCoupon} />
+            </div>
+          </div>
+        );
+      case 2:
+        return (
+          <div
+            style={{
+              background: 'green',
+              padding: '10px 20px',
+              color: 'white',
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            Your coupon code has been applied!
+            <a
+              style={{ color: 'white' }}
+              onClick={this.removeCoupon}
+            >
+              Remove
+            </a>
+          </div>
+        );
+      default:
+        return null;
+    }
+  }
+
+  applyCoupon = () => {
+    this.props.applyCoupon(this.state.coupon.value);
+  }
+
+  removeCoupon = (event) => {
+    event.preventDefault();
+    this.props.discount(null, null);
+    this.setState({
+      couponViewType: 0,
+      coupon: {
+        value: '',
+      },
+    });
+  }
+
+  showCouponView = () => {
+    this.setState({
+      couponViewType: 1,
+    });
+  }
+
   handleStripeResponse = (status, response) => {
     if (response.error) {
       alert(response.error.message);
@@ -123,6 +288,8 @@ class SignupCheckout extends Component {
   }
 
   render() {
+    const { loading } = this.state;
+
     return (
       <div>
         <Title>Hi {this.state.name}</Title>
@@ -169,9 +336,10 @@ class SignupCheckout extends Component {
               />
             </div>
           </div>
-          <Center style={{ marginTop: '30px' }}><PPLink to="/coupon">Add Coupon Code</PPLink></Center>
+          { this.getCouponView() }
           <Center style={{ marginTop: '30px' }}><PPButton type="submit" label="Thanks, now get started" primary /></Center>
         </form>
+        { loading && <Loading /> }
       </div>
     );
   }
@@ -180,12 +348,18 @@ class SignupCheckout extends Component {
 export function mapDispatchToProps(dispatch) {
   return {
     createPaymentSource: (payload) => dispatch(createPaymentSource(payload)),
+    applyCoupon: (payload) => dispatch(applyCoupon(payload)),
+    postSubscription: (payload) => dispatch(postSubscription(payload)),
+    fetchCurrentPlan: (payload) => dispatch(fetchCurrentPlan(payload)),
   };
 }
 
 const mapStateToProps = createStructuredSelector({
   plan: selectPlan(),
   paymentSource: selectPaymentSource(),
+  coupon: selectCoupon(),
+  subscription: selectSubscription(),
+  currentPlan: selectCurrentPlan(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignupCheckout);
