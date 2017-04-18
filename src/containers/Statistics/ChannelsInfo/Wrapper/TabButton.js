@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 
 const TabButton = styled.button`
@@ -12,7 +11,7 @@ const TabButton = styled.button`
   text-decoration: none;
   font-size: 1em;
   margin: 0 1em;
-  
+
   :hover {
       background-color: #afafaf;
   }

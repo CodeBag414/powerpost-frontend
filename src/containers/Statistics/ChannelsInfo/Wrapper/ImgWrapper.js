@@ -7,7 +7,7 @@ export default styled.div`
   border-radius: 2px;
   float: left;
   margin-left: 12px;
-  
+
   img {
     width: 100%;
     height: 100%;
