@@ -3,6 +3,7 @@
 // which listen for actions.
 
 // Sagas help us gather all our side effects (network requests in this case) in one place
+/* eslint-disable camelcase */
 
 import { take, call, put, race, select } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
@@ -310,7 +311,7 @@ function* fetchCurrentPlanLoop(accountId, selectedPlan) {
     const response = yield call(getData, `/payment_api/plan/${accountId}`);
     const { data: { plan_id } = {} } = response;
 
-    if (false) {
+    if (plan_id === selectedPlan) {
       return 'success';
     }
     yield call(delay, 3000);

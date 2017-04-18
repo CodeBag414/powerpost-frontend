@@ -4,7 +4,7 @@ const selectAuth = (state) => state.get('auth');
 
 const makeSelectAuthError = () => createSelector(
     selectAuth,
-    (auth) => { console.log(auth); auth.get('error'); }
+    (auth) => auth.get('error')
 );
 
 const makeSelectUser = () => createSelector(
