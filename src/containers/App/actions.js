@@ -16,6 +16,9 @@ import {
   POST_SUBSCRIPTION,
   POST_SUBSCRIPTION_SUCCESS,
   POST_SUBSCRIPTION_ERROR,
+  FETCH_CURRENT_PLAN,
+  FETCH_CURRENT_PLAN_SUCCESS,
+  FETCH_CURRENT_PLAN_ERROR,
   // CHECK_USER_OBJECT,
 } from './constants';
 
@@ -150,6 +153,27 @@ export function postSubscriptionSuccess(payload) {
 export function postSubscriptionError(payload) {
   return {
     type: POST_SUBSCRIPTION_ERROR,
+    payload,
+  };
+}
+
+export function fetchCurrentPlan(payload) {
+  return {
+    type: FETCH_CURRENT_PLAN,
+    payload,
+  };
+}
+
+export function fetchCurrentPlanSuccess(payload) {
+  return {
+    type: FETCH_CURRENT_PLAN_SUCCESS,
+    payload,
+  };
+}
+
+export function fetchCurrentPlanError(payload) {
+  return {
+    type: FETCH_CURRENT_PLAN_ERROR,
     payload,
   };
 }

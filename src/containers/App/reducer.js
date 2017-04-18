@@ -11,13 +11,14 @@ import {
   SET_USER,
   // CHECK_USER_OBJECT,
   CLEAR_USER,
-  CREATE_PAYMENT_SOURCE,
   CREATE_PAYMENT_SOURCE_SUCCESS,
   CREATE_PAYMENT_SOURCE_ERROR,
   APPLY_COUPON_SUCCESS,
   APPLY_COUPON_ERROR,
   POST_SUBSCRIPTION_SUCCESS,
   POST_SUBSCRIPTION_ERROR,
+  FETCH_CURRENT_PLAN_SUCCESS,
+  FETCH_CURRENT_PLAN_ERROR,
 } from './constants';
 
 import auth from 'utils/auth';
@@ -32,18 +33,10 @@ const initialState = fromJS({
   subAccounts: [],
   loggedIn: auth.loggedIn(),
   filePickerKey: 'A6Upb4pDFTFu9uXIjmV8Oz',
-  paymentSource: {
-    details: {},
-    error: null,
-  },
-  coupon: {
-    details: {},
-    error: null,
-  },
-  subscription: {
-    details: {},
-    error: null,
-  },
+  paymentSource: {},
+  coupon: {},
+  subscription: {},
+  currentPlan: {},
 });
 
 // Takes care of changing the application state
@@ -71,12 +64,6 @@ function globalReducer(state = initialState, action) {
       .set('sharedAccounts', [])
       .set('userAccount', {})
       .set('subAccounts', []);
-    case CREATE_PAYMENT_SOURCE:
-      return state
-        .set('paymentSource', {
-          details: {},
-          error: null,
-        });
     case CREATE_PAYMENT_SOURCE_SUCCESS:
       return state
         .set('paymentSource', {
@@ -110,6 +97,18 @@ function globalReducer(state = initialState, action) {
     case POST_SUBSCRIPTION_ERROR:
       return state
         .set('subscription', {
+          details: null,
+          error: action.payload,
+        });
+    case FETCH_CURRENT_PLAN_SUCCESS:
+      return state
+        .set('currentPlan', {
+          details: action.payload,
+          error: null,
+        });
+    case FETCH_CURRENT_PLAN_ERROR:
+      return state
+        .set('currentPlan', {
           details: null,
           error: action.payload,
         });

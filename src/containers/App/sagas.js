@@ -5,6 +5,7 @@
 // Sagas help us gather all our side effects (network requests in this case) in one place
 
 import { take, call, put, race, select } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 import { browserHistory } from 'react-router';
 
 import auth from 'utils/auth';
@@ -28,6 +29,7 @@ import {
   CREATE_PAYMENT_SOURCE,
   APPLY_COUPON,
   POST_SUBSCRIPTION,
+  FETCH_CURRENT_PLAN,
 } from './constants';
 
 import {
@@ -37,6 +39,7 @@ import {
   applyCouponError,
   postSubscriptionSuccess,
   postSubscriptionError,
+  fetchCurrentPlanError,
 } from './actions';
 
 /**
@@ -252,9 +255,12 @@ export function* createPaymentSourceFlow() {
 
     try {
       const response = yield call(postData, '/payment_api/source', { payload });
-
-      yield put(createPaymentSourceSuccess(response));
-      browserHistory.push('/');
+      const { data } = response;
+      if (data.status === 'success') {
+        yield put(createPaymentSourceSuccess(data));
+      } else {
+        throw data.error;
+      }
     } catch (error) {
       yield put(createPaymentSourceError(error));
     }
@@ -286,11 +292,48 @@ export function* postSubscriptionFlow() {
 
     try {
       const response = yield call(postData, '/payment_api/subscription', { payload });
-      const { data: { subscriptions } = {} } = response;
-      console.log('////////', response);
-      yield put(postSubscriptionSuccess(subscriptions));
+      const { data } = response;
+
+      if (data.status === 'success') {
+        yield put(postSubscriptionSuccess(data));
+      } else {
+        throw data;
+      }
     } catch (error) {
       yield put(postSubscriptionError(error));
+    }
+  }
+}
+
+function* fetchCurrentPlanLoop(accountId, selectedPlan) {
+  while (true) {
+    const response = yield call(getData, `/payment_api/plan/${accountId}`);
+    const { data: { plan_id } = {} } = response;
+
+    if (false) {
+      return 'success';
+    }
+    yield call(delay, 3000);
+  }
+}
+
+export function* fetchCurrentPlanFlow() {
+  while (true) {
+    const { payload: { accountId, selectedPlan } } = yield take(FETCH_CURRENT_PLAN);
+
+    try {
+      const { currentPlan } = yield race({
+        currentPlan: call(fetchCurrentPlanLoop, accountId, selectedPlan),
+        timeout: call(delay, 30000),
+      });
+
+      if (currentPlan) {
+        browserHistory.push('/');
+      } else {
+        yield put(fetchCurrentPlanError('Timeout'));
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 }
@@ -309,6 +352,7 @@ export default [
   createPaymentSourceFlow,
   applyCouponFlow,
   postSubscriptionFlow,
+  fetchCurrentPlanFlow,
 ];
 
 // Little helper function to abstract going to different pages

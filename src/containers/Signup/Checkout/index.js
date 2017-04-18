@@ -8,15 +8,19 @@ import { browserHistory } from 'react-router';
 
 import { get } from 'utils/localStorage';
 
+import { toastr } from 'lib/react-redux-toastr';
+
 import {
   createPaymentSource,
   applyCoupon,
   postSubscription,
+  fetchCurrentPlan,
 } from 'containers/App/actions';
 import {
   selectPaymentSource,
   selectCoupon,
   selectSubscription,
+  selectCurrentPlan,
 } from 'containers/App/selectors';
 
 import Dropdown from 'elements/atm.Dropdown';
@@ -52,10 +56,13 @@ class SignupCheckout extends Component {
     paymentSource: PropTypes.object,
     coupon: PropTypes.object,
     subscription: PropTypes.object,
+    location: PropTypes.object,
+    currentPlan: PropTypes.object,
     createPaymentSource: PropTypes.func,
     applyCoupon: PropTypes.func,
     postSubscription: PropTypes.func,
     discount: PropTypes.func,
+    fetchCurrentPlan: PropTypes.func,
   }
 
   constructor(props) {
@@ -108,6 +115,41 @@ class SignupCheckout extends Component {
             error,
           },
         });
+      }
+    } else if (this.props.paymentSource !== nextProps.paymentSource) {
+      const { error } = nextProps.paymentSource;
+
+      if (!error) {     // Create Source Succeeded
+        let payload = {
+          account_id: cookie.load('account_id'),
+          plan_id: nextProps.location.query.plan_id,
+        };
+        if (this.state.couponViewType === 2) {
+          payload = {
+            ...payload,
+            coupon: this.state.coupon.value,
+          };
+        }
+        this.props.postSubscription(payload);
+      } else {
+        toastr.error(error.toString());
+      }
+    } else if (this.props.subscription !== nextProps.subscription) {
+      const { error } = nextProps.subscription;
+
+      if (!error) {
+        this.props.fetchCurrentPlan({
+          accountId: cookie.load('account_id'),
+          selectedPlan: nextProps.location.query.plan_id,
+        });
+      } else {
+        toastr.error(error.toString());
+      }
+    } else if (this.props.currentPlan !== nextProps.currentPlan) {
+      const { error } = nextProps.subscription;
+
+      if (error) {
+        toastr.error(error.toString());
       }
     }
   }
@@ -281,6 +323,7 @@ export function mapDispatchToProps(dispatch) {
     createPaymentSource: (payload) => dispatch(createPaymentSource(payload)),
     applyCoupon: (payload) => dispatch(applyCoupon(payload)),
     postSubscription: (payload) => dispatch(postSubscription(payload)),
+    fetchCurrentPlan: (payload) => dispatch(fetchCurrentPlan(payload)),
   };
 }
 
@@ -289,6 +332,7 @@ const mapStateToProps = createStructuredSelector({
   paymentSource: selectPaymentSource(),
   coupon: selectCoupon(),
   subscription: selectSubscription(),
+  currentPlan: selectCurrentPlan(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignupCheckout);

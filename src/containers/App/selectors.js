@@ -52,6 +52,11 @@ const selectSubscription = () => createSelector(
     (auth) => auth.get('subscription')
 );
 
+const selectCurrentPlan = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('currentPlan')
+);
+
 export {
     selectAuth,
     makeSelectAuthError,
@@ -64,4 +69,5 @@ export {
     selectPaymentSource,
     selectCoupon,
     selectSubscription,
+    selectCurrentPlan,
 };
