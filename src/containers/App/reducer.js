@@ -11,12 +11,15 @@ import {
   SET_USER,
   // CHECK_USER_OBJECT,
   CLEAR_USER,
+  CREATE_PAYMENT_SOURCE,
   CREATE_PAYMENT_SOURCE_SUCCESS,
   CREATE_PAYMENT_SOURCE_ERROR,
   APPLY_COUPON_SUCCESS,
   APPLY_COUPON_ERROR,
+  POST_SUBSCRIPTION,
   POST_SUBSCRIPTION_SUCCESS,
   POST_SUBSCRIPTION_ERROR,
+  FETCH_CURRENT_PLAN,
   FETCH_CURRENT_PLAN_SUCCESS,
   FETCH_CURRENT_PLAN_ERROR,
 } from './constants';
@@ -64,15 +67,22 @@ function globalReducer(state = initialState, action) {
       .set('sharedAccounts', [])
       .set('userAccount', {})
       .set('subAccounts', []);
+    case CREATE_PAYMENT_SOURCE:
+      return state
+        .set('paymentSource', {
+          fetching: true,
+        });
     case CREATE_PAYMENT_SOURCE_SUCCESS:
       return state
         .set('paymentSource', {
+          fetching: false,
           details: action.payload,
           error: null,
         });
     case CREATE_PAYMENT_SOURCE_ERROR:
       return state
         .set('paymentSource', {
+          fetching: false,
           details: null,
           error: action.payload,
         });
@@ -88,27 +98,41 @@ function globalReducer(state = initialState, action) {
           details: null,
           error: action.payload,
         });
+    case POST_SUBSCRIPTION:
+      return state
+        .set('subscription', {
+          fetching: true,
+        });
     case POST_SUBSCRIPTION_SUCCESS:
       return state
         .set('subscription', {
+          fetching: false,
           details: action.payload,
           error: null,
         });
     case POST_SUBSCRIPTION_ERROR:
       return state
         .set('subscription', {
+          fetching: false,
           details: null,
           error: action.payload,
+        });
+    case FETCH_CURRENT_PLAN:
+      return state
+        .set('currentPlan', {
+          fetching: true,
         });
     case FETCH_CURRENT_PLAN_SUCCESS:
       return state
         .set('currentPlan', {
+          fetching: false,
           details: action.payload,
           error: null,
         });
     case FETCH_CURRENT_PLAN_ERROR:
       return state
         .set('currentPlan', {
+          fetching: false,
           details: null,
           error: action.payload,
         });

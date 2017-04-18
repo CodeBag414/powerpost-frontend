@@ -7,6 +7,7 @@ import { range } from 'lodash';
 import cookie from 'react-cookie';
 import { browserHistory } from 'react-router';
 
+import theme from 'theme';
 import { get } from 'utils/localStorage';
 
 import { toastr } from 'lib/react-redux-toastr';
@@ -23,6 +24,8 @@ import {
   selectSubscription,
   selectCurrentPlan,
 } from 'containers/App/selectors';
+
+import Loading from 'components/Loading';
 
 import Dropdown from 'elements/atm.Dropdown';
 import PPTextField from 'elements/atm.TextField';
@@ -92,6 +95,7 @@ class SignupCheckout extends Component {
         error: '',
       },
       couponViewType: 0,
+      loading: false,
     };
   }
 
@@ -118,39 +122,58 @@ class SignupCheckout extends Component {
         });
       }
     } else if (this.props.paymentSource !== nextProps.paymentSource) {
-      const { error } = nextProps.paymentSource;
+      const { fetching, error } = nextProps.paymentSource;
 
-      if (!error) {     // Create Source Succeeded
-        let payload = {
-          account_id: cookie.load('account_id'),
-          plan_id: nextProps.location.query.plan_id,
-        };
-        if (this.state.couponViewType === 2) {
-          payload = {
-            ...payload,
-            coupon: this.state.coupon.value,
+      if (!fetching) {
+        if (!error) {     // Create Source Succeeded
+          let payload = {
+            account_id: cookie.load('account_id'),
+            plan_id: nextProps.location.query.plan_id,
           };
+          if (this.state.couponViewType === 2) {
+            payload = {
+              ...payload,
+              coupon: this.state.coupon.value,
+            };
+          }
+          this.props.postSubscription(payload);
+        } else {
+          toastr.error(error.toString());
+          this.setState({
+            loading: false,
+          });
         }
-        this.props.postSubscription(payload);
       } else {
-        toastr.error(error.toString());
+        this.setState({
+          loading: true,
+        });
       }
     } else if (this.props.subscription !== nextProps.subscription) {
-      const { error } = nextProps.subscription;
+      const { fetching, error } = nextProps.subscription;
 
-      if (!error) {
-        this.props.fetchCurrentPlan({
-          accountId: cookie.load('account_id'),
-          selectedPlan: nextProps.location.query.plan_id,
-        });
-      } else {
-        toastr.error(error.toString());
+      if (!fetching) {
+        if (!error) {
+          this.props.fetchCurrentPlan({
+            accountId: cookie.load('account_id'),
+            selectedPlan: nextProps.location.query.plan_id,
+          });
+        } else {
+          toastr.error(error.toString());
+          this.setState({
+            loading: false,
+          });
+        }
       }
     } else if (this.props.currentPlan !== nextProps.currentPlan) {
-      const { error } = nextProps.subscription;
+      const { fetching, error } = nextProps.subscription;
 
-      if (error) {
-        toastr.error(error.toString());
+      if (!fetching) {
+        if (error) {
+          toastr.error(error.toString());
+          this.setState({
+            loading: false,
+          });
+        }
       }
     }
   }
@@ -265,6 +288,8 @@ class SignupCheckout extends Component {
   }
 
   render() {
+    const { loading } = this.state;
+
     return (
       <div>
         <Title>Hi {this.state.name}</Title>
@@ -314,6 +339,7 @@ class SignupCheckout extends Component {
           { this.getCouponView() }
           <Center style={{ marginTop: '30px' }}><PPButton type="submit" label="Thanks, now get started" primary /></Center>
         </form>
+        { loading && <Loading /> }
       </div>
     );
   }
