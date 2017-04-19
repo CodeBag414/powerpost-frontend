@@ -31,8 +31,10 @@ class Profile extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.accountProfileSave = this.accountProfileSave.bind(this);
 
+    const avatarColor = ['#F27E39', '#B4ED50', '#30D0AA', '#67C5E7', '#B171B6', '#E35A88', '#E22424', '#778CDF', '#F0DB09', '#8FBEA4'];
+
     this.state = {
-      avatar: 'https://www.photo.net/avatar/8224163',
+      avatar: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
       avatarKey: '',
       name: '',
       description: '',
@@ -44,6 +46,8 @@ class Profile extends React.Component {
       contactPhoneNumber: '',
       profile: this.props.profile || null,
       accountID: null,
+      blankAvatar: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+      randomAvatar: avatarColor[Math.floor(Math.random() * 10)],
     };
   }
 
@@ -64,7 +68,7 @@ class Profile extends React.Component {
       newsletter_url: '',
       store_url: '',
       phone_number: '',
-      thumb_url: 'https://www.photo.net/avatar/8224163',
+      thumb_url: '',
       accountID: nextProps.params.account_id,
     };
 
@@ -72,7 +76,7 @@ class Profile extends React.Component {
       const properties = Object.assign({}, initialProperties, propsProperties);
       this.setState({
         name: profile && profile.title ? profile.title : '',
-        avatar: properties.thumb_url,
+        avatar: properties.thumb_url ? properties.thumb_url : this.state.blankAvatar,
         description: properties.description,
         facebook: properties.facebook_url,
         twitter: properties.twitter_url,
@@ -185,7 +189,7 @@ class Profile extends React.Component {
         <form onSubmit={this.accountProfileSave} className="container">
           <Avatar>
             <h6>Icon</h6>
-            <button className="avatar" onClick={this.openFilePicker} type="button">
+            <button className="avatar" onClick={this.openFilePicker} type="button" style={{ background: this.state.randomAvatar }}>
               <img src={this.state.avatar} alt="avatar" />
               <div className="avatar-txt">
                 <i className="fa fa-camera"></i>
