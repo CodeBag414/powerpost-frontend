@@ -283,7 +283,8 @@ export function* applyCouponFlow() {
         throw data.message;
       }
     } catch (error) {
-      yield put(applyCouponError(error));
+      const msg = 'So sorry, the coupon code you entered is invalid.';
+      yield put(applyCouponError(msg));
     }
   }
 }

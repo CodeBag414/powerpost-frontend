@@ -110,14 +110,16 @@ class SignupCheckout extends Component {
       if (!error) {
         this.props.discount(details.amount_off, details.percent_off);
 
+        toastr.success('Success', 'Your coupon code has been applied!');
         this.setState({
           couponViewType: 2,
         });
       } else {
+        toastr.error(error);
         this.setState({
           coupon: {
             value: this.state.coupon.value,
-            error: 'So sorry, the coupon code you entered is invalid.',
+            error,
           },
         });
       }
