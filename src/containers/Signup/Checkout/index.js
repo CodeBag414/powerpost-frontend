@@ -117,7 +117,7 @@ class SignupCheckout extends Component {
         this.setState({
           coupon: {
             value: this.state.coupon.value,
-            error,
+            error: 'So sorry, the coupon code you entered is invalid.',
           },
         });
       }
