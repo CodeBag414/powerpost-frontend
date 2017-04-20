@@ -7,7 +7,7 @@ import {
 
 const initialState = fromJS({
   plan: {
-    detail: {},
+    details: {},
     error: null,
   },
 });
@@ -18,12 +18,12 @@ export default function singupReducer(state = initialState, action) {
   switch (action.type) {
     case FETCH_PLAN_SUCCESS:
       return state.set('plan', {
-        detail: payload,
+        details: payload,
         error: null,
       });
     case FETCH_PLAN_ERROR:
       return state.set('plan', {
-        detail: {},
+        details: {},
         error: payload,
       });
     default:

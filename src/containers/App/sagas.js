@@ -3,15 +3,17 @@
 // which listen for actions.
 
 // Sagas help us gather all our side effects (network requests in this case) in one place
+/* eslint-disable camelcase */
 
 import { take, call, put, race, select } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 import { browserHistory } from 'react-router';
 
 import auth from 'utils/auth';
 import { set } from 'utils/localStorage';
 import { makeSelectUser } from './selectors';
 import { toastr } from 'lib/react-redux-toastr';
-import { postData } from 'utils/request';
+import { getData, postData } from 'utils/request';
 
 import {
   SENDING_REQUEST,
@@ -27,11 +29,19 @@ import {
   CHECK_USER_OBJECT,
   CLEAR_USER,
   CREATE_PAYMENT_SOURCE,
+  APPLY_COUPON,
+  POST_SUBSCRIPTION,
+  FETCH_CURRENT_PLAN,
 } from './constants';
 
 import {
   createPaymentSourceSuccess,
   createPaymentSourceError,
+  applyCouponSuccess,
+  applyCouponError,
+  postSubscriptionSuccess,
+  postSubscriptionError,
+  fetchCurrentPlanError,
 } from './actions';
 
 /**
@@ -256,14 +266,89 @@ export function* createPaymentSourceFlow() {
 
     try {
       const response = yield call(postData, '/payment_api/source', { payload });
-
-      yield put(createPaymentSourceSuccess(response));
-      browserHistory.push('/');
+      const { data } = response;
+      if (data.status === 'success') {
+        yield put(createPaymentSourceSuccess(data));
+      } else {
+        throw data.error;
+      }
     } catch (error) {
       yield put(createPaymentSourceError(error));
     }
   }
 }
+
+export function* applyCouponFlow() {
+  while (true) {
+    const { payload } = yield take(APPLY_COUPON);
+
+    try {
+      const response = yield call(getData, `/payment_api/coupon/${payload}`);
+      const { data } = response;
+
+      if (data.coupon) {
+        yield put(applyCouponSuccess(data.coupon));
+      } else {
+        throw data.message;
+      }
+    } catch (error) {
+      yield put(applyCouponError(error));
+    }
+  }
+}
+
+export function* postSubscriptionFlow() {
+  while (true) {
+    const { payload } = yield take(POST_SUBSCRIPTION);
+
+    try {
+      const response = yield call(postData, '/payment_api/subscription', { payload });
+      const { data } = response;
+
+      if (data.status === 'success') {
+        yield put(postSubscriptionSuccess(data));
+      } else {
+        throw data;
+      }
+    } catch (error) {
+      yield put(postSubscriptionError(error));
+    }
+  }
+}
+
+function* fetchCurrentPlanLoop(accountId, selectedPlan) {
+  while (true) {
+    const response = yield call(getData, `/payment_api/plan/${accountId}`);
+    const { data: { plan_id } = {} } = response;
+
+    if (plan_id === selectedPlan) {
+      return 'success';
+    }
+    yield call(delay, 3000);
+  }
+}
+
+export function* fetchCurrentPlanFlow() {
+  while (true) {
+    const { payload: { accountId, selectedPlan } } = yield take(FETCH_CURRENT_PLAN);
+
+    try {
+      const { currentPlan } = yield race({
+        currentPlan: call(fetchCurrentPlanLoop, accountId, selectedPlan),
+        timeout: call(delay, 30000),
+      });
+
+      if (currentPlan) {
+        browserHistory.push('/');
+      } else {
+        yield put(fetchCurrentPlanError('Timeout'));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
+
 
 // The root saga is what we actually send to Redux's middleware. In here we fork
 // each saga so that they are all "active" and listening.
@@ -277,6 +362,9 @@ export default [
   getUserFlow,
   userExistsFlow,
   createPaymentSourceFlow,
+  applyCouponFlow,
+  postSubscriptionFlow,
+  fetchCurrentPlanFlow,
 ];
 
 // Little helper function to abstract going to different pages
