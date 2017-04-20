@@ -1,6 +1,7 @@
 import { takeLatest, call, put, take, cancel } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 
+import { toastr } from 'lib/react-redux-toastr';
 import { postData } from 'utils/request';
 
 import {
@@ -18,12 +19,12 @@ export function* forgotPasswordWorker(action) {
   try {
     const response = yield call(postData, '/user_api/password_reset', { payload }, false);
     const { data } = response;
-    console.log('*****', data);
     if (data.status === 'success') {
+      toastr.success('Success', 'Please check your email inbox for instructions on how to reset your password.');
       yield put(forgotPasswordSuccess(data.payload.token));
     }
   } catch (error) {
-    console.log('----', error);
+    toastr.error('We do not have a user account associated with the email you provided.');
     yield put(forgotPasswordError(error));
   }
 }

@@ -17,7 +17,6 @@ import {
 
 class ForgotPassword extends Component {
   static propTypes = {
-    authError: PropTypes.string,
     forgotPassword: PropTypes.func,
   }
 
@@ -59,11 +58,6 @@ class ForgotPassword extends Component {
   }
 
   render() {
-    const { authError } = this.props;
-    if (authError) {
-      alert('Login Failed. Try again!');
-    }
-
     return (
       <div>
         <Title>Forgot your password?</Title>
@@ -80,7 +74,7 @@ class ForgotPassword extends Component {
           />
 
           <Center style={{ marginTop: '30px' }}><PPButton type="submit" label="Reset Password" primary disabled={!!this.state.error} /></Center>
-          <Center style={{ marginTop: '30px' }}>Already have an account?<PPLink to="/login">Sign In</PPLink></Center>
+          <Center style={{ marginTop: '30px' }}>Already have an account?&nbsp;<PPLink to="/login">Sign In</PPLink></Center>
         </form>
       </div>
     );
@@ -94,7 +88,7 @@ export function mapDispatchToProps(dispatch) {
 }
 
 const mapStateToProps = createStructuredSelector({
-  forgotPasswordResult: selectForgotPassword(),
+  forgotPasswordResult: selectForgotPassword,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ForgotPassword);
