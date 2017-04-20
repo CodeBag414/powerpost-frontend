@@ -22,6 +22,7 @@ import {
   LOGOUT,
   REQUEST_ERROR,
   SET_USER,
+  GET_USER,
   // SET_ROLES,
   CHECK_USER_OBJECT,
   CLEAR_USER,
@@ -93,10 +94,9 @@ export function* authorizeUpdate(data) {
     // with `yield`!
 
     yield call(auth.updateUser, data);
-    yield call(auth.updateAccount, data);
+    yield call(auth.updateOwnAccount, data);
 
-    const currentUser = yield call(auth.getCurrentUser);
-    yield put({ type: SET_USER, user: currentUser });
+    yield put({ type: GET_USER });
 
     return true;
   } catch (error) {
@@ -241,6 +241,15 @@ export function* userExistsFlow() {
   }
 }
 
+export function* getUserFlow() {
+  while (true) {
+    yield take(GET_USER);
+
+    const currentUser = yield call(auth.getCurrentUser);
+    yield put({ type: SET_USER, user: currentUser });
+  }
+}
+
 export function* createPaymentSourceFlow() {
   while (true) {
     const { payload } = yield take(CREATE_PAYMENT_SOURCE);
@@ -265,6 +274,7 @@ export default [
   logoutFlow,
   registerFlow,
   updateFlow,
+  getUserFlow,
   userExistsFlow,
   createPaymentSourceFlow,
 ];

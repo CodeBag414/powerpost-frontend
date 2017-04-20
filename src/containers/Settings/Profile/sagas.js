@@ -7,6 +7,7 @@ import { putData } from 'utils/request';
 
 import { fetchCurrentAccount } from 'containers/Main/actions';
 
+import { GET_USER } from 'containers/App/constants';
 import { UPDATE_ACCOUNT_PROFILE } from './constants';
 
 export function* setAccount(updateData) { // eslint-disable-line no-unused-vars
@@ -15,6 +16,7 @@ export function* setAccount(updateData) { // eslint-disable-line no-unused-vars
   const result = yield call(putData, requestUrl, update);
   if (result.data.status === 'success') {
     yield put(fetchCurrentAccount(accountID));
+    yield put({ type: GET_USER });
     toastr.success('Success!', 'Settings have been updated.');
   } else {
     console.log(result.data);

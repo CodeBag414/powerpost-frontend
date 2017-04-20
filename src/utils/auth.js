@@ -98,12 +98,11 @@ let auth = {
       * Update a account object
       * 
       */
-     updateAccount(data) {
+     updateOwnAccount(data) {
         const account_data = {
             payload:{
               title: data.title,
               properties:{
-                 thumbnail_image_key: data.avatarKey,
                  phone_number: data.phoneNumber
               }
             }
