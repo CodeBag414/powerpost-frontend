@@ -139,19 +139,22 @@ const rules = {
       topByEngagementKey: 'top_posts_by_engagement',
     },
     likes: {
-      infoMonth: 'analytics.page_fans_by_month',
-      infoWeek: 'analytics.page_fans_by_weeks_ago',
-      conent: 'Likes',
+      infoMonth: 'analytics.total_followers_by_month',
+      infoWeek: 'analytics.total_followers_by_weeks_ago',
+      content: 'Likes',
     },
     comments: {
-      infoMonth: 'analytics.posts_by_month',
-      infoWeek: 'analytics.posts_by_weeks_ago',
-      conent: 'Comments',
+      infoMonth: 'analytics.organic_followers_by_month',
+      infoWeek: 'analytics.organic_followers_by_weeks_ago',
+      content: 'Comments',
     },
     infos: {
       items: [
-
+        { label: 'Likes', valueKey: 'numLikes' },
       ],
+      imageUrlKey: 'updateContent.companyStatusUpdate.share.content.submittedImageUrl',
+      createTimeKey: 'updateContent.companyStatusUpdate.share.timestamp',
+      descriptionKey: 'updateContent.companyStatusUpdate.share.comment',
     },
   },
 };
@@ -167,6 +170,7 @@ class MainInfo extends React.Component {
   getRule() {
     const { activeChannel, isMonth, subChannel } = this.props;
     const channel = activeChannel.getIn(['connection', 'channel']);
+    console.log(activeChannel.toJS());
     return {
       ...rules[channel][subChannel],
       info: rules[channel][subChannel][isMonth ? 'infoMonth' : 'infoWeek'],
