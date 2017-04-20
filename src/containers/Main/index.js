@@ -1,11 +1,11 @@
 /**
- * 
+ *
  * Dashboard
- * 
+ *
  * This component is the skeleton around the start pages (login, signup, checkout) and should only contain
  * code that is visible on all app routes
  */
- 
+
 import React from 'react';
 import {connect} from 'react-redux';
 
@@ -13,7 +13,7 @@ import Nav from 'components/Nav';
 
 import { UserIsAuthenticated } from 'config.routes/UserIsAuthenticated';
 import { UserCanAccount } from 'config.routes/UserRoutePermissions';
-import { makeSelectUser, 
+import { makeSelectUser,
          makeSelectUserAccount,
          makeSelectSharedAccounts,
          makeSelectSubAccounts,
@@ -36,7 +36,7 @@ import { makeSelectMenuCollapsed,
 class Main extends React.Component{
     constructor(props) {
         super(props);
-        
+
         this.handleMenuToggle = this.handleMenuToggle.bind(this);
     }
 
@@ -45,22 +45,22 @@ class Main extends React.Component{
             this.props.fetchAccount(nextProps.params.account_id);
         }
     }
-    
+
     componentDidMount() {
-        this.props.fetchAccount(this.props.params.account_id);  
+        this.props.fetchAccount(this.props.params.account_id);
     }
-    
+
     handleMenuToggle() {
-        this.props.toggleMenuCollapse(!this.props.menuCollapsed);    
+        this.props.toggleMenuCollapse(!this.props.menuCollapsed);
     }
-    
+
     render() {
         const styles = require('./styles.scss');
         const viewContentStyle = this.props.menuCollapsed ? styles.viewContentCollapsed : styles.viewContentFull;
         return(
         <div>
             <Nav accountPermissions = { this.props.accountPermissions } location={ this.props.location } logout={ this.props.logout } user={ this.props.user } handleMenuToggle={ this.handleMenuToggle } isMenuCollapsed = { this.props.menuCollapsed } activeBrand = { this.props.activeBrand } accountId = { this.props.params.account_id } userAccount = { this.props.userAccount } sharedAccounts = { this.props.sharedAccounts } subAccounts = { this.props.subAccounts } />
-            <div className={[viewContentStyle, styles.viewContent].join(' ') }>
+            <div id="main-panel" className={[viewContentStyle, styles.viewContent].join(' ') }>
                 { this.props.children }
             </div>
         </div>
@@ -90,7 +90,7 @@ const mapStateToProps = (initialState, initialProps) => {
     const selectUserAccount = makeSelectUserAccount();
     const selectUserAvatar = makeSelectUserAvatar();
     const selectAccountPermissions = makeSelectAccountPermissions();
-    
+
     return (state, ownProps) => ({
         user: selectUser(state),
         menuCollapsed: selectMenuCollapsed(state),

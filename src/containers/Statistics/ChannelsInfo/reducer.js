@@ -30,7 +30,7 @@ function channelsReducer(state = initialState, action) {
       return state
             .set('isFetchingChannel', false)
             .set('isFetchingErr', false)
-            .set('activeChannel', action.channelInfo);
+            .set('activeChannel', fromJS(action.channelInfo));
     case FETCH_CHANNEL_ERR:
       return state
             .set('isFetchingChannel', false)

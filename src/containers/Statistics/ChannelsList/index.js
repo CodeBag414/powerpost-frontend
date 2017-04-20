@@ -13,7 +13,7 @@ function ChannelsList({ connections, accountId, setChannelFilter, channelFilter,
     connections.forEach((connection, index) => {
       if (connection.channel !== 'wordpress') {
         connectionsList.push(
-          <TabLink to={`/account/${accountId}/statistics/${connection.connection_id}`} key={`${index}a`}>
+          <TabLink graySelect to={`/account/${accountId}/statistics/${connection.connection_id}`} key={`${index}a`}>
             <ChannelsListItem connection={connection} />
           </TabLink>
         );

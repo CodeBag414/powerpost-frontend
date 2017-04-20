@@ -11,33 +11,200 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { makeSelectCurrentChannel } from '../selectors';
 
-import TopTweetListItem from '../TopLists/TopTweetlistItem';
-import TopFaceListItem from '../TopLists/TopFacelistItem';
-import TopPinListItem from '../TopLists/TopPinlistItem';
-import TopPostListItem from '../TopLists/TopPostlistItem';
+import TopListItem from '../TopListItem';
 
 import Info from '../Wrapper/Info';
 import Wrapper from '../Wrapper/Wrapper';
 
-class Tweets extends React.Component {
+const rules = {
+  twitter: {
+    tweets: {
+      infoMonth: 'analytics.tweets_by_month',
+      infoWeek: 'analytics.tweets_by_weeks_ago',
+      totalKey: 'tweet_count',
+      content: 'Tweets',
+      reKey: 'retween_count',
+      reLabel: 'Retweets',
+      topByEngagementKey: 'top_tweets_by_engagement',
+    },
+    retweets: {
+      infoMonth: 'analytics.tweets_by_month',
+      infoWeek: 'analytics.tweets_by_weeks_ago',
+      totalKey: 'retween_count',
+      content: 'Retweets',
+      reKey: 'tweet_count',
+      reLabel: 'Tweets',
+      topByEngagementKey: 'top_tweets_by_engagement',
+    },
+    favorites: {
+      infoMonth: 'analytics.tweets_by_month',
+      infoWeek: 'analytics.tweets_by_weeks_ago',
+      totalKey: 'favorite_count',
+      content: 'Favorites',
+      reKey: 'tweet_count',
+      reLabel: 'Tweets',
+      topByEngagementKey: 'top_tweets_by_engagement',
+    },
+    infos: {
+      items: [
+        { label: 'Tweets', valueKey: 'tweet_count' },
+        { label: 'Favorites', valueKey: 'favorite_count' },
+        { label: 'Retweets', valueKey: 'retweet_count' },
+      ],
+      imageUrlKey: 'user.profile_image_url',
+      createTimeKey: 'created_at',
+      descriptionKey: 'text',
+    },
+  },
+  facebook: {
+    posts: {
+      infoMonth: 'analytics.posts_by_month',
+      infoWeek: 'analytics.posts_by_weeks_ago',
+      totalKey: 'post_count',
+      content: 'Posts',
+      reKey: 'comments',
+      reLabel: 'Comments',
+      topByEngagementKey: 'top_posts_by_engagement',
+    },
+    fans: {
+      infoMonth: 'analytics.extended.page_fans_by_month',
+      infoWeek: 'analytics.extended.page_fans_by_weeks_ago',
+      totalKey: '',
+      content: 'Fans',
+      topByEngagementKey: 'top_posts_by_engagement',
+    },
+    impressions: {
+      infoMonth: 'analytics.extended.unique_page_impressions_by_month',
+      infoWeek: 'analytics.extended.unique_page_impressions_by_weeks_ago',
+      totalKey: '',
+      content: 'Impressions',
+      topByEngagementKey: 'top_posts_by_engagement',
+    },
+    likes: {
+      infoMonth: 'analytics.posts_by_month',
+      infoWeek: 'analytics.posts_by_weeks_ago',
+      content: 'Likes',
+    },
+    comments: {
+      infoMonth: 'analytics.posts_by_month',
+      infoWeek: 'analytics.posts_by_weeks_ago',
+      content: 'Comments',
+    },
+    infos: {
+      infoMonth: 'analytics.posts_by_month',
+      items: [
+        { label: 'Likes', valueKey: 'likes.summary.total_count' },
+        { label: 'Comments', valueKey: 'comments.summary.total_count' },
+      ],
+      imageUrlKey: 'picture',
+      createTimeKey: 'created_time',
+      descriptionKey: 'description',
+    },
+  },
+  pinterest: {
+    pins: {
+      infoMonth: 'analytics.pins_by_month',
+      infoWeek: 'analytics.pins_by_weeks_ago',
+      content: 'Pins',
+    },
+    're-pins': {
+      infoMonth: 'analytics.pins_by_month',
+      infoWeek: 'analytics.pins_by_weeks_ago',
+      content: 'Re-pins',
+    },
+    likes: {
+      infoMonth: 'analytics.pins_by_month',
+      infoWeek: 'analytics.pins_by_weeks_ago',
+      content: 'Likes',
+    },
+    comments: {
+      infoMonth: 'analytics.pins_by_month',
+      infoWeek: 'analytics.pins_by_weeks_ago',
+      content: 'Comments',
+    },
+    infos: {
+      items: [
+
+      ],
+    },
+  },
+  linkedin: {
+    posts: {
+      infoMonth: 'analytics.posts_by_month',
+      infoWeek: 'analytics.posts_by_weeks_ago',
+      totalKey: 'post_count',
+      content: 'Posts',
+      reKey: 'comments',
+      reLabel: 'Comments',
+      topByEngagementKey: 'top_posts_by_engagement',
+    },
+    likes: {
+      infoMonth: 'analytics.page_fans_by_month',
+      infoWeek: 'analytics.page_fans_by_weeks_ago',
+      conent: 'Likes',
+    },
+    comments: {
+      infoMonth: 'analytics.posts_by_month',
+      infoWeek: 'analytics.posts_by_weeks_ago',
+      conent: 'Comments',
+    },
+    infos: {
+      items: [
+
+      ],
+    },
+  },
+};
+
+class MainInfo extends React.Component {
 
   static propTypes = {
     activeChannel: PropTypes.shape(),
-    params: PropTypes.shape({
-      channel_id: PropTypes.string,
-    }),
+    subChannel: PropTypes.string,
+    isMonth: PropTypes.bool,
+  }
+
+  getRule() {
+    const { activeChannel, isMonth, subChannel } = this.props;
+    const channel = activeChannel.getIn(['connection', 'channel']);
+    return {
+      ...rules[channel][subChannel],
+      info: rules[channel][subChannel][isMonth ? 'infoMonth' : 'infoWeek'],
+    };
+  }
+
+  getInfos() {
+    const { activeChannel } = this.props;
+    const channel = activeChannel.getIn(['connection', 'channel']);
+    return rules[channel].infos;
   }
 
   getTotaldata() {
-    let total;
-    let keys;
-    let last;
-    let contents;
-    let tweet;
-    let content;
+    let total = 0;
     const { activeChannel } = this.props;
-    let info;
-    switch (activeChannel.connection.channel) {
+    const rule = this.getRule();
+    const info = activeChannel.getIn(rule.info.split('.'));
+    const keys = Object.keys(info.toJS());
+    const last = keys[0];
+    let re = `0 ${rule.reLabel}`;
+    if (last != null) {
+      if (rule.totalKey) {
+        total = info.getIn([last, rule.totalKey]);
+      } else {
+        total = info.getIn([last]);
+      }
+      re = `${info.getIn([last, rule.reKey]) || 0} ${rule.reLabel}`;
+    }
+    const contents = `${total} ${rule.content}`;
+    const content = rule.content;
+    return (
+      <div>
+        <h1><b>{total || 0}</b></h1>
+        <h5>{content} this week</h5><br />
+        <h5>Based on {re} sent in the last week you averaged <b>{contents} </b>per post.</h5>
+      </div>
+    );
+    /* switch (activeChannel.connection.channel) {
       case 'pinterest':
         info = activeChannel.analytics.pins_by_weeks_ago;
         keys = Object.keys(info);
@@ -86,26 +253,33 @@ class Tweets extends React.Component {
         break;
       default:
         break;
-    }
-    return (
-      <div>
-        <h1><b>{total}</b></h1>
-        <h5>{content} this week</h5><br />
-        <h5>Based on {tweet} sent in the last week you averaged <b>{contents} </b>per post.</h5>
-      </div>
-    );
+    }*/
   }
 
-  getNameDate(date) {
-    const d = new Date(date);
+  getNameDate(index, isMonth) {
+    const d = new Date();
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    if (isMonth) {
+      return `${monthNames[index - 1]}`;
+    }
+    d.setDate(d.getDate() - (7 * index));
     return `${d.getMonth() + 1}/${d.getDate()}`;
   }
 
   getChartsData() {
     const data = [];
-    const { activeChannel } = this.props;
-    let info;
-    switch (activeChannel.connection.channel) {
+    const { activeChannel, isMonth } = this.props;
+    const rule = this.getRule();
+    const info = activeChannel.getIn(rule.info.split('.'));
+    info.forEach((item, key) =>
+      data.push({
+        name: this.getNameDate(parseInt(key, 10), isMonth),
+        [rule.content]: rule.totalKey ? item.get(rule.totalKey) : item,
+        key: isMonth ? parseInt(key, 10) : -parseInt(key, 10),
+      }),
+    );
+    return data.sort((a, b) => a.key > b.key ? 1 : -1).slice(0, isMonth ? 3 : 12);
+    /* switch (activeChannel.connection.channel) {
       case 'pinterest':
         info = activeChannel.analytics.pins_by_weeks_ago;
         info.forEach((item) =>
@@ -148,17 +322,36 @@ class Tweets extends React.Component {
         break;
       default:
         break;
-    }
-    return data;
+    } */
   }
 
   render() {
-    const channelInfo = this.props.activeChannel.analytics;
-    let keys;
-    let last;
-    let info;
-    let TopTweetsList;
-    if (channelInfo !== undefined) {
+    let TopItemsList = 'You Currently have no Posts.';
+    const { activeChannel } = this.props;
+    const rule = this.getRule();
+    const { infoMonth, items, imageUrlKey, createTimeKey, descriptionKey } = this.getInfos();
+    const itemInfo = activeChannel.getIn((infoMonth || rule.infoMonth).split('.'));
+    const keys = Object.keys(itemInfo.toJS());
+    const last = keys[0];
+    if (last !== null) {
+      const topItems = itemInfo.getIn([last, rule.topByEngagementKey]) || [];
+      TopItemsList = topItems.map((topItem, index) =>
+        <TopListItem
+          topItem={topItem}
+          key={index}
+          infos={
+            items.map((item) => ({
+              label: item.label,
+              value: (item.additionalKey ? topItem.getIn(item.valueKey.split('.'))[item.additionalKey] : topItem.getIn(item.valueKey.split('.'))) || 0,
+            }))
+          }
+          imageUrlKey={imageUrlKey}
+          createTimeKey={createTimeKey}
+          descriptionKey={descriptionKey}
+        />
+      );
+    }
+    /* if (channelInfo !== undefined) {
       TopTweetsList = [];
       const { activeChannel, params } = this.props;
       switch (activeChannel.connection.channel) {
@@ -246,8 +439,7 @@ class Tweets extends React.Component {
           TopTweetsList = 'You Currently have no Channels.';
           break;
       }
-    }
-
+    }*/
     return (
       <Info>
         <Wrapper>
@@ -260,13 +452,13 @@ class Tweets extends React.Component {
               <YAxis />
               <CartesianGrid strokeDasharray="3 3" />
               <Tooltip />
-              <Bar dataKey="followers" fill="#dfdfdf" />
+              <Bar dataKey={rule.content} fill="#dfdfdf" />
             </BarChart>
           </div>
         </Wrapper>
         <div>
-          <h3>Top This Month</h3>
-          {TopTweetsList}
+          <h3 className="top-this-month">Top This Month</h3>
+          {TopItemsList}
         </div>
       </Info>
     );
@@ -277,4 +469,4 @@ const mapStateToProps = createStructuredSelector({
   activeChannel: makeSelectCurrentChannel(),
 });
 
-export default (connect(mapStateToProps)(Tweets));
+export default (connect(mapStateToProps)(MainInfo));

@@ -19,4 +19,9 @@ export default styled.div`
   table {
     width: 100%;
   }
+
+  .desctiption {
+    font-size: 11px;
+    font-weight: normal;
+  }
 `;

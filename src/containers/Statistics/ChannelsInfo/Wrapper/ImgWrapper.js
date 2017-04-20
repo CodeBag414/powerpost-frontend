@@ -6,7 +6,6 @@ export default styled.div`
   border: 1px solid #dddddd;
   border-radius: 2px;
   float: left;
-  margin-left: 12px;
 
   img {
     width: 100%;

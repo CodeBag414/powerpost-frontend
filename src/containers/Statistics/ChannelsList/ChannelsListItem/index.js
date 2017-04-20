@@ -33,7 +33,7 @@ class ChannelsListItem extends React.Component {
           <div className="connectionName">
             {connection.display_name}
           </div>
-          <div className={connection.channel}>
+          <div className={`${connection.channel} connectionSubName`}>
             {this.getType()[0].toUpperCase() + this.getType().slice(1)}
           </div>
         </div>

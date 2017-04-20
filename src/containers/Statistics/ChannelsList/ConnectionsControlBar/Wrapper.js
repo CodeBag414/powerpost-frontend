@@ -6,11 +6,11 @@ const Wrapper = styled.div`
   color: #6e6f6f;
   margin-top: 20px;
   height: 80px;
-  
+
   .noLeftPadding {
     padding-left: 0;
   }
-  
+
   div {
     margin-left: 0rem !important;
   }
