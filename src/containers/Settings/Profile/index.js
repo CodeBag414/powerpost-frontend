@@ -14,11 +14,10 @@ import PPButton from 'elements/atm.Button';
 import { UserCanTeam } from 'config.routes/UserRoutePermissions';
 
 import { makeSelectFilePickerKey } from 'containers/App/selectors';
-import { makeSelectAccountProfile } from './selectors';
-import {
-  fetchAccount,
-  updateAccount,
-} from './actions';
+import { makeSelectCurrentAccount } from 'containers/Main/selectors';
+import { fetchCurrentAccount } from 'containers/Main/actions';
+
+import { updateAccount } from './actions';
 
 import Wrapper from './Wrapper';
 import Avatar from './avatar';
@@ -32,31 +31,46 @@ class Profile extends React.Component {
     this.accountProfileSave = this.accountProfileSave.bind(this);
 
     const avatarColor = ['#F27E39', '#B4ED50', '#30D0AA', '#67C5E7', '#B171B6', '#E35A88', '#E22424', '#778CDF', '#F0DB09', '#8FBEA4'];
+    const blankAvatar = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+    const { profile, params } = this.props;
+    const propsProperties = (profile && profile.properties) ? profile.properties : null;
+    const initialProperties = {
+      description: '',
+      facebook_url: '',
+      twitter_url: '',
+      website_url: '',
+      newsletter_url: '',
+      store_url: '',
+      phone_number: '',
+      thumb_url: '',
+      accountID: params.account_id,
+    };
+
+    const properties = Object.assign({}, initialProperties, propsProperties);
 
     this.state = {
-      avatar: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+      avatar: properties.thumb_url ? properties.thumb_url : blankAvatar,
       avatarKey: '',
-      name: '',
-      description: '',
-      facebook: '',
-      twitter: '',
-      website: '',
-      newsletterSignUp: '',
-      storeURL: '',
-      contactPhoneNumber: '',
+      name: profile && profile.title ? profile.title : '',
+      description: properties.description,
+      facebook: properties.facebook_url,
+      twitter: properties.twitter_url,
+      website: properties.website_url,
+      newsletterSignUp: properties.newsletter_url,
+      storeURL: properties.store_url,
+      contactPhoneNumber: properties.phone_number,
+      accountID: properties.accountID,
       profile: this.props.profile || null,
-      accountID: null,
       blankAvatar: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
       randomAvatar: avatarColor[Math.floor(Math.random() * 10)],
     };
   }
 
   componentDidMount() {
-    this.fetchAccount(this.props);
+    this.props.getAccountProfile(this.state.accountID);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.fetchAccount(nextProps);
     const profile = nextProps.profile;
     const propsProperties = (profile && profile.properties) ? profile.properties : null;
 
@@ -69,10 +83,10 @@ class Profile extends React.Component {
       store_url: '',
       phone_number: '',
       thumb_url: '',
-      accountID: nextProps.params.account_id,
     };
 
     if ((JSON.stringify(this.state.profile) !== JSON.stringify(profile)) && profile) {
+      this.props.getAccountProfile(this.state.accountID);
       const properties = Object.assign({}, initialProperties, propsProperties);
       this.setState({
         name: profile && profile.title ? profile.title : '',
@@ -87,16 +101,6 @@ class Profile extends React.Component {
         profile: nextProps.profile,
       });
     }
-  }
-
-  fetchAccount = (props) => {
-    const accountID = props.params.account_id;
-    const getAccountProfile = props.getAccountProfile;
-    getAccountProfile(accountID);
-
-    this.setState({
-      accountID,
-    });
   }
 
   openFilePicker() {
@@ -289,20 +293,21 @@ class Profile extends React.Component {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    getAccountProfile: (accountID) => dispatch(fetchAccount(accountID)),
+    getAccountProfile: (accountID) => dispatch(fetchCurrentAccount(accountID)),
     save: (data) => dispatch(updateAccount(data)),
   };
 }
 
 Profile.propTypes = {
   getAccountProfile: React.PropTypes.func,
-  profile: React.PropTypes.object,
-  save: React.PropTypes.func,
   filePickerKey: React.PropTypes.string,
+  profile: React.PropTypes.object,
+  params: React.PropTypes.object,
+  save: React.PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
-  profile: makeSelectAccountProfile(),
+  profile: makeSelectCurrentAccount(),
   filePickerKey: makeSelectFilePickerKey(),
 });
 
