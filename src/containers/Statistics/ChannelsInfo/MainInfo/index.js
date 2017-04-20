@@ -9,6 +9,7 @@ import {
 } from 'recharts';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { Map, List } from 'immutable';
 import { makeSelectCurrentChannel } from '../selectors';
 
 import TopListItem from '../TopListItem';
@@ -170,7 +171,6 @@ class MainInfo extends React.Component {
   getRule() {
     const { activeChannel, isMonth, subChannel } = this.props;
     const channel = activeChannel.getIn(['connection', 'channel']);
-    console.log(activeChannel.toJS());
     return {
       ...rules[channel][subChannel],
       info: rules[channel][subChannel][isMonth ? 'infoMonth' : 'infoWeek'],
@@ -187,7 +187,7 @@ class MainInfo extends React.Component {
     let total = 0;
     const { activeChannel } = this.props;
     const rule = this.getRule();
-    const info = activeChannel.getIn(rule.info.split('.'));
+    const info = activeChannel.getIn(rule.info.split('.')) || Map();
     const keys = Object.keys(info.toJS());
     const last = keys[0];
     let re = `0 ${rule.reLabel}`;
@@ -274,7 +274,7 @@ class MainInfo extends React.Component {
     const data = [];
     const { activeChannel, isMonth } = this.props;
     const rule = this.getRule();
-    const info = activeChannel.getIn(rule.info.split('.'));
+    const info = activeChannel.getIn(rule.info.split('.')) || List();
     info.forEach((item, key) =>
       data.push({
         name: this.getNameDate(parseInt(key, 10), isMonth),
@@ -334,7 +334,7 @@ class MainInfo extends React.Component {
     const { activeChannel } = this.props;
     const rule = this.getRule();
     const { infoMonth, items, imageUrlKey, createTimeKey, descriptionKey } = this.getInfos();
-    const itemInfo = activeChannel.getIn((infoMonth || rule.infoMonth).split('.'));
+    const itemInfo = activeChannel.getIn((infoMonth || rule.infoMonth).split('.')) || Map();
     const keys = Object.keys(itemInfo.toJS());
     const last = keys[0];
     if (last !== null) {
