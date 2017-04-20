@@ -4,5 +4,5 @@ export default styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  color: ${props => props.color};
+  color: ${(props) => props.color};
 `;

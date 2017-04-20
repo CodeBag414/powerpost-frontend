@@ -8,10 +8,9 @@ import Wrapper from './Wrapper';
 import Topbar from './Topbar';
 import FormWrapper from './FormWrapper';
 
-export class Login extends React.Component {
+export default class Login extends React.Component {
   static propTypes = {
     children: PropTypes.node,
-    location: PropTypes.object,
   }
 
   render() {
@@ -23,10 +22,7 @@ export class Login extends React.Component {
         <RightPane>
           <Topbar />
           <FormWrapper>
-            { React.cloneElement(children, {
-              discount: this.discount,
-            })
-            }
+            { children }
           </FormWrapper>
         </RightPane>
       </Wrapper>
