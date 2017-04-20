@@ -159,7 +159,7 @@ export function* loginFlow() {
       auth: call(authorize, { email, password, isRegistering: false }),
       logout: take(LOGOUT),
     });
-    console.log('////', auth);
+
     // If `authorize` was the winner...
     if (winner.auth) {
       // ...we send Redux appropiate actions
@@ -172,6 +172,8 @@ export function* loginFlow() {
       yield put({ type: SET_AUTH, newAuthState: false }); // User is not logged in (not authorized)
       yield call(logout); // Call `logout` effect
       yield call(forwardTo, '/login'); // Go to root page
+    } else {
+      toastr.error('Sign in failed. Please check your email and password and try again.');
     }
   }
 }
