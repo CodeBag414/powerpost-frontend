@@ -190,7 +190,7 @@ class Profile extends React.Component {
   render() {
     return (
       <Wrapper>
-        <form onSubmit={this.accountProfileSave} className="container">
+        <form onSubmit={this.accountProfileSave}>
           <Avatar>
             <h6>Icon</h6>
             <button className="avatar" onClick={this.openFilePicker} type="button" style={{ background: this.state.randomAvatar }}>
@@ -219,72 +219,12 @@ class Profile extends React.Component {
               value={this.state.description}
               onChange={this.handleChange}
             />
+            <PPButton
+              type="submit"
+              label="Save"
+              primary={!false}
+            />
           </div>
-          <row>
-            <div className="col">
-              <PPTextField
-                type="url"
-                name="facebook"
-                floatingLabelText="Facebook"
-                maxLength={100}
-                hintText="https://www.facebook.com/myprofile"
-                value={this.state.facebook}
-                onChange={this.handleChange}
-              />
-              <PPTextField
-                type="url"
-                name="twitter"
-                floatingLabelText="Twitter"
-                maxLength={100}
-                hintText="https://www.twitter.com/myprofile"
-                value={this.state.twitter}
-                onChange={this.handleChange}
-              />
-              <PPTextField
-                type="url"
-                name="website"
-                floatingLabelText="Website"
-                maxLength={200}
-                value={this.state.website}
-                onChange={this.handleChange}
-              />
-            </div>
-            <div className="col">
-              <PPTextField
-                type="url"
-                name="newsletterSignUp"
-                floatingLabelText="Newsletter Sign Up"
-                maxLength={200}
-                hintText="https://www.mydomain.com/newslettersignup"
-                value={this.state.newsletterSignUp}
-                onChange={this.handleChange}
-              />
-              <PPTextField
-                type="url"
-                name="storeURL"
-                floatingLabelText="Store URL"
-                maxLength={200}
-                hintText="https://www.mycartdomain.com"
-                value={this.state.storeURL}
-                onChange={this.handleChange}
-              />
-              <PPTextField
-                type="tel"
-                name="contactPhoneNumber"
-                floatingLabelText="Contact Phone Number"
-                maxLength={25}
-                hintText="XXX-XXX-XXXX"
-                value={this.state.contactPhoneNumber}
-                onChange={this.handleChange}
-              />
-
-              <PPButton
-                type="submit"
-                label="Save"
-                primary={!false}
-              />
-            </div>
-          </row>
         </form>
       </Wrapper>
     );

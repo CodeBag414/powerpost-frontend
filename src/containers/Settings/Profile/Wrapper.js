@@ -19,6 +19,13 @@ const Wrapper = styled.div`
       width: 100%;
       display: block;
     }
+
+    button {
+      float: right;
+      height: 29px;
+      min-width: 60px;
+      line-height: 29px;
+    }
   }
 
   div.col {
