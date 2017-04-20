@@ -1,57 +1,35 @@
 import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
 
-import { loginRequest } from 'containers/App/actions';
+import LeftPane from 'components/LeftPane';
+import RightPane from 'components/RightPane';
+import imgLogo from 'assets/images/logo.png';
 
-import PPInput from 'elements/atm.Input';
-import PPRaisedButton from 'elements/atm.RaisedButton';
-import { Link } from 'react-router';
+import Wrapper from './Wrapper';
+import Topbar from './Topbar';
+import FormWrapper from './FormWrapper';
 
-import { push } from 'react-router-redux';
-
-class Login extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      emailValue: '',
-      passwordValue: '',
-    };
-
-    this.changeEmail = this.changeEmail.bind(this);
-    this.changePassword = this.changePassword.bind(this);
-  }
-
-  changeEmail(value) {
-    this.setState({ emailValue: value});
-  }
-
-  changePassword(value) {
-    this.setState({ passwordValue: value});
+export class Login extends React.Component {
+  static propTypes = {
+    children: PropTypes.node,
+    location: PropTypes.object,
   }
 
   render() {
+    const { children } = this.props;
     return (
-      <div>
-        <h4>Login</h4>
-        <Link to="/signup">Register</Link>
-        <PPInput type="text" label="Email" value={this.state.emailValue} onChange={this.changeEmail} />
-        <PPInput type="password" label="Password" value={this.state.passwordValue} onChange={this.changePassword} />
-
-        <PPRaisedButton label="Login" primary onClick={() => this.props.login(this.state.emailValue, this.state.passwordValue)} />
-      </div>
+      <Wrapper>
+        <LeftPane>
+        </LeftPane>
+        <RightPane>
+          <Topbar />
+          <FormWrapper>
+            { React.cloneElement(children, {
+              discount: this.discount,
+            })
+            }
+          </FormWrapper>
+        </RightPane>
+      </Wrapper>
     );
   }
 }
-
-export function mapDispatchToProps(dispatch) {
-  return {
-    login: (email, password) => dispatch(loginRequest({ email, password })),
-  };
-}
-
-function mapStateToProps(state) {
-  return {
-  };
-}
-export default connect(mapStateToProps, mapDispatchToProps)(Login);

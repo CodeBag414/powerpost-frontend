@@ -159,6 +159,7 @@ export function* loginFlow() {
       auth: call(authorize, { email, password, isRegistering: false }),
       logout: take(LOGOUT),
     });
+    console.log('////', auth);
     // If `authorize` was the winner...
     if (winner.auth) {
       // ...we send Redux appropiate actions
