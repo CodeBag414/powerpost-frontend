@@ -159,6 +159,7 @@ export function* loginFlow() {
       auth: call(authorize, { email, password, isRegistering: false }),
       logout: take(LOGOUT),
     });
+
     // If `authorize` was the winner...
     if (winner.auth) {
       // ...we send Redux appropiate actions
@@ -171,6 +172,8 @@ export function* loginFlow() {
       yield put({ type: SET_AUTH, newAuthState: false }); // User is not logged in (not authorized)
       yield call(logout); // Call `logout` effect
       yield call(forwardTo, '/login'); // Go to root page
+    } else {
+      toastr.error('Sign in failed. Please check your email and password and try again.');
     }
   }
 }
@@ -292,7 +295,8 @@ export function* applyCouponFlow() {
         throw data.message;
       }
     } catch (error) {
-      yield put(applyCouponError(error));
+      const msg = 'So sorry, the coupon code you entered is invalid.';
+      yield put(applyCouponError(msg));
     }
   }
 }

@@ -427,6 +427,44 @@ export function createRoutes(store, auth) {
 
         importModules.catch(errorLoading);
       },
+      indexRoute: {
+        getComponent(nextState, cb) {
+          const importModules = Promise.all([
+            System.import('containers/Login/SignIn'),
+          ]);
+
+          const renderRoute = loadModule(cb);
+
+          importModules.then(([component]) => {
+            renderRoute(component);
+          });
+
+          importModules.catch(errorLoading);
+        },
+      },
+      childRoutes: [
+        {
+          path: 'forgot-password',
+          name: 'forgotPassword',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/Login/ForgotPassword/reducer'),
+              System.import('containers/Login/ForgotPassword/sagas'),
+              System.import('containers/Login/ForgotPassword'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([reducer, sagas, component]) => {
+              injectReducer('forgotPassword', reducer.default);
+              injectSagas(sagas.default);
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+      ],
     },
     {
       path: '/signup',
