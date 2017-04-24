@@ -7,9 +7,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import filepicker from 'filepicker-js';
 import PPTextField from 'elements/atm.TextField';
 import PPTextArea from 'elements/atm.TextArea';
+import PPAvatar from 'elements/atm.Avatar';
 import PPButton from 'elements/atm.Button';
 import { UserCanTeam } from 'config.routes/UserRoutePermissions';
 
@@ -20,18 +20,15 @@ import { fetchCurrentAccount } from 'containers/Main/actions';
 import { updateAccount } from './actions';
 
 import Wrapper from './Wrapper';
-import Avatar from './avatar';
 
 class Profile extends React.Component {
   constructor(props) {
     super(props);
 
-    this.openFilePicker = this.openFilePicker.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.getAvatarandColor = this.getAvatarandColor.bind(this);
     this.accountProfileSave = this.accountProfileSave.bind(this);
 
-    const avatarColor = ['#F27E39', '#B4ED50', '#30D0AA', '#67C5E7', '#B171B6', '#E35A88', '#E22424', '#778CDF', '#F0DB09', '#8FBEA4'];
-    const blankAvatar = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
     const { profile, params } = this.props;
     const propsProperties = (profile && profile.properties) ? profile.properties : null;
     const initialProperties = {
@@ -43,14 +40,15 @@ class Profile extends React.Component {
       store_url: '',
       phone_number: '',
       thumb_url: '',
+      color: '',
       accountID: params.account_id,
     };
 
     const properties = Object.assign({}, initialProperties, propsProperties);
 
     this.state = {
-      avatar: properties.thumb_url ? properties.thumb_url : blankAvatar,
       avatarKey: '',
+      avatar: properties.thumb_url,
       name: profile && profile.title ? profile.title : '',
       description: properties.description,
       facebook: properties.facebook_url,
@@ -59,10 +57,9 @@ class Profile extends React.Component {
       newsletterSignUp: properties.newsletter_url,
       storeURL: properties.store_url,
       contactPhoneNumber: properties.phone_number,
+      color: properties.color,
       accountID: properties.accountID,
       profile: this.props.profile || null,
-      blankAvatar: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
-      randomAvatar: avatarColor[Math.floor(Math.random() * 10)],
     };
   }
 
@@ -83,6 +80,7 @@ class Profile extends React.Component {
       store_url: '',
       phone_number: '',
       thumb_url: '',
+      color: '',
     };
 
     if ((JSON.stringify(this.state.profile) !== JSON.stringify(profile)) && profile) {
@@ -90,7 +88,7 @@ class Profile extends React.Component {
       const properties = Object.assign({}, initialProperties, propsProperties);
       this.setState({
         name: profile && profile.title ? profile.title : '',
-        avatar: properties.thumb_url ? properties.thumb_url : this.state.blankAvatar,
+        avatar: properties.thumb_url,
         description: properties.description,
         facebook: properties.facebook_url,
         twitter: properties.twitter_url,
@@ -98,59 +96,17 @@ class Profile extends React.Component {
         newsletterSignUp: properties.newsletter_url,
         storeURL: properties.store_url,
         contactPhoneNumber: properties.phone_number,
+        color: properties.color,
         profile: nextProps.profile,
       });
     }
   }
 
-  openFilePicker() {
+  getAvatarandColor(uploadedAvatar, BKColor) {
     this.setState({
-      open: false,
+      avatarKey: uploadedAvatar,
+      color: BKColor,
     });
-
-    const tthis = this;
-    filepicker.setKey(this.props.filePickerKey);
-
-    const filePickerOptions = {
-      cropRatio: 1 / 1,
-      buttonText: 'Choose',
-      container: 'modal',
-      multiple: false,
-      maxFiles: 1,
-      imageQuality: 80,
-      imageMax: [1200, 1200],
-      services: ['CONVERT', 'COMPUTER', 'WEBCAM', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
-      conversions: ['crop', 'filter'],
-    };
-
-    const fileStoreOptions = {
-      location: 'S3',
-    };
-
-    const uploadSuccess = function (Blobs) {
-      tthis.setState({
-        avatar: Blobs[0].url,
-        avatarKey: Blobs[0].key,
-      });
-    };
-
-    const uploadFail = function () {
-      tthis.setState({
-        avatarKey: '',
-      });
-    };
-
-    const uploadProgress = function (progress) {
-      console.log(JSON.stringify(progress));
-    };
-
-    filepicker.pickAndStore(
-      filePickerOptions,
-      fileStoreOptions,
-      uploadSuccess,
-      uploadFail,
-      uploadProgress,
-    );
   }
 
   handleChange(event) {
@@ -179,6 +135,7 @@ class Profile extends React.Component {
             newsletter_url: state.newsletterSignUp,
             store_url: state.storeURL,
             phone_number: state.contactPhoneNumber,
+            color: state.color,
           },
         },
       },
@@ -191,16 +148,16 @@ class Profile extends React.Component {
     return (
       <Wrapper>
         <form onSubmit={this.accountProfileSave}>
-          <Avatar>
-            <h6>Icon</h6>
-            <button className="avatar" onClick={this.openFilePicker} type="button" style={{ background: this.state.randomAvatar }}>
-              <img src={this.state.avatar} alt="avatar" />
-              <div className="avatar-txt">
-                <i className="fa fa-camera"></i>
-                <p>Update Your <br /> Profile Photo</p>
-              </div>
-            </button>
-          </Avatar>
+          <PPAvatar
+            size={180}
+            header="Icon"
+            image={this.state.avatar}
+            title={this.state.name}
+            backgroundColor={this.state.color}
+            filePickerKey={this.props.filePickerKey}
+            name="avatarKey"
+            getAvatarandColor={this.getAvatarandColor}
+          />
           <div className="basic-info">
             <PPTextField
               type="text"
