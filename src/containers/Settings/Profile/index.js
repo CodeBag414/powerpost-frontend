@@ -148,16 +148,18 @@ class Profile extends React.Component {
     return (
       <Wrapper>
         <form onSubmit={this.accountProfileSave}>
-          <PPAvatar
-            size={180}
-            header="Icon"
-            image={this.state.avatar}
-            title={this.state.name}
-            backgroundColor={this.state.color}
-            filePickerKey={this.props.filePickerKey}
-            name="avatarKey"
-            getAvatarandColor={this.getAvatarandColor}
-          />
+          <div className="avatar-image">
+            <PPAvatar
+              size={180}
+              header="Icon"
+              image={this.state.avatar}
+              title={this.state.name}
+              backgroundColor={this.state.color}
+              filePickerKey={this.props.filePickerKey}
+              name="avatarKey"
+              getAvatarandColor={this.getAvatarandColor}
+            />
+          </div>
           <div className="basic-info">
             <PPTextField
               type="text"

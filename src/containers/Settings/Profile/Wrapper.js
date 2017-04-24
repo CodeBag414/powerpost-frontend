@@ -7,6 +7,11 @@ const Wrapper = styled.div`
     color: #888888;
   }
 
+  div.avatar-image {
+    display: inline-block;
+    padding: 0 10px;
+  }
+
   div.basic-info {
     width: calc(100% - 210px);
     display: inline-block;
