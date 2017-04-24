@@ -40,23 +40,30 @@ class Redeem extends Component {
       } else {
         const detail = redeem.get('detail');
 
-        if (query.type === 'new_user') {
-          const selectedPlan = get(detail, 'user_own_account.properties.selected_plan');
-          const accountTypeId = get(detail, 'user_own_account.account_type_id');
+        switch (query.type) {
+          case 'new_user': {
+            const selectedPlan = get(detail, 'user_own_account.properties.selected_plan');
+            const accountTypeId = get(detail, 'user_own_account.account_type_id');
 
-          if (!detail.api_key) {
-            alert('Something is wrong with returned api_key');
-            return;
+            cookie.save('account_id', detail.user_own_account.account_id, { path: '/' });
+
+            if (accountTypeId === '5' && selectedPlan) {
+              browserHistory.push(`/signup/checkout?plan_id=${selectedPlan}`);
+            } else {
+              browserHistory.push('/');
+            }
+
+            break;
           }
+          case 'password_reset': {
+            cookie.save('user', detail.user);
 
-          cookie.save('token', detail.api_key, { path: '/' });
-          cookie.save('account_id', detail.user_own_account.account_id, { path: '/' });
+            browserHistory.push('/login/reset-password');
 
-          if (accountTypeId === '5' && selectedPlan) {
-            browserHistory.push(`/signup/checkout?plan_id=${selectedPlan}`);
-          } else {
-            browserHistory.push('/');
+            break;
           }
+          default:
+            break;
         }
       }
     }

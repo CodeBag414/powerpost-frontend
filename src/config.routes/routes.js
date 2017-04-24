@@ -462,6 +462,27 @@ export function createRoutes(store, auth) {
             importModules.catch(errorLoading);
           },
         },
+        {
+          path: 'reset-password',
+          name: 'resetPassword',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/Login/ResetPassword/reducer'),
+              System.import('containers/Login/ResetPassword/sagas'),
+              System.import('containers/Login/ResetPassword'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([reducer, sagas, component]) => {
+              injectReducer('resetPassword', reducer.default);
+              injectSagas(sagas.default);
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
       ],
     },
     {
