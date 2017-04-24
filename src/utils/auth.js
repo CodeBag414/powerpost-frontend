@@ -132,6 +132,7 @@ let auth = {
                 email: data.email,
                 properties:{
                     thumbnail_image_key: data.avatarKey,
+                    color: data.color,
                     timezone_id: data.timeZone,
                     receive_notifications: data.emailNotifications
                 }

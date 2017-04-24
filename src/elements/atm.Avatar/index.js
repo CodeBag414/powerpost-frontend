@@ -9,10 +9,9 @@ class PPAvatar extends Component {
 
     this.openFilePicker = this.openFilePicker.bind(this);
     const avatarColor = ['#F27E39', '#B4ED50', '#30D0AA', '#67C5E7', '#B171B6', '#E35A88', '#E22424', '#778CDF', '#F0DB09', '#8FBEA4'];
-    const blankAvatar = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
 
     this.state = {
-      avatar: this.props.image ? this.props.image : blankAvatar,
+      avatar: this.props.image,
       avatarNew: '',
       avatarKey: '',
       filePickerKey: this.props.filePickerKey,
@@ -22,13 +21,11 @@ class PPAvatar extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const avatarColor = ['#F27E39', '#B4ED50', '#30D0AA', '#67C5E7', '#B171B6', '#E35A88', '#E22424', '#778CDF', '#F0DB09', '#8FBEA4'];
-    const blankAvatar = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
     if (this.state.previousProps !== nextProps) {
       this.setState({
-        avatar: nextProps.image ? nextProps.image : blankAvatar,
+        avatar: nextProps.image,
         filePickerKey: nextProps.filePickerKey,
-        backgroundColor: this.props.backgroundColor ? this.props.backgroundColor : avatarColor[Math.floor(Math.random() * 10)],
+        backgroundColor: nextProps.backgroundColor ? nextProps.backgroundColor : this.state.backgroundColor,
         previousProps: nextProps,
       });
     }
@@ -87,6 +84,7 @@ class PPAvatar extends Component {
   render() {
     const title = this.props.title || '';
     const avatar = this.state.avatarNew ? this.state.avatarNew : this.state.avatar;
+    const blankAvatar = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
 
     const style = {
       image: {
@@ -112,7 +110,7 @@ class PPAvatar extends Component {
           : null
         }
         <div className={['avatar-photo', this.props.className].join(' ')} style={style.image} onClick={this.openFilePicker} type="button">
-          <img src={avatar} alt="avatar" />
+          <img src={avatar ? avatar : blankAvatar} alt="avatar" />
           { avatar
             ? null
             : <div className="avatar-initial">

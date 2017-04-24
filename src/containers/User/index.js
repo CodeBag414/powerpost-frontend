@@ -119,6 +119,7 @@ class settingsUser extends Component {
 
     const data = {
       avatarKey: this.state.avatarKey,
+      color: this.state.color,
       name: this.state.name,
       title: this.state.title,
       email: this.state.email,
