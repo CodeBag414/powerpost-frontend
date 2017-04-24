@@ -1,6 +1,7 @@
 import React from 'react';
 
 import PPButton from 'elements/atm.Button';
+import PPAvatar from 'elements/atm.Avatar';
 import PPTooltip from 'elements/atm.Tooltip';
 import withReactRouter from 'elements/hoc.withReactRouter';
 
@@ -25,11 +26,18 @@ const BrandItem = (props) => {
         to={brandURL}
       >
         <div className="item">
-          <img src={thumbURL} alt="Brand" />
-          <div>
+          <div className="avatar">
+            <PPAvatar
+              size={45}
+              image={thumbURL}
+              title={title}
+              backgroundColor={''}
+            />
+          </div>
+          <span>
             <p className="itemTitle">{title}</p>
             <p>{groupTitle}</p>
-          </div>
+          </span>
         </div>
       </ReactRouterButton>
 

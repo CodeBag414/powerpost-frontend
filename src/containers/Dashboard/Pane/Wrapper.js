@@ -48,10 +48,6 @@ export default styled.div`
   div.profile {
     margin: 10px 0 20px;
     .avatar {
-      width: 90px;
-      height: 90px;
-      border-radius: 10px;
-      overflow: hidden;
       margin-right: 30px;
       display: inline-block;
     }
@@ -59,7 +55,7 @@ export default styled.div`
     .userInfo {
       display: inline-block;
       height: 90px;
-      vertical-align: middle;
+      vertical-align: top;
       padding: 10px 0;
       h6 {
         color: #888888;

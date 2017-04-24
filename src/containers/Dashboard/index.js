@@ -13,6 +13,7 @@ import {
 } from 'reselect';
 
 import PPButton from 'elements/atm.Button';
+import PPAvatar from 'elements/atm.Avatar';
 import withReactRouter from 'elements/hoc.withReactRouter';
 import {
   UserCanAccount,
@@ -36,6 +37,7 @@ const Dashboard = (props) => {
   const brands = props.brands || null;
   const userInfo = props.user || null;
   const avatarUrl = (userInfo && userInfo.properties && userInfo.properties.thumb_url) ? userInfo.properties.thumb_url : null;
+  const avatarClr = (userInfo && userInfo.properties && userInfo.properties.color) ? userInfo.properties.color : null;
 
   return (
     <Wrapper>
@@ -81,11 +83,15 @@ const Dashboard = (props) => {
                   />
                 </div>
                 <div className="profile">
-                  <img
-                    src={avatarUrl}
-                    className="avatar"
-                    alt="Profile"
-                  />
+                  <div className="avatar">
+                    <PPAvatar
+                      size={90}
+                      radius={10}
+                      image={avatarUrl}
+                      title={userInfo.display_name}
+                      backgroundColor={avatarClr}
+                    />
+                  </div>
 
                   <div className="userInfo">
                     <div>

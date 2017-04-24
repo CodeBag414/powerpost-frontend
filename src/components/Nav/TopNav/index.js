@@ -66,7 +66,7 @@ class TopNav extends Component {
           <PPIconMenu
             open={this.state.userMenuOpen}
             position="topRight"
-            icon={<PPAvatar image={avatar} />}
+            icon={<PPAvatar image={avatar} size={40} radius={50} />}
           >
             <ReactRouterMenuItem caption="Settings" to={'/user/settings'} />
             <PPMenuItem caption="Logout" onTouchTap={this.props.logout} />

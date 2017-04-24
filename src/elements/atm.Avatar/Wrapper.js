@@ -7,7 +7,7 @@ const Avatar = styled.div`
     margin: 10px 0 6px;
     font-weight: bold;
   }
-  .avatar {
+  .avatar-photo {
     display: table;
     position: relative;
     padding: 0;

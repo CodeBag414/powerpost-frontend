@@ -92,7 +92,7 @@ class PPAvatar extends Component {
       image: {
         width: this.props.size,
         height: this.props.size,
-        borderRadius: this.props.radius,
+        borderRadius: `${this.props.radius}%`,
         background: this.state.backgroundColor,
       },
       initial: {
@@ -111,7 +111,7 @@ class PPAvatar extends Component {
           ? <h6>{this.props.header}</h6>
           : null
         }
-        <div className={['avatar', this.props.className].join(' ')} style={style.image} onClick={this.openFilePicker} type="button">
+        <div className={['avatar-photo', this.props.className].join(' ')} style={style.image} onClick={this.openFilePicker} type="button">
           <img src={avatar} alt="avatar" />
           { avatar
             ? null
@@ -138,7 +138,7 @@ PPAvatar.propTypes = {
   image: PropTypes.string,
   className: PropTypes.string,
   size: PropTypes.number.isRequired,
-  radius: PropTypes.string,
+  radius: PropTypes.number,
   backgroundColor: PropTypes.string,
   title: PropTypes.string,
   getAvatarandColor: PropTypes.func,

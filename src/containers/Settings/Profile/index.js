@@ -156,7 +156,6 @@ class Profile extends React.Component {
               title={this.state.name}
               backgroundColor={this.state.color}
               filePickerKey={this.props.filePickerKey}
-              name="avatarKey"
               getAvatarandColor={this.getAvatarandColor}
             />
           </div>
