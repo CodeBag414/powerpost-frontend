@@ -71,11 +71,10 @@ export function* authorize({ name, email, password, properties, isRegistering })
     }
     return response;
   } catch (error) {
-    console.log('hi');
     // If we get an error we send Redux the appropiate action and return
-    yield put({ type: REQUEST_ERROR, error: error.message });
+    // yield put({ type: REQUEST_ERROR, error: error.response.data.message });
 
-    return false;
+    throw error.data.message;
   } finally {
     // When done, we tell Redux we're not in the middle of a request any more
     yield put({ type: SENDING_REQUEST, sending: false });
@@ -155,25 +154,30 @@ export function* loginFlow() {
     // A `LOGOUT` action may happen while the `authorize` effect is going on, which may
     // lead to a race condition. This is unlikely, but just in case, we call `race` which
     // returns the "winner", i.e. the one that finished first
-    const winner = yield race({
-      auth: call(authorize, { email, password, isRegistering: false }),
-      logout: take(LOGOUT),
-    });
 
-    // If `authorize` was the winner...
-    if (winner.auth) {
-      // ...we send Redux appropiate actions
-      yield put({ type: SET_AUTH, newAuthState: true }); // User is logged in (authorized)
-      yield put({ type: SET_USER, user: winner.auth });
-      yield call(forwardTo, '/'); // Go to dashboard page
-      // If `logout` won...
-    } else if (winner.logout) {
-      // ...we send Redux appropiate action
-      yield put({ type: SET_AUTH, newAuthState: false }); // User is not logged in (not authorized)
-      yield call(logout); // Call `logout` effect
-      yield call(forwardTo, '/login'); // Go to root page
-    } else {
-      toastr.error('Sign in failed. Please check your email and password and try again.');
+    try {
+      const winner = yield race({
+        auth: call(authorize, { email, password, isRegistering: false }),
+        logout: take(LOGOUT),
+      });
+
+      // If `authorize` was the winner...
+      if (winner.auth) {
+        // ...we send Redux appropiate actions
+        yield put({ type: SET_AUTH, newAuthState: true }); // User is logged in (authorized)
+        yield put({ type: SET_USER, user: winner.auth });
+        yield call(forwardTo, '/'); // Go to dashboard page
+        // If `logout` won...
+      } else if (winner.logout) {
+        // ...we send Redux appropiate action
+        yield put({ type: SET_AUTH, newAuthState: false }); // User is not logged in (not authorized)
+        yield call(logout); // Call `logout` effect
+        yield call(forwardTo, '/login'); // Go to root page
+      } else {
+        throw Error('Sign in failed. Please check your email and password and try again.');
+      }
+    } catch (err) {
+      toastr.error(err);
     }
   }
 }
@@ -215,7 +219,7 @@ export function* registerFlow() {
       yield call(set, 'signup', { name, email });
       yield forwardTo('/signup/verification');
     } catch (error) {
-      console.err(error);
+      toastr.error(error);
     }
   }
 }

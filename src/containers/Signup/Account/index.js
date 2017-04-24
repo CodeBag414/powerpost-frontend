@@ -94,10 +94,7 @@ class SignupAccount extends Component {
   }
 
   render() {
-    const { authError } = this.props;
-    if (authError) {
-      alert('Signup Failed. Try again!');
-    }
+    // const { authError } = this.props;
 
     return (
       <div>

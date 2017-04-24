@@ -26,9 +26,7 @@ let auth = {
                 
                 return response.data;
             })
-            .catch((error) => {
-                console.log(error.response);
-            });
+            .catch((error) => Promise.reject(error.response));
          
      },
      /**
@@ -89,9 +87,7 @@ let auth = {
                 console.log('response:' + response);
                 auth.login(email, password);
             })
-            .catch((error) => {
-                console.log(error.response);
-            });
+            .catch((error) => Promise.reject(error.response));
      },
      
      /**
