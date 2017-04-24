@@ -12,6 +12,7 @@ export const LOGOUT = 'LOGOUT';
 export const REQUEST_ERROR = 'REQUEST_ERROR';
 export const CLEAR_ERROR = 'CLEAR_ERROR';
 export const SET_USER = 'SET_USER';
+export const GET_USER = 'GET_USER';
 export const CHECK_USER_OBJECT = 'CHECK_USER_OBJECT';
 export const CLEAR_USER = 'CLEAR_USER';
 export const CHECK_CURRENT_ACCOUNT = 'CHECK_CURRENT_ACCOUNT';

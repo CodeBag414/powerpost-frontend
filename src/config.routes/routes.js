@@ -359,12 +359,14 @@ export function createRoutes(store, auth) {
               name: 'Profile',
               getComponent(nextState, cb) {
                 const importModules = Promise.all([
+                  System.import('containers/Settings/Profile/sagas'),
                   System.import('containers/Settings/Profile'),
                 ]);
 
                 const renderRoute = loadModule(cb);
 
-                importModules.then(([component]) => {
+                importModules.then(([sagas, component]) => {
+                  injectSagas(sagas.default);
                   renderRoute(component);
                 });
 

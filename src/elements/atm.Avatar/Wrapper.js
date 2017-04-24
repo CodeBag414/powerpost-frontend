@@ -1,28 +1,49 @@
 import styled from 'styled-components';
 
 const Avatar = styled.div`
+  background: transparent;
+
   h6 {
     margin: 10px 0 6px;
     font-weight: bold;
   }
-  .avatar {
+  .avatar-photo {
     display: table;
     position: relative;
     padding: 0;
     outline: none;
     border: none;
     border-radius: 4px;
+    width: 180px;
+    height: 180px;
+    overflow: hidden;
 
     img {
       left: 0px;
-      width: 180px;
-      height: 180px;
+      width: 100%;
+      height: 100%;
       border-radius: 4px;
+
+      &[alt] {
+        color: transparent;
+      }
     }
+
+    .avatar-initial {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      border-radius: 4px;
+      border: none;
+      text-align: center;
+    }
+
     .avatar-txt {
       position: absolute;
-      width: 180px;
-      height: 180px;
+      width: 100%;
+      height: 100%;
       top: 0;
       left: 0;
       border-radius: 4px;
@@ -40,7 +61,7 @@ const Avatar = styled.div`
       }
 
       i {
-        margin-top: 70px;
+        margin-top: calc(50% - 15px);
         vertical-align: super;
         font-size: 20px;
         font-family: FontAwesome;

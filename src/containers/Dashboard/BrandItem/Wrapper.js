@@ -31,17 +31,15 @@ export default styled.div`
 
     .item {
       display: inline-block;
-      img {
-        width: 45px;
-        height: 45px;
-        border-radius: 4px;
+      .avatar {
+        margin-top: 5px;
         margin-right: 15px;
         display: inline-block;
       }
-      div {
+      span {
         display: inline-block;
         height: 50px;
-        vertical-align: middle;
+        vertical-align: top;
         padding: 5px 0;
         p {
           font-size: 12px;

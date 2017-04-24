@@ -4,9 +4,9 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import filepicker from 'filepicker-js';
 import PPTextField from 'elements/atm.TextField';
 import PPButton from 'elements/atm.Button';
+import PPAvatar from 'elements/atm.Avatar';
 import PPRadioButton from 'elements/atm.RadioButton';
 
 import { updateRequest } from 'containers/App/actions';
@@ -19,7 +19,6 @@ import {
 import Wrapper from './Wrapper';
 import Content from './content';
 import Header from './Header';
-import Avatar from './avatar';
 
 class settingsUser extends Component {
   static propTypes = {
@@ -32,7 +31,7 @@ class settingsUser extends Component {
   constructor(props) {
     super(props);
 
-    this.openFilePicker = this.openFilePicker.bind(this);
+    this.getAvatarandColor = this.getAvatarandColor.bind(this);
     this.profileUpdate = this.profileUpdate.bind(this);
     this.notificationUpdate = this.notificationUpdate.bind(this);
     this.passwordUpdate = this.passwordUpdate.bind(this);
@@ -53,6 +52,7 @@ class settingsUser extends Component {
 
       dailySnapshot: (userProperties && userProperties.daily_snapshot) || false,
       emailNotifications: (userProperties && userProperties.receive_notifications) || 'none',
+      color: (userProperties && userProperties.color) || '',
 
       title: (userOwnAccount && userOwnAccount.title) || '',
       phoneNumber: (userOwnAccountProperties && userOwnAccountProperties.phone_number) || '',
@@ -87,6 +87,7 @@ class settingsUser extends Component {
 
       dailySnapshot: (userProperties && userProperties.daily_snapshot) || false,
       emailNotifications: (userProperties && userProperties.receive_notifications) || 'none',
+      color: (userProperties && userProperties.color) || '',
 
       title: (userOwnAccount && userOwnAccount.title) || '',
       phoneNumber: (userOwnAccountProperties && userOwnAccountProperties.phone_number) || '',
@@ -106,54 +107,11 @@ class settingsUser extends Component {
     });
   }
 
-  openFilePicker() {
+  getAvatarandColor(uploadedAvatar, BKColor) {
     this.setState({
-      open: false,
+      avatarKey: uploadedAvatar,
+      color: BKColor,
     });
-
-    const tthis = this;
-    filepicker.setKey(this.props.filePickerKey);
-
-    const filePickerOptions = {
-      cropRatio: 1 / 1,
-      buttonText: 'Choose',
-      container: 'modal',
-      multiple: false,
-      maxFiles: 1,
-      imageQuality: 80,
-      imageMax: [1200, 1200],
-      services: ['CONVERT', 'COMPUTER', 'WEBCAM', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
-      conversions: ['crop', 'filter'],
-    };
-
-    const fileStoreOptions = {
-      location: 'S3',
-    };
-
-    const uploadSuccess = function (Blobs) {
-      tthis.setState({
-        avatar: Blobs[0].url,
-        avatarKey: Blobs[0].key,
-      });
-    };
-
-    const uploadFail = function () {
-      tthis.setState({
-        avatarKey: '',
-      });
-    };
-
-    const uploadProgress = function (progress) {
-      console.log(JSON.stringify(progress));
-    };
-
-    filepicker.pickAndStore(
-      filePickerOptions,
-      fileStoreOptions,
-      uploadSuccess,
-      uploadFail,
-      uploadProgress,
-    );
   }
 
   profileUpdate(event) {
@@ -161,6 +119,7 @@ class settingsUser extends Component {
 
     const data = {
       avatarKey: this.state.avatarKey,
+      color: this.state.color,
       name: this.state.name,
       title: this.state.title,
       email: this.state.email,
@@ -256,16 +215,15 @@ class settingsUser extends Component {
           <form onSubmit={this.profileUpdate}>
             <Content>
               <div className="head">
-                <Avatar>
-                  <h6>Profile Picture</h6>
-                  <button className="avatar" onClick={this.openFilePicker} type="button">
-                    <img src={this.state.avatar} alt="avatar" />
-                    <div className="avatar-txt">
-                      <i className="fa fa-camera"></i>
-                      <p>Update Your <br /> Profile Photo</p>
-                    </div>
-                  </button>
-                </Avatar>
+                <PPAvatar
+                  size={180}
+                  header="Profile Picture"
+                  image={this.state.avatar}
+                  title={this.state.name}
+                  backgroundColor={this.state.color}
+                  filePickerKey={this.props.filePickerKey}
+                  getAvatarandColor={this.getAvatarandColor}
+                />
               </div>
               <div className="body">
                 <div className="col">
