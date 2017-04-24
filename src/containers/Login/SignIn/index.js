@@ -64,10 +64,7 @@ class SignIn extends Component {
   }
 
   render() {
-    const { authError } = this.props;
-    if (authError) {
-      alert('Login Failed. Try again!');
-    }
+    // const { authError } = this.props;
 
     return (
       <div>
