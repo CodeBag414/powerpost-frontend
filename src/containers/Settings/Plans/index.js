@@ -4,12 +4,13 @@ import { createStructuredSelector } from 'reselect';
 import moment from 'moment';
 
 import { UserCanTeam } from 'config.routes/UserRoutePermissions';
-import Card from 'elements/atm.Card';
 import Button from 'elements/atm.Button';
 
 import { makeSelectCurrentAccount } from 'containers/Main/selectors';
 
 import Wrapper from './Wrapper';
+import CardWrapper from './CardWrapper';
+import PaymentCard from './PaymentCard';
 
 import {
   fetchSubscriptions,
@@ -25,10 +26,6 @@ export class Plans extends Component {
     fetchSubscriptions: PropTypes.func,
   }
 
-  state = {
-    editingPayment: false,
-  }
-
   componentDidMount() {
     const { userAccount } = this.props;
 
@@ -39,7 +36,7 @@ export class Plans extends Component {
     const { subscriptions: { details, error } } = this.props;
 
     return (
-      <Card className="card">
+      <CardWrapper>
         <div className="title-label">
           Current Plan
         </div>
@@ -74,63 +71,16 @@ export class Plans extends Component {
             </div>
           )
         }
-      </Card>
+      </CardWrapper>
     );
   }
 
-  toggleEdit = () => {
-    const { editingPayment } = this.state;
-
-    if (editingPayment) {
-
-    }
-
-    this.setState({
-      editingPayment: !editingPayment,
-    });
-  }
-
   render() {
-    const { editingPayment } = this.state;
-
     return (
       <Wrapper>
         <div className="left-pane">
           { this.getCurrentPlanDOM() }
-          <Card className="card">
-            <div className="title-label">
-              Payment
-            </div>
-            <div className="title">
-              Information
-            </div>
-            <div className="divider" />
-
-            { editingPayment ?
-              <div>
-
-              </div>
-              :
-              <div>
-                <section>
-                  <div className="header">Name</div>
-                  <div className="value">Person's Name</div>
-                </section>
-                <section>
-                  <div className="header">Visa</div>
-                  <div className="value">********4743</div>
-                </section>
-                <section>
-                  <div className="header">Expires</div>
-                  <div className="value">10/14/12</div>
-                </section>
-              </div>
-            }
-
-            <Button onClick={this.toggleEdit}>
-              { editingPayment ? 'Save Card' : 'Edit Info' }
-            </Button>
-          </Card>
+          <PaymentCard />
         </div>
         <div className="right-pane">
           <p className="title">Charge History</p>

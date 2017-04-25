@@ -288,19 +288,22 @@ export function* createPaymentSourceFlow() {
 export function* applyCouponFlow() {
   while (true) {
     const { payload } = yield take(APPLY_COUPON);
+    if (!payload) {   // remove coupon
+      yield put(applyCouponSuccess(null));
+    } else {
+      try {
+        const response = yield call(getData, `/payment_api/coupon/${payload}`);
+        const { data } = response;
 
-    try {
-      const response = yield call(getData, `/payment_api/coupon/${payload}`);
-      const { data } = response;
-
-      if (data.coupon) {
-        yield put(applyCouponSuccess(data.coupon));
-      } else {
-        throw data.message;
+        if (data.coupon) {
+          yield put(applyCouponSuccess(data.coupon));
+        } else {
+          throw data.message;
+        }
+      } catch (error) {
+        const msg = 'So sorry, the coupon code you entered is invalid.';
+        yield put(applyCouponError(msg));
       }
-    } catch (error) {
-      const msg = 'So sorry, the coupon code you entered is invalid.';
-      yield put(applyCouponError(msg));
     }
   }
 }
