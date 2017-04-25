@@ -17,7 +17,7 @@ import IconMenu from 'material-ui/IconMenu';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
 import styles from './styles.scss';
-// import PPLogo from './PP_Icon.png';
+import PPLogo from './PP_Icon.png';
 
 const ReactRouterMenuItem = withReactRouter(PPMenuItem);
 
@@ -45,7 +45,7 @@ class Sidebar extends React.Component {
       <div>
         <div className={styles.brandNav}>
           <div className={styles.powerpostLogoContainer} >
-            <Link to="/">PPLogo{/*<img src={PPLogo} alt="Powerpost Logo" style={{ marginTop: '15px' }} />*/}</Link>
+            <Link to="/"><img src={PPLogo} alt="Powerpost Logo" style={{ marginTop: '15px' }} /></Link>
           </div>
           <div>
             { this.props.userAccount && this.props.userAccount.account_type_id !== 5 &&
