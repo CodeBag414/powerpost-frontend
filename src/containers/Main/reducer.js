@@ -28,6 +28,7 @@ const initialState = fromJS({
     user_access: {
       permissions: [],
     },
+    user_access_level: false,
     subAccounts: [],
     connections: [{}],
   },
@@ -57,6 +58,7 @@ function dashboardReducer(state = initialState, action) {
             .setIn(['activeBrand', 'subscriptions'], action.account.data.account.subscriptions)
             .setIn(['activeBrand', 'account_access', 'permissions'], action.account.data.account.account_access.permissions)
             .setIn(['activeBrand', 'user_access', 'permissions'], action.account.data.account.user_access.permissions)
+            .setIn(['activeBrand', 'user_access_level'], action.account.data.account.user_access_level)
             .setIn(['activeBrand', 'subAccounts'], action.account.data.account.subaccounts)
             .setIn(['activeBrand', 'connections'], action.account.data.account.connections);
     case FETCH_ACCOUNT_ERROR:
@@ -67,7 +69,7 @@ function dashboardReducer(state = initialState, action) {
       return state
             .set('menuCollapsed', action.collapsed);
     case SET_CONNECTIONS_LIST:
-        return state
+      return state
             .setIn(['activeBrand', 'connections'], action.connections);
     default:
       return state;
