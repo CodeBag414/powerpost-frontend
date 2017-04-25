@@ -7,7 +7,7 @@ export function postData(url, data, isAuthReq=true) {
   const requestUrl = API_URL + url;
   let headers = {};
   let key = cookie.load('token');
-  
+
   if(isAuthReq) {
     headers = {headers: {'X-API-KEY': key}};
   }

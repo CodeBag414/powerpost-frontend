@@ -26,9 +26,7 @@ let auth = {
                 
                 return response.data;
             })
-            .catch((error) => {
-                console.log(error.response);
-            });
+            .catch((error) => Promise.reject(error.response));
          
      },
      /**
@@ -73,13 +71,14 @@ let auth = {
       * Registers a user then logs them in
       * 
       */
-     register(name, email, password) {
+     register(name, email, password, properties) {
         const data = {
             payload: {
                 display_name: name,
                 password: password,
-                email: email
-            }
+                email: email,
+                properties,
+            },
         };
         
         const url = API_URL + '/account_api/create';
@@ -88,21 +87,18 @@ let auth = {
                 console.log('response:' + response);
                 auth.login(email, password);
             })
-            .catch((error) => {
-                console.log(error.response);
-            });
+            .catch((error) => Promise.reject(error.response));
      },
      
      /**
       * Update a account object
       * 
       */
-     updateAccount(data) {
+     updateOwnAccount(data) {
         const account_data = {
             payload:{
               title: data.title,
               properties:{
-                 thumbnail_image_key: data.avatarKey,
                  phone_number: data.phoneNumber
               }
             }
@@ -132,6 +128,7 @@ let auth = {
                 email: data.email,
                 properties:{
                     thumbnail_image_key: data.avatarKey,
+                    color: data.color,
                     timezone_id: data.timeZone,
                     receive_notifications: data.emailNotifications
                 }

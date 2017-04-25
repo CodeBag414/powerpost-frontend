@@ -3,13 +3,17 @@
 // which listen for actions.
 
 // Sagas help us gather all our side effects (network requests in this case) in one place
+/* eslint-disable camelcase */
 
 import { take, call, put, race, select } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 import { browserHistory } from 'react-router';
 
 import auth from 'utils/auth';
+import { set } from 'utils/localStorage';
 import { makeSelectUser } from './selectors';
 import { toastr } from 'lib/react-redux-toastr';
+import { getData, postData } from 'utils/request';
 
 import {
   SENDING_REQUEST,
@@ -18,13 +22,27 @@ import {
   UPDATE_REQUEST,
   SET_AUTH,
   LOGOUT,
-  CHANGE_FORM,
   REQUEST_ERROR,
   SET_USER,
+  GET_USER,
   // SET_ROLES,
   CHECK_USER_OBJECT,
   CLEAR_USER,
+  CREATE_PAYMENT_SOURCE,
+  APPLY_COUPON,
+  POST_SUBSCRIPTION,
+  FETCH_CURRENT_PLAN,
 } from './constants';
+
+import {
+  createPaymentSourceSuccess,
+  createPaymentSourceError,
+  applyCouponSuccess,
+  applyCouponError,
+  postSubscriptionSuccess,
+  postSubscriptionError,
+  fetchCurrentPlanError,
+} from './actions';
 
 /**
  * Effect to handle authorization
@@ -33,7 +51,7 @@ import {
  * @param  {object} options                Options
  * @param  {boolean} options.isRegistering Is this a register request?
  */
-export function* authorize({ name, email, password, isRegistering }) {
+export function* authorize({ name, email, password, properties, isRegistering }) {
   // We send an action that tells Redux we're sending a request
   yield put({ type: SENDING_REQUEST, sending: true });
 
@@ -48,17 +66,16 @@ export function* authorize({ name, email, password, isRegistering }) {
     // as if it's synchronous because we pause execution until the call is done
     // with `yield`!
     if (isRegistering) {
-      response = yield call(auth.register, name, email, password);
+      response = yield call(auth.register, name, email, password, properties);
     } else {
       response = yield call(auth.login, email, password);
     }
     return response;
   } catch (error) {
-    console.log('hi');
     // If we get an error we send Redux the appropiate action and return
-    yield put({ type: REQUEST_ERROR, error: error.message });
+    // yield put({ type: REQUEST_ERROR, error: error.response.data.message });
 
-    return false;
+    throw error.data.message;
   } finally {
     // When done, we tell Redux we're not in the middle of a request any more
     yield put({ type: SENDING_REQUEST, sending: false });
@@ -85,12 +102,12 @@ export function* authorizeUpdate(data) {
     // as if it's synchronous because we pause execution until the call is done
     // with `yield`!
 
-    const responseUser = yield call(auth.updateUser, data);
-    const responseAccount = yield call(auth.updateAccount, data);
-    if (responseUser && responseAccount) {
-      return true;
-    }
-    return responseUser || responseAccount;
+    yield call(auth.updateUser, data);
+    yield call(auth.updateOwnAccount, data);
+
+    yield put({ type: GET_USER });
+
+    return true;
   } catch (error) {
     console.log('hi');
     // If we get an error we send Redux the appropiate action and return
@@ -137,23 +154,30 @@ export function* loginFlow() {
     // A `LOGOUT` action may happen while the `authorize` effect is going on, which may
     // lead to a race condition. This is unlikely, but just in case, we call `race` which
     // returns the "winner", i.e. the one that finished first
-    const winner = yield race({
-      auth: call(authorize, { email, password, isRegistering: false }),
-      logout: take(LOGOUT),
-    });
-    // If `authorize` was the winner...
-    if (winner.auth) {
-      // ...we send Redux appropiate actions
-      yield put({ type: SET_AUTH, newAuthState: true }); // User is logged in (authorized)
-      yield put({ type: SET_USER, user: winner.auth });
-      yield put({ type: CHANGE_FORM, newFormState: { username: '', password: '' } }); // Clear form
-      yield call(forwardTo, '/'); // Go to dashboard page
-      // If `logout` won...
-    } else if (winner.logout) {
-      // ...we send Redux appropiate action
-      yield put({ type: SET_AUTH, newAuthState: false }); // User is not logged in (not authorized)
-      yield call(logout); // Call `logout` effect
-      yield call(forwardTo, '/login'); // Go to root page
+
+    try {
+      const winner = yield race({
+        auth: call(authorize, { email, password, isRegistering: false }),
+        logout: take(LOGOUT),
+      });
+
+      // If `authorize` was the winner...
+      if (winner.auth) {
+        // ...we send Redux appropiate actions
+        yield put({ type: SET_AUTH, newAuthState: true }); // User is logged in (authorized)
+        yield put({ type: SET_USER, user: winner.auth });
+        yield call(forwardTo, '/'); // Go to dashboard page
+        // If `logout` won...
+      } else if (winner.logout) {
+        // ...we send Redux appropiate action
+        yield put({ type: SET_AUTH, newAuthState: false }); // User is not logged in (not authorized)
+        yield call(logout); // Call `logout` effect
+        yield call(forwardTo, '/login'); // Go to root page
+      } else {
+        throw Error('Sign in failed. Please check your email and password and try again.');
+      }
+    } catch (err) {
+      toastr.error(err);
     }
   }
 }
@@ -185,17 +209,17 @@ export function* registerFlow() {
   while (true) {
     // We always listen to `REGISTER_REQUEST` actions
     const request = yield take(REGISTER_REQUEST);
-    const { name, password, email } = request.data;
+    const { name, password, email, properties } = request.data;
 
     // We call the `authorize` task with the data, telling it that we are registering a user
     // This returns `true` if the registering was successful, `false` if not
-    const wasSuccessful = yield call(authorize, { name, email, password, isRegistering: true });
 
-    // If we could register a user, we send the appropiate actions
-    if (wasSuccessful) {
-      yield put({ type: SET_AUTH, newAuthState: true }); // User is logged in (authorized) after being registered
-      yield put({ type: CHANGE_FORM, newFormState: { name: '', password: '' } }); // Clear form
-      forwardTo('/dashboard'); // Go to dashboard page
+    try {
+      yield call(authorize, { name, email, password, properties, isRegistering: true });
+      yield call(set, 'signup', { name, email });
+      yield forwardTo('/signup/verification');
+    } catch (error) {
+      toastr.error(error);
     }
   }
 }
@@ -218,7 +242,6 @@ export function* updateFlow() {
     if (wasSuccessful) {
       toastr.success('Success!', 'User setting is updated.');
       yield put({ type: SET_AUTH, newAuthState: true }); // User is logged in (authorized) after being registered
-      yield put({ type: CHANGE_FORM, newFormState: { name: '', password: '' } }); // Clear form
       forwardTo('/dashboard'); // Go to dashboard page
     }
   }
@@ -234,6 +257,107 @@ export function* userExistsFlow() {
     }
   }
 }
+
+export function* getUserFlow() {
+  while (true) {
+    yield take(GET_USER);
+
+    const currentUser = yield call(auth.getCurrentUser);
+    yield put({ type: SET_USER, user: currentUser });
+  }
+}
+
+export function* createPaymentSourceFlow() {
+  while (true) {
+    const { payload } = yield take(CREATE_PAYMENT_SOURCE);
+
+    try {
+      const response = yield call(postData, '/payment_api/source', { payload });
+      const { data } = response;
+      if (data.status === 'success') {
+        yield put(createPaymentSourceSuccess(data));
+      } else {
+        throw data.error;
+      }
+    } catch (error) {
+      yield put(createPaymentSourceError(error));
+    }
+  }
+}
+
+export function* applyCouponFlow() {
+  while (true) {
+    const { payload } = yield take(APPLY_COUPON);
+
+    try {
+      const response = yield call(getData, `/payment_api/coupon/${payload}`);
+      const { data } = response;
+
+      if (data.coupon) {
+        yield put(applyCouponSuccess(data.coupon));
+      } else {
+        throw data.message;
+      }
+    } catch (error) {
+      const msg = 'So sorry, the coupon code you entered is invalid.';
+      yield put(applyCouponError(msg));
+    }
+  }
+}
+
+export function* postSubscriptionFlow() {
+  while (true) {
+    const { payload } = yield take(POST_SUBSCRIPTION);
+
+    try {
+      const response = yield call(postData, '/payment_api/subscription', { payload });
+      const { data } = response;
+
+      if (data.status === 'success') {
+        yield put(postSubscriptionSuccess(data));
+      } else {
+        throw data;
+      }
+    } catch (error) {
+      yield put(postSubscriptionError(error));
+    }
+  }
+}
+
+function* fetchCurrentPlanLoop(accountId, selectedPlan) {
+  while (true) {
+    const response = yield call(getData, `/payment_api/plan/${accountId}`);
+    const { data: { plan_id } = {} } = response;
+
+    if (plan_id === selectedPlan) {
+      return 'success';
+    }
+    yield call(delay, 3000);
+  }
+}
+
+export function* fetchCurrentPlanFlow() {
+  while (true) {
+    const { payload: { accountId, selectedPlan } } = yield take(FETCH_CURRENT_PLAN);
+
+    try {
+      const { currentPlan } = yield race({
+        currentPlan: call(fetchCurrentPlanLoop, accountId, selectedPlan),
+        timeout: call(delay, 30000),
+      });
+
+      if (currentPlan) {
+        browserHistory.push('/');
+      } else {
+        yield put(fetchCurrentPlanError('Timeout'));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
+
+
 // The root saga is what we actually send to Redux's middleware. In here we fork
 // each saga so that they are all "active" and listening.
 // Sagas are fired once at the start of an app and can be thought of as processes running
@@ -243,7 +367,12 @@ export default [
   logoutFlow,
   registerFlow,
   updateFlow,
+  getUserFlow,
   userExistsFlow,
+  createPaymentSourceFlow,
+  applyCouponFlow,
+  postSubscriptionFlow,
+  fetchCurrentPlanFlow,
 ];
 
 // Little helper function to abstract going to different pages
