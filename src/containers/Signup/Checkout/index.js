@@ -14,7 +14,7 @@ import {
   fetchCurrentPlan,
 } from 'containers/App/actions';
 import {
-  selectPaymentSource,
+  selectCreatingPaymentSource,
   selectSubscription,
   selectCurrentPlan,
   selectCoupon,
@@ -34,8 +34,8 @@ import {
 class SignupCheckout extends Component {
   static propTypes = {
     plan: PropTypes.object,
-    coupon: PropTypes.object,
-    paymentSource: PropTypes.object,
+    coupon: PropTypes.object,   // eslint-disable-line
+    creatingPaymentSource: PropTypes.object,
     subscription: PropTypes.object,
     currentPlan: PropTypes.object,
     createPaymentSource: PropTypes.func,
@@ -60,8 +60,8 @@ class SignupCheckout extends Component {
       if (!details.requires_payment) {
         browserHistory.push('/');
       }
-    } else if (this.props.paymentSource !== nextProps.paymentSource) {
-      const { fetching, error } = nextProps.paymentSource;
+    } else if (this.props.creatingPaymentSource !== nextProps.creatingPaymentSource) {
+      const { fetching, error } = nextProps.creatingPaymentSource;
 
       if (!fetching) {
         if (!error) {     // Create Source Succeeded
@@ -150,7 +150,7 @@ export function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   plan: selectPlan(),
-  paymentSource: selectPaymentSource(),
+  creatingPaymentSource: selectCreatingPaymentSource(),
   subscription: selectSubscription(),
   currentPlan: selectCurrentPlan(),
   coupon: selectCoupon(),

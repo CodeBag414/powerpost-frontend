@@ -1,9 +1,11 @@
+/* eslint-disable camelcase */
+
 import React, { PropTypes } from 'react';
 
 import Button from 'elements/atm.Button';
 import CardWrapper from '../CardWrapper';
 
-const PaymentCard = ({ editPayment }) => (
+const PaymentCard = ({ info: { name, brand, last4, exp_year, exp_month }, togglePayment }) => (
   <CardWrapper style={{ marginTop: '20px' }}>
     <div className="title-label">
       Payment
@@ -16,27 +18,28 @@ const PaymentCard = ({ editPayment }) => (
       <div>
         <section>
           <div className="header">Name</div>
-          <div className="value">Person's Name</div>
+          <div className="value">{name}</div>
         </section>
         <section>
-          <div className="header">Visa</div>
-          <div className="value">********4743</div>
+          <div className="header">{brand}</div>
+          <div className="value">************{last4}</div>
         </section>
         <section>
           <div className="header">Expires</div>
-          <div className="value">10/14/12</div>
+          <div className="value">{exp_month}/{exp_year}</div>
         </section>
       </div>
     }
 
-    <Button onClick={editPayment}>
+    <Button onClick={togglePayment}>
       Edit Info
     </Button>
   </CardWrapper>
 );
 
 PaymentCard.propTypes = {
-  editPayment: PropTypes.func,
+  info: PropTypes.object,
+  togglePayment: PropTypes.func,
 };
 
 export default PaymentCard;

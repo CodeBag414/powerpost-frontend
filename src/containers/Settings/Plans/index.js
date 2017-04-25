@@ -2,11 +2,24 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import moment from 'moment';
+import cookie from 'react-cookie';
 
+import { toastr } from 'lib/react-redux-toastr';
 import { UserCanTeam } from 'config.routes/UserRoutePermissions';
-import Button from 'elements/atm.Button';
 
+import {
+  createPaymentSource,
+  fetchPaymentSources,
+} from 'containers/App/actions';
+import {
+  selectCreatingPaymentSource,
+  selectPaymentSources,
+} from 'containers/App/selectors';
 import { makeSelectCurrentAccount } from 'containers/Main/selectors';
+
+import PaymentForm from 'components/PaymentForm';
+import Button from 'elements/atm.Button';
+import Dialog from 'react-toolbox/lib/dialog';
 
 import Wrapper from './Wrapper';
 import CardWrapper from './CardWrapper';
@@ -23,13 +36,36 @@ export class Plans extends Component {
   static propTypes = {
     userAccount: PropTypes.object,
     subscriptions: PropTypes.object,
+    creatingPaymentSource: PropTypes.object,
+    paymentSources: PropTypes.object,
     fetchSubscriptions: PropTypes.func,
+    createPaymentSource: PropTypes.func,
+    fetchPaymentSources: PropTypes.func,
+  }
+
+  state = {
+    editingPayment: false,
   }
 
   componentDidMount() {
     const { userAccount } = this.props;
 
-    this.props.fetchSubscriptions(userAccount.account_id);
+    this.props.fetchSubscriptions({ accountId: userAccount.account_id });
+    this.props.fetchPaymentSources({ accountId: userAccount.account_id });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.creatingPaymentSource !== nextProps.creatingPaymentSource) {
+      const { details, error } = nextProps.creatingPaymentSource;
+      if (details) {
+        toastr.success('Success', 'Payment info has been successfully updated!');
+      } else if (error) {
+        toastr.error(error);
+      }
+      this.setState({
+        editingPayment: false,
+      });
+    }
   }
 
   getCurrentPlanDOM = () => {
@@ -75,12 +111,38 @@ export class Plans extends Component {
     );
   }
 
+  togglePayment = () => {
+    const { editingPayment } = this.state;
+    this.setState({
+      editingPayment: !editingPayment,
+    });
+  }
+
+  handlePayment = (stripeToken) => {
+    this.props.createPaymentSource({
+      account_id: cookie.load('account_id'),
+      stripe_token: stripeToken,
+    });
+  }
+
   render() {
+    const { paymentSources } = this.props;
+    const { editingPayment } = this.state;
+
     return (
       <Wrapper>
         <div className="left-pane">
           { this.getCurrentPlanDOM() }
-          <PaymentCard />
+          { paymentSources.details &&
+            paymentSources.details.map((p) =>
+              <PaymentCard
+                key={p.id}
+                info={p}
+                togglePayment={this.togglePayment}
+              />
+            )
+          }
+
         </div>
         <div className="right-pane">
           <p className="title">Charge History</p>
@@ -100,6 +162,16 @@ export class Plans extends Component {
             </tbody>
           </table>
         </div>
+        <Dialog
+          active={editingPayment}
+          onEscKeyDown={this.togglePayment}
+          onOverlayClick={this.togglePayment}
+          title="Please enter payment details below"
+        >
+          <PaymentForm couponAllowed={false} handlePayment={this.handlePayment} style={{ marginTop: '40px' }}>
+            <Button type="submit" label="SAVE CARD" primary />
+          </PaymentForm>
+        </Dialog>
       </Wrapper>
     );
   }
@@ -108,10 +180,14 @@ export class Plans extends Component {
 export const mapStateToProps = createStructuredSelector({
   userAccount: makeSelectCurrentAccount(),
   subscriptions: selectSubscriptions(),
+  creatingPaymentSource: selectCreatingPaymentSource(),
+  paymentSources: selectPaymentSources(),
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-  fetchSubscriptions: (accountId) => dispatch(fetchSubscriptions(accountId)),
+  fetchSubscriptions: (payload) => dispatch(fetchSubscriptions(payload)),
+  createPaymentSource: (payload) => dispatch(createPaymentSource(payload)),
+  fetchPaymentSources: (payload) => dispatch(fetchPaymentSources(payload)),
 });
 
 export default UserCanTeam(connect(mapStateToProps, mapDispatchToProps)(Plans));

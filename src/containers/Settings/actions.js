@@ -4,12 +4,10 @@ import {
   FETCH_SUBSCRIPTIONS_ERROR,
 } from './constants';
 
-export function fetchSubscriptions(accountId) {
+export function fetchSubscriptions(payload) {
   return {
     type: FETCH_SUBSCRIPTIONS,
-    payload: {
-      accountId,
-    },
+    payload,
   };
 }
 

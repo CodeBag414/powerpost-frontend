@@ -32,6 +32,7 @@ import {
   APPLY_COUPON,
   POST_SUBSCRIPTION,
   FETCH_CURRENT_PLAN,
+  FETCH_PAYMENT_SOURCES,
 } from './constants';
 
 import {
@@ -42,6 +43,8 @@ import {
   postSubscriptionSuccess,
   postSubscriptionError,
   fetchCurrentPlanError,
+  fetchPaymentSourcesSuccess,
+  fetchPaymentSourcesError,
 } from './actions';
 
 /**
@@ -275,7 +278,7 @@ export function* createPaymentSourceFlow() {
       const response = yield call(postData, '/payment_api/source', { payload });
       const { data } = response;
       if (data.status === 'success') {
-        yield put(createPaymentSourceSuccess(data));
+        yield put(createPaymentSourceSuccess(data.sources));
       } else {
         throw data.error;
       }
@@ -360,6 +363,23 @@ export function* fetchCurrentPlanFlow() {
   }
 }
 
+export function* fetchPaymentSourcesFlow() {
+  while (true) {
+    const { payload: { accountId } } = yield take(FETCH_PAYMENT_SOURCES);
+
+    try {
+      const { data } = yield call(getData, `/payment_api/sources/${accountId}`);
+
+      if (data.status === 'success') {
+        yield put(fetchPaymentSourcesSuccess(data.sources));
+      } else {
+        yield put(fetchPaymentSourcesError(data.message));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
 
 // The root saga is what we actually send to Redux's middleware. In here we fork
 // each saga so that they are all "active" and listening.
@@ -376,6 +396,7 @@ export default [
   applyCouponFlow,
   postSubscriptionFlow,
   fetchCurrentPlanFlow,
+  fetchPaymentSourcesFlow,
 ];
 
 // Little helper function to abstract going to different pages

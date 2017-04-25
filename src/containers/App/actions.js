@@ -19,6 +19,9 @@ import {
   FETCH_CURRENT_PLAN,
   FETCH_CURRENT_PLAN_SUCCESS,
   FETCH_CURRENT_PLAN_ERROR,
+  FETCH_PAYMENT_SOURCES,
+  FETCH_PAYMENT_SOURCES_SUCCESS,
+  FETCH_PAYMENT_SOURCES_ERROR,
   // CHECK_USER_OBJECT,
 } from './constants';
 
@@ -174,6 +177,27 @@ export function fetchCurrentPlanSuccess(payload) {
 export function fetchCurrentPlanError(payload) {
   return {
     type: FETCH_CURRENT_PLAN_ERROR,
+    payload,
+  };
+}
+
+export function fetchPaymentSources(payload) {
+  return {
+    type: FETCH_PAYMENT_SOURCES,
+    payload,
+  };
+}
+
+export function fetchPaymentSourcesSuccess(payload) {
+  return {
+    type: FETCH_PAYMENT_SOURCES_SUCCESS,
+    payload,
+  };
+}
+
+export function fetchPaymentSourcesError(payload) {
+  return {
+    type: FETCH_PAYMENT_SOURCES_ERROR,
     payload,
   };
 }
