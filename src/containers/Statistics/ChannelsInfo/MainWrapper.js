@@ -12,7 +12,7 @@ const Wrapper = styled.div`
         margin-left: 10px;
         border-right: 0px;
 
-        table {
+        .tablewidth {
           box-shadow: 0px 1px 6px #cccccc;
           border-radius: 3px;
           overflow: hidden;
@@ -69,24 +69,34 @@ const Wrapper = styled.div`
     }
     .tablewidth {
         width: 100%;
-        height: 100%;
+        display: inline-block;
+        height: 84px;
+    }
+    .tablewidth.short {
+        max-width: 400px;
     }
     .borderright {
         border-right: 1px solid #dddddd;
     }
-    th {
+
+    .tbody {
+      display: flex;
+      align-items: center;
+      .activeWidth {
+          flex: 3;
+          height: 87px;
+          display: flex;
+      }
+
+      .infoWidth {
+          flex: 2;
+      }
+
+      .activeWidth, .infoWidth {
         text-align: center;
         color: #777777;
-    }
-
-    .activeWidth {
-        width: 28%;
         border-right: 1px solid #dddddd;
-    }
-
-    .infoWidth {
-        width: 18%;
-        border-right: 1px solid #dddddd;
+      }
     }
 
     .connectionBlock {
@@ -107,6 +117,18 @@ const Wrapper = styled.div`
         padding-right: 10px;
         font-size: 25px;
         font-weight: regular;
+    }
+
+    .basicInfo {
+      .connectionBlock {
+        display: flex;
+      }
+      .connectionName {
+        white-space: nowrap;
+        max-width: 180px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
 
     .connectionType {

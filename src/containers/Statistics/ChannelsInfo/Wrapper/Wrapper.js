@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export default styled.div`
     display: inline-block;
+    width: 100%;
 
     .borderRight {
         border-right: 1px solid #dbdfef;

@@ -35,6 +35,7 @@ const rules = {
       content: 'Retweets',
       reKey: 'tweet_count',
       reLabel: 'Tweets',
+      hasDescription: true,
       topByEngagementKey: 'top_tweets_by_engagement',
     },
     favorites: {
@@ -185,7 +186,7 @@ class MainInfo extends React.Component {
 
   getTotaldata() {
     let total = 0;
-    const { activeChannel } = this.props;
+    const { activeChannel, isMonth } = this.props;
     const rule = this.getRule();
     const info = activeChannel.getIn(rule.info.split('.')) || Map();
     const keys = Object.keys(info.toJS());
@@ -204,67 +205,18 @@ class MainInfo extends React.Component {
     return (
       <div>
         <h1><b>{total || 0}</b></h1>
-        <h5>{content} this week</h5><br />
-        <h5>Based on {re} sent in the last week you averaged <b>{contents} </b>per post.</h5>
+        <h5>{content} this {isMonth ? 'month' : 'week'}</h5><br />
+        {rule.hasDescription && <h5>Based on {re} sent in the last week you averaged <b>{contents} </b>per post.</h5>}
       </div>
     );
-    /* switch (activeChannel.connection.channel) {
-      case 'pinterest':
-        info = activeChannel.analytics.pins_by_weeks_ago;
-        keys = Object.keys(info);
-        last = keys[0];
-        if (last != null) {
-          total = info[last].pin_count != null ? info[last].pin_count : '0';
-          tweet = `${info[last].repins} Repins`;
-          contents = `${total} Pins`;
-          content = 'Pins';
-        }
-        break;
-      case 'twitter':
-        info = activeChannel.analytics.tweets_by_weeks_ago;
-        keys = Object.keys(info);
-        last = keys[0];
-        if (last != null) {
-          total = info[last].tweet_count != null ? info[last].tweet_count : '0';
-          tweet = `${info[last].retweet_count} Retweets`;
-          contents = `${total} Tweets`;
-          content = 'Tweets';
-        }
-        break;
-      case 'facebook':
-        info = activeChannel.analytics.extended.page_fans_by_weeks_ago;
-        keys = Object.keys(info);
-        last = keys[0];
-        if (last != null) {
-          total = info[last] != null ? info[last] : '0';
-          // TODO: fix me the following is hard coded
-          tweet = '2 Likes';
-          contents = `${total} Fans`;
-          content = 'Fans';
-        }
-        break;
-      case 'linkedin':
-        info = activeChannel.analytics.total_followers_by_weeks_ago;
-        keys = Object.keys(info);
-        last = keys[0];
-        if (info != null) {
-          total = info[last] != null ? info[last] : '0';
-          // TODO: fix me the following is hard coded
-          tweet = '3 Likes';
-          contents = `${total} Posts`;
-          content = 'Posts';
-        }
-        break;
-      default:
-        break;
-    }*/
   }
 
   getNameDate(index, isMonth) {
     const d = new Date();
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     if (isMonth) {
-      return `${monthNames[index - 1]}`;
+      d.setMonth(d.getMonth() - index);
+      return `${monthNames[d.getMonth()]}`;
     }
     d.setDate(d.getDate() - (7 * index));
     return `${d.getMonth() + 1}/${d.getDate()}`;
@@ -275,58 +227,21 @@ class MainInfo extends React.Component {
     const { activeChannel, isMonth } = this.props;
     const rule = this.getRule();
     const info = activeChannel.getIn(rule.info.split('.')) || List();
-    info.forEach((item, key) =>
+    const length = isMonth ? 3 : 12;
+    Array(length).fill(0).forEach((zeroItem, index) => {
+      const infoItem = isMonth
+        ? info.filter((item, key) => parseInt(key, 10) - 1 === ((new Date().getMonth() - index) + 12) % 12).first()
+        : info.filter((item, key) => parseInt(key, 10) === index).first();
+      let value = 0;
+      if (infoItem) value = rule.totalKey ? infoItem.get(rule.totalKey) : infoItem;
       data.push({
-        name: this.getNameDate(parseInt(key, 10), isMonth),
-        [rule.content]: rule.totalKey ? item.get(rule.totalKey) : item,
-        key: isMonth ? parseInt(key, 10) : -parseInt(key, 10),
-      }),
-    );
-    return data.sort((a, b) => a.key > b.key ? 1 : -1).slice(0, isMonth ? 3 : 12);
-    /* switch (activeChannel.connection.channel) {
-      case 'pinterest':
-        info = activeChannel.analytics.pins_by_weeks_ago;
-        info.forEach((item) =>
-          data.push({
-            name: this.getNameDate(item.top_pins_by_engagement['0'].created_at),
-            favorites: item.repins,
-            amt: item.repins,
-          })
-        );
-        break;
-      case 'twitter':
-        info = activeChannel.analytics.tweets_by_weeks_ago;
-        info.forEach((item) =>
-          data.push({
-            name: this.getNameDate(item.top_tweets_by_engagement['0'].created_at),
-            favorites: item.retweet_count,
-            amt: item.retweet_count,
-          })
-        );
-        break;
-      case 'facebook':
-        info = activeChannel.analytics.posts_by_weeks_ago;
-        info.forEach((item) =>
-          data.push({
-            name: this.getNameDate(item.top_posts_by_engagement['0'].created_at),
-            favorites: item.post_count,
-            amt: item.post_count,
-          })
-        );
-        break;
-      case 'linkedin':
-        info = activeChannel.analytics.posts_by_weeks_ago;
-        info.forEach((item) =>
-          data.push({
-            name: this.getNameDate(item.top_posts_by_engagement['0'].created_at),
-            favorites: item.post_count,
-            amt: item.post_count,
-          })
-        );
-        break;
-      default:
-        break;
-    } */
+        name: this.getNameDate(parseInt(index, 10), isMonth),
+        [rule.content]: value,
+        index,
+      });
+    });
+
+    return data.sort((a, b) => a.index < b.index ? 1 : -1).slice(0, isMonth ? 3 : 12);
   }
 
   render() {
@@ -355,95 +270,7 @@ class MainInfo extends React.Component {
         />
       );
     }
-    /* if (channelInfo !== undefined) {
-      TopTweetsList = [];
-      const { activeChannel, params } = this.props;
-      switch (activeChannel.connection.channel) {
-        case 'pinterest':
-          info = activeChannel.analytics.pins_by_month;
-          keys = Object.keys(info);
-          last = keys[0];
-          if (last != null) {
-            info[last].top_pins_by_engagement.forEach((topPin, index) => {
-              TopTweetsList.push(
-                <TopPinListItem
-                  topTweet={topPin}
-                  key={`${params.channel_id - index - 1200}bc`}
-                  likes={info[last].likes}
-                  comments={info[last].comments}
-                  repins={info[last].repins}
-                />
-              );
-            });
-          } else {
-            TopTweetsList = 'You Currently have no Posts.';
-          }
-          break;
-        case 'twitter':
-          info = activeChannel.analytics.tweets_by_month;
-          keys = Object.keys(info);
-          last = keys[0];
-          if (last != null) {
-            info[last].top_tweets_by_engagement.forEach((topPin, index) => {
-              TopTweetsList.push(
-                <TopTweetListItem
-                  topTweet={topPin}
-                  key={`${params.channel_id - index - 1200}bc`}
-                  tweets={info[last].tweet_count}
-                  favorites={info[last].favorite_count}
-                  retweets={info[last].retweet_count}
-                />
-              );
-            });
-          } else {
-            TopTweetsList = 'You Currently have no Posts.';
-          }
-          break;
-        case 'linkedin':
-          info = activeChannel.analytics.posts_by_month;
-          keys = Object.keys(info);
-          last = keys[0];
-          if (last != null) {
-            info[last].top_posts_by_engagement.forEach((topPin, index) => {
-              TopTweetsList.push(
-                <TopPostListItem
-                  topTweet={topPin}
-                  key={`${params.channel_id - index - 1200}bc`}
-                  likes={info[last].likes}
-                  comments={info[last].comments}
-                  posts={info[last].post_count}
-                />
-              );
-            });
-          } else {
-            TopTweetsList = 'You Currently have no Posts.';
-          }
-          break;
-        case 'facebook':
-          info = activeChannel.analytics.posts_by_month;
-          keys = Object.keys(info);
-          last = keys[0];
-          if (last != null) {
-            info[last].top_posts_by_engagement.forEach((topPin, index) => {
-              TopTweetsList.push(
-                <TopFaceListItem
-                  topTweet={topPin}
-                  key={`${params.channel_id - index - 1200}bc`}
-                  likes={info[last].likes}
-                  comments={info[last].comments}
-                  posts={info[last].post_count}
-                />
-              );
-            });
-          } else {
-            TopTweetsList = 'You Currently have no Posts.';
-          }
-          break;
-        default:
-          TopTweetsList = 'You Currently have no Channels.';
-          break;
-      }
-    }*/
+
     return (
       <Info>
         <Wrapper>

@@ -53,86 +53,70 @@ class ChannelsInfo extends React.Component {
       fetchChannelInfo(nextProps.activeChannel);
       this.setState({ subChannel: engagementTabsList[nextProps.activeChannel.getIn(['connection', 'channel'])][0] });
     }
-    /* if (nextProps.isLoading) {
-      if (document.getElementById('main-panel').scrollTop === 0) {
-        clearInterval(this.timer);
-        return;
-      }
-      this.timer = setInterval(() => {
-        document.getElementById('main-panel').scrollTop -= 50;
-        if (document.getElementById('main-panel').scrollTop < 0) {
-          document.getElementById('main-panel').scrollTop = 0;
-          clearInterval(this.timer);
-        }
-      }, 50);
-    } */
   }
 
   getType(channel) {
     return channel.type.split('_')[1];
   }
 
-  setInfo(channel, field = 'likes') {
+  setInfo(channel) {
     let keys;
     let last;
     let info;
     const { activeChannel } = this.props;
-    const rule = {
-      likes: {
-        pinterest: { info: 'analytics.pins_by_month', key: 'likes', label: 'Likes' },
-        twitter: { info: 'analytics.user_stats.listed_count', direct: true, label: 'Tweets' },
-        linkedin: { info: 'analytics.posts_by_month', key: 'likes', label: 'Likes' },
-        facebook: { info: 'analytics.pins_by_month', key: 'likes', label: 'Likes' },
-      },
-      followers: {
-        pinterest: { info: 'analytics.pins_by_month', key: 'comments', label: 'Followers' },
-        twitter: { info: 'analytics.user_stats.followers_count', direct: true, label: 'Followers' },
-        linkedin: { info: 'analytics.total_followers_by_month', label: 'Followers' },
-        facebook: { info: 'analytics.extended.page_fans_by_month', label: 'Fans' },
-      },
-      following: {
-        pinterest: { info: 'analytics.pins_by_month', key: 'repins', label: 'Repins' },
-        twitter: { info: 'analytics.user_stats.friends_count', direct: true, label: 'Following' },
-        linkedin: { info: 'analytics.posts_by_month', key: 'comments', label: 'Following' },
-        facebook: { info: 'analytics.extended.posts_by_month', key: 'comments', label: 'Following' },
-      },
-      favorites: {
-        pinterest: { info: 'analytics.pins_by_month', key: 'pin_count', label: 'Pins' },
-        twitter: { info: 'analytics.user_stats.favourites_count', direct: true, label: 'Favorites' },
-        linkedin: { info: 'analytics.total_followers_by_month', key: 'post_count', label: 'Posts' },
-        facebook: { info: 'analytics.extended.total_followers_by_month', key: 'post_count', label: 'Posts' },
-      },
-    }[field][channel];
-    if (rule) {
-      if (rule.direct) {
-        return (
-          <div>
-            <h3 className="topItemValue">{activeChannel.getIn(rule.info.split('.'))}</h3>
-            <h6 className="topItemLabel">{rule.label}</h6>
-          </div>
-        );
-      }
-      info = activeChannel.getIn(rule.info.split('.'));
-      if (info) {
-        keys = Object.keys(info.toJS());
-        last = keys[0];
-        if (last != null) {
+    const rules = {
+      pinterest: [
+        { info: 'analytics.pins_by_month', key: 'comments', label: 'Followers' },
+        { info: 'analytics.pins_by_month', key: 'pin_count', label: 'Pins' },
+        { info: 'analytics.pins_by_month', key: 'repins', label: 'Repins' },
+        { info: 'analytics.pins_by_month', key: 'likes', label: 'Likes' },
+        { info: 'analytics.pins_by_month', key: 'comments', label: 'Comments' },
+      ],
+      twitter: [
+        { info: 'analytics.user_stats.listed_count', direct: true, label: 'Tweets' },
+        { info: 'analytics.user_stats.followers_count', direct: true, label: 'Followers' },
+        { info: 'analytics.user_stats.friends_count', direct: true, label: 'Following' },
+        { info: 'analytics.user_stats.favourites_count', direct: true, label: 'Favorites' },
+      ],
+      linkedin: [
+        { info: 'analytics.total_followers_by_month', label: 'Followers' },
+      ],
+      facebook: [
+        { info: 'analytics.extended.page_fans_by_month', label: 'Fans' },
+      ],
+    }[channel];
+    return rules.map((rule) => {
+      if (rule) {
+        if (rule.direct) {
           return (
-            <div>
-              <h3 className="topItemValue">{(rule.key ? info.getIn([last, rule.key]) : info.get(last)) || 0}</h3>
+            <div className="infoWidth">
+              <h3 className="topItemValue">{activeChannel.getIn(rule.info.split('.'))}</h3>
               <h6 className="topItemLabel">{rule.label}</h6>
             </div>
           );
         }
+        info = activeChannel.getIn(rule.info.split('.'));
+        if (info) {
+          keys = Object.keys(info.toJS());
+          last = keys[0];
+          if (last != null) {
+            return (
+              <div className="infoWidth">
+                <h3 className="topItemValue">{(rule.key ? info.getIn([last, rule.key]) : info.get(last)) || 0}</h3>
+                <h6 className="topItemLabel">{rule.label}</h6>
+              </div>
+            );
+          }
+        }
+        return (
+          <div className="infoWidth">
+            <h3 className="topItemValue">0</h3>
+            <h6 className="topItemLabel">{rule.label}</h6>
+          </div>
+        );
       }
-      return (
-        <div>
-          <h3 className="topItemValue">0</h3>
-          <h6 className="topItemLabel">{rule.label}</h6>
-        </div>
-      );
-    }
-    return null;
+      return null;
+    });
   }
 
   renderLoading(channel) {
@@ -149,9 +133,9 @@ class ChannelsInfo extends React.Component {
     return (
       <div>
         <div className="basicInfo">
-          <table className="tablewidth">
-            <tbody>
-              <th className={['borderright', 'activeWidth'].join(' ')}>
+          <div className={`tablewidth ${channel.channel === 'facebook' || channel.channel === 'linkedin' ? 'short' : ''}`}>
+            <div className="tbody">
+              <th className="activeWidth">
                 <div className="connectionBlock">
                   <div className="connectionIcon">
                     <i className={`${channel.channel_icon} ${channel.channel}`}></i>
@@ -166,12 +150,9 @@ class ChannelsInfo extends React.Component {
                   </div>
                 </div>
               </th>
-              <th className={['borderright', 'infoWidth'].join(' ')}>{this.setInfo(channel.channel, 'likes')}</th>
-              <th className={['borderright', 'infoWidth'].join(' ')}>{this.setInfo(channel.channel, 'followers')}</th>
-              <th className={['borderright', 'infoWidth'].join(' ')}>{this.setInfo(channel.channel, 'following')}</th>
-              <th className="infoWidth">{this.setInfo(channel.channel, 'favorites')}</th>
-            </tbody>
-          </table>
+              {this.setInfo(channel.channel)}
+            </div>
+          </div>
         </div>
         <div className="channelsinfo">
           <h3 className="paddingleft">Engagement</h3>
