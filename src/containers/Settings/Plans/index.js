@@ -47,8 +47,18 @@ export class Plans extends Component {
     fetchPaymentHistory: PropTypes.func,
   }
 
+  constructor(props) {
+    super(props);
+
+    this.cancelPlanActions = [
+      { label: 'Yes, cancel my plan', onClick: this.cancelPlan },
+      { label: 'No', onClick: this.toggleCancelPlan },
+    ];
+  }
+
   state = {
     editingPayment: false,
+    cancelModalVisible: false,
   }
 
   componentDidMount() {
@@ -66,12 +76,15 @@ export class Plans extends Component {
       const { details, error } = nextProps.creatingPaymentSource;
       if (details) {
         toastr.success('Success', 'Payment info has been successfully updated!');
+        this.setState({
+          editingPayment: false,
+        });
       } else if (error) {
         toastr.error(error);
+        this.setState({
+          editingPayment: false,
+        });
       }
-      this.setState({
-        editingPayment: false,
-      });
     }
   }
 
@@ -110,12 +123,24 @@ export class Plans extends Component {
                 <div className="header">Billed</div>
                 <div className="value">${details.plan.amount / 100}/{details.plan.interval}</div>
               </section>
-              <Button>Cancel Plan</Button>
+              <Button onClick={this.toggleCancelPlan}>Cancel Plan</Button>
             </div>
           )
         }
       </CardWrapper>
     );
+  }
+
+  cancelPlan = () => {
+    alert('123');
+    this.toggleCancelPlan();
+  }
+
+  toggleCancelPlan = () => {
+    const { cancelModalVisible } = this.state;
+    this.setState({
+      cancelModalVisible: !cancelModalVisible,
+    });
   }
 
   togglePayment = () => {
@@ -134,7 +159,7 @@ export class Plans extends Component {
 
   render() {
     const { paymentSources, paymentHistory } = this.props;
-    const { editingPayment } = this.state;
+    const { editingPayment, cancelModalVisible } = this.state;
 
     return (
       <Wrapper>
@@ -185,6 +210,15 @@ export class Plans extends Component {
           <PaymentForm couponAllowed={false} handlePayment={this.handlePayment} style={{ marginTop: '40px' }}>
             <Button type="submit" label="SAVE CARD" primary />
           </PaymentForm>
+        </Dialog>
+        <Dialog
+          active={cancelModalVisible}
+          actions={this.cancelPlanActions}
+          onEscKeyDown={this.toggleCancelPlan}
+          onOverlayClick={this.toggleCancelPlan}
+          type="small"
+          title="Are you sure?"
+        >
         </Dialog>
       </Wrapper>
     );
