@@ -24,6 +24,8 @@ import {
   FETCH_CURRENT_PLAN_ERROR,
   FETCH_PAYMENT_SOURCES_SUCCESS,
   FETCH_PAYMENT_SOURCES_ERROR,
+  FETCH_PAYMENT_HISTORY_SUCCESS,
+  FETCH_PAYMENT_HISTORY_ERROR,
 } from './constants';
 
 import auth from 'utils/auth';
@@ -43,6 +45,7 @@ const initialState = fromJS({
   subscription: {},
   currentPlan: {},
   paymentSources: {},
+  paymentHistory: {},
 });
 
 // Takes care of changing the application state
@@ -151,6 +154,18 @@ function globalReducer(state = initialState, action) {
     case FETCH_PAYMENT_SOURCES_ERROR:
       return state
         .set('paymentSources', {
+          details: null,
+          error: action.payload,
+        });
+    case FETCH_PAYMENT_HISTORY_SUCCESS:
+      return state
+        .set('paymentHistory', {
+          details: action.payload,
+          error: null,
+        });
+    case FETCH_PAYMENT_HISTORY_ERROR:
+      return state
+        .set('paymentHistory', {
           details: null,
           error: action.payload,
         });

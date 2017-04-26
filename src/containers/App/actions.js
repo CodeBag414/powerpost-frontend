@@ -22,6 +22,9 @@ import {
   FETCH_PAYMENT_SOURCES,
   FETCH_PAYMENT_SOURCES_SUCCESS,
   FETCH_PAYMENT_SOURCES_ERROR,
+  FETCH_PAYMENT_HISTORY,
+  FETCH_PAYMENT_HISTORY_SUCCESS,
+  FETCH_PAYMENT_HISTORY_ERROR,
   // CHECK_USER_OBJECT,
 } from './constants';
 
@@ -198,6 +201,27 @@ export function fetchPaymentSourcesSuccess(payload) {
 export function fetchPaymentSourcesError(payload) {
   return {
     type: FETCH_PAYMENT_SOURCES_ERROR,
+    payload,
+  };
+}
+
+export function fetchPaymentHistory(payload) {
+  return {
+    type: FETCH_PAYMENT_HISTORY,
+    payload,
+  };
+}
+
+export function fetchPaymentHistorySuccess(payload) {
+  return {
+    type: FETCH_PAYMENT_HISTORY_SUCCESS,
+    payload,
+  };
+}
+
+export function fetchPaymentHistoryError(payload) {
+  return {
+    type: FETCH_PAYMENT_HISTORY_ERROR,
     payload,
   };
 }

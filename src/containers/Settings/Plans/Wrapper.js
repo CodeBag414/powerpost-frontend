@@ -38,19 +38,13 @@ export default styled.div`
       th {
         padding: 8px 3px;
         &.date {
-          width: 15%;
+          width: 25%;
         }
         &.paid {
-          width: 20%;
-        }
-        &.refunded {
-          width: 25%;
-        }
-        &.method {
-          width: 25%;
+          width: 50%;
         }
         &.status {
-          width: 15%;
+          width: 25%;
         }
       }
       td {

@@ -10,10 +10,12 @@ import { UserCanTeam } from 'config.routes/UserRoutePermissions';
 import {
   createPaymentSource,
   fetchPaymentSources,
+  fetchPaymentHistory,
 } from 'containers/App/actions';
 import {
   selectCreatingPaymentSource,
   selectPaymentSources,
+  selectPaymentHistory,
 } from 'containers/App/selectors';
 import { makeSelectCurrentAccount } from 'containers/Main/selectors';
 
@@ -38,9 +40,11 @@ export class Plans extends Component {
     subscriptions: PropTypes.object,
     creatingPaymentSource: PropTypes.object,
     paymentSources: PropTypes.object,
+    paymentHistory: PropTypes.object,
     fetchSubscriptions: PropTypes.func,
     createPaymentSource: PropTypes.func,
     fetchPaymentSources: PropTypes.func,
+    fetchPaymentHistory: PropTypes.func,
   }
 
   state = {
@@ -50,8 +54,11 @@ export class Plans extends Component {
   componentDidMount() {
     const { userAccount } = this.props;
 
-    this.props.fetchSubscriptions({ accountId: userAccount.account_id });
-    this.props.fetchPaymentSources({ accountId: userAccount.account_id });
+    const payload = { accountId: userAccount.account_id };
+
+    this.props.fetchSubscriptions(payload);
+    this.props.fetchPaymentSources(payload);
+    this.props.fetchPaymentHistory(payload);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -126,7 +133,7 @@ export class Plans extends Component {
   }
 
   render() {
-    const { paymentSources } = this.props;
+    const { paymentSources, paymentHistory } = this.props;
     const { editingPayment } = this.state;
 
     return (
@@ -150,15 +157,22 @@ export class Plans extends Component {
             <tbody>
               <tr>
                 <th className="date">DATE</th>
-                <th className="paid">AMOUNT PAID</th>
-                <th className="refunded">AMOUNT REFUNDED</th>
-                <th className="method">PAYMENT METHOD</th>
+                <th className="paid">AMOUNT PAID OR REFUNDED</th>
                 <th className="status">STATUS</th>
               </tr>
-              <tr>
-                <td>April 11</td>
-                <td>199.00 USD</td>
-              </tr>
+              { paymentHistory.details &&
+                paymentHistory.details.map((p) => {
+                  const paid = !p.amount_refunded;
+                  const amount = p.amount_refunded || p.amount;
+                  return (
+                    <tr key={p.id}>
+                      <td>{moment(p.created).format('MMMM DD')}</td>
+                      <td>{(amount / 100).toFixed(2)} {p.currency.toUpperCase()} {paid ? 'paid' : 'refunded'}</td>
+                      <td>{p.status}</td>
+                    </tr>
+                  );
+                })
+              }
             </tbody>
           </table>
         </div>
@@ -182,12 +196,14 @@ export const mapStateToProps = createStructuredSelector({
   subscriptions: selectSubscriptions(),
   creatingPaymentSource: selectCreatingPaymentSource(),
   paymentSources: selectPaymentSources(),
+  paymentHistory: selectPaymentHistory(),
 });
 
 export const mapDispatchToProps = (dispatch) => ({
   fetchSubscriptions: (payload) => dispatch(fetchSubscriptions(payload)),
   createPaymentSource: (payload) => dispatch(createPaymentSource(payload)),
   fetchPaymentSources: (payload) => dispatch(fetchPaymentSources(payload)),
+  fetchPaymentHistory: (payload) => dispatch(fetchPaymentHistory(payload)),
 });
 
 export default UserCanTeam(connect(mapStateToProps, mapDispatchToProps)(Plans));

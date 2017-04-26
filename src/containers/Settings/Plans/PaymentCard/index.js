@@ -26,7 +26,7 @@ const PaymentCard = ({ info: { name, brand, last4, exp_year, exp_month }, toggle
         </section>
         <section>
           <div className="header">Expires</div>
-          <div className="value">{exp_month}/{exp_year}</div>
+          <div className="value">{exp_month} / {exp_year}</div>
         </section>
       </div>
     }
