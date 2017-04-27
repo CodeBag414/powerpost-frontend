@@ -13,6 +13,7 @@ import PPLink from 'elements/atm.Link';
 
 class SignupAccount extends Component {
   static propTypes = {
+    location: PropTypes.object,
     authError: PropTypes.string,
     register: PropTypes.func,
   }
@@ -50,7 +51,7 @@ class SignupAccount extends Component {
     if (!this.state.error) {
       this.props.register(this.state.name.value, this.state.email.value, this.state.password.value, {
         phone_number: this.state.phone.value,
-        selected_plan: '',
+        selected_plan: this.props.location.query.plan_id,
       });
     }
   }
@@ -93,10 +94,7 @@ class SignupAccount extends Component {
   }
 
   render() {
-    const { authError } = this.props;
-    if (authError) {
-      alert('Signup Failed. Try again!');
-    }
+    // const { authError } = this.props;
 
     return (
       <div>

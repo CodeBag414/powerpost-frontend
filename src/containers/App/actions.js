@@ -7,6 +7,24 @@ import {
   LOGOUT,
   REQUEST_ERROR,
   CLEAR_ERROR,
+  CREATE_PAYMENT_SOURCE,
+  CREATE_PAYMENT_SOURCE_SUCCESS,
+  CREATE_PAYMENT_SOURCE_ERROR,
+  APPLY_COUPON,
+  APPLY_COUPON_SUCCESS,
+  APPLY_COUPON_ERROR,
+  POST_SUBSCRIPTION,
+  POST_SUBSCRIPTION_SUCCESS,
+  POST_SUBSCRIPTION_ERROR,
+  FETCH_CURRENT_PLAN,
+  FETCH_CURRENT_PLAN_SUCCESS,
+  FETCH_CURRENT_PLAN_ERROR,
+  FETCH_PAYMENT_SOURCES,
+  FETCH_PAYMENT_SOURCES_SUCCESS,
+  FETCH_PAYMENT_SOURCES_ERROR,
+  FETCH_PAYMENT_HISTORY,
+  FETCH_PAYMENT_HISTORY_SUCCESS,
+  FETCH_PAYMENT_HISTORY_ERROR,
   // CHECK_USER_OBJECT,
 } from './constants';
 
@@ -80,4 +98,130 @@ export function requestError(error) {
  */
 export function clearError() {
   return { type: CLEAR_ERROR };
+}
+
+export function createPaymentSource(payload) {
+  return {
+    type: CREATE_PAYMENT_SOURCE,
+    payload,
+  };
+}
+
+export function createPaymentSourceSuccess(payload) {
+  return {
+    type: CREATE_PAYMENT_SOURCE_SUCCESS,
+    payload,
+  };
+}
+
+export function createPaymentSourceError(payload) {
+  return {
+    type: CREATE_PAYMENT_SOURCE_ERROR,
+    payload,
+  };
+}
+
+export function applyCoupon(payload) {
+  return {
+    type: APPLY_COUPON,
+    payload,
+  };
+}
+
+export function applyCouponSuccess(payload) {
+  return {
+    type: APPLY_COUPON_SUCCESS,
+    payload,
+  };
+}
+
+export function applyCouponError(payload) {
+  return {
+    type: APPLY_COUPON_ERROR,
+    payload,
+  };
+}
+
+export function postSubscription(payload) {
+  return {
+    type: POST_SUBSCRIPTION,
+    payload,
+  };
+}
+
+export function postSubscriptionSuccess(payload) {
+  return {
+    type: POST_SUBSCRIPTION_SUCCESS,
+    payload,
+  };
+}
+
+export function postSubscriptionError(payload) {
+  return {
+    type: POST_SUBSCRIPTION_ERROR,
+    payload,
+  };
+}
+
+export function fetchCurrentPlan(payload) {
+  return {
+    type: FETCH_CURRENT_PLAN,
+    payload,
+  };
+}
+
+export function fetchCurrentPlanSuccess(payload) {
+  return {
+    type: FETCH_CURRENT_PLAN_SUCCESS,
+    payload,
+  };
+}
+
+export function fetchCurrentPlanError(payload) {
+  return {
+    type: FETCH_CURRENT_PLAN_ERROR,
+    payload,
+  };
+}
+
+export function fetchPaymentSources(payload) {
+  return {
+    type: FETCH_PAYMENT_SOURCES,
+    payload,
+  };
+}
+
+export function fetchPaymentSourcesSuccess(payload) {
+  return {
+    type: FETCH_PAYMENT_SOURCES_SUCCESS,
+    payload,
+  };
+}
+
+export function fetchPaymentSourcesError(payload) {
+  return {
+    type: FETCH_PAYMENT_SOURCES_ERROR,
+    payload,
+  };
+}
+
+export function fetchPaymentHistory(payload) {
+  return {
+    type: FETCH_PAYMENT_HISTORY,
+    payload,
+  };
+}
+
+export function fetchPaymentHistorySuccess(payload) {
+  return {
+    type: FETCH_PAYMENT_HISTORY_SUCCESS,
+    payload,
+  };
+}
+
+export function fetchPaymentHistoryError(payload) {
+  return {
+    type: FETCH_PAYMENT_HISTORY_ERROR,
+    payload,
+  };
 }

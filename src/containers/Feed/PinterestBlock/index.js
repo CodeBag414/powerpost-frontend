@@ -2,6 +2,7 @@
 import React, { PropTypes } from 'react';
 import moment from 'moment';
 import Link from 'react-toolbox/lib/link';
+import Linkify from 'react-linkify';
 
 import Wrapper from './Wrapper';
 import Content from './Content';
@@ -16,7 +17,9 @@ function PinterestBlock({ post }) {
     <Wrapper>
       <img src={post.image.original.url} alt="Pin" />
       <Content>
-        <div className="pin-note">{post.note}</div>
+        <Linkify properties={{ target: '_blank' }}>
+          <div className="pin-note">{post.note}</div>
+        </Linkify>
         <div className="pin-details">
           Pinned by&nbsp;
           <a href={post.creator.url} target="_blank">{post.creator.first_name}</a>

@@ -1,4 +1,5 @@
 import { takeLatest, call, put } from 'redux-saga/effects';
+import cookie from 'react-cookie';
 
 import { postData } from 'utils/request';
 
@@ -15,9 +16,14 @@ export function* redeemTokenWorker(action) {
   const { payload } = action;
 
   try {
-    const response = yield call(postData, `/account_api/redeem_token/${payload.token}`);
+    const response = yield call(postData, `/account_api/redeem_token/${payload.token}`, {}, false);
 
-    yield put(redeemTokenSuccess(response));
+    if (!response.data.api_key) {
+      throw Error('Something is wrong with returned api_key');
+    }
+
+    cookie.save('token', response.data.api_key, { path: '/' });
+    yield put(redeemTokenSuccess(response.data));
   } catch (error) {
     yield put(redeemTokenError(error));
   }

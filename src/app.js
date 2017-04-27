@@ -28,6 +28,9 @@ import { makeSelectLocationState } from './config.redux/selectors';
 import { createRoutes } from './config.routes/routes';
 import PPTheme from './theme';
 
+Stripe.setPublishableKey('pk_test_X9sZwXwoYLj4fFnWCvXWntmO');   // TEST KEY
+// Stripe.setPublishableKey('pk_live_qElipTZ1MpTIsPNjdn3IxCCN');   // LIVE KEY
+
 export const historyObj = browserHistory;
 // Needed for material-ui libarry
 injectTapEventPlugin();

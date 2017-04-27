@@ -4,7 +4,7 @@ const selectAuth = (state) => state.get('auth');
 
 const makeSelectAuthError = () => createSelector(
     selectAuth,
-    (auth) => { console.log(auth); auth.get('error'); }
+    (auth) => auth.get('error')
 );
 
 const makeSelectUser = () => createSelector(
@@ -37,6 +37,36 @@ const makeSelectFilePickerKey = () => createSelector(
     (auth) => auth.get('filePickerKey')
 );
 
+const selectCreatingPaymentSource = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('creatingPaymentSource')
+);
+
+const selectCoupon = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('coupon')
+);
+
+const selectSubscription = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('subscription')
+);
+
+const selectCurrentPlan = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('currentPlan')
+);
+
+const selectPaymentSources = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('paymentSources')
+);
+
+const selectPaymentHistory = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('paymentHistory')
+);
+
 export {
     selectAuth,
     makeSelectAuthError,
@@ -46,5 +76,10 @@ export {
     makeSelectSharedAccounts,
     makeSelectUserAvatar,
     makeSelectFilePickerKey,
-
+    selectCreatingPaymentSource,
+    selectCoupon,
+    selectSubscription,
+    selectCurrentPlan,
+    selectPaymentSources,
+    selectPaymentHistory,
 };

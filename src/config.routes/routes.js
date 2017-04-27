@@ -280,12 +280,16 @@ export function createRoutes(store, auth) {
           name: 'settings',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
+              System.import('containers/Settings/reducer'),
+              System.import('containers/Settings/sagas'),
               System.import('containers/Settings'),
             ]);
 
             const renderRoute = loadModule(cb);
 
-            importModules.then(([component]) => {
+            importModules.then(([reducer, sagas, component]) => {
+              injectReducer('settings', reducer.default);
+              injectSagas(sagas.default);
               renderRoute(component);
             });
 
@@ -316,12 +320,14 @@ export function createRoutes(store, auth) {
               name: 'Profile',
               getComponent(nextState, cb) {
                 const importModules = Promise.all([
+                  System.import('containers/Settings/Profile/sagas'),
                   System.import('containers/Settings/Profile'),
                 ]);
 
                 const renderRoute = loadModule(cb);
 
-                importModules.then(([component]) => {
+                importModules.then(([sagas, component]) => {
+                  injectSagas(sagas.default);
                   renderRoute(component);
                 });
 
@@ -382,6 +388,65 @@ export function createRoutes(store, auth) {
 
         importModules.catch(errorLoading);
       },
+      indexRoute: {
+        getComponent(nextState, cb) {
+          const importModules = Promise.all([
+            System.import('containers/Login/SignIn'),
+          ]);
+
+          const renderRoute = loadModule(cb);
+
+          importModules.then(([component]) => {
+            renderRoute(component);
+          });
+
+          importModules.catch(errorLoading);
+        },
+      },
+      childRoutes: [
+        {
+          path: 'forgot-password',
+          name: 'forgotPassword',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/Login/ForgotPassword/reducer'),
+              System.import('containers/Login/ForgotPassword/sagas'),
+              System.import('containers/Login/ForgotPassword'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([reducer, sagas, component]) => {
+              injectReducer('forgotPassword', reducer.default);
+              injectSagas(sagas.default);
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+        {
+          path: 'reset-password',
+          name: 'resetPassword',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/Login/ResetPassword/reducer'),
+              System.import('containers/Login/ResetPassword/sagas'),
+              System.import('containers/Login/ResetPassword'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([reducer, sagas, component]) => {
+              injectReducer('resetPassword', reducer.default);
+              injectSagas(sagas.default);
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+      ],
     },
     {
       path: '/signup',
@@ -459,7 +524,7 @@ export function createRoutes(store, auth) {
       ],
     },
     {
-      path: 'redeem/token/:token',
+      path: 'redeem/:token',
       name: 'redeem',
       getComponent(nextState, cb) {
         const importModules = Promise.all([

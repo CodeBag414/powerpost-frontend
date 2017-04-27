@@ -51,6 +51,8 @@ class TopNav extends Component {
     const accountStyle = isAccountPath ? styles.accountTopNav : styles.userTopNav;
 
     const avatar = this.props.user && this.props.user.properties ? this.props.user.properties.thumb_url : '';
+    const color = this.props.user && this.props.user.properties ? this.props.user.properties.color : '';
+
     return (
       <div className={[styles.topNav, viewStyle, accountStyle].join(' ')}>
         { isAccountPath &&
@@ -66,7 +68,7 @@ class TopNav extends Component {
           <PPIconMenu
             open={this.state.userMenuOpen}
             position="topRight"
-            icon={<PPAvatar image={avatar} />}
+            icon={<PPAvatar image={avatar} title={this.props.user.display_name} backgroundColor={color} size={40} radius={50} />}
           >
             <ReactRouterMenuItem caption="Settings" to={'/user/settings'} />
             <PPMenuItem caption="Logout" onTouchTap={this.props.logout} />
