@@ -22,6 +22,10 @@ import {
   FETCH_CURRENT_PLAN,
   FETCH_CURRENT_PLAN_SUCCESS,
   FETCH_CURRENT_PLAN_ERROR,
+  FETCH_PAYMENT_SOURCES_SUCCESS,
+  FETCH_PAYMENT_SOURCES_ERROR,
+  FETCH_PAYMENT_HISTORY_SUCCESS,
+  FETCH_PAYMENT_HISTORY_ERROR,
 } from './constants';
 
 import auth from 'utils/auth';
@@ -36,10 +40,12 @@ const initialState = fromJS({
   subAccounts: [],
   loggedIn: auth.loggedIn(),
   filePickerKey: 'A6Upb4pDFTFu9uXIjmV8Oz',
-  paymentSource: {},
+  creatingPaymentSource: {},
   coupon: {},
   subscription: {},
   currentPlan: {},
+  paymentSources: {},
+  paymentHistory: {},
 });
 
 // Takes care of changing the application state
@@ -69,19 +75,22 @@ function globalReducer(state = initialState, action) {
       .set('subAccounts', []);
     case CREATE_PAYMENT_SOURCE:
       return state
-        .set('paymentSource', {
+        .set('creatingPaymentSource', {
           fetching: true,
         });
     case CREATE_PAYMENT_SOURCE_SUCCESS:
       return state
-        .set('paymentSource', {
+        .set('creatingPaymentSource', {
           fetching: false,
           details: action.payload,
           error: null,
+        })
+        .set('paymentSources', {
+          details: action.payload,
         });
     case CREATE_PAYMENT_SOURCE_ERROR:
       return state
-        .set('paymentSource', {
+        .set('creatingPaymentSource', {
           fetching: false,
           details: null,
           error: action.payload,
@@ -133,6 +142,30 @@ function globalReducer(state = initialState, action) {
       return state
         .set('currentPlan', {
           fetching: false,
+          details: null,
+          error: action.payload,
+        });
+    case FETCH_PAYMENT_SOURCES_SUCCESS:
+      return state
+        .set('paymentSources', {
+          details: action.payload,
+          error: null,
+        });
+    case FETCH_PAYMENT_SOURCES_ERROR:
+      return state
+        .set('paymentSources', {
+          details: null,
+          error: action.payload,
+        });
+    case FETCH_PAYMENT_HISTORY_SUCCESS:
+      return state
+        .set('paymentHistory', {
+          details: action.payload,
+          error: null,
+        });
+    case FETCH_PAYMENT_HISTORY_ERROR:
+      return state
+        .set('paymentHistory', {
           details: null,
           error: action.payload,
         });

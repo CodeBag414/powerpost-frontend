@@ -7,6 +7,10 @@ import LeftPane from 'components/LeftPane';
 import RightPane from 'components/RightPane';
 import imgLogo from 'assets/images/logo.png';
 
+import {
+  selectCoupon,
+} from 'containers/App/selectors';
+
 import Wrapper from './Wrapper';
 import FormWrapper from './FormWrapper';
 import Topbar from './Topbar';
@@ -23,6 +27,7 @@ class Signup extends Component {
     children: PropTypes.node,
     location: PropTypes.object,
     plan: PropTypes.object,
+    coupon: PropTypes.object,
     fetchPlan: PropTypes.func,
   }
 
@@ -49,8 +54,8 @@ class Signup extends Component {
   }
 
   render() {
-    const { children, plan } = this.props;
-    const { amountOff, percentOff } = this.state;
+    const { children, plan, coupon } = this.props;
+    const { amount_off, percent_off } = coupon.details || {};
 
     const {
       title,
@@ -60,10 +65,10 @@ class Signup extends Component {
     } = plan.details || {};
     let newPrice = price;
 
-    if (amountOff) {
-      newPrice -= amountOff / 100;
-    } else if (percentOff) {
-      newPrice *= (100 - percentOff) / 100;
+    if (amount_off) {
+      newPrice -= amount_off / 100;
+    } else if (percent_off) {
+      newPrice *= (100 - percent_off) / 100;
     }
 
     return (
@@ -84,10 +89,7 @@ class Signup extends Component {
         <RightPane>
           <Topbar />
           <FormWrapper>
-            { React.cloneElement(children, {
-              discount: this.discount,
-            })
-            }
+            { children }
           </FormWrapper>
         </RightPane>
       </Wrapper>
@@ -97,6 +99,7 @@ class Signup extends Component {
 
 export const mapStateToProps = createStructuredSelector({
   plan: selectPlan(),
+  coupon: selectCoupon(),
 });
 
 export const mapDispatchToProps = (dispatch) => ({
