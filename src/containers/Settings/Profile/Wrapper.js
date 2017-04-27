@@ -9,11 +9,12 @@ const Wrapper = styled.div`
 
   div.avatar-image {
     display: inline-block;
-    padding: 0 10px;
+    padding: 0 40px 0 10px;
   }
 
   div.basic-info {
-    width: calc(100% - 210px);
+    width: calc(100% - 240px);
+    max-width: 430px;
     display: inline-block;
     vertical-align: top;
     margin-bottom: 45px;
