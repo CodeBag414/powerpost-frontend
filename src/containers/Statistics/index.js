@@ -1,151 +1,147 @@
-/*
+ /*
  * Statistics
- *
- * 
+ * Analytics Info for Social Channels.
+ * i.e. Facebook, LinkedIn, Twitter, Pinterest
  */
 
-import React from 'react';
+import React, { PropTypes } from 'react';
 
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
 import { UserCanStatistics } from 'config.routes/UserRoutePermissions';
-
-import AddConnectionDialog from './AddConnectionDialog';
-import ChannelsList from './ChannelsList';
-
-import {
-    setChannelFilter,
-    setChannelType,
-    setConnectionsList,
-    toggleDialog,
-    getSocialUrl,
-    getAccountId,
-} from './actions';
-
-import {
-    makeSelectChannelFilter,
-    makeSelectChannelType,
-    makeSelectDialogShown,
-    makeSelectSocialUrls,
-    makeSelectAccountId,
-} from './selectors';
-
 import {
     makeSelectAccountConnections,
 } from 'containers/Main/selectors';
 
+import ChannelsList from './ChannelsList';
+import {
+  setChannelFilter,
+  setChannelType,
+  setConnectionsList,
+  toggleDialog,
+  getAccountId,
+} from './actions';
+import {
+  makeSelectChannelFilter,
+  makeSelectChannelType,
+  makeSelectDialogShown,
+  makeSelectAccountId,
+} from './selectors';
+
 class Statistics extends React.Component {
-    constructor(props) {
-        super(props);
-        //this.props.setConnectionsListShown(require('./connections.json').connections);
-        this.handleDialogToggle = this.handleDialogToggle.bind(this);
-        this.removeConnection = this.removeConnection.bind(this);
-        this.setChannelFilter = this.setChannelFilter.bind(this);
-        this.setChannelType = this.setChannelType.bind(this);
-    }
-    
-    componentDidMount() {
-        this.props.getSocialUrl();
-        this.props.getAccountId();
-    }
-    
-    componentDidUpdate() {
-       // this.props.getSocialUrl();
-    }
-    handleDialogToggle() {
-        this.props.toggleDialogShown(!this.props.dialogShown);
-    }
-    
-    removeConnection(connectionId) {
-        let connections = this.props.connections.slice(), connectionIndex;
 
-        connections.forEach((connection, index) => {
-            if(connection.connection_id === connectionId) {
-                connectionIndex = index;
-            }
-        });
+  static propTypes = {
+    connections: PropTypes.arrayOf(
+      PropTypes.shape({
+        display_name: PropTypes.string,
+        channel: PropTypes.string,
+      })
+    ).isRequired,
+    params: PropTypes.shape({
+      account_id: PropTypes.string,
+    }).isRequired,
+    channelFilter: PropTypes.string,
+    channelType: PropTypes.string,
+    dialogShown: PropTypes.bool,
+    children: PropTypes.node,
+    getAccountId: PropTypes.func.isRequired,
+    toggleDialogShown: PropTypes.func.isRequired,
+    setChannelFilter: PropTypes.func.isRequired,
+    setChannelType: PropTypes.func.isRequired,
+  };
 
-        if(connectionIndex !== undefined) {
-            connections.splice(connectionIndex, 1);
-        }
+  constructor(props) {
+    super(props);
 
-        this.props.setConnectionsListShown(connections);
-    }
+    this.handleDialogToggle = this.handleDialogToggle.bind(this);
+    this.setChannelFilter = this.setChannelFilter.bind(this);
+    this.setChannelType = this.setChannelType.bind(this);
+  }
 
-    setChannelFilter(channelFilter) {
-        this.props.setChannelFilter(channelFilter);
-    }
+  componentDidMount() {
+    this.props.getAccountId();
+  }
 
-    setChannelType(channelType) {
-        this.props.setChannelType(channelType);
-    }
+  getFilteredConnections() {
+    const { connections, channelFilter, channelType } = this.props;
+    return connections.filter((connection) => {
+      let matched = true;
 
-    getFilteredConnections () {
-        return this.props.connections.filter(connection => {
-            let matched = true;
+      if (channelFilter) {
+        matched = matched && (connection.display_name.toLowerCase().indexOf(channelFilter.toLowerCase()) > -1);
+      }
 
-            if(this.props.channelFilter) {
-                matched = matched && (connection.display_name.toLowerCase().indexOf(this.props.channelFilter.toLowerCase()) > -1);
-            }
+      if (channelType) {
+        matched = matched && (connection.channel === channelType);
+      }
 
-            if(this.props.channelType) {
-                matched = matched && (connection.channel === this.props.channelType);
-            }
+      return matched;
+    });
+  }
 
-            return matched;
-        });
-    }
+  getChannelTypes() {
+    const types = [];
 
-    getChannelTypes () {
-        let types = [];
+    this.props.connections.forEach((connection) => {
+      if (types.indexOf(connection.channel) === -1) {
+        types.push(connection.channel);
+      }
+    });
 
-        this.props.connections.forEach(connection => {
-            if(types.indexOf(connection.channel) === -1) {
-                types.push(connection.channel);
-            }
-        });
+    types.sort();
+    return types;
+  }
 
-        types.sort();
-        return types;
-    }
+  setChannelFilter(channelFilter) {
+    this.props.setChannelFilter(channelFilter);
+  }
 
-    render() {
+  setChannelType(channelType) {
+    this.props.setChannelType(channelType);
+  }
 
-        return (
-            <div>
-                <div>
-                    <ChannelsList connections={this.getFilteredConnections()} removeConnection={this.removeConnection} accountId={ this.props.params.account_id } loading={ this.props.children }
-                                    handleDialogToggle={this.handleDialogToggle} channels={this.getChannelTypes()}
-                                    setChannelFilter={this.setChannelFilter} setChannelType={this.setChannelType}
-                                    channelFilter={this.props.channelFilter} channelType={this.props.channelType} />
-                    <AddConnectionDialog handleDialogToggle={this.handleDialogToggle} dialogShown={this.props.dialogShown} socialUrls={ this.props.socialUrls }/>
-                </div>
-            </div>
-        );
-    }
+  handleDialogToggle() {
+    const { toggleDialogShown, dialogShown } = this.props;
+    toggleDialogShown(!dialogShown);
+  }
+
+  render() {
+    const { params, children } = this.props;
+    return (
+      <div>
+        <ChannelsList
+          connections={this.getFilteredConnections()}
+          accountId={params.account_id}
+          loading={children}
+          handleDialogToggle={this.handleDialogToggle}
+          channels={this.getChannelTypes()}
+          setChannelFilter={this.setChannelFilter}
+          setChannelType={this.setChannelType}
+          channelFilter={this.props.channelFilter}
+          channelType={this.props.channelType}
+        />
+      </div>
+    );
+  }
 }
 
-Statistics.propTypes = {children: React.PropTypes.node};
-
 export function mapDispatchToProps(dispatch) {
-    return {
-        setChannelFilter: channelFilter => dispatch(setChannelFilter(channelFilter)),
-        setChannelType: channelType => dispatch(setChannelType(channelType)),
-        setConnectionsListShown: connections => dispatch(setConnectionsList(connections)),
-        toggleDialogShown: isShown => dispatch(toggleDialog(isShown)),
-        getSocialUrl: () => dispatch(getSocialUrl()),
-        getAccountId: () => dispatch(getAccountId()),
-    };
+  return {
+    setChannelFilter: (channelFilter) => dispatch(setChannelFilter(channelFilter)),
+    setChannelType: (channelType) => dispatch(setChannelType(channelType)),
+    setConnectionsListShown: (connections) => dispatch(setConnectionsList(connections)),
+    toggleDialogShown: (isShown) => dispatch(toggleDialog(isShown)),
+    getAccountId: () => dispatch(getAccountId()),
+  };
 }
 
 const mapStateToProps = createStructuredSelector({
-    channelFilter: makeSelectChannelFilter(),
-    channelType: makeSelectChannelType(),
-    connections: makeSelectAccountConnections(),
-    dialogShown: makeSelectDialogShown(),
-    socialUrls: makeSelectSocialUrls(),
-    accountId: makeSelectAccountId(),
+  channelFilter: makeSelectChannelFilter(),
+  channelType: makeSelectChannelType(),
+  connections: makeSelectAccountConnections(),
+  dialogShown: makeSelectDialogShown(),
+  accountId: makeSelectAccountId(),
 });
 
 export default UserCanStatistics(connect(mapStateToProps, mapDispatchToProps)(Statistics));
