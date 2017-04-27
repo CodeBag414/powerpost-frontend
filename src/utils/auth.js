@@ -111,9 +111,7 @@ let auth = {
                 console.log('response:' + response);
                 return response.data;
             })
-            .catch((error) => {
-                console.log(error.response);
-            });
+            .catch((error) => Promise.reject(error.response));
      },
      
      /**
@@ -142,9 +140,7 @@ let auth = {
                 console.log('response:' + response);
                 return response.data;
             })
-            .catch((error) => {
-                console.log(error.response);
-            });
+            .catch((error) => Promise.reject(error.response));
      }
 };
 
