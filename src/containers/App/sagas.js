@@ -32,6 +32,8 @@ import {
   APPLY_COUPON,
   POST_SUBSCRIPTION,
   FETCH_CURRENT_PLAN,
+  FETCH_PAYMENT_SOURCES,
+  FETCH_PAYMENT_HISTORY,
 } from './constants';
 
 import {
@@ -42,6 +44,10 @@ import {
   postSubscriptionSuccess,
   postSubscriptionError,
   fetchCurrentPlanError,
+  fetchPaymentSourcesSuccess,
+  fetchPaymentSourcesError,
+  fetchPaymentHistorySuccess,
+  fetchPaymentHistoryError,
 } from './actions';
 
 /**
@@ -275,7 +281,7 @@ export function* createPaymentSourceFlow() {
       const response = yield call(postData, '/payment_api/source', { payload });
       const { data } = response;
       if (data.status === 'success') {
-        yield put(createPaymentSourceSuccess(data));
+        yield put(createPaymentSourceSuccess(data.sources));
       } else {
         throw data.error;
       }
@@ -288,19 +294,22 @@ export function* createPaymentSourceFlow() {
 export function* applyCouponFlow() {
   while (true) {
     const { payload } = yield take(APPLY_COUPON);
+    if (!payload) {   // remove coupon
+      yield put(applyCouponSuccess(null));
+    } else {
+      try {
+        const response = yield call(getData, `/payment_api/coupon/${payload}`);
+        const { data } = response;
 
-    try {
-      const response = yield call(getData, `/payment_api/coupon/${payload}`);
-      const { data } = response;
-
-      if (data.coupon) {
-        yield put(applyCouponSuccess(data.coupon));
-      } else {
-        throw data.message;
+        if (data.coupon) {
+          yield put(applyCouponSuccess(data.coupon));
+        } else {
+          throw data.message;
+        }
+      } catch (error) {
+        const msg = 'So sorry, the coupon code you entered is invalid.';
+        yield put(applyCouponError(msg));
       }
-    } catch (error) {
-      const msg = 'So sorry, the coupon code you entered is invalid.';
-      yield put(applyCouponError(msg));
     }
   }
 }
@@ -357,6 +366,41 @@ export function* fetchCurrentPlanFlow() {
   }
 }
 
+export function* fetchPaymentSourcesFlow() {
+  while (true) {
+    const { payload: { accountId } } = yield take(FETCH_PAYMENT_SOURCES);
+
+    try {
+      const { data } = yield call(getData, `/payment_api/sources/${accountId}`);
+
+      if (data.status === 'success') {
+        yield put(fetchPaymentSourcesSuccess(data.sources));
+      } else {
+        yield put(fetchPaymentSourcesError(data.message));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
+
+export function* fetchPaymentHistoryFlow() {
+  while (true) {
+    const { payload: { accountId } } = yield take(FETCH_PAYMENT_HISTORY);
+
+    try {
+      const { data } = yield call(getData, `/payment_api/history/${accountId}`);
+
+      if (data.status === 'success') {
+        yield put(fetchPaymentHistorySuccess(data.charges));
+      } else {
+        yield put(fetchPaymentHistoryError(data.message));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
 
 // The root saga is what we actually send to Redux's middleware. In here we fork
 // each saga so that they are all "active" and listening.
@@ -373,6 +417,8 @@ export default [
   applyCouponFlow,
   postSubscriptionFlow,
   fetchCurrentPlanFlow,
+  fetchPaymentSourcesFlow,
+  fetchPaymentHistoryFlow,
 ];
 
 // Little helper function to abstract going to different pages

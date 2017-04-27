@@ -327,12 +327,16 @@ export function createRoutes(store, auth) {
           name: 'settings',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
+              System.import('containers/Settings/reducer'),
+              System.import('containers/Settings/sagas'),
               System.import('containers/Settings'),
             ]);
 
             const renderRoute = loadModule(cb);
 
-            importModules.then(([component]) => {
+            importModules.then(([reducer, sagas, component]) => {
+              injectReducer('settings', reducer.default);
+              injectSagas(sagas.default);
               renderRoute(component);
             });
 

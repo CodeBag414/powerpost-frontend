@@ -25,7 +25,7 @@ export function* redeemTokenWorker(action) {
     cookie.save('token', response.data.api_key, { path: '/' });
     yield put(redeemTokenSuccess(response.data));
   } catch (error) {
-    yield put(redeemTokenError(error.response.data));
+    yield put(redeemTokenError(error));
   }
 }
 
