@@ -115,11 +115,10 @@ export function* authorizeUpdate(data) {
 
     return true;
   } catch (error) {
-    console.log('hi');
     // If we get an error we send Redux the appropiate action and return
-    yield put({ type: REQUEST_ERROR, error: error.message });
+    // yield put({ type: REQUEST_ERROR, error: error.response.data.message });
 
-    return false;
+    throw error.data.message;
   } finally {
     // When done, we tell Redux we're not in the middle of a request any more
     yield put({ type: SENDING_REQUEST, sending: false });
@@ -242,13 +241,14 @@ export function* updateFlow() {
 
     // We call the `authorize` task with the data, telling it that we are registering a user
     // This returns `true` if the registering was successful, `false` if not
-    const wasSuccessful = yield call(authorizeUpdate, data);
 
-    // If we could register a user, we send the appropiate actions
-    if (wasSuccessful) {
+    try {
+      yield call(authorizeUpdate, data);
       toastr.success('Success!', 'User setting is updated.');
       yield put({ type: SET_AUTH, newAuthState: true }); // User is logged in (authorized) after being registered
       forwardTo('/dashboard'); // Go to dashboard page
+    } catch (error) {
+      toastr.error('Failed!', error);
     }
   }
 }
