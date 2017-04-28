@@ -82,6 +82,7 @@ class PPAvatar extends Component {
   }
 
   render() {
+    const { isClickable } = this.props;
     const title = this.props.title || '';
     const avatar = this.state.avatarNew ? this.state.avatarNew : this.state.avatar;
     const blankAvatar = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
@@ -109,7 +110,7 @@ class PPAvatar extends Component {
           ? <h6>{this.props.header}</h6>
           : null
         }
-        <div className={['avatar-photo', this.props.className].join(' ')} style={style.image} onClick={this.openFilePicker} type="button">
+        <div className={['avatar-photo', this.props.className].join(' ')} style={style.image} onClick={isClickable && this.openFilePicker} type="button">
           <img src={avatar ? avatar : blankAvatar} alt="avatar" />
           { avatar
             ? null
@@ -140,6 +141,11 @@ PPAvatar.propTypes = {
   backgroundColor: PropTypes.string,
   title: PropTypes.string,
   getAvatarandColor: PropTypes.func,
+  isClickable: PropTypes.bool,
+};
+
+PPAvatar.defaultProps = {
+  isClickable: true,
 };
 
 export default PPAvatar;
