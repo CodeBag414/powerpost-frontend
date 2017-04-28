@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import moment from 'moment';
 import cookie from 'react-cookie';
+import { browserHistory } from 'react-router';
 
 import { toastr } from 'lib/react-redux-toastr';
 import { UserCanTeam } from 'config.routes/UserRoutePermissions';
@@ -29,9 +30,11 @@ import PaymentCard from './PaymentCard';
 
 import {
   fetchSubscriptions,
+  cancelSubscription,
 } from '../actions';
 import {
   selectSubscriptions,
+  selectCancellingSubscription,
 } from '../selectors';
 
 export class Plans extends Component {
@@ -41,10 +44,12 @@ export class Plans extends Component {
     creatingPaymentSource: PropTypes.object,
     paymentSources: PropTypes.object,
     paymentHistory: PropTypes.object,
+    cancellingSubscription: PropTypes.object,
     fetchSubscriptions: PropTypes.func,
     createPaymentSource: PropTypes.func,
     fetchPaymentSources: PropTypes.func,
     fetchPaymentHistory: PropTypes.func,
+    cancelSubscription: PropTypes.func,
   }
 
   constructor(props) {
@@ -84,6 +89,15 @@ export class Plans extends Component {
         this.setState({
           editingPayment: false,
         });
+      }
+    } else if (this.props.cancellingSubscription !== nextProps.cancellingSubscription) {
+      const { details, error } = nextProps.cancellingSubscription;
+
+      if (details) {
+        browserHistory.push('/');
+        toastr.success('Success', 'The account plan has been cancelled');
+      } else if (error) {
+        toastr.error(error);
       }
     }
   }
@@ -132,7 +146,9 @@ export class Plans extends Component {
   }
 
   cancelPlan = () => {
-    alert('123');
+    const { userAccount, subscriptions: { details, error } } = this.props;
+
+    this.props.cancelSubscription({ accountId: userAccount.account_id, planId: details.plan.id });
     this.toggleCancelPlan();
   }
 
@@ -231,6 +247,7 @@ export const mapStateToProps = createStructuredSelector({
   creatingPaymentSource: selectCreatingPaymentSource(),
   paymentSources: selectPaymentSources(),
   paymentHistory: selectPaymentHistory(),
+  cancellingSubscription: selectCancellingSubscription(),
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -238,6 +255,7 @@ export const mapDispatchToProps = (dispatch) => ({
   createPaymentSource: (payload) => dispatch(createPaymentSource(payload)),
   fetchPaymentSources: (payload) => dispatch(fetchPaymentSources(payload)),
   fetchPaymentHistory: (payload) => dispatch(fetchPaymentHistory(payload)),
+  cancelSubscription: (payload) => dispatch(cancelSubscription(payload)),
 });
 
 export default UserCanTeam(connect(mapStateToProps, mapDispatchToProps)(Plans));
