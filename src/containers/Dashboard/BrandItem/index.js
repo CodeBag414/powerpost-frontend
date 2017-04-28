@@ -14,10 +14,12 @@ const BrandItem = (props) => {
   const brand = props.brand;
 
   const thumbURL = (brand && brand.properties.thumb_url) ? brand.properties.thumb_url : '';
-  const groupTitle = brand && brand.group_title ? brand.group_title : '';
+  const color = (brand && brand.properties.color) ? brand.properties.color : '';
   const title = brand && brand.title ? brand.title : '';
-  const accountID = brand && brand.account_id ? brand.account_id : null;
+  const accountID = brand && brand.account_id ? brand.account_id : 'me';
   const brandURL = `/account/${accountID}`;
+  const accessLevel = brand && brand.user_access_level ? brand.user_access_level : '';
+  const role = accessLevel === 'owner' ? accessLevel : `${accessLevel} - Shared`;
 
   return (
     <Wrapper>
@@ -31,12 +33,12 @@ const BrandItem = (props) => {
               size={45}
               image={thumbURL}
               title={title}
-              backgroundColor={''}
+              backgroundColor={color}
             />
           </div>
           <span>
             <p className="itemTitle">{title}</p>
-            <p>{groupTitle}</p>
+            <p>{role}</p>
           </span>
         </div>
       </ReactRouterButton>

@@ -20,6 +20,7 @@ import {
 } from 'config.routes/UserRoutePermissions';
 import {
   makeSelectUser,
+  makeSelectUserAccount,
   makeSelectSharedAccounts,
 } from 'containers/App/selectors';
 
@@ -36,6 +37,9 @@ const ReactRouterButton = withReactRouter(PPButton);
 const Dashboard = (props) => {
   const brands = props.brands || null;
   const userInfo = props.user || null;
+  const userOwnAccount = props.userOwnAccount || null;
+  const accountType = userOwnAccount && userOwnAccount.account_type_id ? userOwnAccount.account_type_id : 0;
+
   const avatarUrl = (userInfo && userInfo.properties && userInfo.properties.thumb_url) ? userInfo.properties.thumb_url : null;
   const avatarClr = (userInfo && userInfo.properties && userInfo.properties.color) ? userInfo.properties.color : null;
 
@@ -59,6 +63,11 @@ const Dashboard = (props) => {
               <div className="paneContent">
                 <p>Easily jump into a brand to manage its posts.</p>
                 <div style={{ padding: '10px 0' }}>
+                  {
+                    accountType === '2' || accountType === '3' || accountType === '4' || accountType === '6' || accountType === '7'
+                    ? <BrandItem brand={userOwnAccount} key={'ownaccount'} />
+                    : null
+                  }
                   {
                     brands
                     ? brands.map((brand, index) => <BrandItem brand={brand} key={index} />)
@@ -117,10 +126,12 @@ const Dashboard = (props) => {
 Dashboard.propTypes = {
   brands: React.PropTypes.any,
   user: React.PropTypes.object,
+  userOwnAccount: React.PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({
   user: makeSelectUser(),
+  userOwnAccount: makeSelectUserAccount(),
   brands: makeSelectSharedAccounts(),
 });
 
