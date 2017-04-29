@@ -92,7 +92,6 @@ export default class Dropdown extends React.Component {
       },
       isOpen: false,
     };
-  
   }
 
   componentDidMount() {
@@ -191,6 +190,7 @@ export default class Dropdown extends React.Component {
   render() {
     const placeHolderValue = typeof this.state.selected === 'string' ? this.state.selected : this.state.selected.label;
     const value = (<div>{placeHolderValue}</div>);
+
     const menu = this.state.isOpen ? <DropdownMenu>{this.buildMenu()}</DropdownMenu> : null;
 
     return (
