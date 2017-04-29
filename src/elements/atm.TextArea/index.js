@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 
 import styles from './styles.scss';
 
-const TextField = (props) => {
+const TextField = ({ resizable = false, ...props }) => {
   const errorStyles = props.errorText ? styles.errorBackground : '';
 
   return (
@@ -10,7 +10,7 @@ const TextField = (props) => {
       <label className={styles.labelStyles} htmlFor={props.htmlFor}>{props.floatingLabelText}</label>
       <label className={styles.rightLabelStyles}>{props.rightLabelText}</label>
       <div className={styles.inputContainer} >
-        <textarea className={props.iconClass ? styles.inputStylesWithIcon : `${styles.inputStyles} ${errorStyles}`} name={props.name} value={props.value} rows={props.rows} cols={props.cols} maxLength={props.maxLength} placeholder={props.hintText} onChange={props.onChange}/>
+        <textarea style={!resizable && { resize: 'none' }} className={props.iconClass ? styles.inputStylesWithIcon : `${styles.inputStyles} ${errorStyles}`} name={props.name} value={props.value} rows={props.rows} cols={props.cols} maxLength={props.maxLength} placeholder={props.hintText} onChange={props.onChange}/>
         { props.iconClass && <i className={props.iconClass} /> }
       </div>
       <div className={styles.errorContainer}>
@@ -34,6 +34,7 @@ TextField.propTypes = {
   errorText: PropTypes.string,
   htmlFor: PropTypes.any,
   maxLength: PropTypes.number,
+  resizable: PropTypes.bool,
 };
 
 export default TextField;
