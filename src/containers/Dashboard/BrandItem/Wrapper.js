@@ -45,6 +45,7 @@ export default styled.div`
           font-size: 12px;
           margin: 2px 0;
           color: #616669;
+          text-transform: capitalize;
           &.itemTitle {
             font-weight: bold;
           }

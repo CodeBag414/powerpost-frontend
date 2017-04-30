@@ -42,7 +42,7 @@ export function putData(url, data, isAuthReq=true ) {
 }
 
 // Delete Request
-export function deleteData(url, isAuthReq) {
+export function deleteData(url, isAuthReq = true) {
   const requestUrl = API_URL + url;
   let headers = {};
   let key = cookie.load('token');

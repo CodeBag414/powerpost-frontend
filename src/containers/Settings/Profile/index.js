@@ -151,7 +151,7 @@ class Profile extends React.Component {
           <div className="avatar-image">
             <PPAvatar
               size={180}
-              header="Icon"
+              header="Logo"
               image={this.state.avatar}
               title={this.state.name}
               backgroundColor={this.state.color}
