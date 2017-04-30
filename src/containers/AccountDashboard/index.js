@@ -128,6 +128,12 @@ class AccountDashboard extends Component {
               <p>Go here to get a snapshot of how well your posts are performing on your channels.</p>
             </span>
           </ReactRouterCapsule>
+          <ReactRouterCapsule to={`/account/${account.account_id}/board`}>
+            <span>
+              <h5>Board</h5>
+              <p>Go here to easily view and edit the posts.</p>
+            </span>
+          </ReactRouterCapsule>
         </div>
       </Wrapper>
     );

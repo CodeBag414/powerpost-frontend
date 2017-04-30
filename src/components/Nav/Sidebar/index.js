@@ -124,6 +124,12 @@ class Sidebar extends React.Component {
                 { this.props.accountPermissions && this.props.accountPermissions.indexOf('statistics') > -1 &&
                 <div>
                   <PPMenuDivider />
+                  <ReactRouterMenuItem caption="Board" isSidebar icon={<FontIcon>insert_chart</FontIcon>} to={`/account/${this.props.accountId}/board`} />
+                </div>
+                                }
+                { this.props.accountPermissions && this.props.accountPermissions.indexOf('statistics') > -1 &&
+                <div>
+                  <PPMenuDivider />
                   <ReactRouterMenuItem caption="Statistics" isSidebar icon={<FontIcon>insert_chart</FontIcon>} to={`/account/${this.props.accountId}/statistics`} />
                 </div>
                                 }

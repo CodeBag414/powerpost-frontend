@@ -201,6 +201,27 @@ export function createRoutes(store, auth) {
           },
         },
         {
+          path: '/account(/:account_id)/board',
+          name: 'board',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/Board/reducer'),
+              System.import('containers/Board/sagas'),
+              System.import('containers/Board'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([reducer, sagas, component]) => {
+              injectReducer('board', reducer.default);
+              injectSagas(sagas.default);
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+        {
           path: '/account(/:account_id)/statistics',
           name: 'statistics',
           getComponent(nextState, cb) {
