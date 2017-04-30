@@ -67,6 +67,16 @@ const selectPaymentHistory = () => createSelector(
     (auth) => auth.get('paymentHistory')
 );
 
+const selectGroupUsers = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('groupUsers')
+);
+
+const selectInviteEmailToGroup = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('inviteEmailToGroup')
+);
+
 export {
     selectAuth,
     makeSelectAuthError,
@@ -82,4 +92,6 @@ export {
     selectCurrentPlan,
     selectPaymentSources,
     selectPaymentHistory,
+    selectGroupUsers,
+    selectInviteEmailToGroup,
 };

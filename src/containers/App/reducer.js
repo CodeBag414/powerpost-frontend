@@ -26,6 +26,12 @@ import {
   FETCH_PAYMENT_SOURCES_ERROR,
   FETCH_PAYMENT_HISTORY_SUCCESS,
   FETCH_PAYMENT_HISTORY_ERROR,
+  FETCH_GROUP_USERS,
+  FETCH_GROUP_USERS_SUCCESS,
+  FETCH_GROUP_USERS_ERROR,
+  INVITE_EMAIL_TO_GROUP,
+  INVITE_EMAIL_TO_GROUP_SUCCESS,
+  INVITE_EMAIL_TO_GROUP_ERROR,
 } from './constants';
 
 import auth from 'utils/auth';
@@ -46,6 +52,8 @@ const initialState = fromJS({
   currentPlan: {},
   paymentSources: {},
   paymentHistory: {},
+  groupUsers: {},
+  inviteEmailToGroup: {},
 });
 
 // Takes care of changing the application state
@@ -166,6 +174,46 @@ function globalReducer(state = initialState, action) {
     case FETCH_PAYMENT_HISTORY_ERROR:
       return state
         .set('paymentHistory', {
+          details: null,
+          error: action.payload,
+        });
+    case FETCH_GROUP_USERS:
+      return state
+        .set('groupUsers', {
+          isFetching: true,
+          details: null,
+          error: null,
+        });
+    case FETCH_GROUP_USERS_SUCCESS:
+      return state
+        .set('groupUsers', {
+          isFetching: false,
+          details: action.payload,
+          error: null,
+        });
+    case FETCH_GROUP_USERS_ERROR:
+      return state
+        .set('groupUsers', {
+          isFetching: false,
+          details: null,
+          error: action.payload,
+        });
+    case INVITE_EMAIL_TO_GROUP:
+      return state
+        .set('inviteEmailToGroup', {
+          isFetching: true,
+        });
+    case INVITE_EMAIL_TO_GROUP_SUCCESS:
+      return state
+        .set('inviteEmailToGroup', {
+          isFetching: false,
+          details: action.payload,
+          error: null,
+        });
+    case INVITE_EMAIL_TO_GROUP_ERROR:
+      return state
+        .set('inviteEmailToGroup', {
+          isFetching: false,
           details: null,
           error: action.payload,
         });

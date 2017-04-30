@@ -1,18 +1,23 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import moment from 'moment';
-import cookie from 'react-cookie';
+import { find } from 'lodash';
 import { browserHistory } from 'react-router';
 
 import { toastr } from 'lib/react-redux-toastr';
 import { UserCanTeam } from 'config.routes/UserRoutePermissions';
 
 import {
+  fetchGroupUsers,
+  inviteEmailToGroup,
 } from 'containers/App/actions';
 import {
+  selectGroupUsers,
+  selectInviteEmailToGroup,
 } from 'containers/App/selectors';
 import { makeSelectCurrentAccount } from 'containers/Main/selectors';
+
+import Loading from 'components/Loading';
 
 import Dropdown from 'elements/atm.Dropdown';
 import PPTextField from 'elements/atm.TextField';
@@ -22,20 +27,20 @@ import TextArea from 'elements/atm.TextArea';
 
 import Wrapper from './Wrapper';
 
-import {
-} from '../actions';
-import {
-} from '../selectors';
-
 const accessLevelOptions = [
-  { value: 'admin', label: 'Admin' },
-  { value: 'edit', label: 'Edit' },
-  { value: 'author', label: 'Author' },
-  { value: 'review', label: 'Review' },
+  { value: 'admins', label: 'Admin' },
+  { value: 'editors', label: 'Editor' },
+  { value: 'viewers', label: 'Viewer' },
+  { value: 'reviewers', label: 'Reviewer' },
 ];
 
 export class Team extends Component {
   static propTypes = {
+    userAccount: PropTypes.object,
+    groupUsers: PropTypes.object,
+    inviteEmailToGroup: PropTypes.object,
+    fetchGroupUsers: PropTypes.func,
+    inviteEmailToGroupRequest: PropTypes.func,
   }
 
   constructor(props) {
@@ -53,6 +58,11 @@ export class Team extends Component {
   }
 
   componentDidMount() {
+    const { userAccount } = this.props;
+
+    const payload = { accountId: userAccount.account_id };
+
+    this.props.fetchGroupUsers(payload);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -78,7 +88,21 @@ export class Team extends Component {
   }
 
   sendInvite = () => {
+    const { groupUsers, inviteEmailToGroupRequest } = this.props;
+    const { email, accessLevel, message } = this.state;
+    const group = find(groupUsers.details, { title: accessLevel.value });
 
+    if (!group) {
+      throw Error('Something is wrong with group');
+    }
+
+    const payload = {
+      email: email.value,
+      group_id: group.group_id,
+      message,
+    };
+
+    inviteEmailToGroupRequest(payload);
   }
 
   toggleModal = () => {
@@ -89,7 +113,8 @@ export class Team extends Component {
   }
 
   render() {
-    const { inviteModalVisible } = this.state;
+    const { userAccount, groupUsers, inviteEmailToGroup } = this.props;
+    const { inviteModalVisible, email, accessLevel } = this.state;
 
     return (
       <Wrapper>
@@ -99,7 +124,7 @@ export class Team extends Component {
         </div>
         <Dialog
           active={inviteModalVisible}
-          title="Invite a new member to Eight Eight"
+          title={`Invite a new member to ${userAccount.title}`}
         >
           <div style={{ position: 'absolute', top: '30px', right: '25px', cursor: 'pointer' }} onClick={this.toggleModal}>&#10005;</div>
           <div className="row">
@@ -109,16 +134,16 @@ export class Team extends Component {
                 name="email"
                 hintText="name@domain.com"
                 floatingLabelText="Email"
-                value={this.state.email.value}
-                errorText={this.state.email.error}
+                value={email.value}
+                errorText={email.error}
                 onChange={this.onEmailChange}
               />
             </div>
             <div className="col-sm-12 col-md-4">
               <Dropdown
                 label="Access Level"
-                value={this.state.accessLevel}
-                options={accessLevelOptions}
+                value={accessLevel}
+                options={groupUsers.isFetching ? [] : accessLevelOptions}
                 placeholder="Select Option"
                 onChange={this.onAccessLevelChange}
               />
@@ -142,9 +167,10 @@ export class Team extends Component {
               <span style={{ cursor: 'pointer', marginRight: '35px' }} onClick={this.toggleModal}>
                 Close
               </span>
-              <Button label="Send Invite" primary onClick={this.sendInvite} />
+              <Button label="Send Invite" primary onClick={this.sendInvite} disabled={email.error || !accessLevel} />
             </div>
           </div>
+          { inviteEmailToGroup.isFetching && <Loading /> }
         </Dialog>
       </Wrapper>
     );
@@ -152,9 +178,14 @@ export class Team extends Component {
 }
 
 export const mapStateToProps = createStructuredSelector({
+  userAccount: makeSelectCurrentAccount(),
+  groupUsers: selectGroupUsers(),
+  inviteEmailToGroup: selectInviteEmailToGroup(),
 });
 
 export const mapDispatchToProps = (dispatch) => ({
+  fetchGroupUsers: (payload) => dispatch(fetchGroupUsers(payload)),
+  inviteEmailToGroupRequest: (payload) => dispatch(inviteEmailToGroup(payload)),
 });
 
 export default UserCanTeam(connect(mapStateToProps, mapDispatchToProps)(Team));

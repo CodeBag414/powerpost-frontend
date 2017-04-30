@@ -34,6 +34,8 @@ import {
   FETCH_CURRENT_PLAN,
   FETCH_PAYMENT_SOURCES,
   FETCH_PAYMENT_HISTORY,
+  FETCH_GROUP_USERS,
+  INVITE_EMAIL_TO_GROUP,
 } from './constants';
 
 import {
@@ -48,6 +50,10 @@ import {
   fetchPaymentSourcesError,
   fetchPaymentHistorySuccess,
   fetchPaymentHistoryError,
+  fetchGroupUsersSuccess,
+  fetchGroupUsersError,
+  inviteEmailToGroupSuccess,
+  inviteEmailToGroupError,
 } from './actions';
 
 /**
@@ -402,6 +408,41 @@ export function* fetchPaymentHistoryFlow() {
   }
 }
 
+export function* fetchGroupUsersFlow() {
+  while (true) {
+    const { payload: { accountId } } = yield take(FETCH_GROUP_USERS);
+
+    try {
+      const { data } = yield call(getData, `/account_api/account_group_users/${accountId}`);
+      if (data.status === 'success') {
+        yield put(fetchGroupUsersSuccess(data.groups));
+      } else {
+        yield put(fetchGroupUsersError(data.message));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
+
+export function* inviteEmailToGroupFlow() {
+  while (true) {
+    const { payload } = yield take(INVITE_EMAIL_TO_GROUP);
+
+    try {
+      const { data } = yield call(postData, '/account_api/invite_email_to_group', { payload });
+      console.log('-----', data)
+      if (data.status === 'success') {
+        yield put(inviteEmailToGroupSuccess(data));
+      } else {
+        yield put(inviteEmailToGroupError(data.message));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
+
 // The root saga is what we actually send to Redux's middleware. In here we fork
 // each saga so that they are all "active" and listening.
 // Sagas are fired once at the start of an app and can be thought of as processes running
@@ -419,6 +460,8 @@ export default [
   fetchCurrentPlanFlow,
   fetchPaymentSourcesFlow,
   fetchPaymentHistoryFlow,
+  fetchGroupUsersFlow,
+  inviteEmailToGroupFlow,
 ];
 
 // Little helper function to abstract going to different pages
