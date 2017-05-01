@@ -42,7 +42,7 @@ class Board extends React.Component {
         postSets: sets,
         statusColor,
       };
-    }); // this.props.postSets.
+    });
     return (
       <div className={styles.board}>
         {

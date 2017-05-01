@@ -52,7 +52,7 @@ export const UserCanBoard = UserAuthWrapper({
   redirectAction: routerActions.push,
   authenticatingSelector: (state) => { const main = state.get('main'); return main.get('isFetchingAccount'); },
   LoadingComponent: Loading,
-  predicate: auth => auth.getIn(['activeBrand', 'user_access', 'permissions']).indexOf('statistics') > -1 && auth.getIn(['activeBrand', 'account_access', 'permissions']).indexOf('statistics') > -1 && !auth.get('fetchingError'),
+  predicate: auth => auth.getIn(['activeBrand', 'user_access', 'permissions']).indexOf('board') > -1 && auth.getIn(['activeBrand', 'account_access', 'permissions']).indexOf('board') > -1 && !auth.get('fetchingError'),
   failureRedirectPath: '/forbidden',
   wrapperDisplayName: 'UserCanBoard',
   allowRedirectBack: false,
