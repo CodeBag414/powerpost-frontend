@@ -7,7 +7,13 @@ const selectSubscriptions = () => createSelector(
   (settings) => settings.get('subscriptions')
 );
 
+const selectCancellingSubscription = () => createSelector(
+  selectSettings,
+  (settings) => settings.get('cancellingSubscription')
+);
+
 export {
   selectSettings,
   selectSubscriptions,
+  selectCancellingSubscription,
 };

@@ -1,57 +1,51 @@
-import React from 'react';
-import FontIcon from 'elements/atm.FontIcon';
+import React, { PropTypes } from 'react';
 
-import styles from './styles.scss';
+import Wrapper from './Wrapper';
 
 class ChannelsListItem extends React.Component {
-    constructor(props) {
-        super(props);
-        this.remove = this.remove.bind(this);
-    }
+  static propTypes = {
+    connection: PropTypes.shape({
+      type: PropTypes.string,
+      status: PropTypes.string,
+    }).isRequired,
+  }
+  getType() {
+    return this.props.connection.type.split('_')[1];
+  }
 
-    getChannelClass(styles) {
-        return styles.hasOwnProperty(this.props.connection.channel) ? styles[this.props.connection.channel] : '';
+  getStatusLabel() {
+    switch (this.props.connection.status) {
+      case '3':
+        return <div className="disconnectedLabel"><i className="fa fa-warning"></i> Reconnect</div>;
+      default:
+        return null;
     }
+  }
 
-    getType() {
-        return this.props.connection.type.split('_')[1];
-    }
-
-    getStatusLabel(styles) {
-        switch(this.props.connection.status) {
-            case '3': return <div className={styles.disconnectedLabel}><i className="fa fa-warning"></i> Reconnect</div>;
-        }
-    }
-
-    remove () {
-        this.props.remove(this.props.connection.connection_id);
-    }
-
-    render() {
-        return (
-            <div className={styles.connectionBlock}>
-                <div>
-                    <div className={ styles.connectionIcon }>
-                        <i className={ this.props.connection.channel_icon + ' ' + this.getChannelClass(styles)}></i>
-                    </div>
-                    <div style={{ float: 'left' }}>
-                        <div className={styles.connectionName}>{ this.props.connection.display_name }</div>
-                        <div className={this.getChannelClass(styles)}>{this.getType()[0].toUpperCase() + this.getType().slice(1)}</div>
-                    </div>
-                    <div>
-                        <div className={styles.controlBlock}>
-                            {this.getStatusLabel(styles)}
-                        </div>
-                        <div style={{clear: 'both'}}></div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+  render() {
+    const { connection } = this.props;
+    return (
+      <Wrapper>
+        <div className="connectionIcon">
+          <i className={`${connection.channel_icon} ${connection.channel}`}></i>
+        </div>
+        <div style={{ float: 'left' }}>
+          <div className="connectionName">
+            {connection.display_name}
+          </div>
+          <div className={`${connection.channel} connectionSubName`}>
+            {this.getType()[0].toUpperCase() + this.getType().slice(1)}
+          </div>
+        </div>
+        <div>
+          <div className="controlBlock">
+            {this.getStatusLabel()}
+          </div>
+          <div className="clearBoth"></div>
+        </div>
+      </Wrapper>
+    );
+  }
 }
-
-ChannelsListItem.propTypes = {
-    children: React.PropTypes.node,
-};
 
 export default ChannelsListItem;

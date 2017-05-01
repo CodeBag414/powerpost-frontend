@@ -12,7 +12,7 @@ export function postData(url, data, isAuthReq=true) {
     headers = {headers: {'X-API-KEY': key}};
   }
 
-  return axios.post(requestUrl, data, headers);
+  return axios.post(requestUrl, data, headers).catch((error) => { console.log(error.response.data)});
 }
 
 // Get Request
@@ -42,7 +42,7 @@ export function putData(url, data, isAuthReq=true ) {
 }
 
 // Delete Request
-export function deleteData(url, isAuthReq) {
+export function deleteData(url, isAuthReq = true) {
   const requestUrl = API_URL + url;
   let headers = {};
   let key = cookie.load('token');
