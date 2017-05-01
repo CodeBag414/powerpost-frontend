@@ -11,7 +11,7 @@ export const UserCanAccount= UserAuthWrapper({
     predicate: auth => !auth.get('fetchingError'),
     failureRedirectPath: '/forbidden',
     wrapperDisplayName: 'UserCanTeam',
-    allowRedirectBack: false    
+    allowRedirectBack: false
 });
 
 export const UserCanTeam = UserAuthWrapper({
@@ -35,7 +35,7 @@ export const UserCanSettings = UserAuthWrapper({
     wrapperDisplayName: 'UserCanSettings',
     allowRedirectBack: false
   });
-  
+
 export const UserCanStatistics = UserAuthWrapper({
     authSelector: state => state.get('main'),
     redirectAction: routerActions.push,
@@ -46,6 +46,17 @@ export const UserCanStatistics = UserAuthWrapper({
     wrapperDisplayName: 'UserCanStatistics',
     allowRedirectBack: false
 })
+
+export const UserCanBoard = UserAuthWrapper({
+  authSelector: state => state.get('main'),
+  redirectAction: routerActions.push,
+  authenticatingSelector: (state) => { const main = state.get('main'); return main.get('isFetchingAccount'); },
+  LoadingComponent: Loading,
+  predicate: auth => auth.getIn(['activeBrand', 'user_access', 'permissions']).indexOf('board') > -1 && auth.getIn(['activeBrand', 'account_access', 'permissions']).indexOf('board') > -1 && !auth.get('fetchingError'),
+  failureRedirectPath: '/forbidden',
+  wrapperDisplayName: 'UserCanBoard',
+  allowRedirectBack: false,
+});
 
 export const UserCanConnections = UserAuthWrapper({
     authSelector: state => state.get('main'),

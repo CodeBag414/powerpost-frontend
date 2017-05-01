@@ -47,6 +47,7 @@ class Connections extends React.Component {
   }
 
   componentDidMount() {
+    console.log('werwer');
     this.props.getSocialUrl();
     window.addEventListener('message', receiveMessage.bind(this), false);
 
