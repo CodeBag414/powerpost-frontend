@@ -5,7 +5,7 @@ import { makeSelectCurrentAccount } from 'containers/Main/selectors';
 
 import {
   getData,
-  deleteData,
+  putData,
 } from 'utils/request';
 
 import {
@@ -35,7 +35,13 @@ const serialize = function serialize(obj, prefix) {
 
 export function* getPostSets() {
   const currentAccount = yield select(makeSelectCurrentAccount());
-  const requestUrl = `/post_api/post_sets/${currentAccount.account_id}`;
+  const data = {
+    payload: {
+      statuses: [1, 2, 3, 4, 5, 6],
+    },
+  };
+  const params = serialize(data);
+  const requestUrl = `/post_api/post_sets/${currentAccount.account_id}?${params}`;
   const result = yield call(getData, requestUrl);
 
   if (result.data.status === 'success') {
@@ -47,14 +53,21 @@ export function* getPostSets() {
 }
 
 export function* deletePostSetRequest(payload) {
-  yield put({ type: DELETE_POST_SET, id: payload.id });
-  /* const requestUrl = `/post_api/post_set/${payload.id}`;
-  const result = yield call(deleteData, requestUrl, true);
-  if (result.data.status === 'success') {
-    yield put({ type: DELETE_POST_SET, id: payload.id });
-  } else {
-    // console.log(result);
-  }*/
+  const requestData = {
+    payload: {
+      status: '0',
+    },
+  };
+  const requestUrl = `/post_api/post_set/${payload.id}?`;
+  try {
+    const response = yield call(putData, requestUrl, requestData);
+    const { data } = response;
+    if (data.status === 'success') {
+      yield put({ type: DELETE_POST_SET, id: payload.id });
+    }
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export function* boardChannel() {
