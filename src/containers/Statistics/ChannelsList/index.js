@@ -25,14 +25,14 @@ function ChannelsList({ connections, accountId, setChannelFilter, channelFilter,
 
   return (
     <Analytics>
-      <div className={['col-xs-3', 'col-sm-3', 'col-md-3', 'tabLink'].join(' ')}>
+      <div className="tabLink">
         <ConnectionsControlBar
           setChannelFilter={setChannelFilter}
           channelFilter={channelFilter}
         />
         { connectionsList }
       </div>
-      <div className={['col-xs-9', 'col-sm-9', 'col-md-9'].join(' ')}>
+      <div className="tabContent">
         { loading }
       </div>
     </Analytics>

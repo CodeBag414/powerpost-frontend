@@ -1,7 +1,7 @@
+import moment from 'moment';
+
 export function getFormattedDate(time) {
-  const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const created = new Date(time);
-  return `${month[created.getUTCMonth()]} ${created.getUTCDate()}-${created.getUTCHours()}:${created.getUTCMinutes()}`;
+  return moment(time).format('MMM dd - hh:mm a');
 }
 
 export function getCurrentMonth() {

@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  padding: 10px 5px 10px 10px;
-
+  padding-left: 22px;
   .connectionIcon {
     float:left;
     margin-right: 18px;
@@ -60,6 +59,7 @@ const Wrapper = styled.div`
     height: 40px;
     width: 120px;
     padding-top: 10px;
+    position: absolute;
   }
 
   .disabledLabel {
