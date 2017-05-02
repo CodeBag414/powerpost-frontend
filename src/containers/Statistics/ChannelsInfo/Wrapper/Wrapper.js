@@ -24,4 +24,17 @@ export default styled.div`
     table {
         width: 100%;
     }
+    tspan {
+      font-size: 11px;
+    }
+    .recharts-x-axis {
+      text {
+        transform: translateY(10px);
+      }
+    }
+    .recharts-y-axis {
+      text {
+        transform: translateX(-10px);
+      }
+    }
 `;
