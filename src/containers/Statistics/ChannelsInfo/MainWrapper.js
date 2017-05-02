@@ -5,7 +5,6 @@ const Wrapper = styled.div`
 
     .basicInfo {
         height: 80px;
-        background-color: white;
         display: block;
         position: relative;
         margin-top: 30px;
@@ -22,7 +21,10 @@ const Wrapper = styled.div`
         margin-top: 50px;
         color: rgb(136, 136, 136);
         h3 {
-          font-weight: normal;
+          padding-left: 22px;
+          font-weight: 200;
+          font-size: 22px;
+          color: #616669;
         }
     }
     .infoTab {
@@ -86,6 +88,7 @@ const Wrapper = styled.div`
           flex: 3;
           height: 87px;
           display: flex;
+          background-color: white;
       }
 
       .infoWidth {

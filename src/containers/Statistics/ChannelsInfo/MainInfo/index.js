@@ -238,6 +238,7 @@ class MainInfo extends React.Component {
         name: this.getNameDate(parseInt(index, 10), isMonth),
         [rule.content]: value,
         index,
+        radius: [4, 4, 0, 0],
       });
     });
 
@@ -278,17 +279,17 @@ class MainInfo extends React.Component {
             {this.getTotaldata()}
           </div>
           <div className={['col-md-8', 'col-sm-8', 'col-xs-8'].join(' ')}>
-            <BarChart width={600} height={200} data={this.getChartsData()} margin={{ top: 5, right: 30, left: 20, bottom: 1 }}>
-              <XAxis dataKey="name" />
-              <YAxis />
-              <CartesianGrid strokeDasharray="3 3" />
+            <BarChart width={650} height={200} data={this.getChartsData()} margin={{ top: 5, right: 30, left: 20, bottom: 1 }}>
+              <XAxis dataKey="name" stroke="#888888" tickLine={false} />
+              <YAxis tickLine={false} stroke="#888888" axisLine={false} />
+              <CartesianGrid vertical={false} stroke="rgba(207,216,220,0.7)" strokeWidth={1.35} />
               <Tooltip />
-              <Bar dataKey={rule.content} fill="#dfdfdf" />
+              <Bar dataKey={rule.content} fill="#C8CED0" barSize={33} />
             </BarChart>
           </div>
         </Wrapper>
         <div>
-          <h3 className="top-this-month">Top This Month</h3>
+          <h3 className="top-this-month">Top Posts Current Month</h3>
           {TopItemsList}
         </div>
       </Info>

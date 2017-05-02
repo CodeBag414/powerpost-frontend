@@ -146,16 +146,16 @@ export function createRoutes(store, auth) {
           name: 'calendar',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
-              // System.import('../App/views/Main/views/Calendar/state/reducer'),
-              // System.import('../App/views/Main/views/Calendar/state/sagas'),
+              System.import('containers/Calendar/reducer'),
+              System.import('containers/Calendar/sagas'),
               System.import('containers/Calendar'),
             ]);
 
             const renderRoute = loadModule(cb);
 
-            importModules.then(([component]) => {
-            //  injectReducer('posts', reducer.default);
-            //  injectSagas(sagas.default);
+            importModules.then(([reducer, sagas, component]) => {
+              injectReducer('posts', reducer.default);
+              injectSagas(sagas.default);
               renderRoute(component);
             });
 
@@ -193,6 +193,27 @@ export function createRoutes(store, auth) {
 
             importModules.then(([reducer, sagas, component]) => {
               injectReducer('feed', reducer.default);
+              injectSagas(sagas.default);
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+        {
+          path: '/account(/:account_id)/board',
+          name: 'board',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/Board/reducer'),
+              System.import('containers/Board/sagas'),
+              System.import('containers/Board'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([reducer, sagas, component]) => {
+              injectReducer('board', reducer.default);
               injectSagas(sagas.default);
               renderRoute(component);
             });
