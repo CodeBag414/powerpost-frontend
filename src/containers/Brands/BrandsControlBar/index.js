@@ -1,68 +1,51 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import PPButton from 'elements/atm.Button';
-import {Button, IconButton} from 'react-toolbox/lib/button';
-import PPButtonInput from 'elements/atm.ButtonInput';
 
-const BrandsControlBarContainer = styled.div`
-    width: 100%;
-    padding: 10px;
-    display: inline-block;
-    border: 1px solid #ddd;
-    font-size: 18px;
-    text-align: left;
-    box-shadow: 2px 2px 9px rgba(0,0,0,0.1);
+const Wrapper = styled.div`
+  width: 100%;
+  padding: 22px 15px;
+  display: flex;
+  justify-content: space-between;
 `;
 
-const BrandsControlButtons = styled.div`
-    display: inline-block;
-    vertical-align: top;
-    margin: 5px 20px 10px 10px;
-`;
-
-const BrandsControlSearch = styled.div`
-    display: inline-block;
-    vertical-align: top;
-    margin-top: 6px;
-
-    div {
-        margin-left: 10px  !important;
-    }
+const BrandStatus = styled.p`
+  margin: auto 0;
+  color: #888888;
+  font-family: Lato;
+  font-size: 13px;
 `;
 
 class BrandsControlBar extends React.Component {
-    constructor(props) {
-        super(props);
-        this.setBrandFilter = this.setBrandFilter.bind(this);
-    }
 
-    setBrandFilter(e) {
-        this.props.setBrandFilter(e);
-    }
+  static propTypes = {
+    setBrandFilter: PropTypes.func,
+    handleDialogToggle: PropTypes.func,
+  }
 
-    render() {
+  constructor(props) {
+    super(props);
+    this.setBrandFilter = this.setBrandFilter.bind(this);
+  }
 
-        return (
-            <BrandsControlBarContainer>
-                <BrandsControlButtons>
-                    <PPButton label="ADD NEW BRAND" primary onClick={ this.props.handleDialogToggle } />
-                    <IconButton icon='list' />
-                    <IconButton icon='apps' accent />
-                </BrandsControlButtons>
-                <BrandsControlSearch>
-                  <PPButtonInput value={ this.props.brandFilter } type="text" hint="Search" icon="search" onChange={ this.setBrandFilter }/>
-                </BrandsControlSearch>
-            </BrandsControlBarContainer>
-        );
-    }
+  setBrandFilter(e) {
+    this.props.setBrandFilter(e);
+  }
+
+  render() {
+    return (
+      <Wrapper>
+        <PPButton
+          label="Add New Brand"
+          onClick={this.props.handleDialogToggle}
+          primary
+        />
+        <BrandStatus>9 of 20 Brands Remaining</BrandStatus>
+      </Wrapper>
+    );
+  }
 }
 
-BrandsControlBar.propTypes = {children: React.PropTypes.node};
-
-function mapStateToProps() {
-    return {};
-}
-
-export default connect(mapStateToProps, null)(BrandsControlBar);
+export default BrandsControlBar;

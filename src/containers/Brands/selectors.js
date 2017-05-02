@@ -17,14 +17,8 @@ const makeSelectDeleteBrandID = () => createSelector(
     (brands) => brands.get('deleteBrandID')
 );
 
-const makeSelectDialogShown = () => createSelector(
-    selectBrands,
-    (brands) => brands.get('dialogShown')
-);
-
 export {
     makeSelectBrandFilter,
     makeSelectNewBrand,
     makeSelectDeleteBrandID,
-    makeSelectDialogShown,
 };

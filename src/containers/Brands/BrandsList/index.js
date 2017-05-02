@@ -1,36 +1,37 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 import BrandsListItem from './BrandsListItem';
 
-class BrandsList extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-    
-    render() {
-        let brandsList = [];
-        console.log('last brands', this.props.brands)
-        
-        if((this.props.brands !== undefined) && (this.props.brands.length > 0)) {
-            this.props.brands.map((brand, index) => {
-                brandsList.push(
-                    <BrandsListItem key={index} brand={brand} remove={this.props.removeBrand}/>
-                );
-            });
-        } else {
-            brandsList = 'You currently have no brands';
-        }
+const Wrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
 
-        return (
-            <div>
-                { brandsList }
-            </div>
-        );
-    }
+function BrandsList({ brands, removeBrand }) {
+  let brandsList = [];
+
+  if ((brands !== undefined) && (brands.length > 0)) {
+    brands.map((brand, index) => {
+      brandsList.push(
+        <BrandsListItem key={index} brand={brand} remove={removeBrand} />
+                );
+    });
+  } else {
+    brandsList = 'You currently have no brands';
+  }
+
+  return (
+    <Wrapper>
+      { brandsList }
+    </Wrapper>
+  );
 }
 
 BrandsList.propTypes = {
-    children: React.PropTypes.node
+  brands: PropTypes.array,
+  removeBrand: PropTypes.func,
 };
 
 export default BrandsList;

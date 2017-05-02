@@ -14,7 +14,7 @@ import {
 
 export function* getAccount(action) {
   let accountId = action.accountId;
-  console.log(accountId);
+
   if (!action.accountId) {
     accountId = 'me';
   }
@@ -26,7 +26,6 @@ export function* getAccount(action) {
     yield put({ type: IS_LOADING_ACCOUNT });
     try {
       const account = yield call(getData, requestURL);
-      console.log(account);
       if (account.data.error) {
         yield put({ type: FETCH_ACCOUNT_ERROR, account });
       } else {

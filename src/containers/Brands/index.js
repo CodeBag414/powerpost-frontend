@@ -1,25 +1,9 @@
-import React from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
 import { UserCanAccount } from 'config.routes/UserRoutePermissions';
-
-import AddBrandDialog from './AddBrandDialog';
-import BrandsControlBar from './BrandsControlBar';
-import BrandsList from './BrandsList';
-
-import {
-    setBrandFilter,
-    setBrandsList,
-    toggleDialog,
-} from './actions';
-
-import {
-    makeSelectBrandFilter,
-    makeSelectNewBrand,
-    makeSelectDeleteBrandID,
-    makeSelectDialogShown,
-} from './selectors';
 
 import {
     makeSelectAccountBrands,
@@ -29,101 +13,111 @@ import {
   makeSelectSharedAccounts,
 } from 'containers/App/selectors';
 
+import Wrapper from './Wrapper';
+import AddBrandDialog from './AddBrandDialog';
+import BrandsControlBar from './BrandsControlBar';
+import BrandsList from './BrandsList';
 
-class Brands extends React.Component {
-    constructor(props) {
-        super(props);
+import {
+  setBrandFilter,
+  setBrandsList,
+  toggleDialog,
+} from './actions';
 
-        this.state = {
-            brands: [],
+import {
+  makeSelectBrandFilter,
+  makeSelectNewBrand,
+  makeSelectDeleteBrandID,
+} from './selectors';
+
+class Brands extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      brands: [],
+      isDialogShown: false,
+    };
+
+    this.setBrandFilter = this.setBrandFilter.bind(this);
+  }
+
+  setBrandFilter(brandFilter) {
+    this.props.setBrandFilter(brandFilter);
+  }
+
+  getFilteredBrands() {
+    this.state.brands = this.props.brands;
+    if (this.props.newBrand.account_id !== undefined) {
+      this.state.brands = [...this.state.brands, this.props.newBrand];
+    }
+
+    if (this.props.deleteBrandID !== '') {
+      const tmpBrands = [];
+      this.state.brands.map((brand, index) => {
+        if (brand.account_id !== this.props.deleteBrandID) {
+          tmpBrands.push(brand);
         }
-        
-        this.handleDialogToggle = this.handleDialogToggle.bind(this);
-        this.setBrandFilter = this.setBrandFilter.bind(this);
-    }
-    
-    handleDialogToggle() {
-        this.props.toggleDialogShown(!this.props.dialogShown);
+      });
+      this.state.brands = tmpBrands;
     }
 
-    setBrandFilter(brandFilter) {
-        this.props.setBrandFilter(brandFilter);
-    }
+    return this.state.brands.filter((brand) => {
+      let matched = true;
 
-    getFilteredBrands () {
-        console.log('props brands 111', this.props.brands)
-        
-        this.state.brands = this.props.brands;
-        if (this.props.newBrand.account_id !== undefined) {
-            this.state.brands = [...this.state.brands, this.props.newBrand]
-        }
-        
-        if (this.props.deleteBrandID !== '') {
-            let tmpBrands = [];
-            this.state.brands.map((brand, index) => {
-                if ( brand.account_id !== this.props.deleteBrandID ) {
-                    tmpBrands.push(brand);
-                }                
-            });
-            this.state.brands = tmpBrands
-        }
-        
-        console.log('props brands 222', this.props.brands)
-    
-        return this.state.brands.filter(brand => {
-            let matched = true;
+      if (this.props.brandFilter) {
+        matched = matched && (brand.title.toLowerCase().indexOf(this.props.brandFilter.toLowerCase()) > -1);
+      }
 
-            if(this.props.brandFilter) {
-                matched = matched && (brand.title.toLowerCase().indexOf(this.props.brandFilter.toLowerCase()) > -1);
-            }
-
-            return matched;
-        });
-    }
+      return matched;
+    });
+  }
 
 
-    getBrandsRemaining () {
-        this.getFilteredBrands()
-        return this.state.brands.length
-    }
+  getBrandsRemaining() {
+    this.getFilteredBrands();
+    return this.state.brands.length;
+  }
 
-    render() {
-        return (
-            <div>
-                <BrandsControlBar 
-                    handleDialogToggle={this.handleDialogToggle} 
-                    setBrandFilter={this.setBrandFilter} 
-                    brandFilter={'this.props.brand', this.props.brandFilter}
-                />
-                <BrandsList 
-                    brands={this.getFilteredBrands()}
-                /> 
-                <AddBrandDialog 
-                    handleDialogToggle={this.handleDialogToggle} 
-                    dialogShown={this.props.dialogShown} 
-                />
-            </div>
-        );
-    }
+  handleDialogToggle = () => {
+    this.setState({ isDialogShown: !this.state.isDialogShown });
+  }
+
+  render() {
+    const { isDialogShown } = this.state;
+
+    return (
+      <Wrapper>
+        <BrandsControlBar
+          handleDialogToggle={this.handleDialogToggle}
+          setBrandFilter={this.setBrandFilter}
+          brandFilter={'this.props.brand', this.props.brandFilter}
+        />
+        <BrandsList
+          brands={this.getFilteredBrands()}
+        />
+        <AddBrandDialog
+          handleDialogToggle={this.handleDialogToggle}
+          active={isDialogShown}
+        />
+      </Wrapper>
+    );
+  }
 }
 
-Brands.propTypes = {children: React.PropTypes.node};
-
 export function mapDispatchToProps(dispatch) {
-    return {
-        setBrandFilter: brandFilter => dispatch(setBrandFilter(brandFilter)),
-        setBrandsListShown: brands => dispatch(setBrandsList(brands)),
-        toggleDialogShown: isShown => dispatch(toggleDialog(isShown)),
-    };
+  return {
+    setBrandFilter: (brandFilter) => dispatch(setBrandFilter(brandFilter)),
+    setBrandsListShown: (brands) => dispatch(setBrandsList(brands)),
+    toggleDialogShown: (isShown) => dispatch(toggleDialog(isShown)),
+  };
 }
 
 const mapStateToProps = createStructuredSelector({
-    brandFilter: makeSelectBrandFilter(),
-    // brands: makeSelectSharedAccounts(),
-    brands: makeSelectAccountBrands(),
-    newBrand: makeSelectNewBrand(),
-    deleteBrandID: makeSelectDeleteBrandID(),
-    dialogShown: makeSelectDialogShown(),
+  brandFilter: makeSelectBrandFilter(),
+  brands: makeSelectAccountBrands(),
+  newBrand: makeSelectNewBrand(),
+  deleteBrandID: makeSelectDeleteBrandID(),
 });
 
 export default UserCanAccount(connect(mapStateToProps, mapDispatchToProps)(Brands));
