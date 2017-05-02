@@ -146,16 +146,16 @@ export function createRoutes(store, auth) {
           name: 'calendar',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
-              // System.import('../App/views/Main/views/Calendar/state/reducer'),
-              // System.import('../App/views/Main/views/Calendar/state/sagas'),
+              System.import('containers/Calendar/reducer'),
+              System.import('containers/Calendar/sagas'),
               System.import('containers/Calendar'),
             ]);
 
             const renderRoute = loadModule(cb);
 
-            importModules.then(([component]) => {
-            //  injectReducer('posts', reducer.default);
-            //  injectSagas(sagas.default);
+            importModules.then(([reducer, sagas, component]) => {
+              injectReducer('posts', reducer.default);
+              injectSagas(sagas.default);
               renderRoute(component);
             });
 
