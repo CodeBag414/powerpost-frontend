@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import filepicker from 'filepicker-js';
 
-import { UserCanTeam } from 'config.routes/UserRoutePermissions';
-
 import PPTextField from 'elements/atm.TextField';
 import PPButton from 'elements/atm.Button';
 import PPAvatar from 'elements/atm.Avatar';
@@ -188,4 +186,4 @@ const mapStateToProps = createStructuredSelector({
   filePickerKey: makeSelectFilePickerKey(),
 });
 
-export default UserCanTeam(connect(mapStateToProps)(BrandUploadForm));
+export default connect(mapStateToProps)(BrandUploadForm);

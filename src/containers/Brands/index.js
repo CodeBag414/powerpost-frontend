@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import { UserCanAccount } from 'config.routes/UserRoutePermissions';
+import { UserCanBrands } from 'config.routes/UserRoutePermissions';
 
 import {
     makeSelectAccountBrands,
@@ -120,4 +120,4 @@ const mapStateToProps = createStructuredSelector({
   deleteBrandID: makeSelectDeleteBrandID(),
 });
 
-export default UserCanAccount(connect(mapStateToProps, mapDispatchToProps)(Brands));
+export default UserCanBrands(connect(mapStateToProps, mapDispatchToProps)(Brands));
