@@ -8,17 +8,10 @@ import Wrapper from './Wrapper';
 
 class PopupMenu extends Component {
 
-  handleClickOutside = (e) => {
-    this.props.onOutsideClick(e);
-  }
-
-  handleClickDelete = () => {
-
-  }
-
-  handleClickEdit = () => {
-
-  }
+  static propTypes = {
+    post: PropTypes.object,
+    popupPosition: PropTypes.object,
+  };
 
   getStatusText({ post }) {
     switch (post.status) {
@@ -35,16 +28,28 @@ class PopupMenu extends Component {
     }
   }
 
+  handleClickOutside = (e) => {
+    this.props.onOutsideClick(e);
+  }
+
+  handleClickDelete = () => {
+
+  }
+
+  handleClickEdit = () => {
+
+  }
+
   render() {
     const { post, popupPosition } = this.props;
-    console.log('post', post);
+    // console.log('post', post);
     if (!post) return null;
     return (
       <Wrapper position={popupPosition}>
         <div className="event-popup-close"><i className="fa fa-times" aria-hidden="true" onClick={this.handleClickOutside} /></div>
         {
           post.post_set.post_type === 'image' &&
-            <img className="event-popup-image" src={post.post_set.media_items[0].properties.source_url} />
+            <img className="event-popup-image" src={post.post_set.media_items[0].properties.source_url} alt="Post" />
         }
         <div className="event-popup-status">
           {this.getStatusText(post)}

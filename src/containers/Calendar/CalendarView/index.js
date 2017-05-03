@@ -9,10 +9,9 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 
-import PopupMenu from 'components/PopupMenu';
-
 import Wrapper from './Wrapper';
 import Toolbar from './Toolbar';
+import PopupMenu from './PopupMenu';
 
 BigCalendar.setLocalizer(
   BigCalendar.momentLocalizer(moment)

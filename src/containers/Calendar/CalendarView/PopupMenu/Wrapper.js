@@ -18,8 +18,8 @@ const Wrapper = styled.div`
   -webkit-filter: drop-shadow(0 1px 5px rgba(60, 92, 129, 0.42));
   filter        : drop-shadow(0 1px 5px rgba(60, 92, 129, 0.42));
   -ms-filter    : "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=1, Color='#383C5C81')";
-  left: ${props => `${getX(props)}px`};
-  top: ${props => `${props.position.y}px`};
+  left: ${(props) => `${getX(props)}px`};
+  top: ${(props) => `${props.position.y}px`};
   transform: translate(-50%, calc(-100% - ${arrowHeight}px));
   z-index: 10;
   &::before {
@@ -100,6 +100,7 @@ const Wrapper = styled.div`
       font-size: 12px;
       line-height: 1;
       border: none;
+      margin-right: 10px;
     }
   }
 `;
