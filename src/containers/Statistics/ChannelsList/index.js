@@ -46,7 +46,7 @@ ChannelsList.propTypes = {
   accountId: PropTypes.string,
   loading: PropTypes.any,
   setChannelFilter: PropTypes.func.isRequired,
-  channelFilter: PropTypes.func.isRequired,
+  channelFilter: PropTypes.string.isRequired,
 };
 
 export default ChannelsList;
