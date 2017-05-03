@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
@@ -21,6 +21,12 @@ import {
  */
 class Calendar extends React.Component {
 
+  static propTypes = {
+    location: PropTypes.object,
+    getPosts: PropTypes.func,
+    posts: PropTypes.array,
+  };
+
   state = {
     query: '',
     filters: [true, true, true, true, true, true, true],
@@ -38,7 +44,6 @@ class Calendar extends React.Component {
 
   fetchPosts = (props) => {
     const { location, getPosts } = props;
-    console.log('location', location);
     const pathParts = location.pathname.split('/');
     const accountId = pathParts[pathParts.length - 2];
     getPosts(accountId);
@@ -64,6 +69,8 @@ class Calendar extends React.Component {
       case 'showIdea':
         newFilters[6] = value;
         break;
+      default:
+        return;
     }
     this.setState({ filters: newFilters });
   }
@@ -71,7 +78,7 @@ class Calendar extends React.Component {
   render() {
     const { query, filters } = this.state;
     const { posts } = this.props;
-    if (posts == null || posts.length == 0 || !Array.isArray(posts)) return null;
+    if (posts == null || posts.length === 0 || !Array.isArray(posts)) return null;
     return (
       <Wrapper>
         <CalendarSidebar
@@ -90,11 +97,11 @@ class Calendar extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
+const mapDispatchToProps = (dispatch) => (
+  {
     getPosts: (accountId) => dispatch(fetchPosts(accountId)),
-  };
-}
+  }
+);
 
 const mapStateToProps = createStructuredSelector({
   posts: makeSelectPosts(),

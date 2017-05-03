@@ -2,11 +2,11 @@
 
 import { createSelector } from 'reselect';
 
-const selectCalendar = state => state.get('posts');
+const selectCalendar = (state) => state.get('posts');
 
 const makeSelectPosts = () => createSelector(
     selectCalendar,
-    posts => posts.get('posts'),
+    (posts) => posts.get('posts'),
 );
 
 export {

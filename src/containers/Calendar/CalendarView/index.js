@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 import BigCalendar from 'react-big-calendar';
@@ -14,32 +14,23 @@ import PopupMenu from 'components/PopupMenu';
 import Wrapper from './Wrapper';
 import Toolbar from './Toolbar';
 
-const samplePosts = [
-  {
-    id: '1',
-    title: 'First event',
-    start: moment('2017-04-25 3:00:00 am'),
-    end: moment('2017-04-25 11:00:00 am'),
-  },
-  {
-    id: '2',
-    title: 'Second event',
-    start: moment('2017-04-26 3:00:00 am'),
-    end: moment('2017-04-26 6:00:00 am'),
-  },
-];
-
 BigCalendar.setLocalizer(
   BigCalendar.momentLocalizer(moment)
 );
 
 const DragAndDropCalendar = withDragAndDrop(BigCalendar);
 
-let formats = {
+const formats = {
   dateFormat: 'D',
 };
 
 class CalendarView extends React.Component {
+
+  static propTypes = {
+    posts: PropTypes.array,
+    query: PropTypes.string,
+    filters: PropTypes.array,
+  };
 
   state = {
     showPopup: false,
@@ -47,9 +38,11 @@ class CalendarView extends React.Component {
     currentPost: null,
   };
 
-  eventPropGetter = (event, start, end, isSelected) => {
+  eventPropGetter = (event) => {
     const { post } = event.post;
-    let bgColor, fgColor, borderColor;
+    let bgColor;
+    let fgColor;
+    let borderColor;
     switch (post.status) {
       case '3':
         bgColor = 'rgba(171,230,106,0.5)'; // Ready
@@ -82,13 +75,15 @@ class CalendarView extends React.Component {
       background: bgColor,
       border: `1px solid ${borderColor}`,
       color: fgColor,
-    }
+    };
+
     return {
       style,
     };
   }
 
-  moveEvent = ({ event, start, end }) => {
+  moveEvent = ({ event }) => {
+    console.log('event', event);
   }
 
   eventSelected = (event, e) => {
@@ -96,7 +91,7 @@ class CalendarView extends React.Component {
     const y = e.nativeEvent.clientY;
     this.setState({
       showPopup: true,
-      popupPosition: {x, y},
+      popupPosition: { x, y },
       currentPost: event.post,
     });
   }
@@ -115,7 +110,7 @@ class CalendarView extends React.Component {
       const titleMatch = !query || (post.post_set.title && post.post_set.title.toLowerCase().indexOf(queryLower) !== -1);
       let tagsMatch = !query;
       if (post.post_set.tags) {
-        for (let i = 0; i < post.post_set.tags.length; i++) {
+        for (let i = 0; i < post.post_set.tags.length; i += 1) {
           const tag = post.post_set.tags[i].toLowerCase();
           if (tag.indexOf(queryLower) !== -1) {
             tagsMatch = true;
@@ -130,9 +125,10 @@ class CalendarView extends React.Component {
           title: post.post_set.title ? post.post_set.title : 'Untitled post',
           start: moment.unix(post.post.schedule_time),
           end: moment.unix(post.post.schedule_time),
-        }
+        };
       }
-    }).filter(post => post);
+      return null;
+    }).filter((post) => post);
     return (
       <Wrapper>
         <DragAndDropCalendar
