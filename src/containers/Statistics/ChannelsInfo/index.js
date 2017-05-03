@@ -73,10 +73,11 @@ class ChannelsInfo extends React.Component {
         { info: 'analytics.pins_by_month', key: 'comments', label: 'Comments' },
       ],
       twitter: [
-        { info: 'analytics.user_stats.listed_count', direct: true, label: 'Tweets' },
+        { info: 'analytics.user_stats.statuses_count', direct: true, label: 'Tweets' },
+        { info: 'analytics.user_stats.listed_count', direct: true, label: 'Retweets' },
         { info: 'analytics.user_stats.followers_count', direct: true, label: 'Followers' },
         { info: 'analytics.user_stats.friends_count', direct: true, label: 'Following' },
-        { info: 'analytics.user_stats.favourites_count', direct: true, label: 'Favorites' },
+        { info: 'analytics.user_stats.favorites_count', direct: true, label: 'Favorites' },
       ],
       linkedin: [
         { info: 'analytics.total_followers_by_month', label: 'Followers' },
@@ -90,7 +91,7 @@ class ChannelsInfo extends React.Component {
         if (rule.direct) {
           return (
             <div className="infoWidth">
-              <h3 className="topItemValue">{activeChannel.getIn(rule.info.split('.'))}</h3>
+              <h3 className="topItemValue">{(activeChannel.getIn(rule.info.split('.')) || 0).toLocaleString()}</h3>
               <h6 className="topItemLabel">{rule.label}</h6>
             </div>
           );
@@ -102,7 +103,7 @@ class ChannelsInfo extends React.Component {
           if (last != null) {
             return (
               <div className="infoWidth">
-                <h3 className="topItemValue">{(rule.key ? info.getIn([last, rule.key]) : info.get(last)) || 0}</h3>
+                <h3 className="topItemValue">{((rule.key ? info.getIn([last, rule.key]) : info.get(last)) || 0).toLocaleString()}</h3>
                 <h6 className="topItemLabel">{rule.label}</h6>
               </div>
             );

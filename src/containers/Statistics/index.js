@@ -8,6 +8,7 @@ import React, { PropTypes } from 'react';
 
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { browserHistory } from 'react-router';
 
 import { UserCanStatistics } from 'config.routes/UserRoutePermissions';
 import {
@@ -61,10 +62,15 @@ class Statistics extends React.Component {
 
   componentDidMount() {
     this.props.getAccountId();
+    const { router } = this.props;
+    const connections = this.getFilteredConnections(this.props.connections);
+    if (!router.params.channel_id && connections.length) {
+      browserHistory.push(`${router.location.pathname.replace(/\/$/,'')}/${connections[0].connection_id}`);
+    }
   }
 
-  getFilteredConnections() {
-    const { connections, channelFilter, channelType } = this.props;
+  getFilteredConnections(connections) {
+    const { channelFilter, channelType } = this.props;
     return connections.filter((connection) => {
       let matched = true;
 
@@ -75,6 +81,8 @@ class Statistics extends React.Component {
       if (channelType) {
         matched = matched && (connection.channel === channelType);
       }
+
+      if (connection.type === 'facebook_profile') return false;
 
       return matched;
     });
@@ -107,11 +115,11 @@ class Statistics extends React.Component {
   }
 
   render() {
-    const { params, children } = this.props;
+    const { params, children, connections } = this.props;
     return (
       <div>
         <ChannelsList
-          connections={this.getFilteredConnections()}
+          connections={this.getFilteredConnections(connections)}
           accountId={params.account_id}
           loading={children}
           handleDialogToggle={this.handleDialogToggle}
@@ -143,5 +151,9 @@ const mapStateToProps = createStructuredSelector({
   dialogShown: makeSelectDialogShown(),
   accountId: makeSelectAccountId(),
 });
+
+Statistics.propTypes = {
+
+}
 
 export default UserCanStatistics(connect(mapStateToProps, mapDispatchToProps)(Statistics));

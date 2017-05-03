@@ -93,6 +93,7 @@ const Wrapper = styled.div`
 
       .infoWidth {
           flex: 2;
+          background-color: #f9fafa;
       }
 
       .activeWidth, .infoWidth {
