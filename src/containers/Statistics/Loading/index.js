@@ -22,11 +22,11 @@ class ChannelLoading extends React.Component {
     const { channel } = this.props;
     return (
       <Wrapper>
-        <div className="connectionBlock">
+        <div className="connectionBlockLoading">
           <div className="connectionIcon">
             <i className={`${channel.channel_icon} ${channel.channel}`}></i>
           </div>
-          <div style={{ float: 'left' }}>
+          <div className="connectionContent">
             <div className="connectionName">
               {channel.display_name}
             </div>
@@ -35,9 +35,9 @@ class ChannelLoading extends React.Component {
             </div>
           </div>
         </div>
-        <p>We are crunching the numbers!</p>
+        <p className="crunchingNumber">We are crunching the numbers!</p>
         <Progress>
-          <Loading type="spin" color="#ff0000" />
+          <Loading type="spin" color="#E81C64" width="60" height="60" delay="0" />
         </Progress>
       </Wrapper>
     );

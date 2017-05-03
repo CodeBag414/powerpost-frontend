@@ -18,7 +18,7 @@ const Analytics = styled.div`
       background-color: white;
   }
   .tabContent {
-    padding-left: 30px;
+    padding: 0 30px;
     flex: 1;
   }
 `;
