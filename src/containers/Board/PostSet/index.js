@@ -34,13 +34,12 @@ class PostSet extends Component {
   render() {
     const { postSet, onDeletePostSet } = this.props;
     const { popOver } = this.state;
-    const imgSrc = postSet.getIn(['media_items', 0, 'properties', 'source_url']); //TODO: I couldn't get any image.
+    const imgSrc = postSet.getIn(['media_items', 0, 'properties', 'source_url']); // TODO: I couldn't get any image.
     const hasImage = !!imgSrc;
     const scheduledTime = postSet.getIn(['posts', 0, 'schedule_time']);
     const formattedTime = scheduledTime && moment(scheduledTime * 1000).format('MMM DD - hh:mma');
     const title = postSet.get('title');
     const description = postSet.get('message');
-    console.log(`url(${imgSrc}) noRepeat center center fixed`);
     return (
       <div className={styles.postSet} onClick={this.hidePopover}>
         <div className={hasImage ? styles.image : styles.noImage} style={{ backgroundImage: `url(${imgSrc})` }}>
