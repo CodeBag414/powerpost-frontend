@@ -31,7 +31,7 @@ const rules = {
     retweets: {
       infoMonth: 'analytics.tweets_by_month',
       infoWeek: 'analytics.tweets_by_weeks_ago',
-      totalKey: 'retween_count',
+      totalKey: 'retweet_count',
       content: 'Retweets',
       reKey: 'tweet_count',
       reLabel: 'Tweets',
@@ -86,11 +86,15 @@ const rules = {
       infoMonth: 'analytics.posts_by_month',
       infoWeek: 'analytics.posts_by_weeks_ago',
       content: 'Likes',
+      totalKey: 'likes',
+      topByEngagementKey: 'top_posts_by_engagement',
     },
     comments: {
       infoMonth: 'analytics.posts_by_month',
       infoWeek: 'analytics.posts_by_weeks_ago',
       content: 'Comments',
+      totalKey: 'comments',
+      topByEngagementKey: 'top_posts_by_engagement',
     },
     infos: {
       infoMonth: 'analytics.posts_by_month',
@@ -108,26 +112,39 @@ const rules = {
       infoMonth: 'analytics.pins_by_month',
       infoWeek: 'analytics.pins_by_weeks_ago',
       content: 'Pins',
+      totalKey: 'pin_count',
+      topByEngagementKey: 'top_pins_by_engagement',
     },
     're-pins': {
       infoMonth: 'analytics.pins_by_month',
       infoWeek: 'analytics.pins_by_weeks_ago',
-      content: 'Re-pins',
+      content: 'Re-Pins',
+      totalKey: 'repins',
+      topByEngagementKey: 'top_pins_by_engagement',
     },
     likes: {
       infoMonth: 'analytics.pins_by_month',
       infoWeek: 'analytics.pins_by_weeks_ago',
       content: 'Likes',
+      totalKey: 'likes',
+      topByEngagementKey: 'top_pins_by_engagement',
     },
     comments: {
       infoMonth: 'analytics.pins_by_month',
       infoWeek: 'analytics.pins_by_weeks_ago',
       content: 'Comments',
+      totalKey: 'comments',
+      topByEngagementKey: 'top_pins_by_engagement',
     },
     infos: {
       items: [
-
+        { label: 'Likes', valueKey: 'counts.likes' },
+        { label: 'Comments', valueKey: 'counts.comments' },
+        { label: 'Re-pins', valueKey: 'counts.repins' },
       ],
+      imageUrlKey: 'image.original.url',
+      createTimeKey: 'created_at',
+      descriptionKey: 'note',
     },
   },
   linkedin: {

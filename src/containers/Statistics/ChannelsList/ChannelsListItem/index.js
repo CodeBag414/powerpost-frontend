@@ -14,6 +14,7 @@ class ChannelsListItem extends React.Component {
   }
 
   getStatusLabel() {
+    console.log(this.props.connection);
     switch (this.props.connection.status) {
       case '3':
         return <div className="disconnectedLabel"><i className="fa fa-warning"></i> Reconnect</div>;

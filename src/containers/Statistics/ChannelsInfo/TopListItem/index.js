@@ -24,7 +24,6 @@ class TopListItem extends React.Component {
 
   renderItem() {
     const { topItem, imageUrlKey, createTimeKey, descriptionKey } = this.props;
-    console.log(topItem.toJS());
     return (
       <ContentWrapper>
         <ImgWrapper>
@@ -44,7 +43,7 @@ class TopListItem extends React.Component {
       <TableWrapper>
         {
           infos.map((info, index) =>
-            <div className={infos.length - 1 > index ? 'borderRight' : ''}>
+            <div key={index} className={infos.length - 1 > index ? 'borderRight' : ''}>
               <span className="value">{info.value}</span>
               <span className="description">{info.label}</span>
             </div>
