@@ -6,77 +6,50 @@ import { createStructuredSelector } from 'reselect';
 import { UserCanBrands } from 'config.routes/UserRoutePermissions';
 
 import {
-    makeSelectAccountBrands,
+  fetchCurrentAccount,
+} from 'containers/Main/actions';
+
+import {
+  makeSelectAccountBrands,
 } from 'containers/Main/selectors';
 
 import {
-  makeSelectSharedAccounts,
+  makeSelectUserAccount,
 } from 'containers/App/selectors';
+
+import {
+  makeSelectBrandCreated,
+  makeSelectBrandDeleted,
+} from './selectors';
 
 import Wrapper from './Wrapper';
 import AddBrandDialog from './AddBrandDialog';
-import BrandsControlBar from './BrandsControlBar';
+import Header from './Header';
 import BrandsList from './BrandsList';
 
-import {
-  setBrandFilter,
-  setBrandsList,
-  toggleDialog,
-} from './actions';
-
-import {
-  makeSelectBrandFilter,
-  makeSelectNewBrand,
-  makeSelectDeleteBrandID,
-} from './selectors';
-
 class Brands extends Component {
+
+  static propTypes = {
+    userAccount: PropTypes.object,
+    brands: PropTypes.array,
+    isBrandCreated: PropTypes.bool,
+    isBrandDeleted: PropTypes.bool,
+    fetchAccount: PropTypes.func,
+  }
+
   constructor(props) {
     super(props);
 
     this.state = {
-      brands: [],
       isDialogShown: false,
     };
-
-    this.setBrandFilter = this.setBrandFilter.bind(this);
   }
 
-  setBrandFilter(brandFilter) {
-    this.props.setBrandFilter(brandFilter);
-  }
-
-  getFilteredBrands() {
-    this.state.brands = this.props.brands;
-    if (this.props.newBrand.account_id !== undefined) {
-      this.state.brands = [...this.state.brands, this.props.newBrand];
+  componentWillReceiveProps(nextProps) {
+    if (this.props.isBrandCreated !== nextProps.isBrandCreated ||
+      this.props.isBrandDeleted !== nextProps.isBrandDeleted) {
+      this.props.fetchAccount(this.props.userAccount.account_id);
     }
-
-    if (this.props.deleteBrandID !== '') {
-      const tmpBrands = [];
-      this.state.brands.map((brand, index) => {
-        if (brand.account_id !== this.props.deleteBrandID) {
-          tmpBrands.push(brand);
-        }
-      });
-      this.state.brands = tmpBrands;
-    }
-
-    return this.state.brands.filter((brand) => {
-      let matched = true;
-
-      if (this.props.brandFilter) {
-        matched = matched && (brand.title.toLowerCase().indexOf(this.props.brandFilter.toLowerCase()) > -1);
-      }
-
-      return matched;
-    });
-  }
-
-
-  getBrandsRemaining() {
-    this.getFilteredBrands();
-    return this.state.brands.length;
   }
 
   handleDialogToggle = () => {
@@ -84,17 +57,20 @@ class Brands extends Component {
   }
 
   render() {
+    const { userAccount, brands } = this.props;
     const { isDialogShown } = this.state;
+
+    const numBrands = userAccount && userAccount.account_access && userAccount.account_access.num_brands;
 
     return (
       <Wrapper>
-        <BrandsControlBar
+        <Header
           handleDialogToggle={this.handleDialogToggle}
-          setBrandFilter={this.setBrandFilter}
-          brandFilter={'this.props.brand', this.props.brandFilter}
+          brandLimit={numBrands}
+          numBrands={brands.length}
         />
         <BrandsList
-          brands={this.getFilteredBrands()}
+          brands={brands}
         />
         <AddBrandDialog
           handleDialogToggle={this.handleDialogToggle}
@@ -107,17 +83,15 @@ class Brands extends Component {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    setBrandFilter: (brandFilter) => dispatch(setBrandFilter(brandFilter)),
-    setBrandsListShown: (brands) => dispatch(setBrandsList(brands)),
-    toggleDialogShown: (isShown) => dispatch(toggleDialog(isShown)),
+    fetchAccount: (accountId) => dispatch(fetchCurrentAccount(accountId)),
   };
 }
 
 const mapStateToProps = createStructuredSelector({
-  brandFilter: makeSelectBrandFilter(),
   brands: makeSelectAccountBrands(),
-  newBrand: makeSelectNewBrand(),
-  deleteBrandID: makeSelectDeleteBrandID(),
+  userAccount: makeSelectUserAccount(),
+  isBrandCreated: makeSelectBrandCreated(),
+  isBrandDeleted: makeSelectBrandDeleted(),
 });
 
 export default UserCanBrands(connect(mapStateToProps, mapDispatchToProps)(Brands));

@@ -39,7 +39,7 @@ class AddBrandDialog extends Component {
       account_id: this.props.userOwnAccount.account_id,
       display_name: content.brandName,
       thumbnail_image_key: content.avatarKey,
-      color: this.state.accountColor,
+      color: content.backgroundColor,
     };
 
     this.props.handleDialogToggle();
@@ -56,7 +56,11 @@ class AddBrandDialog extends Component {
         onOverlayClick={handleDialogToggle}
         onEscKeyDown={handleDialogToggle}
       >
-        <BrandUploadForm avatarColor={accountColor} addBrand={this.createNewBrand} />
+        <BrandUploadForm
+          avatarColor={accountColor}
+          addBrand={this.createNewBrand}
+          onCancel={this.props.handleDialogToggle}
+        />
       </PPDialog>
     );
   }

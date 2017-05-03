@@ -1,29 +1,39 @@
 import { fromJS } from 'immutable';
 
 import {
-    SET_BRAND_FILTER,
-    SET_NEW_BRAND,
-    SET_DELETE_BRAND,
+  CREATE_BRAND_REQUEST,
+  CREATE_BRAND_SUCCESS,
+  CREATE_BRAND_FAILURE,
+  DELETE_BRAND_REQUEST,
+  DELETE_BRAND_SUCCESS,
+  DELETE_BRAND_FAILURE,
 } from './constants';
 
 const initialState = fromJS({
-  brandFilter: '',
-  newBrand: {},
-  deleteBrandID: '',
-  channelType: '',
+  isBrandCreated: false,
+  isBrandDeleted: false,
 });
 
 function brandsReducer(state = initialState, action) {
   switch (action.type) {
-    case SET_BRAND_FILTER:
+    case CREATE_BRAND_REQUEST:
       return state
-            .set('brandFilter', action.brandFilter);
-    case SET_NEW_BRAND:
+        .set('isBrandCreated', false);
+    case CREATE_BRAND_SUCCESS:
       return state
-            .set('newBrand', action.brand);
-    case SET_DELETE_BRAND:
+        .set('isBrandCreated', true);
+    case CREATE_BRAND_FAILURE:
       return state
-            .set('deleteBrandID', action.deleteBrandID);
+        .set('isBrandCreated', false);
+    case DELETE_BRAND_REQUEST:
+      return state
+        .set('isBrandDeleted', false);
+    case DELETE_BRAND_SUCCESS:
+      return state
+        .set('isBrandDeleted', true);
+    case DELETE_BRAND_FAILURE:
+      return state
+        .set('isBrandDeleted', false);
     default: return state;
   }
 }

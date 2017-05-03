@@ -24,20 +24,16 @@ const Wrapper = styled.div`
     background-color: #F9FAFA;
     padding: 30px;
 
-    .avatar-wrapper {
-      display: flex;
+    .description-wrapper {
+      padding-top: 30px;
+      padding-left: 30px;
 
-      .description-wrapper {
-        padding-top: 30px;
-        padding-left: 30px;
-
-        p {
-          color: #616669;
-          font-size: 12px;
-          line-height: 16px;
-          padding: 0;
-          margin-bottom: 20px;
-        }
+      p {
+        color: #616669;
+        font-size: 12px;
+        line-height: 16px;
+        padding: 0;
+        margin-bottom: 20px;
       }
     }
 

@@ -1,10 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Link } from 'react-router';
-
-import Dialog from 'react-toolbox/lib/dialog';
 
 import styled from 'styled-components';
 import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu';
@@ -14,92 +12,66 @@ import Wrapper from './Wrapper';
 import BrandImage from './BrandImage';
 import BrandTitle from './BrandTitle';
 
+import DeleteBrandDialog from '../../DeleteBrandDialog';
+
 import { deleteBrandRequest } from '../../actions';
+
 const ReactRouterMenuItem = withReactRouter(MenuItem);
 
 const BrandRouterMenuItem = styled(ReactRouterMenuItem)`
+  height: 34px;
+  width: 180px;
+  
+  i {
+    color: #8C9496;
+  }
+
   span {
     flex-grow: 0;
   }
+
+  &:hover {
+    color: black;
+    background-color: #E81C64;
+  }
 `;
+
 const BrandMenuItem = styled(MenuItem)`
+  i {
+    color: #8C9496;
+  }
   span {
     flex-grow: 0;
   }
 `;
 
 const BrandMenuItemCaption = styled.div`
+  color: #8C9496;
   margin-left: 10px;
 `;
 
-class BrandsListItem extends React.Component {
+class BrandsListItem extends Component {
+
+  static propTypes = {
+    brand: PropTypes.object,
+  }
+
   constructor(props) {
     super(props);
 
-    this.deleteBrand = this.deleteBrand.bind(this);
-
     this.state = {
-      accountpath: `${location.origin}/account/${this.props.brand.account_id}`,
-      active: false,
-      deleteFlag: false,
+      accountpath: `${location.origin}/account/${props.brand.account_id}`,
+      isDialogShown: false,
     };
   }
 
-  getLastUpdatedTime(creation_time) {
-    const d = new Date();
-    const t = d.getTime() / 1000;
-    const dif_minutes = Math.floor((t - creation_time) / 60);
-    if (dif_minutes < 60) {
-      return `${dif_minutes} minutes`;
-    } else {
-      const dif_hours = Math.floor(dif_minutes / 60);
-      if (dif_hours < 24) {
-        return `${dif_hours} hours`;
-      } else {
-        return `${Math.floor(dif_hours / 24)} days`;
-      }
-    }
-    return `${dif_minutes} minutes`;
+  deleteBrand = () => {
+    this.setState({ isDialogShown: true });
   }
 
-  deleteBrand(event) {
-    event.preventDefault();
-    this.setState({ active: !this.state.active });
-        // const data = {
-        //     account_id: this.props.brand.account_id,
-        // };
-
-        // if ( this.state.deleteFlag === true ) {
-        //     this.props.delete(data);
-        //     this.setState({deleteFlag: false});
-        // }
+  handleDialogToggle = () => {
+    this.setState({ isDialogShown: false });
   }
-
-  handleToggleYes = () => {
-    this.setState({ deleteFlag: true });
-
-    const data = {
-      account_id: this.props.brand.account_id,
-    };
-
-    if (this.state.deleteFlag == true) {
-      console.log('yes');
-      this.props.delete(data);
-            // this.setState({deleteFlag: false});
-    }
-
-    this.setState({ active: !this.state.active });
-  }
-
-  handleToggleCancel = () => {
-    this.setState({ deleteFlag: false });
-    this.setState({ active: !this.state.active });
-  }
-
-  actions = [
-        { label: 'Cancel', onClick: this.handleToggleCancel },
-        { label: 'Yes, Delete It!', onClick: this.handleToggleYes },
-  ];
 
   render() {
     const brand = this.props.brand;
@@ -134,18 +106,6 @@ class BrandsListItem extends React.Component {
       </IconMenu>
         );
 
-    const DeleteDialog = () => (
-      <Dialog
-        actions={this.actions}
-        active={this.state.active}
-        onEscKeyDown={this.handleToggleCancel}
-        onOverlayClick={this.handleToggleCancel}
-        title="Delete a brand"
-      >
-        <p>Are you sure? You will not be able to recover this Brand and all of its posts.</p>
-      </Dialog>
-        );
-
     return (
       <Wrapper>
         <BrandImage color={brandColor}>
@@ -156,7 +116,11 @@ class BrandsListItem extends React.Component {
         </BrandTitle>
         </Link>
         <BrandNavMenu />
-        <DeleteDialog />
+        <DeleteBrandDialog
+          active={this.state.isDialogShown}
+          handleDialogToggle={this.handleDialogToggle}
+          accountId={accountID}
+        />
       </Wrapper>
     );
   }
@@ -164,7 +128,7 @@ class BrandsListItem extends React.Component {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    delete: (data) => dispatch(deleteBrandRequest(data)),
+    deleteBrand: (brandObject) => dispatch(deleteBrandRequest(brandObject)),
   };
 }
 

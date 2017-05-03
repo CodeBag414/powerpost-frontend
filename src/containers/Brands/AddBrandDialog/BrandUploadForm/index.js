@@ -16,6 +16,7 @@ class BrandUploadForm extends Component {
 
   static propTypes = {
     avatarColor: PropTypes.string,
+    onCancel: PropTypes.func,
   }
 
   constructor(props) {
@@ -96,6 +97,7 @@ class BrandUploadForm extends Component {
       const data = {
         brandName,
         avatarKey,
+        backgroundColor: this.state.avatarColor,
       };
 
       this.props.addBrand(data);
@@ -168,6 +170,11 @@ class BrandUploadForm extends Component {
                 type="submit"
                 label="Add Brand"
                 primary
+              />
+              <PPButton
+                onClick={this.props.onCancel}
+                label="Cancel"
+                primary={false}
               />
             </div>
           </div>
