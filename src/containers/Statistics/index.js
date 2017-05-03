@@ -50,6 +50,7 @@ class Statistics extends React.Component {
     toggleDialogShown: PropTypes.func.isRequired,
     setChannelFilter: PropTypes.func.isRequired,
     setChannelType: PropTypes.func.isRequired,
+    router: PropTypes.shape().isRequired,
   };
 
   constructor(props) {
@@ -65,7 +66,7 @@ class Statistics extends React.Component {
     const { router } = this.props;
     const connections = this.getFilteredConnections(this.props.connections);
     if (!router.params.channel_id && connections.length) {
-      browserHistory.push(`${router.location.pathname.replace(/\/$/,'')}/${connections[0].connection_id}`);
+      browserHistory.push(`${router.location.pathname.replace(/\/$/, '')}/${connections[0].connection_id}`);
     }
   }
 
@@ -151,9 +152,5 @@ const mapStateToProps = createStructuredSelector({
   dialogShown: makeSelectDialogShown(),
   accountId: makeSelectAccountId(),
 });
-
-Statistics.propTypes = {
-
-}
 
 export default UserCanStatistics(connect(mapStateToProps, mapDispatchToProps)(Statistics));
