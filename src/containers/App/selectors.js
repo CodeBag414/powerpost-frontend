@@ -2,6 +2,11 @@ import { createSelector } from 'reselect';
 
 const selectAuth = (state) => state.get('auth');
 
+const selectLoggedIn = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('loggedIn')
+);
+
 const makeSelectAuthError = () => createSelector(
     selectAuth,
     (auth) => auth.get('error')
@@ -79,6 +84,7 @@ const selectInviteEmailToGroup = () => createSelector(
 
 export {
     selectAuth,
+    selectLoggedIn,
     makeSelectAuthError,
     makeSelectUser,
     makeSelectUserAccount,

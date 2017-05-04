@@ -1,12 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { browserHistory } from 'react-router';
 
 import {
   loginRequest,
 } from 'containers/App/actions';
 import {
   makeSelectAuthError,
+  selectLoggedIn,
 } from 'containers/App/selectors';
 
 import PPTextField from 'elements/atm.TextField';
@@ -19,15 +21,18 @@ class SignIn extends Component {
   static propTypes = {
     location: PropTypes.object,
     authError: PropTypes.string,
+    loggedIn: PropTypes.bool,
     login: PropTypes.func,
   }
 
   constructor(props) {
     super(props);
 
+    const { location: { query } } = props;
+
     this.state = {
       email: {
-        value: '',
+        value: query.email || '',
         error: '',
       },
       password: {
@@ -36,6 +41,17 @@ class SignIn extends Component {
       },
       error: '',
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.loggedIn) {
+      const { location: { query } } = this.props;
+      if (query.token) {
+        browserHistory.push(`/redeem/${query.token}?type=group_invite`);
+      } else {
+        browserHistory.push('/');
+      }
+    }
   }
 
   onFormSubmit = (event) => {
@@ -64,7 +80,7 @@ class SignIn extends Component {
   }
 
   render() {
-    // const { authError } = this.props;
+    const { location: { query } } = this.props;
 
     return (
       <div>
@@ -79,6 +95,7 @@ class SignIn extends Component {
             value={this.state.email.value}
             errorText={this.state.email.error}
             onChange={this.onFieldChange}
+            disabled={!!query.email}
           />
           <PPTextField
             type="password"
@@ -106,6 +123,7 @@ export function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   authError: makeSelectAuthError(),
+  loggedIn: selectLoggedIn(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignIn);

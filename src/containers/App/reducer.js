@@ -2,6 +2,8 @@
  * The reducer takes care of state changes in our app through actions
  */
 import { fromJS } from 'immutable';
+import { find, remove } from 'lodash';
+
 import {
   SET_AUTH,
   SENDING_REQUEST,
@@ -32,6 +34,12 @@ import {
   INVITE_EMAIL_TO_GROUP,
   INVITE_EMAIL_TO_GROUP_SUCCESS,
   INVITE_EMAIL_TO_GROUP_ERROR,
+  ADD_USER_TO_GROUP,
+  ADD_USER_TO_GROUP_SUCCESS,
+  ADD_USER_TO_GROUP_ERROR,
+  REMOVE_USER_FROM_GROUP,
+  REMOVE_USER_FROM_GROUP_SUCCESS,
+  REMOVE_USER_FROM_GROUP_ERROR,
 } from './constants';
 
 import auth from 'utils/auth';
@@ -217,6 +225,43 @@ function globalReducer(state = initialState, action) {
           details: null,
           error: action.payload,
         });
+    case ADD_USER_TO_GROUP:
+    case REMOVE_USER_FROM_GROUP: {
+      const groupUsers = state.get('groupUsers');
+      const user = find(groupUsers.details.groups_users, { user_id: action.payload.user_id });
+      user.processing = true;
+      return state
+        .set('groupUsers', groupUsers);
+    }
+    case ADD_USER_TO_GROUP_SUCCESS: {
+      const groupUsers = state.get('groupUsers');
+      const user = find(groupUsers.details.groups_users, { user_id: action.payload.user_id });
+      user.processing = false;
+      user.group_id = action.payload.group_id;
+      return state
+        .set('groupUsers', groupUsers);
+    }
+    case ADD_USER_TO_GROUP_ERROR: {
+      const groupUsers = state.get('groupUsers');
+      const user = find(groupUsers.details.groups_users, { user_id: action.payload.user_id });
+      user.processing = false;
+      return state
+        .set('groupUsers', groupUsers);
+    }
+    case REMOVE_USER_FROM_GROUP_SUCCESS: {
+      const groupUsers = state.get('groupUsers');
+      const newGroupUsers = remove(groupUsers.details.groups_users, (groupUser) => groupUser.user_id === action.payload.user_id);
+      groupUsers.details.groups_users = newGroupUsers;
+      return state
+        .set('groupUsers', groupUsers);
+    }
+    case REMOVE_USER_FROM_GROUP_ERROR: {
+      const groupUsers = state.get('groupUsers');
+      const user = find(groupUsers.details.groups_users, { user_id: action.payload.user_id });
+      user.processing = false;
+      return state
+        .set('groupUsers', groupUsers);
+    }
     default:
       return state;
   }

@@ -2,9 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { find } from 'lodash';
-import { browserHistory } from 'react-router';
 
-import { toastr } from 'lib/react-redux-toastr';
 import { UserCanTeam } from 'config.routes/UserRoutePermissions';
 
 import {
@@ -26,6 +24,7 @@ import Dialog from 'react-toolbox/lib/dialog';
 import TextArea from 'elements/atm.TextArea';
 
 import Wrapper from './Wrapper';
+import UserCard from './UserCard';
 
 const accessLevelOptions = [
   { value: 'admins', label: 'Admin' },
@@ -53,6 +52,7 @@ export class Team extends Component {
       },
       message: '',
       accessLevel: null,
+      accessLevels: [],
       inviteModalVisible: false,
     };
   }
@@ -66,10 +66,26 @@ export class Team extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const { groupUsers } = nextProps;
+    if (this.props.groupUsers !== groupUsers) {
+      if (!groupUsers.isFecthing && groupUsers.details) {
+        const newAccessLevels = accessLevelOptions.map((l) => {
+          const group = find(groupUsers.details.groups || [], { title: l.value });
+          return {
+            value: group.group_id,
+            label: l.label,
+          };
+        });
+
+        this.setState({
+          accessLevels: newAccessLevels,
+        });
+      }
+    }
   }
 
   onEmailChange = (event) => {
-    const { name, value } = event.target;
+    const { value } = event.target;
     this.setState({
       email: {
         value,
@@ -88,17 +104,12 @@ export class Team extends Component {
   }
 
   sendInvite = () => {
-    const { groupUsers, inviteEmailToGroupRequest } = this.props;
+    const { inviteEmailToGroupRequest } = this.props;
     const { email, accessLevel, message } = this.state;
-    const group = find(groupUsers.details, { title: accessLevel.value });
-
-    if (!group) {
-      throw Error('Something is wrong with group');
-    }
 
     const payload = {
       email: email.value,
-      group_id: group.group_id,
+      group_id: accessLevel.value,
       message,
     };
 
@@ -114,7 +125,7 @@ export class Team extends Component {
 
   render() {
     const { userAccount, groupUsers, inviteEmailToGroup } = this.props;
-    const { inviteModalVisible, email, accessLevel } = this.state;
+    const { inviteModalVisible, email, accessLevel, accessLevels } = this.state;
 
     return (
       <Wrapper>
@@ -122,6 +133,18 @@ export class Team extends Component {
           <Button label="Invite New Member" primary onClick={this.toggleModal} />
           <span>19 of 20 remaining</span>
         </div>
+        { groupUsers.details && groupUsers.details.groups_users.map((u) =>
+          <UserCard
+            key={u.user_id}
+            groupId={u.group_id}
+            userId={u.user_id}
+            email={u.email}
+            name={u.display_name}
+            processing={u.processing}
+            accessLevels={accessLevels}
+          />
+        )}
+
         <Dialog
           active={inviteModalVisible}
           title={`Invite a new member to ${userAccount.title}`}
@@ -143,7 +166,7 @@ export class Team extends Component {
               <Dropdown
                 label="Access Level"
                 value={accessLevel}
-                options={groupUsers.isFetching ? [] : accessLevelOptions}
+                options={groupUsers.isFetching || groupUsers.error ? [] : accessLevelOptions}
                 placeholder="Select Option"
                 onChange={this.onAccessLevelChange}
               />

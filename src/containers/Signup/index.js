@@ -41,9 +41,13 @@ class Signup extends Component {
   }
 
   componentWillMount() {
-    const { fetchPlan, location } = this.props;
+    const { fetchPlan, location: { query } } = this.props;
 
-    fetchPlan(location.query.plan_id);
+    if (query.plan_id) {
+      fetchPlan(query.plan_id);
+    } else if (query.token) {
+      // fetchPlan(location.query.token);
+    }
   }
 
   discount = (amountOff, percentOff) => {
