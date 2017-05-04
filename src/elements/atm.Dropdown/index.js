@@ -7,6 +7,7 @@ const PLACEHOLDER_STRING = 'Select...';
 
 const DropdownWrapper = styled.div`
   position: relative;
+  font-size: ${(props) => props.small ? '1.2rem' : 'inherit'};
 `;
 
 const DropdownLabel = styled.div`
@@ -25,7 +26,7 @@ const DropdownControl = styled.div`
   color: #8C9497;
   cursor: pointer;
   outline: none;
-  padding: 8px 52px 8px 10px;
+  padding: ${(props) => props.small ? '6px 40px 6px 15px' : '8px 52px 8px 10px'};
   transition: all 200ms ease;
   &:hover {
     border-color: ${(props) => props.isOpen ? '#E52466' : '#8C9497'};
@@ -35,8 +36,9 @@ const DropdownControl = styled.div`
 const DropdownArrow = styled.span`
   height: 36px;
   width: 20px;
-  top: 0;
-  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 10px;
   line-height: 36px;
   display: block;
   position: absolute;
@@ -92,7 +94,6 @@ export default class Dropdown extends React.Component {
       },
       isOpen: false,
     };
-  
   }
 
   componentDidMount() {
@@ -189,14 +190,16 @@ export default class Dropdown extends React.Component {
   }
 
   render() {
+    const { small } = this.props;
     const placeHolderValue = typeof this.state.selected === 'string' ? this.state.selected : this.state.selected.label;
     const value = (<div>{placeHolderValue}</div>);
+
     const menu = this.state.isOpen ? <DropdownMenu>{this.buildMenu()}</DropdownMenu> : null;
 
     return (
-      <DropdownWrapper>
+      <DropdownWrapper small={small}>
         {this.props.label !== undefined && <DropdownLabel>{this.props.label}</DropdownLabel>}
-        <DropdownControl isOpen={this.state.isOpen} onMouseDown={this.handleMouseDown.bind(this)} onTouchEnd={this.handleMouseDown.bind(this)}>
+        <DropdownControl isOpen={this.state.isOpen} onMouseDown={this.handleMouseDown.bind(this)} onTouchEnd={this.handleMouseDown.bind(this)} small={small}>
           {value}
           <DropdownArrow isOpen={this.state.isOpen}>
             { this.state.isOpen ? <FontIcon value="keyboard_arrow_up" style={{ verticalAlign: 'middle', color: '#E52466' }} /> : <FontIcon value="keyboard_arrow_down" style={{ verticalAlign: 'middle' }} /> }
@@ -215,4 +218,5 @@ Dropdown.propTypes = {
   value: React.PropTypes.any,
   placeholder: React.PropTypes.string,
   disabled: React.PropTypes.bool,
+  small: React.PropTypes.bool,
 };

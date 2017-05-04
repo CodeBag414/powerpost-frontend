@@ -21,13 +21,14 @@ class SignupAccount extends Component {
   constructor(props) {
     super(props);
 
+    const { location: { query } } = props;
     this.state = {
       name: {
         value: '',
         error: '',
       },
       email: {
-        value: '',
+        value: query.email || '',
         error: '',
       },
       phone: {
@@ -48,8 +49,10 @@ class SignupAccount extends Component {
 
   onFormSubmit = (event) => {
     event.preventDefault();
+    const { location: { query } } = this.props;
+
     if (!this.state.error) {
-      this.props.register(this.state.name.value, this.state.email.value, this.state.password.value, {
+      this.props.register(this.state.name.value, this.state.email.value, this.state.password.value, query.token, {
         phone_number: this.state.phone.value,
         selected_plan: this.props.location.query.plan_id,
       });
@@ -94,7 +97,7 @@ class SignupAccount extends Component {
   }
 
   render() {
-    // const { authError } = this.props;
+    const { location: { query } } = this.props;
 
     return (
       <div>
@@ -118,6 +121,7 @@ class SignupAccount extends Component {
             value={this.state.email.value}
             errorText={this.state.email.error}
             onChange={this.onFieldChange}
+            disabled={!!query.email}
           />
           <PPTextField
             type="text"
@@ -157,7 +161,7 @@ class SignupAccount extends Component {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    register: (name, email, password, properties) => dispatch(registerRequest({ name, email, password, properties })),
+    register: (name, email, password, token, properties) => dispatch(registerRequest({ name, email, password, token, properties })),
   };
 }
 

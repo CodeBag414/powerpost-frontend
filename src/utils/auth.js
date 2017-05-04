@@ -23,7 +23,6 @@ let auth = {
         return axios.post(url, data)
             .then(response => {
                 cookie.save('token', response.data.api_key, { path: '/' });
-                
                 return response.data;
             })
             .catch((error) => Promise.reject(error.response));
@@ -71,13 +70,14 @@ let auth = {
       * Registers a user then logs them in
       * 
       */
-     register(name, email, password, properties) {
+     register(name, email, password, properties, token) {
         const data = {
             payload: {
                 display_name: name,
                 password: password,
                 email: email,
                 properties,
+                token,
             },
         };
         

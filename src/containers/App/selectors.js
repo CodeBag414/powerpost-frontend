@@ -2,6 +2,11 @@ import { createSelector } from 'reselect';
 
 const selectAuth = (state) => state.get('auth');
 
+const selectLoggedIn = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('loggedIn')
+);
+
 const makeSelectAuthError = () => createSelector(
     selectAuth,
     (auth) => auth.get('error')
@@ -67,8 +72,19 @@ const selectPaymentHistory = () => createSelector(
     (auth) => auth.get('paymentHistory')
 );
 
+const selectGroupUsers = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('groupUsers')
+);
+
+const selectInviteEmailToGroup = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('inviteEmailToGroup')
+);
+
 export {
     selectAuth,
+    selectLoggedIn,
     makeSelectAuthError,
     makeSelectUser,
     makeSelectUserAccount,
@@ -82,4 +98,6 @@ export {
     selectCurrentPlan,
     selectPaymentSources,
     selectPaymentHistory,
+    selectGroupUsers,
+    selectInviteEmailToGroup,
 };

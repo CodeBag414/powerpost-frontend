@@ -62,6 +62,21 @@ class Redeem extends Component {
 
             break;
           }
+          case 'group_invite': {
+            const procedure = get(detail, 'token_procedure');
+            const token = get(detail, 'token');
+            const email = get(detail, 'email');
+
+            if (procedure === 'signup') {
+              browserHistory.push(`/signup/account?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`);
+            } else if (procedure === 'login') {
+              browserHistory.push(`/login?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`);
+            } else if (procedure === 'reload_roles') {
+              browserHistory.push('/');
+            }
+
+            break;
+          }
           default:
             break;
         }

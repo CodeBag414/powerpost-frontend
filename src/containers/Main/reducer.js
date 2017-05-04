@@ -47,7 +47,8 @@ function dashboardReducer(state = initialState, action) {
       return state
             .set('isFetchingAccount', false)
             .set('fetchingError', false)
-            .setIn(['activeBrand', 'user_access', 'permissions'], action.account.data.account.user_access.permissions)
+            .setIn(['activeBrand', 'user_access', 'permissions'], Object.values(action.account.data.account.user_access.permissions))
+            .setIn(['activeBrand', 'num_users'], action.account.data.account.account_access.num_users)
             .setIn(['activeBrand', 'account_id'], action.account.data.account.account_id)
             .setIn(['activeBrand', 'user_id'], action.account.data.account.user_id)
             .setIn(['activeBrand', 'title'], action.account.data.account.title)
@@ -57,7 +58,6 @@ function dashboardReducer(state = initialState, action) {
             .setIn(['activeBrand', 'properties'], action.account.data.account.properties)
             .setIn(['activeBrand', 'subscriptions'], action.account.data.account.subscriptions)
             .setIn(['activeBrand', 'account_access', 'permissions'], action.account.data.account.account_access.permissions)
-            .setIn(['activeBrand', 'user_access', 'permissions'], action.account.data.account.user_access.permissions)
             .setIn(['activeBrand', 'user_access_level'], action.account.data.account.user_access_level)
             .setIn(['activeBrand', 'subAccounts'], action.account.data.account.subaccounts)
             .setIn(['activeBrand', 'connections'], action.account.data.account.connections);

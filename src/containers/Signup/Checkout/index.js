@@ -69,7 +69,7 @@ class SignupCheckout extends Component {
             account_id: cookie.load('account_id'),
             plan_id: nextProps.location.query.plan_id,
           };
-          if (nextProps.coupon.details.id) {
+          if (nextProps.coupon.details && nextProps.coupon.details.id) {
             payload = {
               ...payload,
               coupon: nextProps.coupon.details.id,

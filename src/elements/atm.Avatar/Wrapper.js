@@ -16,7 +16,6 @@ const Avatar = styled.div`
     border-radius: 4px;
     width: 180px;
     height: 180px;
-    overflow: hidden;
 
     img {
       left: 0px;
