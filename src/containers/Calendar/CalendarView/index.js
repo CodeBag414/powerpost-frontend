@@ -141,6 +141,7 @@ class CalendarView extends React.Component {
       <Wrapper>
         <DragAndDropCalendar
           selectable
+          popup
           events={formattedPosts}
           components={{
             toolbar: Toolbar,
