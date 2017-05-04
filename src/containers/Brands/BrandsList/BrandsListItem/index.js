@@ -82,6 +82,7 @@ class BrandsListItem extends Component {
     const accountID = brand && brand.account_id ? brand.account_id : null;
     const brandColor = brand && brand.properties.color;
     const brandURL = `/account/${accountID}`;
+    const shortTitle = title.substr(0, 2).toUpperCase();
 
     const BrandNavMenu = () => (
       <IconMenu
@@ -109,7 +110,7 @@ class BrandsListItem extends Component {
     return (
       <Wrapper>
         <BrandImage color={brandColor}>
-          {thumbnailImageKey !== '' ? <img src={thumbURL} /> : <p>{title.substr(0, 2)}</p>}
+          {thumbnailImageKey !== '' ? <img src={thumbURL} /> : <p>{shortTitle}</p>}
         </BrandImage>
         <Link to={`${brandURL}`}><BrandTitle>
           { title }
