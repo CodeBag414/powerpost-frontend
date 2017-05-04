@@ -79,6 +79,12 @@ const Wrapper = styled.div`
 
   .event-popup-message {
     width: calc(100% - 120px);
+    height: 45px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
     color: #616669;
     font-size: 11px;
     line-height: 15px;

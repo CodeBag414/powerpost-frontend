@@ -56,6 +56,8 @@ class PopupMenu extends Component {
         </div>
         <div className="event-popup-title">{post.post_set.title ? post.post_set.title : 'Untitled post'}</div>
         <div className="event-popup-time">{moment.unix(post.post.schedule_time).format('ddd, MMMM Do - h:mma')}</div>
+        {/* Test ellipsis
+        <div className="event-popup-message">1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890</div> */}
         <div className="event-popup-message">{post.post.message}</div>
         <div className="event-popup-buttons">
           <Button onClick={this.handleClickDelete} className="event-popup-flat" flat>Delete Post</Button>
