@@ -400,6 +400,11 @@ export function createRoutes(store, auth) {
     {
       path: '/login',
       name: 'login',
+      onEnter: (nextState, replace) => {
+        if (auth.loggedIn()) {
+          replace('/');
+        }
+      },
       getComponent(nextState, cb) {
         const importModules = Promise.all([
           System.import('containers/Login'),

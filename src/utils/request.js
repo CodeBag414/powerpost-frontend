@@ -1,8 +1,6 @@
 import axios from 'axios';
 import cookie from 'react-cookie';
 
-import { toastr } from 'lib/react-redux-toastr';
-
 export const API_URL = 'https://dev2.powerpost.digital';
 
 // Post Request
@@ -15,7 +13,7 @@ export function postData(url, data, isAuthReq = true) {
     headers = { headers: { 'X-API-KEY': key } };
   }
 
-  return axios.post(requestUrl, data, headers).catch((error) => toastr.error(error.response.data.message));
+  return axios.post(requestUrl, data, headers);
 }
 
 // Get Request

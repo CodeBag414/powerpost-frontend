@@ -25,6 +25,18 @@ import {
   FETCH_PAYMENT_HISTORY,
   FETCH_PAYMENT_HISTORY_SUCCESS,
   FETCH_PAYMENT_HISTORY_ERROR,
+  FETCH_GROUP_USERS,
+  FETCH_GROUP_USERS_SUCCESS,
+  FETCH_GROUP_USERS_ERROR,
+  INVITE_EMAIL_TO_GROUP,
+  INVITE_EMAIL_TO_GROUP_SUCCESS,
+  INVITE_EMAIL_TO_GROUP_ERROR,
+  ADD_USER_TO_GROUP,
+  ADD_USER_TO_GROUP_SUCCESS,
+  ADD_USER_TO_GROUP_ERROR,
+  REMOVE_USER_FROM_GROUP,
+  REMOVE_USER_FROM_GROUP_SUCCESS,
+  REMOVE_USER_FROM_GROUP_ERROR,
   // CHECK_USER_OBJECT,
 } from './constants';
 
@@ -222,6 +234,90 @@ export function fetchPaymentHistorySuccess(payload) {
 export function fetchPaymentHistoryError(payload) {
   return {
     type: FETCH_PAYMENT_HISTORY_ERROR,
+    payload,
+  };
+}
+
+export function fetchGroupUsers(payload) {
+  return {
+    type: FETCH_GROUP_USERS,
+    payload,
+  };
+}
+
+export function fetchGroupUsersSuccess(payload) {
+  return {
+    type: FETCH_GROUP_USERS_SUCCESS,
+    payload,
+  };
+}
+
+export function fetchGroupUsersError(payload) {
+  return {
+    type: FETCH_GROUP_USERS_ERROR,
+    payload,
+  };
+}
+
+export function inviteEmailToGroup(payload) {
+  return {
+    type: INVITE_EMAIL_TO_GROUP,
+    payload,
+  };
+}
+
+export function inviteEmailToGroupSuccess(payload) {
+  return {
+    type: INVITE_EMAIL_TO_GROUP_SUCCESS,
+    payload,
+  };
+}
+
+export function inviteEmailToGroupError(payload) {
+  return {
+    type: INVITE_EMAIL_TO_GROUP_ERROR,
+    payload,
+  };
+}
+
+export function addUserToGroup(payload) {
+  return {
+    type: ADD_USER_TO_GROUP,
+    payload,
+  };
+}
+
+export function addUserToGroupSuccess(payload) {
+  return {
+    type: ADD_USER_TO_GROUP_SUCCESS,
+    payload,
+  };
+}
+
+export function addUserToGroupError(payload) {
+  return {
+    type: ADD_USER_TO_GROUP_ERROR,
+    payload,
+  };
+}
+
+export function removeUserFromGroup(payload) {
+  return {
+    type: REMOVE_USER_FROM_GROUP,
+    payload,
+  };
+}
+
+export function removeUserFromGroupSuccess(payload) {
+  return {
+    type: REMOVE_USER_FROM_GROUP_SUCCESS,
+    payload,
+  };
+}
+
+export function removeUserFromGroupError(payload) {
+  return {
+    type: REMOVE_USER_FROM_GROUP_ERROR,
     payload,
   };
 }

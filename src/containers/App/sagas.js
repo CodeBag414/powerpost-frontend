@@ -34,6 +34,10 @@ import {
   FETCH_CURRENT_PLAN,
   FETCH_PAYMENT_SOURCES,
   FETCH_PAYMENT_HISTORY,
+  FETCH_GROUP_USERS,
+  INVITE_EMAIL_TO_GROUP,
+  ADD_USER_TO_GROUP,
+  REMOVE_USER_FROM_GROUP,
 } from './constants';
 
 import {
@@ -48,6 +52,14 @@ import {
   fetchPaymentSourcesError,
   fetchPaymentHistorySuccess,
   fetchPaymentHistoryError,
+  fetchGroupUsersSuccess,
+  fetchGroupUsersError,
+  inviteEmailToGroupSuccess,
+  inviteEmailToGroupError,
+  addUserToGroupSuccess,
+  addUserToGroupError,
+  removeUserFromGroupSuccess,
+  removeUserFromGroupError,
 } from './actions';
 
 /**
@@ -57,7 +69,7 @@ import {
  * @param  {object} options                Options
  * @param  {boolean} options.isRegistering Is this a register request?
  */
-export function* authorize({ name, email, password, properties, isRegistering }) {
+export function* authorize({ name, email, password, properties, isRegistering, token }) {
   // We send an action that tells Redux we're sending a request
   yield put({ type: SENDING_REQUEST, sending: true });
 
@@ -72,7 +84,7 @@ export function* authorize({ name, email, password, properties, isRegistering })
     // as if it's synchronous because we pause execution until the call is done
     // with `yield`!
     if (isRegistering) {
-      response = yield call(auth.register, name, email, password, properties);
+      response = yield call(auth.register, name, email, password, properties, token);
     } else {
       response = yield call(auth.login, email, password);
     }
@@ -171,7 +183,6 @@ export function* loginFlow() {
         // ...we send Redux appropiate actions
         yield put({ type: SET_AUTH, newAuthState: true }); // User is logged in (authorized)
         yield put({ type: SET_USER, user: winner.auth });
-        yield call(forwardTo, '/'); // Go to dashboard page
         // If `logout` won...
       } else if (winner.logout) {
         // ...we send Redux appropiate action
@@ -214,13 +225,13 @@ export function* registerFlow() {
   while (true) {
     // We always listen to `REGISTER_REQUEST` actions
     const request = yield take(REGISTER_REQUEST);
-    const { name, password, email, properties } = request.data;
+    const { name, password, email, properties, token } = request.data;
 
     // We call the `authorize` task with the data, telling it that we are registering a user
     // This returns `true` if the registering was successful, `false` if not
 
     try {
-      yield call(authorize, { name, email, password, properties, isRegistering: true });
+      yield call(authorize, { name, email, password, properties, token, isRegistering: true });
       yield call(set, 'signup', { name, email });
       yield forwardTo('/signup/verification');
     } catch (error) {
@@ -402,6 +413,77 @@ export function* fetchPaymentHistoryFlow() {
   }
 }
 
+export function* fetchGroupUsersFlow() {
+  while (true) {
+    const { payload: { accountId } } = yield take(FETCH_GROUP_USERS);
+
+    try {
+      const { data } = yield call(getData, `/account_api/account_group_users/${accountId}`);
+      if (data.status === 'success') {
+        yield put(fetchGroupUsersSuccess(data));
+      } else {
+        yield put(fetchGroupUsersError(data.message));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
+
+export function* inviteEmailToGroupFlow() {
+  while (true) {
+    const { payload } = yield take(INVITE_EMAIL_TO_GROUP);
+
+    try {
+      const { data } = yield call(postData, '/account_api/invite_email_to_group', { payload });
+
+      if (data.status === 'success') {
+        yield put(inviteEmailToGroupSuccess(data.payload));
+      } else {
+        yield put(inviteEmailToGroupError(data.message));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
+
+export function* addUserToGroupFlow() {
+  while (true) {
+    const { payload } = yield take(ADD_USER_TO_GROUP);
+
+    try {
+      const { data } = yield call(postData, '/account_api/add_user_to_group', { payload });
+
+      if (data.status === 'success') {
+        yield put(addUserToGroupSuccess(data.payload));
+      } else {
+        yield put(addUserToGroupError(data.message));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
+
+export function* removeUserFromGroupFlow() {
+  while (true) {
+    const { payload } = yield take(REMOVE_USER_FROM_GROUP);
+
+    try {
+      const { data } = yield call(postData, '/account_api/remove_user_from_group', { payload });
+
+      if (data.status === 'success') {
+        yield put(removeUserFromGroupSuccess(data.payload));
+      } else {
+        yield put(removeUserFromGroupError(data.message));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
+
 // The root saga is what we actually send to Redux's middleware. In here we fork
 // each saga so that they are all "active" and listening.
 // Sagas are fired once at the start of an app and can be thought of as processes running
@@ -419,6 +501,10 @@ export default [
   fetchCurrentPlanFlow,
   fetchPaymentSourcesFlow,
   fetchPaymentHistoryFlow,
+  fetchGroupUsersFlow,
+  inviteEmailToGroupFlow,
+  addUserToGroupFlow,
+  removeUserFromGroupFlow,
 ];
 
 // Little helper function to abstract going to different pages
