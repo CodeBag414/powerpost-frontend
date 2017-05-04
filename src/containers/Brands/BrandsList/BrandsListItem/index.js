@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Link } from 'react-router';
+import { truncate } from 'lodash';
 
 import styled from 'styled-components';
 import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu';
@@ -78,7 +79,8 @@ class BrandsListItem extends Component {
 
     const thumbnailImageKey = (brand && brand.properties && brand.properties.thumbnail_image_key) ? brand.properties.thumbnail_image_key : '';
     const thumbURL = `https://s3.amazonaws.com/powerpost/${thumbnailImageKey}`;
-    const title = brand && brand.title ? brand.title : '';
+    let title = brand && brand.title ? brand.title : '';
+    title = truncate(title, { length: 40 });
     const accountID = brand && brand.account_id ? brand.account_id : null;
     const brandColor = brand && brand.properties.color;
     const brandURL = `/account/${accountID}`;
