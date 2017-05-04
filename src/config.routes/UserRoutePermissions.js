@@ -19,7 +19,7 @@ export const UserCanTeam = UserAuthWrapper({
     redirectAction: routerActions.push,
     authenticatingSelector: state => { const main = state.get('main'); return main.get('isFetchingAccount'); },
     LoadingComponent: Loading,
-    predicate: auth => auth.getIn(['activeBrand', 'account_access','permissions']).indexOf('team') > -1 && !auth.get('fetchingError'),
+    predicate: auth => auth.getIn(['activeBrand', 'account_access', 'permissions']).indexOf('team') > -1 && !auth.get('fetchingError'),
     failureRedirectPath: '/forbidden',
     wrapperDisplayName: 'UserCanTeam',
     allowRedirectBack: false
@@ -30,7 +30,7 @@ export const UserCanSettings = UserAuthWrapper({
     redirectAction: routerActions.push,
     authenticatingSelector: state => { const main = state.get('main'); return main.get('isFetchingAccount'); },
     LoadingComponent: Loading,
-    predicate: auth => auth.getIn(['activeBrand', 'user_access','permissions']).indexOf('settings') > -1 && auth.getIn(['activeBrand', 'account_access', 'permissions']).indexOf('settings') > -1 && !auth.get('fetchingError'),
+    predicate: auth => auth.getIn(['activeBrand', 'user_access', 'permissions']).indexOf('settings') > -1 && auth.getIn(['activeBrand', 'account_access', 'permissions']).indexOf('settings') > -1 && !auth.get('fetchingError'),
     failureRedirectPath: '/forbidden',
     wrapperDisplayName: 'UserCanSettings',
     allowRedirectBack: false

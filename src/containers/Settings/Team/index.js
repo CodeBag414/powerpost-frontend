@@ -127,13 +127,17 @@ export class Team extends Component {
     const { userAccount, groupUsers, inviteEmailToGroup } = this.props;
     const { inviteModalVisible, email, accessLevel, accessLevels } = this.state;
 
+    if (groupUsers.isFetching || !groupUsers.details) {
+      return <Loading />;
+    }
+
     return (
       <Wrapper>
         <div className="top-row">
           <Button label="Invite New Member" primary onClick={this.toggleModal} />
-          <span>19 of 20 remaining</span>
+          <span>{userAccount.num_users - groupUsers.details.groups_users.length} of {userAccount.num_users} Users Remaining for this Plan</span>
         </div>
-        { groupUsers.details && groupUsers.details.groups_users.map((u) =>
+        { groupUsers.details.groups_users.map((u) =>
           <UserCard
             key={u.user_id}
             groupId={u.group_id}
