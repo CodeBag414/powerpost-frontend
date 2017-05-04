@@ -37,7 +37,9 @@ class PopupMenu extends Component {
   }
 
   handleClickEdit = () => {
-
+    /* eslint-disable no-alert */
+    alert('This will direct you to the Post editor.');
+    /* eslint-enable no-alert */
   }
 
   render() {
