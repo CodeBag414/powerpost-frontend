@@ -1,4 +1,3 @@
-import React from 'react';
 import { UserAuthWrapper } from 'redux-auth-wrapper';
 import { routerActions } from 'react-router-redux';
 import Loading from 'components/Loading';

@@ -35,25 +35,23 @@ class DeleteBrandDialog extends Component {
         onEscKeyDown={handleDialogToggle}
       >
         <Wrapper>
-          <form onSubmit={this.delete}>
+          <div className="header">
             <h2 className="title">Delete Brand</h2>
-            <div className="divider" />
-            <div className="body-wrapper">
-              <p>Are you sure? You will not be able to recover this Brand and all of its posts.</p>
-              <div className="button_wrapper">
-                <PPButton
-                  type="submit"
-                  label="Delete"
-                  primary
-                />
-                <PPButton
-                  onClick={handleDialogToggle}
-                  label="Cancel"
-                  primary={false}
-                />
-              </div>
+            <button onClick={handleDialogToggle}><i className="fa fa-times" aria-hidden="true" /></button>
+          </div>
+          <div className="divider" />
+          <div className="body-wrapper">
+            <p>Are you sure? You will not be able to recover this Brand and all of its posts.</p>
+            <div className="button_wrapper">
+              <PPButton
+                type="submit"
+                label="Delete"
+                onClick={this.delete}
+                primary
+              />
+              <button className="cancel" onClick={handleDialogToggle}>Cancel</button>
             </div>
-          </form>
+          </div>
         </Wrapper>
       </PPDialog>
     );

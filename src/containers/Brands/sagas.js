@@ -50,6 +50,7 @@ export function* createBrand(action) {
       toastr.error(response.message);
     }
   } catch (error) {
+    toastr.error(error.message);
     yield put(createBrandFailure(error));
   }
 }
