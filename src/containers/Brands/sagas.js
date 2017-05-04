@@ -1,4 +1,7 @@
-import { take, call, put } from 'redux-saga/effects';
+
+import { takeLatest } from 'redux-saga';
+import { take, call, put, cancel } from 'redux-saga/effects';
+import { LOCATION_CHANGE } from 'react-router-redux';
 
 import { toastr } from 'lib/react-redux-toastr';
 
@@ -19,73 +22,79 @@ import {
 } from './constants';
 
 // create Brand (subaccount)
-export function* createBrand() {
-  while (true) {
-    // We always listen to `CREATE_BRAND` actions
-    const request = yield take(CREATE_BRAND_REQUEST);
-    const { account_id, display_name, thumbnail_image_key, color } = request.brandObject;
+export function* createBrand(action) {
+  const { account_id, display_name, thumbnail_image_key, color } = action.brandObject;
 
-    const data = {
-      payload: {
-        account_id,
-        display_name,
-        properties: {
-          thumbnail_image_key,
-          color,
-        },
+  const data = {
+    payload: {
+      account_id,
+      display_name,
+      properties: {
+        thumbnail_image_key,
+        color,
       },
-    };
+    },
+  };
 
     // const params = serialize(data);
-    const requestUrl = '/account_api/subaccount';
+  const requestUrl = '/account_api/subaccount';
 
-    try {
-      const response = yield call(postData, requestUrl, data);
-      const { data: payload } = response;
+  try {
+    const response = yield call(postData, requestUrl, data);
+    const { data: payload } = response;
 
-      if (response.data.status === 'success') {
-        toastr.success('Success!', 'A new brand has been added');
-        yield put(createBrandSuccess(payload));
-      } else {
-        toastr.error(response.message);
-      }
-    } catch (error) {
-      yield put(createBrandFailure(error));
+    if (response.data.status === 'success') {
+      toastr.success('Success!', 'A new brand has been added');
+      yield put(createBrandSuccess(payload));
+    } else {
+      toastr.error(response.message);
     }
+  } catch (error) {
+    yield put(createBrandFailure(error));
   }
 }
 
 // delete brand (subaccount)
 
-export function* deleteBrand() {
-  while (true) {
-    const request = yield take(DELETE_BRAND_REQUEST);
-    const { account_id } = request.brandObject;
-    const data = {
-      payload: {
-        account_id,
-        status: 0,
-      } };
+export function* deleteBrand(action) {
+  const { account_id } = action.brandObject;
 
-    const requestUrl = '/account_api/account';
+  const data = {
+    payload: {
+      account_id,
+      status: 0,
+    } };
 
-    try {
-      const response = yield call(putData, requestUrl, data, true);
+  const requestUrl = '/account_api/account';
 
-      if (response.data.status === 'success') {
-        toastr.success('Success!', 'Deleted Brand');
+  try {
+    const response = yield call(putData, requestUrl, data, true);
 
-        yield put(deleteBrandSuccess({ deleteBrandID: account_id }));
-      } else {
-        toastr.error('Error!', response.data.message);
-      }
-    } catch (error) {
-      yield put(deleteBrandFailure(error));
+    if (response.data.status === 'success') {
+      toastr.success('Success!', 'Deleted Brand');
+
+      yield put(deleteBrandSuccess({ deleteBrandID: account_id }));
+    } else {
+      toastr.error('Error!', response.data.message);
     }
+  } catch (error) {
+    yield put(deleteBrandFailure(error));
   }
 }
 
+export function* createBrandWatcher() {
+  const watcher = yield takeLatest(CREATE_BRAND_REQUEST, createBrand);
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
+export function* deleteBrandWatcher() {
+  const watcher = yield takeLatest(DELETE_BRAND_REQUEST, deleteBrand);
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
 export default [
-  createBrand,
-  deleteBrand,
+  createBrandWatcher,
+  deleteBrandWatcher,
 ];
