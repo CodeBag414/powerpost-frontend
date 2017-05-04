@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import { UserCanAccount } from 'config.routes/UserRoutePermissions';
+import { UserCanPostSet } from 'config.routes/UserRoutePermissions';
 
 import Wrapper from './Wrapper';
 import CalendarSidebar from './CalendarSidebar';
@@ -107,4 +107,4 @@ const mapStateToProps = createStructuredSelector({
   posts: makeSelectPosts(),
 });
 
-export default UserCanAccount(connect(mapStateToProps, mapDispatchToProps)(Calendar));
+export default UserCanPostSet(connect(mapStateToProps, mapDispatchToProps)(Calendar));

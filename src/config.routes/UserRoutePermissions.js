@@ -9,7 +9,7 @@ export const UserCanAccount = UserAuthWrapper({
   LoadingComponent: Loading,
   predicate: (auth) => !auth.get('fetchingError'),
   failureRedirectPath: '/forbidden',
-  wrapperDisplayName: 'UserCanTeam',
+  wrapperDisplayName: 'UserCanAccount',
   allowRedirectBack: false,
 });
 
@@ -76,5 +76,16 @@ export const UserCanBrands = UserAuthWrapper({
   predicate: (auth) => auth.getIn(['activeBrand', 'user_access', 'permissions']).indexOf('brands') > -1 && auth.getIn(['activeBrand', 'account_access', 'permissions']).indexOf('brands') > -1 && !auth.get('fetchingError'),
   failureRedirectPath: '/forbidden',
   wrapperDisplayName: 'UserCanBrands',
+  allowRedirectBack: false,
+});
+
+export const UserCanPostSet = UserAuthWrapper({
+  authSelector: (state) => state.get('main'),
+  redirectAction: routerActions.push,
+  authenticatingSelector: (state) => { const main = state.get('main'); return main.get('isFetchingAccount'); },
+  LoadingComponent: Loading,
+  predicate: (auth) => auth.getIn(['activeBrand', 'user_access', 'permissions']).indexOf('post_set') > -1 && auth.getIn(['activeBrand', 'account_access', 'permissions']).indexOf('post_set') > -1 && !auth.get('fetchingError'),
+  failureRedirectPath: '/forbidden',
+  wrapperDisplayName: 'UserCanPostSet',
   allowRedirectBack: false,
 });
