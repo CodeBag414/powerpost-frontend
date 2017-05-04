@@ -14,7 +14,7 @@ const BrandImage = styled.div`
 
   p {
     width: 100%;
-    height: 100;
+    height: 100%;
     border-radius: 4px;
     text-align: center;
     color: #FFFFFF;
