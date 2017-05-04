@@ -24,7 +24,7 @@ class Calendar extends React.Component {
   static propTypes = {
     location: PropTypes.object,
     getPosts: PropTypes.func,
-    posts: PropTypes.array,
+    posts: PropTypes.any,
   };
 
   state = {
