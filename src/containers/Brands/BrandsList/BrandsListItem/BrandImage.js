@@ -18,7 +18,6 @@ const BrandImage = styled.div`
     border-radius: 4px;
     text-align: center;
     color: #FFFFFF;
-    font-family: Lato;
     font-size: 40px;
     margin: 0;
     padding: 0;

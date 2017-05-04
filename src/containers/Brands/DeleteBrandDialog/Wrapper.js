@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   font-family: Lato;
-  width: 505px;
+  width: 388px;
 
   .title {
     color: #616669;
