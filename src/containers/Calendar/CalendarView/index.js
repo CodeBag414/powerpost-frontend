@@ -38,36 +38,42 @@ class CalendarView extends React.Component {
   };
 
   eventPropGetter = (event) => {
-    const { post } = event.post;
+    const { post, post_set } = event.post;
     let bgColor;
     let fgColor;
     let borderColor;
-    switch (post.status) {
-      case '3':
-        bgColor = 'rgba(171,230,106,0.5)'; // Ready
-        borderColor = '#ABE76A';
-        fgColor = '#65883D';
-        break;
-      case '5':
-        bgColor = 'rgba(177,113,181,0.5)'; // Review
-        borderColor = '#B171B6';
-        fgColor = '#965B9A';
-        break;
-      case '2':
-        bgColor = 'rgba(103,197,230,0.5)'; // Draft
-        borderColor = '#67C5E7';
-        fgColor = '#428096';
-        break;
-      case '6':
-        bgColor = '#ACB5B8'; // Idea
-        borderColor = '#ABE76A';
-        fgColor = '#65883D';
-        break;
-      default:
-        bgColor = 'EFEFEF'; // Same as Unscheduled (gray)
-        borderColor = '#DBDFE0';
-        fgColor = '#616669';
-        break;
+    if (moment().diff(moment.unix(post.schedule_time)) > 0) { // if the post is in the past
+      bgColor = '#eee';
+      borderColor = '#eee';
+      fgColor = '#aaa';
+    } else {
+      switch (post_set.status) {
+        case '3':
+          bgColor = 'rgba(171,230,106,0.5)'; // Ready
+          borderColor = '#ABE76A';
+          fgColor = '#65883D';
+          break;
+        case '5':
+          bgColor = 'rgba(177,113,181,0.5)'; // Review
+          borderColor = '#B171B6';
+          fgColor = '#965B9A';
+          break;
+        case '2':
+          bgColor = 'rgba(103,197,230,0.5)'; // Draft
+          borderColor = '#67C5E7';
+          fgColor = '#428096';
+          break;
+        case '6':
+          bgColor = '#ACB5B8'; // Idea
+          borderColor = '#ABE76A';
+          fgColor = '#65883D';
+          break;
+        default:
+          bgColor = 'EFEFEF'; // Same as Unscheduled (gray)
+          borderColor = '#DBDFE0';
+          fgColor = '#616669';
+          break;
+      }
     }
 
     const style = {
@@ -106,6 +112,9 @@ class CalendarView extends React.Component {
     // console.log('filters', filters);
     const queryLower = query.toLowerCase();
     const formattedPosts = posts.map((post) => {
+      if (moment().diff(moment.unix(post.post.schedule_time)) > 0 && post.post.status !== '1') { // Don't show posts in the past & unpublished
+        return null;
+      }
       const titleMatch = !query || (post.post_set.title && post.post_set.title.toLowerCase().indexOf(queryLower) !== -1);
       let tagsMatch = !query;
       if (post.post_set.tags) {
@@ -117,7 +126,7 @@ class CalendarView extends React.Component {
           }
         }
       }
-      const filterMatch = filters[post.post.status];
+      const filterMatch = filters[post.post_set.status];
       if ((titleMatch || tagsMatch) && filterMatch) {
         return {
           post,
