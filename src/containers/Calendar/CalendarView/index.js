@@ -42,7 +42,7 @@ class CalendarView extends React.Component {
     let bgColor;
     let fgColor;
     let borderColor;
-    if (moment().diff(moment.unix(post.schedule_time)) > 0) { // if the post is in the past
+    if (moment().diff(moment.unix(post.schedule_time)) > 0) { // if the post is in the past, it means it's already published. Otherwise, it's an error, so don't show it
       bgColor = '#eee';
       borderColor = '#eee';
       fgColor = '#aaa';
@@ -112,9 +112,9 @@ class CalendarView extends React.Component {
     // console.log('filters', filters);
     const queryLower = query.toLowerCase();
     const formattedPosts = posts.map((post) => {
-      if (moment().diff(moment.unix(post.post.schedule_time)) > 0 && post.post.status !== '1') { // Don't show posts in the past & unpublished
-        return null;
-      }
+      // if (moment().diff(moment.unix(post.post.schedule_time)) > 0 && post.post.status !== '2') { // Don't show posts in the past & unpublished
+      //   return null;
+      // }
       const titleMatch = !query || (post.post_set.title && post.post_set.title.toLowerCase().indexOf(queryLower) !== -1);
       let tagsMatch = !query;
       if (post.post_set.tags) {
@@ -147,6 +147,7 @@ class CalendarView extends React.Component {
             toolbar: Toolbar,
           }}
           formats={formats}
+          // onSelecting={this.onSelecting}
           // onSelectSlot={(this.slotSelected)}
           onSelectEvent={(this.eventSelected)}
           eventPropGetter={this.eventPropGetter}
