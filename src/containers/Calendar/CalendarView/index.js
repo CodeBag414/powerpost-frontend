@@ -7,8 +7,6 @@ import moment from 'moment';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-import { UserCanAccount } from 'config.routes/UserRoutePermissions';
-
 import Wrapper from './Wrapper';
 import Toolbar from './Toolbar';
 import PopupMenu from './PopupMenu';
@@ -165,4 +163,4 @@ class CalendarView extends React.Component {
   }
 }
 
-export default DragDropContext(HTML5Backend)(UserCanAccount(CalendarView));
+export default DragDropContext(HTML5Backend)(CalendarView);
