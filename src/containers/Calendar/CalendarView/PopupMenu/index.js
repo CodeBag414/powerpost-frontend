@@ -13,8 +13,8 @@ class PopupMenu extends Component {
     popupPosition: PropTypes.object,
   };
 
-  getStatusText({ post }) {
-    switch (post.status) {
+  getStatusText({ post_set }) {
+    switch (post_set.status) {
       case '3':
         return 'Ready';
       case '5':
