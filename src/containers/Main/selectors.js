@@ -22,9 +22,15 @@ const makeSelectAccountConnections = () => createSelector(
     (dashboard) => dashboard.getIn(['activeBrand', 'connections'])
 );
 
+const makeSelectAccountBrands = () => createSelector(
+    selectDashboard,
+    (dashboard) => dashboard.getIn(['activeBrand', 'subAccounts'])
+);
+
 export {
     makeSelectMenuCollapsed,
     makeSelectCurrentAccount,
     makeSelectAccountPermissions,
     makeSelectAccountConnections,
+    makeSelectAccountBrands,
 };

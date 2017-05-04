@@ -53,7 +53,11 @@ const Dashboard = (props) => {
               ? `Hello there ${userInfo.display_name}!`
               : ''
             }
-            <a href="https://app.powerpost.digital" target="_blank">Upgrade to a premium plan</a>
+            {
+              accountType ==='5'
+              ? <a href="https://www.powerpost.digital/pricing/" target="_blank">Upgrade to a Premium Account!</a>
+              : null
+            }
           </Header>
         </div>
 
