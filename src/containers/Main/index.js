@@ -45,10 +45,11 @@ class Main extends React.Component {
     if (nextProps.params.account_id != this.props.params.account_id) {
       this.props.fetchAccount(nextProps.params.account_id);
     }
-
-    handleMenuToggle() {
-        this.props.toggleMenuCollapse(!this.props.menuCollapsed);
-    }
+  }
+  
+  handleMenuToggle() {
+      this.props.toggleMenuCollapse(!this.props.menuCollapsed);
+  }
 
     render() {
         const styles = require('./styles.scss');
@@ -60,7 +61,6 @@ class Main extends React.Component {
                 { this.props.children }
             </div>
         </div>
-      </div>
     );
   }
 }
