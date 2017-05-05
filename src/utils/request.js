@@ -13,7 +13,7 @@ export function postData(url, data, isAuthReq = true) {
     headers = { headers: { 'X-API-KEY': key } };
   }
 
-  return axios.post(requestUrl, data, headers);
+  return axios.post(requestUrl, data, headers).catch((error) => Promise.reject(error.response.data));
 }
 
 // Get Request

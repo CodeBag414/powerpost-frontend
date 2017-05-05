@@ -3,25 +3,26 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Link } from 'react-router';
+import { truncate } from 'lodash';
 
 import styled from 'styled-components';
-import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu';
+import { MenuItem, MenuDivider } from 'react-toolbox/lib/menu';
+import FontIcon from 'react-toolbox/lib/font_icon';
 import withReactRouter from 'elements/hoc.withReactRouter';
 
 import Wrapper from './Wrapper';
 import BrandImage from './BrandImage';
 import BrandTitle from './BrandTitle';
+import Popup from './Popup';
 
 import DeleteBrandDialog from '../../DeleteBrandDialog';
 
 import { deleteBrandRequest } from '../../actions';
 
-const ReactRouterMenuItem = withReactRouter(MenuItem);
+const CustomMenuItem = styled(MenuItem)`
+  width: 170px;
+  height: 36px;
 
-const BrandRouterMenuItem = styled(ReactRouterMenuItem)`
-  height: 34px;
-  width: 180px;
-  
   i {
     color: #8C9496;
   }
@@ -31,23 +32,33 @@ const BrandRouterMenuItem = styled(ReactRouterMenuItem)`
   }
 
   &:hover {
-    color: black;
-    background-color: #E81C64;
+    background: #E81C64 !important; 
+    i {
+      color: white !important;
+    }
+    div {
+      color: white !important;
+    }
   }
 `;
 
-const BrandMenuItem = styled(MenuItem)`
-  i {
-    color: #8C9496;
-  }
-  span {
-    flex-grow: 0;
-  }
-`;
+const BrandRouterMenuItem = withReactRouter(CustomMenuItem);
 
 const BrandMenuItemCaption = styled.div`
   color: #8C9496;
   margin-left: 10px;
+`;
+
+const OptionMenu = styled.a`
+  width: 30px;
+  height: 30px;
+  text-align: right;
+  position: relative;
+  cursor: pointer;
+
+  i {
+    color: #8c9496;
+  }
 `;
 
 class BrandsListItem extends Component {
@@ -62,6 +73,7 @@ class BrandsListItem extends Component {
     this.state = {
       accountpath: `${location.origin}/account/${props.brand.account_id}`,
       isDialogShown: false,
+      isPopupShown: false,
     };
   }
 
@@ -73,49 +85,57 @@ class BrandsListItem extends Component {
     this.setState({ isDialogShown: false });
   }
 
+  showPopup = () => {
+    this.setState({ isPopupShown: true });
+  }
+
+  hidePopup = () => {
+    this.setState({ isPopupShown: false });
+  }
+
+  BrandNavMenu = (brandURL) => (
+    <Popup onOutsideClick={this.hidePopup}>
+      <BrandRouterMenuItem to={`${brandURL}/settings/connections`}>
+        <i className="fa fa-paper-plane"></i><BrandMenuItemCaption>Posts</BrandMenuItemCaption>
+      </BrandRouterMenuItem>
+      <BrandRouterMenuItem to={`${brandURL}/settings/connections`} >
+        <i className="fa fa-exchange"></i><BrandMenuItemCaption>Connections</BrandMenuItemCaption>
+      </BrandRouterMenuItem>
+      <BrandRouterMenuItem to={`${brandURL}/settings/team`} >
+        <i className="fa fa-group"></i><BrandMenuItemCaption>Team</BrandMenuItemCaption>
+      </BrandRouterMenuItem>
+      <BrandRouterMenuItem to={`${brandURL}/settings`} >
+        <i className="fa fa-gear"></i><BrandMenuItemCaption>Settings</BrandMenuItemCaption>
+      </BrandRouterMenuItem>
+      <MenuDivider />
+      <CustomMenuItem onClick={this.deleteBrand} >
+        <i className="fa fa-trash"></i><BrandMenuItemCaption>Delete</BrandMenuItemCaption>
+      </CustomMenuItem>
+    </Popup>
+    );
+
   render() {
     const brand = this.props.brand;
 
     const thumbnailImageKey = (brand && brand.properties && brand.properties.thumbnail_image_key) ? brand.properties.thumbnail_image_key : '';
     const thumbURL = `https://s3.amazonaws.com/powerpost/${thumbnailImageKey}`;
-    const title = brand && brand.title ? brand.title : '';
+    let title = brand && brand.title ? brand.title : '';
+    title = truncate(title, { length: 40 });
     const accountID = brand && brand.account_id ? brand.account_id : null;
     const brandColor = brand && brand.properties.color;
     const brandURL = `/account/${accountID}`;
-
-    const BrandNavMenu = () => (
-      <IconMenu
-        position="topLeft" icon="more_horiz" menuRipple
-      >
-        <BrandRouterMenuItem to={`${brandURL}/settings/connections`}>
-          <i className="fa fa-paper-plane"></i><BrandMenuItemCaption>Posts</BrandMenuItemCaption>
-        </BrandRouterMenuItem>
-        <BrandRouterMenuItem to={`${brandURL}/settings/connections`} >
-          <i className="fa fa-exchange"></i><BrandMenuItemCaption>Connections</BrandMenuItemCaption>
-        </BrandRouterMenuItem>
-        <BrandRouterMenuItem to={`${brandURL}/settings/team`} >
-          <i className="fa fa-group"></i><BrandMenuItemCaption>Team</BrandMenuItemCaption>
-        </BrandRouterMenuItem>
-        <BrandRouterMenuItem to={`${brandURL}/settings`} >
-          <i className="fa fa-gear"></i><BrandMenuItemCaption>Settings</BrandMenuItemCaption>
-        </BrandRouterMenuItem>
-        <MenuDivider />
-        <BrandMenuItem onClick={this.deleteBrand} >
-          <i className="fa fa-trash"></i><BrandMenuItemCaption>Delete</BrandMenuItemCaption>
-        </BrandMenuItem>
-      </IconMenu>
-        );
+    const shortTitle = title.substr(0, 2).toUpperCase();
 
     return (
       <Wrapper>
         <BrandImage color={brandColor}>
-          {thumbnailImageKey !== '' ? <img src={thumbURL} /> : <p>{title.substr(0, 2)}</p>}
+          {thumbnailImageKey !== '' ? <img src={thumbURL} /> : <p>{shortTitle}</p>}
         </BrandImage>
         <Link to={`${brandURL}`}><BrandTitle>
           { title }
         </BrandTitle>
         </Link>
-        <BrandNavMenu />
+        <OptionMenu onClick={this.showPopup} ><FontIcon value="more_horiz" />{this.state.isPopupShown && this.BrandNavMenu(brandURL)}</OptionMenu>
         <DeleteBrandDialog
           active={this.state.isDialogShown}
           handleDialogToggle={this.handleDialogToggle}

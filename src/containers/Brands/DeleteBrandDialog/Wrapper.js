@@ -2,15 +2,30 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   font-family: Lato;
-  width: 505px;
+  width: 388px;
 
-  .title {
-    color: #616669;
-    font-size: 24px;
-    font-weight: 900;
-    line-height: 29px;
-    padding: 0;
-    margin: 26px 30px;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    padding: 26px 30px;
+
+    .title {
+      color: #616669;
+      font-size: 24px;
+      font-weight: 900;
+      line-height: 29px;
+      padding: 0;
+      margin: 0;
+    }
+
+    button {
+      font-size: 16px;
+      background: transparent;
+      border: none;
+      &:focus {
+        outline: 0;
+      }
+    }
   }
 
   .divider {
@@ -41,8 +56,17 @@ const Wrapper = styled.div`
       margin-top: 30px;
       display: flex;
       flex-direction: row-reverse;
+
       button {
-        margin-left: 10px;
+        margin-left: 15px;
+      }
+
+      .cancel {
+        background: transparent;
+        border: none;
+        &:focus {
+          outline: 0;
+        }
       }
     }
   }

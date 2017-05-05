@@ -132,53 +132,50 @@ class BrandUploadForm extends Component {
   render() {
     return (
       <Wrapper>
-        <form onSubmit={this.addBrand}>
+        <div className="header">
           <h2 className="title">Add New Brand</h2>
-          <div className="divider" />
-          <div className="body-wrapper">
-            <PPTextField
-              type="text"
-              name="brandName"
-              floatingLabelText="Brand Name"
-              maxLength={200}
-              value={this.state.brandName}
-              onChange={this.handleNameChange}
-              errorText={this.state.errorText}
-              required
+          <button onClick={this.props.onCancel}><i className="fa fa-times" aria-hidden="true" /></button>
+        </div>
+        <div className="divider" />
+        <div className="body-wrapper">
+          <PPTextField
+            type="text"
+            name="brandName"
+            floatingLabelText="Brand Name"
+            maxLength={200}
+            value={this.state.brandName}
+            onChange={this.handleNameChange}
+            errorText={this.state.errorText}
+            required
+          />
+          <div className="avatar-wrapper">
+            <PPAvatar
+              size={90}
+              header="Brand Icon"
+              image={this.state.avatarNew}
+              title={this.state.brandName}
+              backgroundColor={this.state.avatarColor}
+              getAvatarandColor={this.getAvatarandColor}
+              isClickable={false}
             />
-            <div className="avatar-wrapper">
-              <PPAvatar
-                size={90}
-                header="Brand Icon"
-                image={this.state.avatarNew}
-                title={this.state.brandName}
-                backgroundColor={this.state.avatarColor}
-                getAvatarandColor={this.getAvatarandColor}
-                isClickable={false}
-              />
-              <div className="description-wrapper">
-                <p>Managing multiple brands can be hard. Personalize your new brand with its own image or logo to help!</p>
-                <PPButton
-                  label="Choose File"
-                  primary={false}
-                  onClick={this.uploadAvatar}
-                />
-              </div>
-            </div>
-            <div className="button_wrapper">
+            <div className="description-wrapper">
+              <p>Managing multiple brands can be hard. Personalize your new brand with its own image or logo to help!</p>
               <PPButton
-                type="submit"
-                label="Add Brand"
-                primary
-              />
-              <PPButton
-                onClick={this.props.onCancel}
-                label="Cancel"
+                label="Choose File"
                 primary={false}
+                onClick={this.uploadAvatar}
               />
             </div>
           </div>
-        </form>
+          <div className="button_wrapper">
+            <PPButton
+              type="submit"
+              label="Add Brand"
+              onClick={this.addBrand}
+              primary
+            />
+          </div>
+        </div>
       </Wrapper>
     );
   }
