@@ -7,6 +7,7 @@ import { find } from 'lodash';
 import Loading from 'components/Loading';
 import Dropdown from 'elements/atm.Dropdown';
 import Button from 'elements/atm.Button';
+import PPAvatar from 'elements/atm.Avatar';
 import IconMenu, { MenuItem } from 'elements/atm.IconMenu';
 
 import {
@@ -74,7 +75,9 @@ export class UserCard extends Component {
 
     return (
       <Wrapper>
-        <div className="avatar" style={{ background: `url(${thumbnail})` }} />
+        <div className="avatar">
+          <PPAvatar image={thumbnail} title={name} backgroundColor={'green'} size={80} />
+        </div>
         <div className="detail-pane">
           <div className="name">{name}</div>
           <div className="email">{email}</div>
@@ -82,7 +85,6 @@ export class UserCard extends Component {
             <Dropdown
               value={accessLevel}
               options={accessLevels}
-              placeholder=""
               small
               onChange={this.onAccessLevelChange}
             />
