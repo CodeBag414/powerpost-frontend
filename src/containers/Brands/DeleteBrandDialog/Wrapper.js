@@ -58,7 +58,7 @@ const Wrapper = styled.div`
       flex-direction: row-reverse;
 
       button {
-        margin-left: 10px;
+        margin-left: 15px;
       }
 
       .cancel {
