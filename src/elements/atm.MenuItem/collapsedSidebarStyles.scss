@@ -13,15 +13,12 @@
     }
 }
 .caption {
-    color: #8C9497;
-    font-family: $brandFont;
-    width: 3rem;
-    text-overflow: ellipsis;
-    overflow: hidden;
+  display: none;
 }
 
 .icon {
     text-align: center;
+    width: 100% !important;
     i {
         font-size: 16px !important;
     }
@@ -31,11 +28,4 @@
 }
 .selected {
     background-color: #E7ECEE !important;
-}
-
-.disabled {
-    background-color: rgba(255,255,255, .35);
-    &:hover {
-        background-color: rgba(255,255,255, .35);
-    }
 }

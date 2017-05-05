@@ -31,6 +31,7 @@ import { toggleMenu,
 import { makeSelectMenuCollapsed,
          makeSelectCurrentAccount,
          makeSelectAccountPermissions,
+         makeSelectUserPermissions,
 } from './selectors';
 
 class Main extends React.Component {
@@ -45,25 +46,25 @@ class Main extends React.Component {
       this.props.fetchAccount(nextProps.params.account_id);
     }
   }
-
+  
   componentDidMount() {
     this.props.fetchAccount(this.props.params.account_id);
   }
-
+ 
   handleMenuToggle() {
-    this.props.toggleMenuCollapse(!this.props.menuCollapsed);
+      this.props.toggleMenuCollapse(!this.props.menuCollapsed);
   }
 
-  render() {
-    const styles = require('./styles.scss');
-    const viewContentStyle = this.props.menuCollapsed ? styles.viewContentCollapsed : styles.viewContentFull;
-    return (
-      <div>
-        <Nav accountPermissions={this.props.accountPermissions} location={this.props.location} logout={this.props.logout} user={this.props.user} handleMenuToggle={this.handleMenuToggle} isMenuCollapsed={this.props.menuCollapsed} activeBrand={this.props.activeBrand} accountId={this.props.params.account_id} userAccount={this.props.userAccount} sharedAccounts={this.props.sharedAccounts} subAccounts={this.props.subAccounts} />
-        <div className={[viewContentStyle, styles.viewContent].join(' ')}>
-          { this.props.children }
+    render() {
+        const styles = require('./styles.scss');
+        const viewContentStyle = this.props.menuCollapsed ? styles.viewContentCollapsed : styles.viewContentFull;
+        return(
+        <div>
+            <Nav userPermissions={this.props.userPermissions} accountPermissions = { this.props.accountPermissions } location={ this.props.location } logout={ this.props.logout } user={ this.props.user } handleMenuToggle={ this.handleMenuToggle } isMenuCollapsed = { this.props.menuCollapsed } activeBrand = { this.props.activeBrand } accountId = { this.props.params.account_id } userAccount = { this.props.userAccount } sharedAccounts = { this.props.sharedAccounts } subAccounts = { this.props.subAccounts } />
+            <div id="main-panel" className={[viewContentStyle, styles.viewContent].join(' ') }>
+                { this.props.children }
+            </div>
         </div>
-      </div>
     );
   }
 }
@@ -82,26 +83,27 @@ export function mapDispatchToProps(dispatch) {
 }
 
 const mapStateToProps = (initialState, initialProps) => {
-  const selectUser = makeSelectUser();
-  const selectMenuCollapsed = makeSelectMenuCollapsed();
-  const selectSharedAccounts = makeSelectSharedAccounts();
-  const selectActiveBrand = makeSelectCurrentAccount();
-  const selectSubAccounts = makeSelectSubAccounts();
-  const selectUserAccount = makeSelectUserAccount();
-  const selectUserAvatar = makeSelectUserAvatar();
-  const selectAccountPermissions = makeSelectAccountPermissions();
-
-  return (state, ownProps) => ({
-    user: selectUser(state),
-    menuCollapsed: selectMenuCollapsed(state),
-    sharedAccounts: selectSharedAccounts(state),
-    activeBrand: selectActiveBrand(state),
-    subAccounts: selectSubAccounts(state),
-    userAccount: selectUserAccount(state),
-    userAvatar: selectUserAvatar(state),
-    accountPermissions: selectAccountPermissions(state),
-    location: ownProps.location,
-  });
+    const selectUser = makeSelectUser();
+    const selectMenuCollapsed = makeSelectMenuCollapsed();
+    const selectSharedAccounts = makeSelectSharedAccounts();
+    const selectActiveBrand = makeSelectCurrentAccount();
+    const selectSubAccounts = makeSelectSubAccounts();
+    const selectUserAccount = makeSelectUserAccount();
+    const selectUserAvatar = makeSelectUserAvatar();
+    const selectAccountPermissions = makeSelectAccountPermissions();
+    const selectUserPermissions = makeSelectUserPermissions();
+    return (state, ownProps) => ({
+        user: selectUser(state),
+        menuCollapsed: selectMenuCollapsed(state),
+        sharedAccounts: selectSharedAccounts(state),
+        activeBrand: selectActiveBrand(state),
+        subAccounts: selectSubAccounts(state),
+        userAccount: selectUserAccount(state),
+        userAvatar: selectUserAvatar(state),
+        accountPermissions: selectAccountPermissions(state),
+        userPermissions: selectUserPermissions(state),
+        location: ownProps.location
+    });
 };
 
 export default UserIsAuthenticated(connect(mapStateToProps, mapDispatchToProps)(Main));
