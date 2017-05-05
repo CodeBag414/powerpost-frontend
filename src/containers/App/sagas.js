@@ -233,7 +233,11 @@ export function* registerFlow() {
     try {
       yield call(authorize, { name, email, password, properties, token, isRegistering: true });
       yield call(set, 'signup', { name, email });
-      yield forwardTo('/signup/verification');
+      if (token) {
+        yield forwardTo(`/signup/verification?token=${token}`);
+      } else {
+        yield forwardTo('/signup/verification');
+      }
     } catch (error) {
       toastr.error(error);
     }

@@ -47,7 +47,7 @@ class SignIn extends Component {
     if (nextProps.loggedIn) {
       const { location: { query } } = this.props;
       if (query.token) {
-        browserHistory.push(`/redeem/${query.token}?type=group_invite`);
+        browserHistory.push(`/redeem/${query.token}`);
       } else {
         browserHistory.push('/');
       }

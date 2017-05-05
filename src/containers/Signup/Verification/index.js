@@ -15,6 +15,7 @@ import { resendActivationEmail } from '../actions';
 
 class SignupVerification extends Component {
   static propTypes = {
+    location: PropTypes.object,
     resendActivationEmail: PropTypes.func,
   }
 
@@ -30,7 +31,11 @@ class SignupVerification extends Component {
   }
 
   resendActivationEmail = () => {
-    this.props.resendActivationEmail(this.state.email);
+    const { location: { query } } = this.props;
+    this.props.resendActivationEmail({
+      email: this.state.email,
+      token: query.token,
+    });
   }
 
   render() {
@@ -51,7 +56,7 @@ class SignupVerification extends Component {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    resendActivationEmail: (email) => dispatch(resendActivationEmail(email)),
+    resendActivationEmail: (payload) => dispatch(resendActivationEmail(payload)),
   };
 }
 

@@ -231,7 +231,7 @@ function globalReducer(state = initialState, action) {
       const user = find(groupUsers.details.groups_users, { user_id: action.payload.user_id });
       user.processing = true;
       return state
-        .set('groupUsers', groupUsers);
+        .set('groupUsers', { ...groupUsers });
     }
     case ADD_USER_TO_GROUP_SUCCESS: {
       const groupUsers = state.get('groupUsers');
@@ -239,28 +239,27 @@ function globalReducer(state = initialState, action) {
       user.processing = false;
       user.group_id = action.payload.group_id;
       return state
-        .set('groupUsers', groupUsers);
+        .set('groupUsers', { ...groupUsers });
     }
     case ADD_USER_TO_GROUP_ERROR: {
       const groupUsers = state.get('groupUsers');
       const user = find(groupUsers.details.groups_users, { user_id: action.payload.user_id });
       user.processing = false;
       return state
-        .set('groupUsers', groupUsers);
+        .set('groupUsers', { ...groupUsers });
     }
     case REMOVE_USER_FROM_GROUP_SUCCESS: {
       const groupUsers = state.get('groupUsers');
-      const newGroupUsers = remove(groupUsers.details.groups_users, (groupUser) => groupUser.user_id === action.payload.user_id);
-      groupUsers.details.groups_users = newGroupUsers;
+      remove(groupUsers.details.groups_users, (groupUser) => groupUser.user_id === action.payload.user_id);
       return state
-        .set('groupUsers', groupUsers);
+        .set('groupUsers', { ...groupUsers });
     }
     case REMOVE_USER_FROM_GROUP_ERROR: {
       const groupUsers = state.get('groupUsers');
       const user = find(groupUsers.details.groups_users, { user_id: action.payload.user_id });
       user.processing = false;
       return state
-        .set('groupUsers', groupUsers);
+        .set('groupUsers', { ...groupUsers });
     }
     default:
       return state;
