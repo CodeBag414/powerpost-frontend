@@ -130,12 +130,13 @@ export class Team extends Component {
     if (groupUsers.isFetching || !groupUsers.details) {
       return <Loading />;
     }
+    const remainingText = `${userAccount.num_users - groupUsers.details.groups_users.length} of ${userAccount.num_users} Users Remaining for this Plan`;
 
     return (
       <Wrapper>
         <div className="top-row">
           <Button label="Invite New Member" primary onClick={this.toggleModal} />
-          <span>{userAccount.num_users - groupUsers.details.groups_users.length} of {userAccount.num_users} Users Remaining for this Plan</span>
+          <span>{remainingText}</span>
         </div>
         { groupUsers.details.groups_users.map((u) =>
           <UserCard
@@ -144,6 +145,7 @@ export class Team extends Component {
             userId={u.user_id}
             email={u.email}
             name={u.display_name}
+            thumbnail={u.properties.thumb_url}
             processing={u.processing}
             accessLevels={accessLevels}
           />
@@ -170,7 +172,7 @@ export class Team extends Component {
               <Dropdown
                 label="Access Level"
                 value={accessLevel}
-                options={groupUsers.isFetching || groupUsers.error ? [] : accessLevelOptions}
+                options={accessLevels}
                 placeholder="Select Option"
                 onChange={this.onAccessLevelChange}
               />
@@ -189,7 +191,7 @@ export class Team extends Component {
             </div>
           </div>
           <div>
-            <span style={{ display: 'inline-block', marginTop: '7px' }}>19 of 20 users are remaining for this plan</span>
+            <span style={{ display: 'inline-block', marginTop: '7px' }}>{remainingText}</span>
             <div style={{ float: 'right' }}>
               <span style={{ cursor: 'pointer', marginRight: '35px' }} onClick={this.toggleModal}>
                 Close

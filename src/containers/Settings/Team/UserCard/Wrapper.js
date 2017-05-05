@@ -5,6 +5,7 @@ import theme from 'theme';
 export default styled.div`
   display: inline-block;
   position: relative;
+  margin: 0 25px 15px 0;
   padding: 20px 20px 10px;
   background-color: white;
   box-shadow: 0px 0px 5px rgba(0,0,0,0.2);

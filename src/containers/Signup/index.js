@@ -45,8 +45,6 @@ class Signup extends Component {
 
     if (query.plan_id) {
       fetchPlan(query.plan_id);
-    } else if (query.token) {
-      // fetchPlan(location.query.token);
     }
   }
 

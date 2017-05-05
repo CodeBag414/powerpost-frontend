@@ -6,6 +6,7 @@ import { find } from 'lodash';
 
 import Loading from 'components/Loading';
 import Dropdown from 'elements/atm.Dropdown';
+import Button from 'elements/atm.Button';
 import IconMenu, { MenuItem } from 'elements/atm.IconMenu';
 
 import {
@@ -22,6 +23,7 @@ export class UserCard extends Component {
     groupId: PropTypes.string,
     email: PropTypes.string,
     name: PropTypes.string,
+    thumbnail: PropTypes.string,
     accessLevels: PropTypes.array,
     addUserToGroupRequest: PropTypes.func,
     removeUserFromGroupRequest: PropTypes.func,
@@ -29,11 +31,6 @@ export class UserCard extends Component {
 
   constructor(props) {
     super(props);
-
-    this.removeUserActions = [
-      { label: 'Yes, delete user', onClick: this.handleRemove },
-      { label: 'Cancel', onClick: this.toggleRemoveModal },
-    ];
 
     const defaultOption = find(props.accessLevels, { value: props.groupId });
     this.state = {
@@ -43,6 +40,10 @@ export class UserCard extends Component {
   }
 
   onAccessLevelChange = (option) => {
+    if (this.state.accessLevel.value === option.value) {
+      return;
+    }
+
     const { userId, addUserToGroupRequest } = this.props;
     this.setState({ accessLevel: option });
 
@@ -68,12 +69,12 @@ export class UserCard extends Component {
   }
 
   render() {
-    const { processing, accessLevels, name, email } = this.props;
+    const { processing, accessLevels, name, email, thumbnail } = this.props;
     const { accessLevel, removeModalVisible } = this.state;
 
     return (
       <Wrapper>
-        <div className="avatar" />
+        <div className="avatar" style={{ background: `url(${thumbnail})` }} />
         <div className="detail-pane">
           <div className="name">{name}</div>
           <div className="email">{email}</div>
@@ -87,8 +88,8 @@ export class UserCard extends Component {
             />
           </div>
           <div className="menu-wrapper">
-            <IconMenu icon="more_horizontal" position="topRight" menuRipple>
-              <MenuItem className="remove-member" caption="Remove Member" onClick={this.handleRemove} />
+            <IconMenu icon="more_horizontal" position="topLeft" menuRipple>
+              <MenuItem className="remove-member" caption="Remove Member" onClick={this.toggleRemoveModal} />
             </IconMenu>
           </div>
         </div>
@@ -98,8 +99,19 @@ export class UserCard extends Component {
           onEscKeyDown={this.toggleRemoveModal}
           onOverlayClick={this.toggleRemoveModal}
           type="small"
-          title="Are you sure that you want to delete this user?"
-        />
+          title={`Removing ${name}`}
+        >
+          <p>
+            Are you sure that you want to delete this user?
+          </p>
+          <div style={{ position: 'absolute', top: '30px', right: '25px', cursor: 'pointer' }} onClick={this.toggleModal}>&#10005;</div>
+          <div style={{ float: 'right' }}>
+            <span style={{ cursor: 'pointer', marginRight: '35px' }} onClick={this.toggleRemoveModal}>
+              No, Cancel
+            </span>
+            <Button label="Yes, Delete" primary onClick={this.handleRemove} />
+          </div>
+        </Dialog>
         { processing && <Loading /> }
       </Wrapper>
     );

@@ -85,7 +85,8 @@ let auth = {
         return axios.post(url, data)
             .then(response => {
                 console.log('response:' + response);
-                auth.login(email, password);
+                // auth.login(email, password);
+                return response.data;
             })
             .catch((error) => Promise.reject(error.response));
      },
