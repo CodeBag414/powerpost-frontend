@@ -25,18 +25,21 @@ const CustomMenuItem = styled(MenuItem)`
 
   i {
     color: #8C9496;
-    &:hover {
-      color: white;
-    }
   }
 
   span {
     flex-grow: 0;
   }
 
-    &:hover {
-      background: #E81C64 !important; 
+  &:hover {
+    background: #E81C64 !important; 
+    i {
+      color: white !important;
     }
+    div {
+      color: white !important;
+    }
+  }
 `;
 
 const BrandRouterMenuItem = withReactRouter(CustomMenuItem);
