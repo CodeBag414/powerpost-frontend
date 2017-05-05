@@ -16,7 +16,7 @@ function boardReducer(state = initialState, action) {
         .set('postSets', fromJS(action.postSets));
     case DELETE_POST_SET:
       return state
-        .updateIn(['postSets'], postSets => postSets.filter((postSet => postSet.get('post_set_id') !== action.id)));
+        .updateIn(['postSets'], (postSets) => postSets.filter(((postSet) => postSet.get('post_set_id') !== action.id)));
     default: return state;
   }
 }

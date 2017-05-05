@@ -9,10 +9,6 @@ import {
 } from 'utils/request';
 
 import {
-  boardCallback,
-} from './actions';
-
-import {
   SET_POST_SETS,
   FETCH_POST_SETS,
   DELETE_POST_SET_REQUEST,

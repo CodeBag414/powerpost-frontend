@@ -18,10 +18,6 @@ import styles from './styles.scss';
 
 class Board extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     this.props.getPostSetsAction();
   }
@@ -34,9 +30,9 @@ class Board extends React.Component {
       { status: 6, statusColor: '#ACB5B8', name: 'Idea' },
     ];
     const { postSets, deletePostSetAction } = this.props;
-    const postSetsGroups = groups.map(group => {
+    const postSetsGroups = groups.map((group) => {
       const { name, status, statusColor } = group;
-      const sets = postSets.filter(postSet => parseInt(postSet.get('status')) === status );
+      const sets = postSets.filter((postSet) => parseInt(postSet.get('status'), 10) === status);
       return {
         status: name,
         postSets: sets,
@@ -46,7 +42,7 @@ class Board extends React.Component {
     return (
       <div className={styles.board}>
         {
-          postSetsGroups.map(postSetsGroup =>
+          postSetsGroups.map((postSetsGroup) =>
             <PostSetsGroup
               key={postSetsGroup.status}
               status={postSetsGroup.status}
@@ -72,10 +68,10 @@ Board.propTypes = {
 };
 
 export function mapDispatchToProps(dispatch) {
- return {
-   getPostSetsAction: () => dispatch(getPostSets()),
-   deletePostSetAction: (id) => dispatch(deletePostSetRequest(id)),
- };
+  return {
+    getPostSetsAction: () => dispatch(getPostSets()),
+    deletePostSetAction: (id) => dispatch(deletePostSetRequest(id)),
+  };
 }
 
 const mapStateToProps = createStructuredSelector({
