@@ -12,7 +12,7 @@ import {
 
 // The initial application state
 const initialState = fromJS({
-  menuCollapsed: false,
+  menuCollapsed: true,
   activeBrand: {
     account_id: false,
     user_id: false,
@@ -31,9 +31,11 @@ const initialState = fromJS({
     user_access_level: false,
     subAccounts: [],
     connections: [{}],
+    color: false,
   },
   isFetchingAccount: true,
   fetchingError: false,
+  parentAccount: {},
 });
 
 // Takes care of changing the application state
@@ -44,6 +46,7 @@ function dashboardReducer(state = initialState, action) {
             .set('isFetchingAccount', true)
             .set('fetchingError', false);
     case FETCH_ACCOUNT_SUCCESS:
+      console.log(action.account);
       return state
             .set('isFetchingAccount', false)
             .set('fetchingError', false)
@@ -60,7 +63,8 @@ function dashboardReducer(state = initialState, action) {
             .setIn(['activeBrand', 'account_access', 'permissions'], action.account.data.account.account_access.permissions)
             .setIn(['activeBrand', 'user_access_level'], action.account.data.account.user_access_level)
             .setIn(['activeBrand', 'subAccounts'], action.account.data.account.subaccounts)
-            .setIn(['activeBrand', 'connections'], action.account.data.account.connections);
+            .setIn(['activeBrand', 'connections'], action.account.data.account.connections)
+            .setIn(['activeBrand', 'parentAccount'], action.account.data.account.parent_account);
     case FETCH_ACCOUNT_ERROR:
       return state
             .set('isFetchingAccount', false)

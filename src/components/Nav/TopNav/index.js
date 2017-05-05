@@ -1,18 +1,31 @@
 import React, { PropTypes, Component } from 'react';
 
-import PPIconButton from 'elements/atm.IconButton';
+import PPButton from 'elements/atm.Button';
 import PPMenuItem from 'elements/atm.MenuItem';
 import PPIconMenu from 'elements/atm.IconMenu';
-import PPAvatar from 'elements/atm.Avatar';
 import withReactRouter from 'elements/hoc.withReactRouter';
+import styled from 'styled-components';
 
-// Replace with own Icons eventually
-import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
-import HardwareKeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
-
-import styles from './styles.scss';
+//import Wrapper from './Wrapper';
+import AccountLogo from './AccountLogo';
+import PPLogo from './PPLogo';
+import Avatar from './Avatar';
+import HeaderNavLogo from './HeaderNavLogo.png';
+import HeaderLogo from './HeaderLogo';
+import AvatarWrapper from './AvatarWrapper';
 
 const ReactRouterMenuItem = withReactRouter(PPMenuItem);
+const Wrapper = styled.div`
+  position:fixed;
+  top: 0;
+  height: 60px;
+  right: 0;
+  transition: transform .3s ease-in-out, width .3s ease-in-out;
+  box-shadow: 0 1px 5px 0 rgba(60,92,129,0.20);
+  background-color: #fff;
+  width: ${(props) => props.isNotFullWidth ? 'calc(100% - 60px)' : '100%'};
+  text-align: center;
+`;
 
 class TopNav extends Component {
   constructor(props) {
@@ -47,34 +60,33 @@ class TopNav extends Component {
   render() {
     const isAccountPath = this.props.location.pathname.match('/account/');
 
-    const viewStyle = this.props.isMenuCollapsed ? styles.collapsed : styles.full;
-    const accountStyle = isAccountPath ? styles.accountTopNav : styles.userTopNav;
-
-    const avatar = this.props.user && this.props.user.properties ? this.props.user.properties.thumb_url : '';
-    const color = this.props.user && this.props.user.properties ? this.props.user.properties.color : '';
-
+    const avatar = this.props.user && this.props.user.properties ? this.props.user.properties.thumb_url : '#E7ECEE';
+    const color = this.props.activeBrand && this.props.activeBrand.properties.color ? this.props.activeBrand.properties.color : '#E7ECEE';
+    console.log(this.props.activeBrand);
+    const thumbnail = this.props.activeBrand && this.props.activeBrand.properties.thumb_url ? this.props.activeBrand.properties.thumb_url : '';
+    
+    const logo = isAccountPath ? <AccountLogo isCollapsed={this.props.isMenuCollapsed} color={color} title={this.props.activeBrand.title} thumbnail={thumbnail} /> : <PPLogo />;
+    const showSidebar = this.props.activeBrand.account_type_id == 2 || this.props.activeBrand.account_type_id == 3 || this.props.activeBrand.account_type_id == 7 ? true : false;
     return (
-      <div className={[styles.topNav, viewStyle, accountStyle].join(' ')}>
+      <Wrapper isNotFullWidth={this.props.activeBrand && showSidebar && !this.props.isMenuCollapsed} >
+        {logo}
         { isAccountPath &&
-        <PPIconButton inBar onClick={this.props.handleMenuToggle} >
-          { this.props.isMenuCollapsed ? (
-            <NavigationMenu />
-                    ) : (
-                      <HardwareKeyboardArrowLeft />
-                    )}
-        </PPIconButton>
-                }
-        <div className={styles.userContainer} >
+          <PPButton onClick={this.props.handleMenuToggle} style={{marginTop: '10px', float: 'left'}} icon={this.props.isMenuCollapsed ? 'menu' : 'keyboard_arrow_left'} floating mini />
+        }
+        { !isAccountPath && <div style={{float: 'left', height: '24px', marginTop: '18px', marginLeft: '10px', fontSize: '16px', fontWeight:'700', color: '#8C9496' }}>Welcome</div> }
+        <HeaderLogo src={HeaderNavLogo} />
+        <AvatarWrapper>
           <PPIconMenu
             open={this.state.userMenuOpen}
             position="topRight"
-            icon={<PPAvatar image={avatar} title={this.props.user.display_name} backgroundColor={color} size={40} radius={50} />}
+            icon={<Avatar avatarSrc={avatar} />}
           >
+            <ReactRouterMenuItem caption="Dashboard" to={'/'} />
             <ReactRouterMenuItem caption="Settings" to={'/user/settings'} />
             <PPMenuItem caption="Logout" onTouchTap={this.props.logout} />
           </PPIconMenu>
-        </div>
-      </div>
+        </AvatarWrapper>
+      </Wrapper>
     );
   }
 }
