@@ -47,6 +47,10 @@ class Main extends React.Component {
     }
   }
   
+  componentDidMount() {
+    this.props.fetchAccount(this.props.params.account_id);
+  }
+ 
   handleMenuToggle() {
       this.props.toggleMenuCollapse(!this.props.menuCollapsed);
   }
