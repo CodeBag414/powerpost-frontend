@@ -27,6 +27,7 @@ class CalendarView extends React.Component {
     posts: PropTypes.array,
     query: PropTypes.string,
     filters: PropTypes.array,
+    onMoveEvent: PropTypes.func,
   };
 
   state = {
@@ -85,10 +86,6 @@ class CalendarView extends React.Component {
     };
   }
 
-  moveEvent = ({ event }) => {
-    console.log('event', event);
-  }
-
   eventSelected = (event, e) => {
     const x = e.nativeEvent.clientX;
     const y = e.nativeEvent.clientY;
@@ -105,7 +102,7 @@ class CalendarView extends React.Component {
 
   render() {
     const { showPopup, popupPosition, currentPost } = this.state;
-    const { posts, query, filters } = this.props;
+    const { posts, query, filters, onMoveEvent } = this.props;
     // console.log('posts', posts);
     // console.log('filters', filters);
     const queryLower = query.toLowerCase();
@@ -129,8 +126,8 @@ class CalendarView extends React.Component {
         return {
           post,
           title: post.post_set.title ? post.post_set.title : 'Untitled post',
-          start: moment.unix(post.post.schedule_time),
-          end: moment.unix(post.post.schedule_time),
+          start: new Date(moment.unix(post.post.schedule_time)),
+          end: new Date(moment.unix(post.post.schedule_time)),
         };
       }
       return null;
@@ -149,7 +146,7 @@ class CalendarView extends React.Component {
           // onSelectSlot={(this.slotSelected)}
           onSelectEvent={(this.eventSelected)}
           eventPropGetter={this.eventPropGetter}
-          onEventDrop={this.moveEvent}
+          onEventDrop={onMoveEvent}
         />
         {showPopup &&
           <PopupMenu

@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import moment from 'moment';
 
 import { UserCanPostSet } from 'config.routes/UserRoutePermissions';
 
@@ -10,6 +11,7 @@ import CalendarView from './CalendarView';
 
 import {
   fetchPosts,
+  updatePostRequest,
 } from './actions';
 
 import {
@@ -24,6 +26,7 @@ class Calendar extends React.Component {
   static propTypes = {
     location: PropTypes.object,
     getPosts: PropTypes.func,
+    updatePost: PropTypes.func,
     posts: PropTypes.any,
   };
 
@@ -75,6 +78,19 @@ class Calendar extends React.Component {
     this.setState({ filters: newFilters });
   }
 
+  handleMoveEvent = ({ event, start }) => {
+    const { post } = event;
+    const { updatePost } = this.props;
+    // console.log('post', post.post);
+    // console.log('start', start);
+    const scheduleTime = moment(start).format('X');
+    const newPost = {
+      ...post.post,
+      schedule_time: scheduleTime,
+    };
+    updatePost(newPost);
+  }
+
   render() {
     const { query, filters } = this.state;
     const { posts } = this.props;
@@ -91,6 +107,7 @@ class Calendar extends React.Component {
           posts={posts}
           query={query}
           filters={filters}
+          onMoveEvent={this.handleMoveEvent}
         />
       </Wrapper>
     );
@@ -100,6 +117,7 @@ class Calendar extends React.Component {
 const mapDispatchToProps = (dispatch) => (
   {
     getPosts: (accountId) => dispatch(fetchPosts(accountId)),
+    updatePost: (post) => dispatch(updatePostRequest(post)),
   }
 );
 
