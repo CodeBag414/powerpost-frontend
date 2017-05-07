@@ -85,6 +85,12 @@ export class Team extends Component {
       if (!inviteEmailToGroup.isFetching && !inviteEmailToGroup.error) { // Succeeded
         this.setState({
           inviteModalVisible: false,
+          email: {
+            value: '',
+            error: '',
+          },
+          message: '',
+          accessLevel: null,
         });
       }
     }
