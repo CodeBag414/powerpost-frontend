@@ -443,11 +443,14 @@ export function* inviteEmailToGroupFlow() {
 
       if (data.status === 'success') {
         yield put(inviteEmailToGroupSuccess(data.payload));
+        toastr.success('Success', 'An invitation to join the team has been sent to the email you provided.');
       } else {
-        yield put(inviteEmailToGroupError(data.message));
+        throw data;
       }
     } catch (error) {
-      console.log(error);
+      const message = error.message || 'There was an error in sending the invitation';
+      yield put(inviteEmailToGroupError(message));
+      toastr.error(message);
     }
   }
 }
