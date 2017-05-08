@@ -13,9 +13,13 @@ function ChannelsList({ connections, accountId, setChannelFilter, channelFilter,
     connections.forEach((connection, index) => {
       if (connection.channel !== 'wordpress') {
         connectionsList.push(
-          <TabLink graySelect to={`/account/${accountId}/statistics/${connection.connection_id}`} key={`${index}a`}>
-            <ChannelsListItem connection={connection} />
-          </TabLink>
+          connection.status === '3' ?
+            <TabLink graySelect key={`${index}a`}>
+              <ChannelsListItem connection={connection} key={`${index}a`} />
+            </TabLink> :
+            <TabLink graySelect to={`/account/${accountId}/statistics/${connection.connection_id}`} key={`${index}a`}>
+              <ChannelsListItem connection={connection} />
+            </TabLink>
         );
       }
     });
@@ -46,7 +50,7 @@ ChannelsList.propTypes = {
   accountId: PropTypes.string,
   loading: PropTypes.any,
   setChannelFilter: PropTypes.func.isRequired,
-  channelFilter: PropTypes.func.isRequired,
+  channelFilter: PropTypes.string.isRequired,
 };
 
 export default ChannelsList;

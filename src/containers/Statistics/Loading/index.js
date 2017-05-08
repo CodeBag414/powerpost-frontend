@@ -37,7 +37,7 @@ class ChannelLoading extends React.Component {
         </div>
         <p className="crunchingNumber">We are crunching the numbers!</p>
         <Progress>
-          <Loading type="spin" color="#E81C64" width="60" height="60" delay="0" />
+          <Loading type="spin" color="#E81C64" width={60} height={60} delay={0} />
         </Progress>
       </Wrapper>
     );

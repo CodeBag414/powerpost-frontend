@@ -2,6 +2,8 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   padding-left: 22px;
+  opacity: ${(props) => props.disconnected ? 0.6 : 1};
+  ${(props) => props.disconnected ? 'pointer-events: none;' : null}
   .connectionIcon {
     float:left;
     margin-right: 18px;
