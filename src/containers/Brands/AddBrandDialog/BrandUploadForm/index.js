@@ -84,7 +84,7 @@ class BrandUploadForm extends Component {
       avatarKey,
       avatarColor,
     } = this.state;
-    console.log('$$$$Uploadcolor', avatarColor);
+
     const error = this.validateName(brandName);
 
     if (error === '') {
