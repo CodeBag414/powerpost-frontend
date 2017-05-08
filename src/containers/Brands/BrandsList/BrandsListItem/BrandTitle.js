@@ -8,6 +8,10 @@ const BrandTitle = styled.div`
   word-break: break-word;
   width: 170px;
   height: 50px;
+
+  a {
+    color: #616669;
+  }
 `;
 
 export default BrandTitle;
