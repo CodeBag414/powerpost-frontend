@@ -5,6 +5,7 @@ import PPMenuItem from 'elements/atm.MenuItem';
 import PPIconMenu from 'elements/atm.IconMenu';
 import withReactRouter from 'elements/hoc.withReactRouter';
 import styled from 'styled-components';
+import { Link } from 'react-router';
 
 //import Wrapper from './Wrapper';
 import AccountLogo from './AccountLogo';
@@ -15,6 +16,7 @@ import HeaderLogo from './HeaderLogo';
 import AvatarWrapper from './AvatarWrapper';
 
 const ReactRouterMenuItem = withReactRouter(PPMenuItem);
+const ReactRouterButton = withReactRouter(PPButton);
 const Wrapper = styled.div`
   position:fixed;
   top: 0;
@@ -24,7 +26,14 @@ const Wrapper = styled.div`
   box-shadow: 0 1px 5px 0 rgba(60,92,129,0.20);
   background-color: #fff;
   width: ${(props) => props.isNotFullWidth ? 'calc(100% - 60px)' : '100%'};
-  text-align: center;
+`;
+
+const DashboardLink = styled(Link)`
+  float: right;
+  font-size: 20px;
+  color: #424647;
+  line-height: 60px;
+  margin-right: 20px;
 `;
 
 class TopNav extends Component {
@@ -86,6 +95,7 @@ class TopNav extends Component {
             <PPMenuItem caption="Logout" onTouchTap={this.props.logout} />
           </PPIconMenu>
         </AvatarWrapper>
+        <DashboardLink to={'/'}><i className="fa fa-send-o" /></DashboardLink>
       </Wrapper>
     );
   }
