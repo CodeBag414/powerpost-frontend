@@ -97,7 +97,6 @@ class BrandUploadForm extends Component {
       const data = {
         brandName,
         avatarKey,
-        backgroundColor: this.state.avatarColor,
       };
 
       this.props.addBrand(data);
