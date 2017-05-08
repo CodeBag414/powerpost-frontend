@@ -12,10 +12,11 @@ import { makeSelectFilePickerKey } from 'containers/App/selectors';
 
 import Wrapper from './Wrapper';
 
+const AVATAR_COLORS = ['#F27E39', '#B4ED50', '#30D0AA', '#67C5E7', '#B171B6', '#E35A88', '#E22424', '#778CDF', '#F0DB09', '#8FBEA4'];
+
 class BrandUploadForm extends Component {
 
   static propTypes = {
-    avatarColor: PropTypes.string,
     onCancel: PropTypes.func,
   }
 
@@ -24,16 +25,9 @@ class BrandUploadForm extends Component {
 
     this.state = {
       brandName: '',
-      avatarColor: props.avatarColor,
       errorText: '',
+      avatarColor: AVATAR_COLORS[Math.floor(Math.random() * 10)],
     };
-  }
-
-  getAvatarandColor = (uploadedAvatar, BKColor) => {
-    this.setState({
-      avatarKey: uploadedAvatar,
-      avatarColor: BKColor,
-    });
   }
 
   uploadAvatar = (e) => {
@@ -57,7 +51,6 @@ class BrandUploadForm extends Component {
     };
 
     const uploadSuccess = (Blobs) => {
-      this.getAvatarandColor(Blobs[0].key, this.state.backgroundColor);
       this.setState({
         avatarNew: Blobs[0].url,
         avatarKey: Blobs[0].key,
@@ -89,15 +82,16 @@ class BrandUploadForm extends Component {
     const {
       brandName,
       avatarKey,
+      avatarColor,
     } = this.state;
-
+    console.log('$$$$Uploadcolor', avatarColor);
     const error = this.validateName(brandName);
 
     if (error === '') {
       const data = {
         brandName,
         avatarKey,
-        backgroundColor: this.state.avatarColor,
+        backgroundColor: avatarColor,
       };
 
       this.props.addBrand(data);
@@ -155,7 +149,6 @@ class BrandUploadForm extends Component {
               image={this.state.avatarNew}
               title={this.state.brandName}
               backgroundColor={this.state.avatarColor}
-              getAvatarandColor={this.getAvatarandColor}
               isClickable={false}
             />
             <div className="description-wrapper">
