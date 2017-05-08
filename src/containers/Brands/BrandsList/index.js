@@ -9,11 +9,23 @@ const Wrapper = styled.div`
   flex-wrap: wrap;
 `;
 
+function compare(a, b) {
+  if (a.title < b.title) {
+    return -1;
+  }
+  if (a.title > b.title) {
+    return 1;
+  }
+  return 0;
+}
+
 function BrandsList({ brands, removeBrand }) {
   let brandsList = [];
 
-  if ((brands !== undefined) && (brands.length > 0)) {
-    brands.map((brand, index) => {
+  const sortedBrands = brands.sort(compare);
+
+  if ((sortedBrands !== undefined) && (sortedBrands.length > 0)) {
+    sortedBrands.map((brand, index) => {
       brandsList.push(
         <BrandsListItem key={index} brand={brand} remove={removeBrand} />
                 );

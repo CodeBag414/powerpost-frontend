@@ -39,7 +39,6 @@ class AddBrandDialog extends Component {
       account_id: this.props.userOwnAccount.account_id,
       display_name: content.brandName,
       thumbnail_image_key: content.avatarKey,
-      color: content.backgroundColor,
     };
 
     this.props.handleDialogToggle();
