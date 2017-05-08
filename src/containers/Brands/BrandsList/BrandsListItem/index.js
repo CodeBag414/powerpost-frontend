@@ -128,13 +128,14 @@ class BrandsListItem extends Component {
 
     return (
       <Wrapper>
-        <BrandImage color={brandColor}>
-          {thumbnailImageKey !== '' ? <img src={thumbURL} /> : <p>{shortTitle}</p>}
-        </BrandImage>
-        <Link to={`${brandURL}`}><BrandTitle>
-          { title }
-        </BrandTitle>
+        <Link to={`${brandURL}`}>
+          <BrandImage color={brandColor}>
+            {thumbnailImageKey !== '' ? <img src={thumbURL} /> : <p>{shortTitle}</p>}
+          </BrandImage>
         </Link>
+        <BrandTitle>
+          <Link to={`${brandURL}`}>{ title }</Link>
+        </BrandTitle>
         <OptionMenu onClick={this.showPopup} ><FontIcon value="more_horiz" />{this.state.isPopupShown && this.BrandNavMenu(brandURL)}</OptionMenu>
         <DeleteBrandDialog
           active={this.state.isDialogShown}
