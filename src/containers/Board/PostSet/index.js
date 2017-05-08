@@ -10,12 +10,13 @@ import moment from 'moment';
 import enhanceWithClickOutside from 'react-click-outside';
 
 import MenuPopover from '../MenuPopover';
+import DeletePostSetDialog from '../DeletePostSetDialog';
 import styles from './styles.scss';
 
 class PostSet extends Component {
 
   componentWillMount() {
-    this.setState({ popOver: false });
+    this.setState({ popOver: false, deleteConfirmPopup: false });
   }
 
   hidePopover = () => {
@@ -27,13 +28,17 @@ class PostSet extends Component {
     this.setState({ popOver: true });
   }
 
+  showDeleteConfirm = (show) => {
+    this.setState({ deleteConfirmPopup: show });
+  }
+
   handleClickOutside() {
     this.setState({ popOver: false });
   }
 
   render() {
     const { postSet, onDeletePostSet } = this.props;
-    const { popOver } = this.state;
+    const { popOver, deleteConfirmPopup } = this.state;
     const imgSrc = postSet.getIn(['media_items', 0, 'properties', 'source_url']); // TODO: I couldn't get any image.
     const hasImage = !!imgSrc;
     const scheduledTime = postSet.getIn(['posts', 0, 'schedule_time']);
@@ -53,7 +58,7 @@ class PostSet extends Component {
             <div className={styles.ellipsis} onClick={this.showPopover} >
               <i className="fa fa-ellipsis-h" />
               <MenuPopover
-                onDeletePostSet={onDeletePostSet}
+                onDeletePostSet={() => this.showDeleteConfirm(true)}
                 show={popOver}
               />
             </div>
@@ -65,6 +70,11 @@ class PostSet extends Component {
             {description}
           </div>
         </div>
+        <DeletePostSetDialog
+          active={deleteConfirmPopup}
+          handleDialogToggle={() => this.showDeleteConfirm(false)}
+          deletePostSet={onDeletePostSet}
+        />
       </div>
     );
   }
