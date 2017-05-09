@@ -3,6 +3,7 @@ import {
   BOARD_CALLBACK,
   SET_POST_SETS,
   DELETE_POST_SET_REQUEST,
+  CHANGE_POST_SET_REQUEST,
 } from './constants';
 
 export function getPostSets() {
@@ -19,4 +20,8 @@ export function setPostSets(postSets) {
 
 export function deletePostSetRequest(id) {
   return { type: DELETE_POST_SET_REQUEST, id };
+}
+
+export function changePostSetStatusRequest(id, status) {
+  return { type: CHANGE_POST_SET_REQUEST, id, status };
 }

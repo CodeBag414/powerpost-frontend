@@ -13,6 +13,8 @@ import {
   FETCH_POST_SETS,
   DELETE_POST_SET_REQUEST,
   DELETE_POST_SET,
+  CHANGE_POST_SET_REQUEST,
+  CHANGE_POST_SET_STATUS,
 } from './constants';
 
 const serialize = function serialize(obj, prefix) {
@@ -66,6 +68,24 @@ export function* deletePostSetRequest(payload) {
   }
 }
 
+export function* changePostSetRequest(payload) {
+  const requestData = {
+    payload: {
+      status: payload.status,
+    },
+  };
+  const requestUrl = `/post_api/post_set/${payload.id}?`;
+  try {
+    const response = yield call(putData, requestUrl, requestData);
+    const { data } = response;
+    if (data.status === 'success') {
+      yield put({ type: CHANGE_POST_SET_STATUS, id: payload.id, status: payload.status });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export function* boardChannel() {
   const watcher = yield takeLatest(FETCH_POST_SETS, getPostSets);
   yield take(LOCATION_CHANGE);
@@ -78,7 +98,14 @@ export function* deletePostSet() {
   yield cancel(watcher);
 }
 
+export function* changePostSetStatus() {
+  const watcher = yield takeLatest(CHANGE_POST_SET_REQUEST, changePostSetRequest);
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
 export default [
   boardChannel,
   deletePostSet,
+  changePostSetStatus,
 ];

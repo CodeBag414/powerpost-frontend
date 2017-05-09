@@ -268,7 +268,6 @@ class MainInfo extends React.Component {
   render() {
     let TopItemsList = 'You Currently have no Posts.';
     const { activeChannel } = this.props;
-    console.log(activeChannel.toJS());
     const rule = this.getRule();
     const { infoMonth, items, imageUrlKey, createTimeKey, descriptionKey } = this.getInfos();
     const itemInfo = activeChannel.getIn((infoMonth || rule.infoMonth) ? (infoMonth || rule.infoMonth).split('.') : []) || Map();

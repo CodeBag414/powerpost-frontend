@@ -8,6 +8,7 @@ import React, { PropTypes, Component } from 'react';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import moment from 'moment';
 import enhanceWithClickOutside from 'react-click-outside';
+import { Draggable } from 'react-drag-and-drop';
 
 import MenuPopover from '../MenuPopover';
 import DeletePostSetDialog from '../DeletePostSetDialog';
@@ -46,7 +47,7 @@ class PostSet extends Component {
     const title = postSet.get('title');
     const description = postSet.get('message');
     return (
-      <div className={styles.postSet} onClick={this.hidePopover}>
+      <Draggable type="post_set" data={postSet.get('post_set_id')} className={styles.postSet} onClick={this.hidePopover}>
         <div className={hasImage ? styles.image : styles.noImage} style={{ backgroundImage: `url(${imgSrc})` }}>
           { hasImage ? null : <i className="fa fa-picture-o" /> }
         </div>
@@ -75,7 +76,7 @@ class PostSet extends Component {
           handleDialogToggle={() => this.showDeleteConfirm(false)}
           deletePostSet={onDeletePostSet}
         />
-      </div>
+      </Draggable>
     );
   }
 }
