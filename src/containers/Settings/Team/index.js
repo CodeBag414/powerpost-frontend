@@ -66,7 +66,7 @@ export class Team extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { groupUsers } = nextProps;
+    const { groupUsers, inviteEmailToGroup } = nextProps;
     if (this.props.groupUsers !== groupUsers) {
       if (!groupUsers.isFecthing && groupUsers.details) {
         const newAccessLevels = accessLevelOptions.map((l) => {
@@ -79,6 +79,18 @@ export class Team extends Component {
 
         this.setState({
           accessLevels: newAccessLevels,
+        });
+      }
+    } else if (this.props.inviteEmailToGroup !== inviteEmailToGroup) {
+      if (!inviteEmailToGroup.isFetching && !inviteEmailToGroup.error) { // Succeeded
+        this.setState({
+          inviteModalVisible: false,
+          email: {
+            value: '',
+            error: '',
+          },
+          message: '',
+          accessLevel: null,
         });
       }
     }
