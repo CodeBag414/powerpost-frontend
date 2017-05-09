@@ -1,6 +1,7 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable jsx-a11y/anchor-has-content */
 /* eslint-disable no-underscore-dangle */
+/* eslint-disable eqeqeq */
 import React, { PropTypes } from 'react';
 import moment from 'moment';
 import Link from 'react-toolbox/lib/link';
@@ -71,7 +72,11 @@ function LinkedInBlock({ post, connection }) {
           </span>
           <span className="ln-comment-dot" />
           <span className="ln-comment-detail">
-            {post.updateComments._total} {post.updateComments._total === '1' ? 'Comment' : 'Comments'}
+            { post.updateComments ?
+              `${post.updateComments._total} ${post.updateComments._total == 1 ? 'Comment' : 'Comments'}`
+            :
+              '0 Comments'
+            }
           </span>
         </div>
         <Link
