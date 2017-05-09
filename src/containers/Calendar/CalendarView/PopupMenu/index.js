@@ -11,6 +11,7 @@ class PopupMenu extends Component {
   static propTypes = {
     post: PropTypes.object,
     popupPosition: PropTypes.object,
+    onDelete: PropTypes.func,
   };
 
   getStatusText({ post_set }) {
@@ -33,7 +34,11 @@ class PopupMenu extends Component {
   }
 
   handleClickDelete = () => {
+    const { post, onDelete, onOutsideClick } = this.props;
 
+    // TODO: Add confirmation
+    onDelete(post);
+    onOutsideClick();
   }
 
   handleClickEdit = () => {

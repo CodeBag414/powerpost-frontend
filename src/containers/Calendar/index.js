@@ -81,12 +81,19 @@ class Calendar extends React.Component {
   handleMoveEvent = ({ event, start }) => {
     const { post } = event;
     const { updatePost } = this.props;
-    // console.log('post', post.post);
-    // console.log('start', start);
     const scheduleTime = moment(start).format('X');
     const newPost = {
       ...post.post,
       schedule_time: scheduleTime,
+    };
+    updatePost(newPost);
+  }
+
+  handleDeleteEvent = (post) => {
+    const { updatePost } = this.props;
+    const newPost = {
+      ...post.post,
+      status: 0,
     };
     updatePost(newPost);
   }
@@ -108,6 +115,7 @@ class Calendar extends React.Component {
           query={query}
           filters={filters}
           onMoveEvent={this.handleMoveEvent}
+          onDeleteEvent={this.handleDeleteEvent}
         />
       </Wrapper>
     );

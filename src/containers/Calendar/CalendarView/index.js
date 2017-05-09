@@ -28,6 +28,7 @@ class CalendarView extends React.Component {
     query: PropTypes.string,
     filters: PropTypes.array,
     onMoveEvent: PropTypes.func,
+    onDeleteEvent: PropTypes.func,
   };
 
   state = {
@@ -102,7 +103,7 @@ class CalendarView extends React.Component {
 
   render() {
     const { showPopup, popupPosition, currentPost } = this.state;
-    const { posts, query, filters, onMoveEvent } = this.props;
+    const { posts, query, filters, onMoveEvent, onDeleteEvent } = this.props;
     // console.log('posts', posts);
     // console.log('filters', filters);
     const queryLower = query.toLowerCase();
@@ -110,6 +111,7 @@ class CalendarView extends React.Component {
       // if (moment().diff(moment.unix(post.post.schedule_time)) > 0 && post.post.status !== '2') { // Don't show posts in the past & unpublished
       //   return null;
       // }
+      if (post.post.status === '0') return null; // Don't show deleted posts
       const titleMatch = !query || (post.post_set.title && post.post_set.title.toLowerCase().indexOf(queryLower) !== -1);
       let tagsMatch = !query;
       if (post.post_set.tags) {
@@ -142,8 +144,6 @@ class CalendarView extends React.Component {
             toolbar: Toolbar,
           }}
           formats={formats}
-          // onSelecting={this.onSelecting}
-          // onSelectSlot={(this.slotSelected)}
           onSelectEvent={(this.eventSelected)}
           eventPropGetter={this.eventPropGetter}
           onEventDrop={onMoveEvent}
@@ -152,6 +152,7 @@ class CalendarView extends React.Component {
           <PopupMenu
             popupPosition={popupPosition}
             onOutsideClick={this.dismissPopup}
+            onDelete={onDeleteEvent}
             post={currentPost}
           />
         }
