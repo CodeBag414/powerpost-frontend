@@ -113,9 +113,9 @@ class CalendarView extends React.Component {
     // console.log('filters', filters);
     const queryLower = query.toLowerCase();
     const formattedPosts = posts.map((post) => {
-      // if (moment().diff(moment.unix(post.post.schedule_time)) > 0 && post.post.status !== '2') { // Don't show posts in the past & unpublished
-      //   return null;
-      // }
+      if (moment().diff(moment.unix(post.post.schedule_time)) > 0 && post.post.status !== '2') { // Don't show posts in the past & unpublished
+        return null;
+      }
       if (post.post.status === '0') return null; // Don't show deleted posts
       const titleMatch = !query || (post.post_set.title && post.post_set.title.toLowerCase().indexOf(queryLower) !== -1);
       let tagsMatch = !query;
