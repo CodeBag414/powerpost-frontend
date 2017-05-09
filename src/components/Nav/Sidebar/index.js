@@ -128,6 +128,7 @@ class Sidebar extends React.Component {
           { this.props.location.pathname.match('/account/') &&
             <MainNavWrapper isCollapsed={this.props.isMenuCollapsed} key="mainNavKey" isMultiBrand={this.props.activeBrand && (this.props.activeBrand.account_type_id == 2 || this.props.activeBrand.account_type_id == 3 || this.props.activeBrand.account_type_id == 7)}>
               <PPMenu isSidebar selectable>
+              <div style={{height: 'calc(100% - 34px)', overflowY: 'scroll'}}>
                 <ReactRouterMenuItem caption="Dashboard" activeClassName={styles.active} isSidebar icon={<i className="fa fa-send-o" />} to={`/account/${this.props.accountId}`} />
                 { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('brands') > -1 &&
                 <ReactRouterMenuItem caption="Brands" activeClassName={styles.active} isSidebar icon={<FontIcon>library_add</FontIcon>} to={`/account/${this.props.accountId}/brands`} />
@@ -138,7 +139,7 @@ class Sidebar extends React.Component {
                 {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
                 <div>
                   <ReactRouterMenuItem caption="Calendar" activeClassName={styles.active} isSidebar icon={<i className="fa fa-calendar" />} to={`/account/${this.props.accountId}/calendar`} />
-                  <ReactRouterMenuItem caption="Workflow" activeClassName={styles.active} isSidebar icon={<i className="fa fa-columns" />} to={`/account/${this.props.accountId}/workflow`} />
+                  <ReactRouterMenuItem caption="Status Boards" activeClassName={styles.active} isSidebar icon={<i className="fa fa-columns" />} to={`/account/${this.props.accountId}/boards`} />
                   <ReactRouterMenuItem caption="List" activeClassName={styles.active} isSidebar icon={<i className="fa fa-list-ul" />} to={`/account/${this.props.accountId}/list`} />
                 </div>
                 }
@@ -171,6 +172,7 @@ class Sidebar extends React.Component {
                   </Panel>
                 </Collapser>
                 }
+              </div>
               { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('settings') > -1 &&
                 <ReactRouterMenuItem style={{position: 'absolute', bottom: '0', marginLeft: '7px'}} caption="Settings" activeClassName={styles.active} isSidebar icon={<i className="fa fa-cog" />} to={`/account/${this.props.accountId}/settings`} />
               }
@@ -198,7 +200,7 @@ class Sidebar extends React.Component {
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
             <div>
               <ReactRouterMenuItemWithTooltip tooltip="Calendar" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-calendar" />} style={{width: '60px'}} to={`/account/${this.props.accountId}/calendar`} />
-              <ReactRouterMenuItemWithTooltip tooltip="Workflow" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-columns" />} style={{width: '60px'}} to={`/account/${this.props.accountId}/workflow`} />
+              <ReactRouterMenuItemWithTooltip tooltip="Status Boards" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-columns" />} style={{width: '60px'}} to={`/account/${this.props.accountId}/boards`} />
               <ReactRouterMenuItemWithTooltip tooltip="List" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-list-ul" />} style={{width: '60px'}} to={`/account/${this.props.accountId}/list`} />
             </div>
             }
