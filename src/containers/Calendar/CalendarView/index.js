@@ -43,9 +43,9 @@ class CalendarView extends React.Component {
     let fgColor;
     let borderColor;
     if (moment().diff(moment.unix(post.schedule_time)) > 0) { // if the post is in the past, it means it's already published. Otherwise, it's an error, so don't show it
-      bgColor = '#eee';
-      borderColor = '#eee';
-      fgColor = '#aaa';
+      bgColor = '#F3F6F7';
+      borderColor = '#E7ECEE';
+      fgColor = '#ACB5B8';
     } else {
       switch (post_set.status) {
         case '3':
@@ -67,6 +67,11 @@ class CalendarView extends React.Component {
           bgColor = '#ACB5B8'; // Idea
           borderColor = '#ABE76A';
           fgColor = '#65883D';
+          break;
+        case '1' && (post.status === '3'):
+          bgColor = '#F3F6F7';
+          borderColor = '#E7ECEE';
+          fgColor = '#ACB5B8';
           break;
         default:
           bgColor = 'EFEFEF'; // Same as Unscheduled (gray)
