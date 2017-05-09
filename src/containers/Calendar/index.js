@@ -82,6 +82,15 @@ class Calendar extends React.Component {
     const { post } = event;
     const { updatePost } = this.props;
     const scheduleTime = moment(start).format('X');
+    /* eslint-disable no-alert */
+    if (moment().diff(moment.unix(post.post.schedule_time)) > 0) { // If the dragged post is in the past
+      alert('You cannot reschedule a past event.');
+      return;
+    } else if (moment().diff(moment(start)) > 0) {
+      alert('You cannot schedule a post in the past.');
+      return;
+    }
+    /* eslint-enable no-alert */
     const newPost = {
       ...post.post,
       schedule_time: scheduleTime,
