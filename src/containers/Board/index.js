@@ -12,14 +12,28 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import { UserCanBoard } from 'config.routes/UserRoutePermissions';
 
 import PostSetsGroup from './PostSetsGroup';
-import { getPostSets, deletePostSetRequest } from './actions';
+import { getPostSets, deletePostSetRequest, changePostSetStatusRequest } from './actions';
 import { makeSelectPostSets } from './selectors';
 import styles from './styles.scss';
 
 class Board extends React.Component {
 
+  constructor() {
+    super();
+    this.state = { moveStatus: 0 };
+  }
+
   componentDidMount() {
     this.props.getPostSetsAction();
+  }
+
+  onDragEnter = (status) => {
+    this.setState({ moveStatus: status });
+  }
+
+  onDrop = (id, status) => {
+    this.props.changePostSetStatusRequest(id, status);
+    this.setState({ moveStatus: 0 });
   }
 
   render() {
@@ -30,6 +44,7 @@ class Board extends React.Component {
       { status: 6, statusColor: '#ACB5B8', name: 'Idea' },
     ];
     const { postSets, deletePostSetAction } = this.props;
+    const { moveStatus } = this.state;
     const postSetsGroups = groups.map((group) => {
       const { name, status, statusColor } = group;
       const sets = postSets.filter((postSet) => parseInt(postSet.get('status'), 10) === status);
@@ -37,6 +52,7 @@ class Board extends React.Component {
         status: name,
         postSets: sets,
         statusColor,
+        status_id: status,
       };
     });
     return (
@@ -49,6 +65,9 @@ class Board extends React.Component {
               statusColor={postSetsGroup.statusColor}
               postSets={postSetsGroup.postSets}
               deletePostSet={deletePostSetAction}
+              onDragEnter={() => this.onDragEnter(postSetsGroup.status)}
+              onDrop={(data) => this.onDrop(data.post_set, postSetsGroup.status_id)}
+              dragHover={postSetsGroup.status === moveStatus}
             />
           )
         }
@@ -60,6 +79,7 @@ class Board extends React.Component {
 Board.propTypes = {
   getPostSetsAction: PropTypes.func.isRequired,
   deletePostSetAction: PropTypes.func.isRequired,
+  changePostSetStatusRequest: PropTypes.func.isRequired,
   postSets: ImmutablePropTypes.listOf(
     ImmutablePropTypes.contains({
 
@@ -71,6 +91,7 @@ export function mapDispatchToProps(dispatch) {
   return {
     getPostSetsAction: () => dispatch(getPostSets()),
     deletePostSetAction: (id) => dispatch(deletePostSetRequest(id)),
+    changePostSetStatusRequest: (id, status) => dispatch(changePostSetStatusRequest(id, status)),
   };
 }
 
