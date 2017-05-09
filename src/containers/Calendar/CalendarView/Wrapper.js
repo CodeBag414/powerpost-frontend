@@ -37,10 +37,6 @@ const Wrapper = styled.div`
     &.rbc-off-range {
       color: #acb5b8;
     }
-    a {
-      cursor: default;
-      pointer-events: none;
-    }
   }
 
   .rbc-day-bg + .rbc-day-bg {
@@ -82,7 +78,7 @@ const Wrapper = styled.div`
       pointer-events: none;
 
       & .rbc-show-more {
-        pointer-events: none;
+        pointer-events: auto;
       }
       & .rbc-event:not(.rbc-addons-dnd-dragging) {
         pointer-events: all;
