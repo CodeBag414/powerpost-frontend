@@ -1,6 +1,7 @@
 /* eslint-disable camelcase, no-shadow, radix */
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import { createStructuredSelector } from 'reselect';
 
 import LeftPane from 'components/LeftPane';
@@ -86,7 +87,9 @@ class Signup extends Component {
           <div style={{ marginTop: '15px', fontSize: '1.5rem' }}>
             { features.join('. ') }
           </div>
-          <div style={{ position: 'absolute', left: 0, bottom: 0 }}>Not the plan you want, we've got you covered. View Plans</div>
+          <div style={{ position: 'absolute', left: 0, bottom: 0 }}>Not the plan you want, we've got you covered.&nbsp;
+            <Link to="https://www.powerpost.digital/pricing" target="_blank" style={{ color: 'white', textDecoration: 'underline' }}>View Plans</Link>
+          </div>
         </LeftPane>
         <RightPane>
           <Topbar />

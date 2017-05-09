@@ -44,8 +44,8 @@ class SignupVerification extends Component {
     return (
       <div style={{ marginTop: '150px' }}>
         <Title>Great Job {name}</Title>
-        <CenterText style={{ marginTop: '40px' }}>Just one more thing! We have emailed an activation link to
-          &nbsp;<span style={{ color: theme.primaryColor }}>{email}</span>. Please click on the link to activate your account and start creating content today.
+        <CenterText style={{ marginTop: '40px' }}>We have emailed an activation link to
+          &nbsp;<span style={{ color: theme.primaryColor }}>{email}</span>. Please click on the link to activate your account.
         </CenterText>
         <Center style={{ marginTop: '40px' }}>Can't find your activation email?</Center>
         <Center style={{ marginTop: '30px' }}><PPButton type="submit" label="Resend Activation Email" primary onClick={this.resendActivationEmail} /></Center>

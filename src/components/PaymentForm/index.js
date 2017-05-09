@@ -30,7 +30,7 @@ const monthOptions = moment.months().map((month, index) => {
   return { value: (index + 1).toString(), label: `${mm} - ${month}` };
 });
 
-const yearOptions = range(2017, 2033).map((year) => ({
+const yearOptions = range(2017, 2026).map((year) => ({
   value: year.toString(),
   label: year,
 }));
@@ -132,7 +132,7 @@ class PaymentForm extends Component {
       case 1:
         return (
           <div className="row">
-            <div className="col-sm-12 col-md-9">
+            <div className="col-sm-12 col-md-8">
               <PPTextField
                 type="text"
                 name="coupon"
@@ -142,8 +142,9 @@ class PaymentForm extends Component {
                 onChange={this.onFieldChange}
               />
             </div>
-            <div className="col-sm-12 col-md-3">
-              <PPButton label="Apply Coupon" primary style={{ marginTop: '30px' }} onClick={this.applyCoupon} />
+            <div className="col-sm-12 col-md-4">
+              <PPButton label="Apply Coupon" primary style={{ marginTop: '30px', width: '100%' }} onClick={this.applyCoupon} />
+              <div style={{ marginTop: '5px', width: '100%', padding: '10px', textAlign: 'center', cursor: 'pointer' }} onClick={this.removeCoupon}>Cancel</div>
             </div>
           </div>
         );
@@ -239,7 +240,6 @@ class PaymentForm extends Component {
             <PPTextField
               type="text"
               name="cvc"
-              hintText="Optional"
               floatingLabelText="CVC"
               value={this.state.cvc.value}
               errorText={this.state.cvc.error}

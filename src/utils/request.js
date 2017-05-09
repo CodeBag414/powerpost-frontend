@@ -33,9 +33,9 @@ export function getData(url, isAuthReq = true) {
 export function putData(url, data, isAuthReq = true) {
   const requestUrl = API_URL + url;
   let headers = {};
-  const key = cookie.load('token');
+  const key = data.payload.apiKey || (isAuthReq && cookie.load('token'));
 
-  if (isAuthReq) {
+  if (key) {
     headers = { headers: { 'X-API-KEY': key } };
   }
 
