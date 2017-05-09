@@ -10,7 +10,6 @@ const Wrapper = styled.div`
   box-shadow: 0 1px 5px 0 rgba(60,92,129,0.20);
   background-color: #fff;
   width: ${(props) => props.isNotFullWidth ? 'calc(100% - 60px)' : '100%'};
-  text-align: center;
 `;
 
 export default Wrapper;
