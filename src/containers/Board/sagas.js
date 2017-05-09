@@ -74,7 +74,6 @@ export function* changePostSetRequest(payload) {
       status: payload.status,
     },
   };
-  console.log(requestData);
   const requestUrl = `/post_api/post_set/${payload.id}?`;
   try {
     const response = yield call(putData, requestUrl, requestData);
