@@ -6,6 +6,7 @@ import PPIconMenu from 'elements/atm.IconMenu';
 import withReactRouter from 'elements/hoc.withReactRouter';
 import styled from 'styled-components';
 import { Link } from 'react-router';
+import DropdownMenu from 'react-dd-menu';
 
 //import Wrapper from './Wrapper';
 import AccountLogo from './AccountLogo';
@@ -17,9 +18,25 @@ import AvatarWrapper from './AvatarWrapper';
 
 const ReactRouterMenuItem = withReactRouter(PPMenuItem);
 const ReactRouterButton = withReactRouter(PPButton);
+const DropDownMenu = styled(DropdownMenu)`
+
+  .dd-menu-items {
+    position: absolute;
+    right: 20px;
+    background: white;
+    box-shadow: 0 1px 5px 0 rgba(60,92,129,0.22);
+    ul {
+      padding: 0;
+      width: 150px;
+      text-align:center;
+    }
+  }
+`;
+
 const Wrapper = styled.div`
   position:fixed;
   top: 0;
+  z-index: 10000;
   height: 60px;
   right: 0;
   transition: transform .3s ease-in-out, width .3s ease-in-out;
@@ -57,7 +74,9 @@ class TopNav extends Component {
       anchorEl: event.currentTarget,
     });
   }
-
+  toggle = () => {
+    this.setState({ userMenuOpen: !this.state.userMenuOpen });
+  }
   handleRequestClose() {
     this.setState({
       userMenuOpen: false,
@@ -68,12 +87,16 @@ class TopNav extends Component {
   }
   render() {
     const isAccountPath = this.props.location.pathname.match('/account/');
-
     const avatar = this.props.user && this.props.user.properties ? this.props.user.properties.thumb_url : '#E7ECEE';
     const color = this.props.activeBrand && this.props.activeBrand.properties.color ? this.props.activeBrand.properties.color : '#E7ECEE';
     console.log(this.props.activeBrand);
     const thumbnail = this.props.activeBrand && this.props.activeBrand.properties.thumb_url ? this.props.activeBrand.properties.thumb_url : '';
-    
+    let menuOptions = {
+      isOpen: this.state.userMenuOpen,
+      close: this.handleRequestClose,
+      toggle: <Avatar avatarSrc={avatar} onClick={this.toggle.bind(this)} />,
+      align: 'left',
+    }
     const logo = isAccountPath ? <AccountLogo isCollapsed={this.props.isMenuCollapsed} color={color} title={this.props.activeBrand.title} thumbnail={thumbnail} /> : <PPLogo />;
     const showSidebar = this.props.activeBrand.account_type_id == 2 || this.props.activeBrand.account_type_id == 3 || this.props.activeBrand.account_type_id == 7 ? true : false;
     return (
@@ -85,15 +108,10 @@ class TopNav extends Component {
         { !isAccountPath && <div style={{float: 'left', height: '24px', marginTop: '18px', marginLeft: '10px', fontSize: '16px', fontWeight:'700', color: '#8C9496' }}>Welcome</div> }
         <HeaderLogo src={HeaderNavLogo} />
         <AvatarWrapper>
-          <PPIconMenu
-            open={this.state.userMenuOpen}
-            position="topRight"
-            icon={<Avatar avatarSrc={avatar} />}
-          >
-            <ReactRouterMenuItem caption="Dashboard" to={'/'} />
+          <DropDownMenu {...menuOptions}>
             <ReactRouterMenuItem caption="Settings" to={'/user/settings'} />
             <PPMenuItem caption="Logout" onTouchTap={this.props.logout} />
-          </PPIconMenu>
+          </DropDownMenu>
         </AvatarWrapper>
         <DashboardLink to={'/'}><i className="fa fa-send-o" /></DashboardLink>
       </Wrapper>
