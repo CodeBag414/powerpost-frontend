@@ -15,36 +15,41 @@ import {
   selectResetPassword,
 } from './selectors';
 
+const initialState = {
+  password: {
+    value: '',
+    error: '',
+  },
+  confirmPassword: {
+    value: '',
+    error: '',
+  },
+  error: null,
+};
 class ResetPassword extends Component {
   static propTypes = {
+    location: PropTypes.object,
     resetPassword: PropTypes.func,
   }
 
   constructor(props) {
     super(props);
 
-    this.state = {
-      password: {
-        value: '',
-        error: '',
-      },
-      confirmPassword: {
-        value: '',
-        error: '',
-      },
-      error: null,
-    };
+    this.state = initialState;
   }
 
   onFormSubmit = (event) => {
     event.preventDefault();
     if (!this.state.error) {
+      const { location: { query } } = this.props;
       const user = cookie.load('user');
 
       this.props.resetPassword({
         ...user,
         password: this.state.password.value,
+        apiKey: query.api_key,
       });
+      this.setState(initialState);
     }
   }
 
@@ -88,7 +93,7 @@ class ResetPassword extends Component {
   render() {
     return (
       <div>
-        <Title>Please enter a new password below</Title>
+        <Title>Please enter a new password</Title>
         <form onSubmit={this.onFormSubmit} style={{ marginTop: '70px' }}>
           <PPTextField
             type="password"

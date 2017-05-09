@@ -18,10 +18,6 @@ export function* redeemTokenWorker(action) {
   try {
     const response = yield call(postData, `/account_api/redeem_token/${payload.token}`, {}, payload.apiKeyRequired);
 
-    if (response.data.api_key) {
-      cookie.save('token', response.data.api_key, { path: '/' });
-    }
-
     yield put(redeemTokenSuccess(response.data));
   } catch (error) {
     yield put(redeemTokenError(error));

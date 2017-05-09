@@ -43,7 +43,7 @@ class SignupAccount extends Component {
         value: '',
         error: '',
       },
-      error: null,
+      error: 'name',
     };
   }
 
@@ -64,6 +64,11 @@ class SignupAccount extends Component {
     let error;
 
     switch (name) {
+      case 'name':
+        if (value.length < 2 || value.length > 100) {
+          error = 'Name field should have a min char of 2 and max char of 100';
+        }
+        break;
       case 'password':
         if (value !== this.state.confirmPassword.value) {
           error = 'Password does not match';
