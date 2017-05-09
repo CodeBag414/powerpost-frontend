@@ -19,20 +19,21 @@ const Wrapper = styled.div`
   }
 
   .feed-blocks {
-    padding: 80px 50px 30px;
-
-    .feed-description {
-      font-size: 14px;
-      font-weight: 300;
-      font-style: italic;
-      color: #999;
-      margin-bottom: 20px;
-      padding-left: 30px;
-    }
+    padding: 60px 50px 30px;
 
     @media (max-width: 768px) {
-      padding: 60px 20px 10px;
+      padding: 40px 20px 10px;
     }
+  }
+
+  .feed-description {
+    font-size: 14px;
+    font-weight: 300;
+    font-style: italic;
+    color: #999;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-left: 30px;
   }
 
   img.feed-loading {
