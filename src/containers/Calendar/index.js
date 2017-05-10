@@ -5,6 +5,8 @@ import moment from 'moment';
 
 import { UserCanPostSet } from 'config.routes/UserRoutePermissions';
 
+import DeletePostSetDialog from 'components/DeletePostSetDialog';
+
 import Wrapper from './Wrapper';
 import CalendarSidebar from './CalendarSidebar';
 import CalendarView from './CalendarView';
@@ -33,6 +35,7 @@ class Calendar extends React.Component {
   state = {
     query: '',
     filters: [true, true, true, true, true, true, true],
+    showDeletePopup: false,
   };
 
   componentDidMount() {
@@ -43,6 +46,16 @@ class Calendar extends React.Component {
     if (this.props.location !== props.location) {
       this.fetchPosts(props);
     }
+  }
+
+  onDeletePostSet = () => {
+    const { postToDelete } = this.state;
+    const { updatePost } = this.props;
+    const newPost = {
+      ...postToDelete.post,
+      status: 0,
+    };
+    updatePost(newPost);
   }
 
   fetchPosts = (props) => {
@@ -99,16 +112,18 @@ class Calendar extends React.Component {
   }
 
   handleDeleteEvent = (post) => {
-    const { updatePost } = this.props;
-    const newPost = {
-      ...post.post,
-      status: 0,
-    };
-    updatePost(newPost);
+    this.setState({
+      postToDelete: post,
+      showDeletePopup: true,
+    });
+  }
+
+  hideDeletePopup = () => {
+    this.setState({ showDeletePopup: false });
   }
 
   render() {
-    const { query, filters } = this.state;
+    const { query, filters, showDeletePopup } = this.state;
     const { posts } = this.props;
     if (posts == null || posts.length === 0 || !Array.isArray(posts)) return null;
     return (
@@ -125,6 +140,11 @@ class Calendar extends React.Component {
           filters={filters}
           onMoveEvent={this.handleMoveEvent}
           onDeleteEvent={this.handleDeleteEvent}
+        />
+        <DeletePostSetDialog
+          active={showDeletePopup}
+          handleDialogToggle={this.hideDeletePopup}
+          deletePostSet={this.onDeletePostSet}
         />
       </Wrapper>
     );

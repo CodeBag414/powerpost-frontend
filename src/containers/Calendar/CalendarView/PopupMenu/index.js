@@ -36,7 +36,6 @@ class PopupMenu extends Component {
   handleClickDelete = () => {
     const { post, onDelete, onOutsideClick } = this.props;
 
-    // TODO: Add confirmation
     onDelete(post);
     onOutsideClick();
   }
