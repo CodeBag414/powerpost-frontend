@@ -33,7 +33,6 @@ class Redeem extends Component {
     if (this.props.redeem !== redeem) {
       const error = redeem.get('error');
       if (error) {
-        alert(error.message);
         if (error.code === '700') {
           browserHistory.push('/login');
         }
@@ -111,8 +110,7 @@ class Redeem extends Component {
     return (
       error ?
         <Wrapper>
-          Redemption Failed. Please Try Again!
-          { JSON.stringify(error) }
+          { error.message }
         </Wrapper>
         :
         <Wrapper>
