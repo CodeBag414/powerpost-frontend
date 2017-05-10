@@ -39,6 +39,9 @@ const Title = styled.div`
   width: calc(216px - 60px);
   line-height: 60px;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const AccountLogo = (props) => {
