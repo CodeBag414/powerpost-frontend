@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /*
 * Boards
 * Analytics Info for Social Channels.
@@ -10,8 +11,9 @@ import moment from 'moment';
 import enhanceWithClickOutside from 'react-click-outside';
 import { Draggable } from 'react-drag-and-drop';
 
+import DeletePostSetDialog from 'components/DeletePostSetDialog';
+
 import MenuPopover from '../MenuPopover';
-import DeletePostSetDialog from '../DeletePostSetDialog';
 import styles from './styles.scss';
 
 class PostSet extends Component {

@@ -91,8 +91,26 @@ const Wrapper = styled.div`
     margin-bottom: 32px;
   }
 
+  .event-popup-tag {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: #7ED321;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 300;
+    padding: 4px 10px;
+    margin-right: 6px;
+    margin-bottom: 2px;
+    i {
+      font-size: 10px;
+      margin-right: 4px;
+    }
+  }
+
   .event-popup-buttons {
-    text-align: right;
+    float: right;
+    display: inline-block;
+    margin-top: 4px;
     .event-popup-primary {
       width: 70px;
       height: 30px;

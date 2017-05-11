@@ -36,7 +36,6 @@ class PopupMenu extends Component {
   handleClickDelete = () => {
     const { post, onDelete, onOutsideClick } = this.props;
 
-    // TODO: Add confirmation
     onDelete(post);
     onOutsideClick();
   }
@@ -45,6 +44,19 @@ class PopupMenu extends Component {
     /* eslint-disable no-alert */
     alert('This will direct you to the Post editor.');
     /* eslint-enable no-alert */
+  }
+
+  buildTags = (post) => {
+    const keys = Object.keys(post.post_set.tags);
+    return keys.map((key) => {
+      const tag = post.post_set.tags[key];
+      return (
+        <span className="event-popup-tag" key={key}>
+          <i className="fa fa-tag" aria-hidden="true" />
+          {tag}
+        </span>
+      );
+    });
   }
 
   render() {
@@ -63,12 +75,13 @@ class PopupMenu extends Component {
         </div>
         <div className="event-popup-title">{post.post_set.title ? post.post_set.title : 'Untitled post'}</div>
         <div className="event-popup-time">{moment.unix(post.post.schedule_time).format('ddd, MMMM Do - h:mma')}</div>
-        {/* Test ellipsis
-        <div className="event-popup-message">1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890</div> */}
         <div className="event-popup-message">{post.post.message}</div>
-        <div className="event-popup-buttons">
-          <Button onClick={this.handleClickDelete} className="event-popup-flat" flat>Delete Post</Button>
-          <Button onClick={this.handleClickEdit} className="event-popup-primary" primary>Edit</Button>
+        <div className="event-popup-bottom">
+          {post.post_set.tags && this.buildTags(post)}
+          <div className="event-popup-buttons">
+            <Button onClick={this.handleClickDelete} className="event-popup-flat" flat>Delete Post</Button>
+            <Button onClick={this.handleClickEdit} className="event-popup-primary" primary>Edit</Button>
+          </div>
         </div>
       </Wrapper>
     );
