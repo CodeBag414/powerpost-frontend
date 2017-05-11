@@ -104,6 +104,7 @@ const Dashboard = (props) => {
                       image={avatarUrl}
                       title={userInfo.display_name}
                       backgroundColor={avatarClr}
+                      isClickable = {false}
                     />
                   </div>
 
