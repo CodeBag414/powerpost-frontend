@@ -104,10 +104,12 @@ class SignupCheckout extends Component {
         }
       }
     } else if (this.props.currentPlan !== nextProps.currentPlan) {
-      const { fetching, error } = nextProps.subscription;
+      const { fetching, error } = nextProps.currentPlan;
 
       if (!fetching) {
-        if (error) {
+        if (!error) {
+          browserHistory.push('/');
+        } else {
           toastr.error(error.toString());
           this.setState({
             loading: false,
