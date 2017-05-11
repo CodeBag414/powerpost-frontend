@@ -14,9 +14,9 @@ class AddConnectionDialog extends React.Component {
     super(props);
 
     this.state = {
-      index: 1,
-      fixedIndex: 1,
-      inverseIndex: 1,
+      index: 0,
+      fixedIndex: 0,
+      inverseIndex: 0,
       channel: '',
       futureChannels: [],
       wordpressUrl: '',
@@ -195,13 +195,6 @@ class AddConnectionDialog extends React.Component {
         sub: false,
         url: this.props.socialUrls ? this.props.socialUrls.twitter : '',
       },
-      { name: 'LinkedIn Profile',
-        icon: 'fa fa-linkedin-square',
-        text: 'Log into your LinkedIn to start sharing content',
-        channel: 'linkedin',
-        sub: false,
-        url: this.props.socialUrls ? this.props.socialUrls.linkedin : '',
-      },
       { name: 'LinkedIn Company',
         icon: 'fa fa-linkedin-square',
         text: 'Log into your LinkedIn to start sharing content',
@@ -216,6 +209,13 @@ class AddConnectionDialog extends React.Component {
         sub: true,
         url: this.props.socialUrls ? this.props.socialUrls.pinterest : '',
       },
+      { name: 'Google + Profile',
+        icon: 'fa fa-google-plus-square',
+        text: 'Log into your Google Plus account to start sharing content',
+        channel: 'googleplus',
+        sub: false,
+        url: this.props.socialUrls ? this.props.socialUrls.google : '',
+      }
     ];
     if (Object.getOwnPropertyNames(this.props.subChannel).length !== 0) {
       let subChannelType = 'Page';
@@ -246,7 +246,7 @@ class AddConnectionDialog extends React.Component {
           </div>
           <div>
             <hr />
-            { !this.props.subChannels &&
+            { !this.props.subChannels || this.props.subChannels.length == 0 &&
               <p>There are no associated { subChannelType } with this account.</p>
             }
             { this.props.subChannels.connected && this.props.subChannels.connected.map((channel, i) =>
@@ -314,7 +314,7 @@ class AddConnectionDialog extends React.Component {
     ];
 
     return (
-      <PPFullScreenDialog title="Connect a Channel" active={this.props.dialogShown} actions={labelActions}>
+      <PPFullScreenDialog title="Connect a Channel" active={this.props.dialogShown} actions={labelActions} style={{overflow: 'scroll'}}>
         { this.renderContent() }
       </PPFullScreenDialog>
     );

@@ -86,22 +86,26 @@ class TopNav extends Component {
     console.log('in handleTouch', event);
   }
   render() {
-    const isAccountPath = this.props.location.pathname.match('/account/');
+    const isAccountPath = this.props.location.pathname.includes('/account/');
+    console.log(isAccountPath);
     const avatar = this.props.user && this.props.user.properties ? this.props.user.properties.thumb_url : '#E7ECEE';
     const color = this.props.activeBrand && this.props.activeBrand.properties.color ? this.props.activeBrand.properties.color : '#E7ECEE';
-    console.log(this.props.activeBrand);
     const thumbnail = this.props.activeBrand && this.props.activeBrand.properties.thumb_url ? this.props.activeBrand.properties.thumb_url : '';
     let menuOptions = {
       isOpen: this.state.userMenuOpen,
       close: this.handleRequestClose,
       toggle: <Avatar avatarSrc={avatar} onClick={this.toggle.bind(this)} />,
       align: 'left',
-    }
+    };
+    
     const logo = isAccountPath ? <AccountLogo isCollapsed={this.props.isMenuCollapsed} color={color} title={this.props.activeBrand.title} thumbnail={thumbnail} /> : <PPLogo />;
     const showSidebar = this.props.activeBrand.account_type_id == 2 || this.props.activeBrand.account_type_id == 3 || this.props.activeBrand.account_type_id == 7 ? true : false;
     return (
       <Wrapper isNotFullWidth={this.props.activeBrand && showSidebar && !this.props.isMenuCollapsed} >
-        {logo}
+          
+        <AccountLogo isAccountPath={isAccountPath} isCollapsed={this.props.isMenuCollapsed} color={color} title={this.props.activeBrand.title} thumbnail={thumbnail} />
+        <PPLogo isAccountPath={isAccountPath} />
+        
         { isAccountPath &&
           <PPButton onClick={this.props.handleMenuToggle} style={{marginTop: '10px', float: 'left'}} icon={this.props.isMenuCollapsed ? 'menu' : 'keyboard_arrow_left'} floating mini />
         }
