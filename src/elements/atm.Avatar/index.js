@@ -15,7 +15,7 @@ class PPAvatar extends Component {
       avatarNew: '',
       avatarKey: '',
       filePickerKey: this.props.filePickerKey,
-      backgroundColor: this.props.backgroundColor ? this.props.backgroundColor : '#B171B6',
+      backgroundColor: this.props.backgroundColor ? this.props.backgroundColor : avatarColor[Math.floor(Math.random() * 10)],
       previousProps: props,
     };
   }
