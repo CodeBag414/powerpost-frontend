@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import FontIcon from 'react-toolbox/lib/font_icon';
+import enhanceWithClickOutside from 'react-click-outside';
 
 const PLACEHOLDER_STRING = 'Select...';
 
@@ -84,7 +85,7 @@ const DropdownOption = styled.div`
   }
 `;
 
-export default class Dropdown extends React.Component {
+class Dropdown extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -178,6 +179,10 @@ export default class Dropdown extends React.Component {
     }
   }
 
+  handleClickOutside() {
+    this.setState({ isOpen: false });
+  }
+
   renderOption(option) {
     const value = option.value || option.label || option;
     const label = option.label || option.value || option;
@@ -220,3 +225,6 @@ Dropdown.propTypes = {
   disabled: React.PropTypes.bool,
   small: React.PropTypes.bool,
 };
+
+export default enhanceWithClickOutside(Dropdown);
+
