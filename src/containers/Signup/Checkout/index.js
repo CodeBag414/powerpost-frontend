@@ -77,7 +77,7 @@ class SignupCheckout extends Component {
           }
           this.props.postSubscription(payload);
         } else {
-          toastr.error(error.toString());
+          toastr.error(error.message);
           this.setState({
             loading: false,
           });
@@ -97,7 +97,7 @@ class SignupCheckout extends Component {
             selectedPlan: nextProps.location.query.plan_id,
           });
         } else {
-          toastr.error(error.toString());
+          toastr.error(error.message);
           this.setState({
             loading: false,
           });
@@ -110,7 +110,7 @@ class SignupCheckout extends Component {
         if (!error) {
           browserHistory.push('/');
         } else {
-          toastr.error(error.toString());
+          toastr.error(error.message);
           this.setState({
             loading: false,
           });
