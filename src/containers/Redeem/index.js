@@ -6,6 +6,11 @@ import cookie from 'react-cookie';
 import { get } from 'lodash';
 
 import {
+  setAuthState,
+  setUser,
+} from 'containers/App/actions';
+
+import {
   redeemToken,
 } from './actions';
 import {
@@ -76,6 +81,14 @@ class Redeem extends Component {
             const selectedPlan = get(detail, 'user_own_account.properties.selected_plan');
             const accountTypeId = get(detail, 'user_own_account.account_type_id');
 
+            nextProps.setAuthState(true);
+            nextProps.setUser({
+              user: detail.user,
+              user_own_account: detail.user_own_account,
+              shared_accounts: detail.shared_accounts,
+              subaccounts: detail.subaccounts || [],
+            });
+
             cookie.save('account_id', detail.user_own_account.account_id, { path: '/' });
 
             if (accountTypeId === '5' && selectedPlan) {
@@ -126,6 +139,8 @@ export const mapStateToProps = createStructuredSelector({
 
 export const mapDispatchToProps = (dispatch) => ({
   redeemToken: (token) => dispatch(redeemToken(token)),
+  setAuthState: (authState) => dispatch(setAuthState(authState)),
+  setUser: (user) => dispatch(setUser(user)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Redeem);

@@ -47,6 +47,7 @@ import {
   applyCouponError,
   postSubscriptionSuccess,
   postSubscriptionError,
+  fetchCurrentPlanSuccess,
   fetchCurrentPlanError,
   fetchPaymentSourcesSuccess,
   fetchPaymentSourcesError,
@@ -371,7 +372,7 @@ export function* fetchCurrentPlanFlow() {
       });
 
       if (currentPlan) {
-        browserHistory.push('/');
+        yield put(fetchCurrentPlanSuccess({}));
       } else {
         yield put(fetchCurrentPlanError('Timeout'));
       }
