@@ -46,6 +46,19 @@ class PopupMenu extends Component {
     /* eslint-enable no-alert */
   }
 
+  buildTags = (post) => {
+    const keys = Object.keys(post.post_set.tags);
+    return keys.map((key) => {
+      const tag = post.post_set.tags[key];
+      return (
+        <span className="event-popup-tag" key={key}>
+          <i className="fa fa-tag" aria-hidden="true" />
+          {tag}
+        </span>
+      );
+    });
+  }
+
   render() {
     const { post, popupPosition } = this.props;
     // console.log('post', post);
@@ -63,9 +76,12 @@ class PopupMenu extends Component {
         <div className="event-popup-title">{post.post_set.title ? post.post_set.title : 'Untitled post'}</div>
         <div className="event-popup-time">{moment.unix(post.post.schedule_time).format('ddd, MMMM Do - h:mma')}</div>
         <div className="event-popup-message">{post.post.message}</div>
-        <div className="event-popup-buttons">
-          <Button onClick={this.handleClickDelete} className="event-popup-flat" flat>Delete Post</Button>
-          <Button onClick={this.handleClickEdit} className="event-popup-primary" primary>Edit</Button>
+        <div className="event-popup-bottom">
+          {post.post_set.tags && this.buildTags(post)}
+          <div className="event-popup-buttons">
+            <Button onClick={this.handleClickDelete} className="event-popup-flat" flat>Delete Post</Button>
+            <Button onClick={this.handleClickEdit} className="event-popup-primary" primary>Edit</Button>
+          </div>
         </div>
       </Wrapper>
     );
