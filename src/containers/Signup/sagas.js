@@ -30,8 +30,7 @@ export function* resendActivationEmailWorker(action) {
   const { payload } = action;
 
   try {
-    const data = { email: payload };
-    const response = yield call(postData, '/user_api/resend_activation_email', { payload: data }, false);
+    const response = yield call(postData, '/user_api/resend_activation_email', { payload }, false);
     const { data: { status } = {} } = response;
     yield put(resendActivationEmailSuccess(status));
   } catch (error) {
