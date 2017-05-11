@@ -146,33 +146,16 @@ export function createRoutes(store, auth) {
           name: 'calendar',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
-              // System.import('../App/views/Main/views/Calendar/state/reducer'),
-              // System.import('../App/views/Main/views/Calendar/state/sagas'),
+              System.import('containers/Calendar/reducer'),
+              System.import('containers/Calendar/sagas'),
               System.import('containers/Calendar'),
             ]);
 
             const renderRoute = loadModule(cb);
 
-            importModules.then(([component]) => {
-            //  injectReducer('posts', reducer.default);
-            //  injectSagas(sagas.default);
-              renderRoute(component);
-            });
-
-            importModules.catch(errorLoading);
-          },
-        },
-        {
-          path: '/account(/:account_id)/workflow',
-          name: 'workflow',
-          getComponent(nextState, cb) {
-            const importModules = Promise.all([
-              System.import('containers/Workflow'),
-            ]);
-
-            const renderRoute = loadModule(cb);
-
-            importModules.then(([component]) => {
+            importModules.then(([reducer, sagas, component]) => {
+              injectReducer('posts', reducer.default);
+              injectSagas(sagas.default);
               renderRoute(component);
             });
 
@@ -184,11 +167,37 @@ export function createRoutes(store, auth) {
           name: 'Social Feed',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
+              System.import('containers/Feed/reducer'),
+              System.import('containers/Feed/sagas'),
               System.import('containers/Feed'),
             ]);
+
             const renderRoute = loadModule(cb);
 
-            importModules.then(([component]) => {
+            importModules.then(([reducer, sagas, component]) => {
+              injectReducer('feed', reducer.default);
+              injectSagas(sagas.default);
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+        {
+          path: '/account(/:account_id)/boards',
+          name: 'board',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/Board/reducer'),
+              System.import('containers/Board/sagas'),
+              System.import('containers/Board'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([reducer, sagas, component]) => {
+              injectReducer('board', reducer.default);
+              injectSagas(sagas.default);
               renderRoute(component);
             });
 
@@ -208,41 +217,49 @@ export function createRoutes(store, auth) {
             const renderRoute = loadModule(cb);
 
             importModules.then(([reducer, sagas, component]) => {
-                injectReducer('connections', reducer.default);
-                injectSagas(sagas.default);
-                renderRoute(component);
+              injectReducer('connections', reducer.default);
+              injectSagas(sagas.default);
+              renderRoute(component);
             });
 
             importModules.catch(errorLoading);
           },
           childRoutes: [{
             path: '/account(/:account_id)/statistics(/:channel_id)',
-            name: 'Channels Info',
+            name: 'Channels',
             getComponent(nextstate, cb) {
               const importModules = Promise.all([
-                System.import('containers/Statistics/Loading'),
+                System.import('containers/Statistics/ChannelsInfo/reducer'),
+                System.import('containers/Statistics/ChannelsInfo/sagas'),
+                System.import('containers/Statistics/ChannelsInfo'),
               ]);
 
               const renderRoute = loadModule(cb);
 
-              importModules.then(([component]) => {
+              importModules.then(([reducer, sagas, component]) => {
+                injectReducer('channel', reducer.default);
+                injectSagas(sagas.default);
                 renderRoute(component);
               });
             },
           },
-          ]
+          ],
         },
         {
           path: '/account(/:account_id)/brands',
           name: 'brands',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
+              System.import('containers/Brands/reducer'),
+              System.import('containers/Brands/sagas'),
               System.import('containers/Brands'),
             ]);
 
             const renderRoute = loadModule(cb);
 
-            importModules.then(([component]) => {
+            importModules.then(([reducer, sagas, component]) => {
+              injectReducer('brands', reducer.default);
+              injectSagas(sagas.default);
               renderRoute(component);
             });
 
@@ -271,12 +288,16 @@ export function createRoutes(store, auth) {
           name: 'settings',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
+              System.import('containers/Settings/reducer'),
+              System.import('containers/Settings/sagas'),
               System.import('containers/Settings'),
             ]);
 
             const renderRoute = loadModule(cb);
 
-            importModules.then(([component]) => {
+            importModules.then(([reducer, sagas, component]) => {
+              injectReducer('settings', reducer.default);
+              injectSagas(sagas.default);
               renderRoute(component);
             });
 
@@ -307,12 +328,14 @@ export function createRoutes(store, auth) {
               name: 'Profile',
               getComponent(nextState, cb) {
                 const importModules = Promise.all([
+                  System.import('containers/Settings/Profile/sagas'),
                   System.import('containers/Settings/Profile'),
                 ]);
 
                 const renderRoute = loadModule(cb);
 
-                importModules.then(([component]) => {
+                importModules.then(([sagas, component]) => {
+                  injectSagas(sagas.default);
                   renderRoute(component);
                 });
 
@@ -360,21 +383,83 @@ export function createRoutes(store, auth) {
     {
       path: '/login',
       name: 'login',
+      onEnter: (nextState, replace) => {
+        if (auth.loggedIn()) {
+          replace('/');
+        }
+      },
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          System.import('containers/Login/reducer'),
-          System.import('containers/Login/sagas'),
           System.import('containers/Login'),
         ]);
 
         const renderRoute = loadModule(cb);
 
-        importModules.then(([reducer, sagas, component]) => {
+        importModules.then(([component]) => {
           renderRoute(component);
         });
 
         importModules.catch(errorLoading);
       },
+      indexRoute: {
+        getComponent(nextState, cb) {
+          const importModules = Promise.all([
+            System.import('containers/Login/SignIn'),
+          ]);
+
+          const renderRoute = loadModule(cb);
+
+          importModules.then(([component]) => {
+            renderRoute(component);
+          });
+
+          importModules.catch(errorLoading);
+        },
+      },
+      childRoutes: [
+        {
+          path: 'forgot-password',
+          name: 'forgotPassword',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/Login/ForgotPassword/reducer'),
+              System.import('containers/Login/ForgotPassword/sagas'),
+              System.import('containers/Login/ForgotPassword'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([reducer, sagas, component]) => {
+              injectReducer('forgotPassword', reducer.default);
+              injectSagas(sagas.default);
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+        {
+          path: 'reset-password',
+          name: 'resetPassword',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/Login/ResetPassword/reducer'),
+              System.import('containers/Login/ResetPassword/sagas'),
+              System.import('containers/Login/ResetPassword'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([reducer, sagas, component]) => {
+              injectReducer('resetPassword', reducer.default);
+              injectSagas(sagas.default);
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+      ],
     },
     {
       path: '/signup',
@@ -389,37 +474,89 @@ export function createRoutes(store, auth) {
         const renderRoute = loadModule(cb);
 
         importModules.then(([reducer, sagas, component]) => {
-        //  injectReducer('signup', reducer.default);
-        //  injectSagas(sagas.default);
+          injectReducer('signup', reducer.default);
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
 
+        importModules.catch(errorLoading);
+      },
+      indexRoute: { onEnter: (nextState, replace) => replace('/signup/account') },
+      childRoutes: [
+        {
+          path: 'account',
+          name: 'account',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/Signup/Account'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+        {
+          path: 'verification',
+          name: 'verification',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/Signup/Verification'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+        {
+          path: 'checkout',
+          name: 'checkout',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/Signup/Checkout'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+      ],
+    },
+    {
+      path: 'redeem/:token',
+      name: 'redeem',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          System.import('containers/Redeem/reducer'),
+          System.import('containers/Redeem/sagas'),
+          System.import('containers/Redeem'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('redeem', reducer.default);
+          injectSagas(sagas.default);
           renderRoute(component);
         });
 
         importModules.catch(errorLoading);
       },
     },
-    {
-      path: '/checkout',
-      name: 'checkout',
-      getComponent(nextState, cb) {
-        const importModules = Promise.all([
-          System.import('containers/Checkout/reducer'),
-          System.import('containers/Checkout/sagas'),
-          System.import('containers/Checkout'),
-        ]);
-
-        const renderRoute = loadModule(cb);
-
-        importModules.then(([reducer, sagas, component]) => {
-        //  injectReducer('signup', reducer.default);
-        //  injectSagas(sagas.default);
-
-          renderRoute(component);
-        });
-
-        importModules.catch(errorLoading);
-      },
-    }
   ];
 
   return {
@@ -429,4 +566,3 @@ export function createRoutes(store, auth) {
     childRoutes: routes,
   };
 }
-

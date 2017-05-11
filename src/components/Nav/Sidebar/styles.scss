@@ -1,8 +1,8 @@
 .sidebar {
-    height: 100%;
+    height: calc(100% - 60px);
     position:fixed;
     left: 0;
-    top: 0;
+    top: 60px;
     width: 260px;
     transition: transform .3s ease-in-out, width .3s ease-in-out;
 }
@@ -107,6 +107,14 @@
     margin-bottom: 20px;
 }
 
+
+.active {
+    background-color: #E7ECEE !important;
+    border-radius: 4px !important;
+    span {
+        color: #424647 !important;
+    }
+}
 .brandNav {
     width: 60px;
     position: absolute;

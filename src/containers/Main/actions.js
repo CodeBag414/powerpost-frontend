@@ -1,14 +1,14 @@
 import {
+    CHECK_USER_OBJECT,
+    // CHECK_CURRENT_ACCOUNT,
+} from 'containers/App/constants';
+
+import {
     FETCH_ACCOUNT,
     FETCH_ACCOUNT_SUCCESS,
     FETCH_ACCOUNT_ERROR,
     TOGGLE_MENU,
 } from './constants';
-
-import {
-    CHECK_USER_OBJECT,
-    // CHECK_CURRENT_ACCOUNT,
-} from 'containers/App/constants';
 
 export function fetchCurrentAccount(accountId) {
   return {

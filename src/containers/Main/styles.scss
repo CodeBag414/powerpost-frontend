@@ -1,11 +1,14 @@
 .viewContent {
     margin-top: 60px;
+    position: relative;
+    height: calc(100vh - 60px);
+    overflow: auto;
 
     transition: transform .3s ease-in-out,margin .3s ease-in-out;
 }
 
 .viewContentFull {
-    margin-left: 260px;
+    margin-left: 276px;
 }
 
 .viewContentCollapsed {

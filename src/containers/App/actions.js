@@ -1,5 +1,4 @@
 import {
-  CHANGE_FORM,
   SET_AUTH,
   SENDING_REQUEST,
   LOGIN_REQUEST,
@@ -8,18 +7,38 @@ import {
   LOGOUT,
   REQUEST_ERROR,
   CLEAR_ERROR,
+  CREATE_PAYMENT_SOURCE,
+  CREATE_PAYMENT_SOURCE_SUCCESS,
+  CREATE_PAYMENT_SOURCE_ERROR,
+  APPLY_COUPON,
+  APPLY_COUPON_SUCCESS,
+  APPLY_COUPON_ERROR,
+  POST_SUBSCRIPTION,
+  POST_SUBSCRIPTION_SUCCESS,
+  POST_SUBSCRIPTION_ERROR,
+  FETCH_CURRENT_PLAN,
+  FETCH_CURRENT_PLAN_SUCCESS,
+  FETCH_CURRENT_PLAN_ERROR,
+  FETCH_PAYMENT_SOURCES,
+  FETCH_PAYMENT_SOURCES_SUCCESS,
+  FETCH_PAYMENT_SOURCES_ERROR,
+  FETCH_PAYMENT_HISTORY,
+  FETCH_PAYMENT_HISTORY_SUCCESS,
+  FETCH_PAYMENT_HISTORY_ERROR,
+  FETCH_GROUP_USERS,
+  FETCH_GROUP_USERS_SUCCESS,
+  FETCH_GROUP_USERS_ERROR,
+  INVITE_EMAIL_TO_GROUP,
+  INVITE_EMAIL_TO_GROUP_SUCCESS,
+  INVITE_EMAIL_TO_GROUP_ERROR,
+  ADD_USER_TO_GROUP,
+  ADD_USER_TO_GROUP_SUCCESS,
+  ADD_USER_TO_GROUP_ERROR,
+  REMOVE_USER_FROM_GROUP,
+  REMOVE_USER_FROM_GROUP_SUCCESS,
+  REMOVE_USER_FROM_GROUP_ERROR,
   // CHECK_USER_OBJECT,
 } from './constants';
-
-/**
- * Sets the form state
- * @param  {object} newFormState          The new state of the form
- * @param  {string} newFormState.username The new text of the username input field of the form
- * @param  {string} newFormState.password The new text of the password input field of the form
- */
-export function changeForm(newFormState) {
-  return { type: CHANGE_FORM, newFormState };
-}
 
 /**
  * Sets the authentication state of the application
@@ -91,4 +110,214 @@ export function requestError(error) {
  */
 export function clearError() {
   return { type: CLEAR_ERROR };
+}
+
+export function createPaymentSource(payload) {
+  return {
+    type: CREATE_PAYMENT_SOURCE,
+    payload,
+  };
+}
+
+export function createPaymentSourceSuccess(payload) {
+  return {
+    type: CREATE_PAYMENT_SOURCE_SUCCESS,
+    payload,
+  };
+}
+
+export function createPaymentSourceError(payload) {
+  return {
+    type: CREATE_PAYMENT_SOURCE_ERROR,
+    payload,
+  };
+}
+
+export function applyCoupon(payload) {
+  return {
+    type: APPLY_COUPON,
+    payload,
+  };
+}
+
+export function applyCouponSuccess(payload) {
+  return {
+    type: APPLY_COUPON_SUCCESS,
+    payload,
+  };
+}
+
+export function applyCouponError(payload) {
+  return {
+    type: APPLY_COUPON_ERROR,
+    payload,
+  };
+}
+
+export function postSubscription(payload) {
+  return {
+    type: POST_SUBSCRIPTION,
+    payload,
+  };
+}
+
+export function postSubscriptionSuccess(payload) {
+  return {
+    type: POST_SUBSCRIPTION_SUCCESS,
+    payload,
+  };
+}
+
+export function postSubscriptionError(payload) {
+  return {
+    type: POST_SUBSCRIPTION_ERROR,
+    payload,
+  };
+}
+
+export function fetchCurrentPlan(payload) {
+  return {
+    type: FETCH_CURRENT_PLAN,
+    payload,
+  };
+}
+
+export function fetchCurrentPlanSuccess(payload) {
+  return {
+    type: FETCH_CURRENT_PLAN_SUCCESS,
+    payload,
+  };
+}
+
+export function fetchCurrentPlanError(payload) {
+  return {
+    type: FETCH_CURRENT_PLAN_ERROR,
+    payload,
+  };
+}
+
+export function fetchPaymentSources(payload) {
+  return {
+    type: FETCH_PAYMENT_SOURCES,
+    payload,
+  };
+}
+
+export function fetchPaymentSourcesSuccess(payload) {
+  return {
+    type: FETCH_PAYMENT_SOURCES_SUCCESS,
+    payload,
+  };
+}
+
+export function fetchPaymentSourcesError(payload) {
+  return {
+    type: FETCH_PAYMENT_SOURCES_ERROR,
+    payload,
+  };
+}
+
+export function fetchPaymentHistory(payload) {
+  return {
+    type: FETCH_PAYMENT_HISTORY,
+    payload,
+  };
+}
+
+export function fetchPaymentHistorySuccess(payload) {
+  return {
+    type: FETCH_PAYMENT_HISTORY_SUCCESS,
+    payload,
+  };
+}
+
+export function fetchPaymentHistoryError(payload) {
+  return {
+    type: FETCH_PAYMENT_HISTORY_ERROR,
+    payload,
+  };
+}
+
+export function fetchGroupUsers(payload) {
+  return {
+    type: FETCH_GROUP_USERS,
+    payload,
+  };
+}
+
+export function fetchGroupUsersSuccess(payload) {
+  return {
+    type: FETCH_GROUP_USERS_SUCCESS,
+    payload,
+  };
+}
+
+export function fetchGroupUsersError(payload) {
+  return {
+    type: FETCH_GROUP_USERS_ERROR,
+    payload,
+  };
+}
+
+export function inviteEmailToGroup(payload) {
+  return {
+    type: INVITE_EMAIL_TO_GROUP,
+    payload,
+  };
+}
+
+export function inviteEmailToGroupSuccess(payload) {
+  return {
+    type: INVITE_EMAIL_TO_GROUP_SUCCESS,
+    payload,
+  };
+}
+
+export function inviteEmailToGroupError(payload) {
+  return {
+    type: INVITE_EMAIL_TO_GROUP_ERROR,
+    payload,
+  };
+}
+
+export function addUserToGroup(payload) {
+  return {
+    type: ADD_USER_TO_GROUP,
+    payload,
+  };
+}
+
+export function addUserToGroupSuccess(payload) {
+  return {
+    type: ADD_USER_TO_GROUP_SUCCESS,
+    payload,
+  };
+}
+
+export function addUserToGroupError(payload) {
+  return {
+    type: ADD_USER_TO_GROUP_ERROR,
+    payload,
+  };
+}
+
+export function removeUserFromGroup(payload) {
+  return {
+    type: REMOVE_USER_FROM_GROUP,
+    payload,
+  };
+}
+
+export function removeUserFromGroupSuccess(payload) {
+  return {
+    type: REMOVE_USER_FROM_GROUP_SUCCESS,
+    payload,
+  };
+}
+
+export function removeUserFromGroupError(payload) {
+  return {
+    type: REMOVE_USER_FROM_GROUP_ERROR,
+    payload,
+  };
 }

@@ -1,0 +1,4 @@
+export const FETCH_POSTS = 'FETCH_POSTS';
+export const SET_POSTS = 'SET_POSTS';
+export const UPDATE_POST_REQUEST = 'UPDATE_POST_REQUEST';
+export const UPDATE_POST_SUCCESS = 'UPDATE_POST_SUCCESS';
