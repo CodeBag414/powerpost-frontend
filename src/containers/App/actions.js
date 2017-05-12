@@ -1,5 +1,6 @@
 import {
   SET_AUTH,
+  SET_USER,
   SENDING_REQUEST,
   LOGIN_REQUEST,
   REGISTER_REQUEST,
@@ -46,6 +47,10 @@ import {
  */
 export function setAuthState(newAuthState) {
   return { type: SET_AUTH, newAuthState };
+}
+
+export function setUser(user) {
+  return { type: SET_USER, user };
 }
 
 /**

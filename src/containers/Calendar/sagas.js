@@ -3,10 +3,14 @@ import { takeLatest } from 'redux-saga';
 import { take, call, put, cancel } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 
-import { getData } from 'utils/request';
+import {
+  getData,
+  putData,
+} from 'utils/request';
 
 import {
   FETCH_POSTS,
+  UPDATE_POST_REQUEST,
 } from './constants';
 
 import {
@@ -25,13 +29,35 @@ function* getPosts({ accountId }) {
   }
 }
 
+function* updatePostRequest({ post }) {
+  const requestUrl = `/post_api/post/${post.post_id}`;
+  const requestData = {
+    payload: {
+      ...post,
+    },
+  };
+
+  const response = yield call(putData, requestUrl, requestData);
+  if (response.data.result === 'success') {
+    yield put({ type: 'UPDATE_POST_SUCCESS', post: response.data.post });
+  } else {
+    console.log(response);
+  }
+}
+
 export function* fetchPosts() {
   const watcher = yield takeLatest(FETCH_POSTS, getPosts);
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
 
+export function* updatePost() {
+  const watcher = yield takeLatest(UPDATE_POST_REQUEST, updatePostRequest);
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
 }
 
 export default [
   fetchPosts,
+  updatePost,
 ];

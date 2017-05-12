@@ -18,8 +18,8 @@ const Wrapper = styled.div`
   -webkit-filter: drop-shadow(0 1px 5px rgba(60, 92, 129, 0.42));
   filter        : drop-shadow(0 1px 5px rgba(60, 92, 129, 0.42));
   -ms-filter    : "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=1, Color='#383C5C81')";
-  left: ${props => `${getX(props)}px`};
-  top: ${props => `${props.position.y}px`};
+  left: ${(props) => `${getX(props)}px`};
+  top: ${(props) => `${props.position.y}px`};
   transform: translate(-50%, calc(-100% - ${arrowHeight}px));
   z-index: 10;
   &::before {
@@ -79,14 +79,38 @@ const Wrapper = styled.div`
 
   .event-popup-message {
     width: calc(100% - 120px);
+    height: 45px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
     color: #616669;
     font-size: 11px;
     line-height: 15px;
     margin-bottom: 32px;
   }
 
+  .event-popup-tag {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: #7ED321;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 300;
+    padding: 4px 10px;
+    margin-right: 6px;
+    margin-bottom: 2px;
+    i {
+      font-size: 10px;
+      margin-right: 4px;
+    }
+  }
+
   .event-popup-buttons {
-    text-align: right;
+    float: right;
+    display: inline-block;
+    margin-top: 4px;
     .event-popup-primary {
       width: 70px;
       height: 30px;
@@ -100,6 +124,7 @@ const Wrapper = styled.div`
       font-size: 12px;
       line-height: 1;
       border: none;
+      margin-right: 10px;
     }
   }
 `;

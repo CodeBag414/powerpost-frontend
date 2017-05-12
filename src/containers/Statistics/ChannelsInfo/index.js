@@ -90,7 +90,7 @@ class ChannelsInfo extends React.Component {
       if (rule) {
         if (rule.direct) {
           return (
-            <div className="infoWidth">
+            <div className="infoWidth" key={rule.label}>
               <h3 className="topItemValue">{(activeChannel.getIn(rule.info.split('.')) || 0).toLocaleString()}</h3>
               <h6 className="topItemLabel">{rule.label}</h6>
             </div>
@@ -102,7 +102,7 @@ class ChannelsInfo extends React.Component {
           last = keys[0];
           if (last != null) {
             return (
-              <div className="infoWidth">
+              <div className="infoWidth" key={rule.label}>
                 <h3 className="topItemValue">{((rule.key ? info.getIn([last, rule.key]) : info.get(last)) || 0).toLocaleString()}</h3>
                 <h6 className="topItemLabel">{rule.label}</h6>
               </div>
@@ -110,7 +110,7 @@ class ChannelsInfo extends React.Component {
           }
         }
         return (
-          <div className="infoWidth">
+          <div className="infoWidth" key={rule.label}>
             <h3 className="topItemValue">0</h3>
             <h6 className="topItemLabel">{rule.label}</h6>
           </div>
@@ -136,7 +136,7 @@ class ChannelsInfo extends React.Component {
         <div className="basicInfo">
           <div className={`tablewidth ${channel.channel === 'facebook' || channel.channel === 'linkedin' ? 'short' : ''}`}>
             <div className="tbody">
-              <th className="activeWidth">
+              <div className="activeWidth">
                 <div className="connectionBlock">
                   <div className="connectionIcon">
                     <i className={`${channel.channel_icon} ${channel.channel}`}></i>
@@ -150,7 +150,7 @@ class ChannelsInfo extends React.Component {
                     </div>
                   </div>
                 </div>
-              </th>
+              </div>
               {this.setInfo(channel.channel)}
             </div>
           </div>
@@ -168,7 +168,7 @@ class ChannelsInfo extends React.Component {
               <Link className={`infoTabItem ${this.state.isMonth ? 'darken' : ''}`} onClick={() => this.setState({ isMonth: true })}>Monthly</Link>
             </SubWrapper>
           </div>
-          <div styles="mainInfo" >
+          <div className="mainInfo" >
             <MainInfo activeChannel={this.props.activeChannel} subChannel={this.state.subChannel} isMonth={this.state.isMonth} />
           </div>
         </div>

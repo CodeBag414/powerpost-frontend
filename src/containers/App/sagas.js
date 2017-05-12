@@ -47,6 +47,7 @@ import {
   applyCouponError,
   postSubscriptionSuccess,
   postSubscriptionError,
+  fetchCurrentPlanSuccess,
   fetchCurrentPlanError,
   fetchPaymentSourcesSuccess,
   fetchPaymentSourcesError,
@@ -371,7 +372,7 @@ export function* fetchCurrentPlanFlow() {
       });
 
       if (currentPlan) {
-        browserHistory.push('/');
+        yield put(fetchCurrentPlanSuccess({}));
       } else {
         yield put(fetchCurrentPlanError('Timeout'));
       }
@@ -443,11 +444,14 @@ export function* inviteEmailToGroupFlow() {
 
       if (data.status === 'success') {
         yield put(inviteEmailToGroupSuccess(data.payload));
+        toastr.success('Success', 'An invitation to join the team has been sent to the email you provided.');
       } else {
-        yield put(inviteEmailToGroupError(data.message));
+        throw data;
       }
     } catch (error) {
-      console.log(error);
+      const message = error.message || 'There was an error in sending the invitation';
+      yield put(inviteEmailToGroupError(message));
+      toastr.error(message);
     }
   }
 }
@@ -461,11 +465,13 @@ export function* addUserToGroupFlow() {
 
       if (data.status === 'success') {
         yield put(addUserToGroupSuccess(data.payload));
+        toastr.success('Success', 'The team member\'s access has been changed');
       } else {
-        yield put(addUserToGroupError(data.message));
+        throw data;
       }
     } catch (error) {
-      console.log(error);
+      const message = error.message || 'There was an error in changing team member\'s access';
+      yield put(addUserToGroupError(message));
     }
   }
 }
@@ -479,11 +485,13 @@ export function* removeUserFromGroupFlow() {
 
       if (data.status === 'success') {
         yield put(removeUserFromGroupSuccess(data.payload));
+        toastr.success('Success', 'The member has been removed');
       } else {
-        yield put(removeUserFromGroupError(data.message));
+        throw data;
       }
     } catch (error) {
-      console.log(error);
+      const message = error.message || 'There was an error in delete a member';
+      yield put(removeUserFromGroupError(message));
     }
   }
 }

@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import moment from 'moment';
 
-import { UserCanAccount } from 'config.routes/UserRoutePermissions';
+import { UserCanPostSet } from 'config.routes/UserRoutePermissions';
+
+import DeletePostSetDialog from 'components/DeletePostSetDialog';
 
 import Wrapper from './Wrapper';
 import CalendarSidebar from './CalendarSidebar';
@@ -10,6 +13,7 @@ import CalendarView from './CalendarView';
 
 import {
   fetchPosts,
+  updatePostRequest,
 } from './actions';
 
 import {
@@ -21,9 +25,17 @@ import {
  */
 class Calendar extends React.Component {
 
+  static propTypes = {
+    location: PropTypes.object,
+    getPosts: PropTypes.func,
+    updatePost: PropTypes.func,
+    posts: PropTypes.any,
+  };
+
   state = {
     query: '',
     filters: [true, true, true, true, true, true, true],
+    showDeletePopup: false,
   };
 
   componentDidMount() {
@@ -36,9 +48,18 @@ class Calendar extends React.Component {
     }
   }
 
+  onDeletePostSet = () => {
+    const { postToDelete } = this.state;
+    const { updatePost } = this.props;
+    const newPost = {
+      ...postToDelete.post,
+      status: 0,
+    };
+    updatePost(newPost);
+  }
+
   fetchPosts = (props) => {
     const { location, getPosts } = props;
-    console.log('location', location);
     const pathParts = location.pathname.split('/');
     const accountId = pathParts[pathParts.length - 2];
     getPosts(accountId);
@@ -64,14 +85,47 @@ class Calendar extends React.Component {
       case 'showIdea':
         newFilters[6] = value;
         break;
+      default:
+        return;
     }
     this.setState({ filters: newFilters });
   }
 
+  handleMoveEvent = ({ event, start }) => {
+    const { post } = event;
+    const { updatePost } = this.props;
+    const scheduleTime = moment(start).format('X');
+    /* eslint-disable no-alert */
+    if (moment().diff(moment.unix(post.post.schedule_time)) > 0) { // If the dragged post is in the past
+      alert('You cannot reschedule a past event.');
+      return;
+    } else if (moment().diff(moment(start)) > 0) {
+      alert('You cannot schedule a post in the past.');
+      return;
+    }
+    /* eslint-enable no-alert */
+    const newPost = {
+      ...post.post,
+      schedule_time: scheduleTime,
+    };
+    updatePost(newPost);
+  }
+
+  handleDeleteEvent = (post) => {
+    this.setState({
+      postToDelete: post,
+      showDeletePopup: true,
+    });
+  }
+
+  hideDeletePopup = () => {
+    this.setState({ showDeletePopup: false });
+  }
+
   render() {
-    const { query, filters } = this.state;
+    const { query, filters, showDeletePopup } = this.state;
     const { posts } = this.props;
-    if (posts == null || posts.length == 0 || !Array.isArray(posts)) return null;
+    if (posts == null || posts.length === 0 || !Array.isArray(posts)) return null;
     return (
       <Wrapper>
         <CalendarSidebar
@@ -84,20 +138,28 @@ class Calendar extends React.Component {
           posts={posts}
           query={query}
           filters={filters}
+          onMoveEvent={this.handleMoveEvent}
+          onDeleteEvent={this.handleDeleteEvent}
+        />
+        <DeletePostSetDialog
+          active={showDeletePopup}
+          handleDialogToggle={this.hideDeletePopup}
+          deletePostSet={this.onDeletePostSet}
         />
       </Wrapper>
     );
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
+const mapDispatchToProps = (dispatch) => (
+  {
     getPosts: (accountId) => dispatch(fetchPosts(accountId)),
-  };
-}
+    updatePost: (post) => dispatch(updatePostRequest(post)),
+  }
+);
 
 const mapStateToProps = createStructuredSelector({
   posts: makeSelectPosts(),
 });
 
-export default UserCanAccount(connect(mapStateToProps, mapDispatchToProps)(Calendar));
+export default UserCanPostSet(connect(mapStateToProps, mapDispatchToProps)(Calendar));

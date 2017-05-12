@@ -18,15 +18,16 @@
     width: 3rem;
     text-overflow: ellipsis;
     overflow: hidden;
+    font-size: 13px;
 }
 
 .icon {
     text-align: center;
     i {
-        font-size: 16px !important;
+        font-size: 15px !important;
     }
     span {
-        font-size: 20px !important;
+        font-size: 15px !important;
     }
 }
 .selected {

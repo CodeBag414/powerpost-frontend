@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /*
 * Boards
 * Analytics Info for Social Channels.
@@ -8,6 +9,9 @@ import React, { PropTypes, Component } from 'react';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import moment from 'moment';
 import enhanceWithClickOutside from 'react-click-outside';
+import { Draggable } from 'react-drag-and-drop';
+
+import DeletePostSetDialog from 'components/DeletePostSetDialog';
 
 import MenuPopover from '../MenuPopover';
 import styles from './styles.scss';
@@ -15,7 +19,7 @@ import styles from './styles.scss';
 class PostSet extends Component {
 
   componentWillMount() {
-    this.setState({ popOver: false });
+    this.setState({ popOver: false, deleteConfirmPopup: false });
   }
 
   hidePopover = () => {
@@ -27,13 +31,17 @@ class PostSet extends Component {
     this.setState({ popOver: true });
   }
 
+  showDeleteConfirm = (show) => {
+    this.setState({ deleteConfirmPopup: show });
+  }
+
   handleClickOutside() {
     this.setState({ popOver: false });
   }
 
   render() {
     const { postSet, onDeletePostSet } = this.props;
-    const { popOver } = this.state;
+    const { popOver, deleteConfirmPopup } = this.state;
     const imgSrc = postSet.getIn(['media_items', 0, 'properties', 'source_url']); // TODO: I couldn't get any image.
     const hasImage = !!imgSrc;
     const scheduledTime = postSet.getIn(['posts', 0, 'schedule_time']);
@@ -41,7 +49,7 @@ class PostSet extends Component {
     const title = postSet.get('title');
     const description = postSet.get('message');
     return (
-      <div className={styles.postSet} onClick={this.hidePopover}>
+      <Draggable type="post_set" data={postSet.get('post_set_id')} className={styles.postSet} onClick={this.hidePopover}>
         <div className={hasImage ? styles.image : styles.noImage} style={{ backgroundImage: `url(${imgSrc})` }}>
           { hasImage ? null : <i className="fa fa-picture-o" /> }
         </div>
@@ -53,7 +61,7 @@ class PostSet extends Component {
             <div className={styles.ellipsis} onClick={this.showPopover} >
               <i className="fa fa-ellipsis-h" />
               <MenuPopover
-                onDeletePostSet={onDeletePostSet}
+                onDeletePostSet={() => this.showDeleteConfirm(true)}
                 show={popOver}
               />
             </div>
@@ -65,7 +73,12 @@ class PostSet extends Component {
             {description}
           </div>
         </div>
-      </div>
+        <DeletePostSetDialog
+          active={deleteConfirmPopup}
+          handleDialogToggle={() => this.showDeleteConfirm(false)}
+          deletePostSet={onDeletePostSet}
+        />
+      </Draggable>
     );
   }
 }

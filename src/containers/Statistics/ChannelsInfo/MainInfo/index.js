@@ -10,6 +10,7 @@ import {
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Map, List } from 'immutable';
+import _ from 'lodash';
 import { makeSelectCurrentChannel } from '../selectors';
 
 import TopListItem from '../TopListItem';
@@ -69,15 +70,17 @@ const rules = {
       topByEngagementKey: 'top_posts_by_engagement',
     },
     fans: {
-      infoMonth: 'analytics.extended.page_fans_by_month',
-      infoWeek: 'analytics.extended.page_fans_by_weeks_ago',
+      infoMonth: 'analytics.extended.page_fans_by_months_ago_difference',
+      infoWeek: 'analytics.extended.page_fans_by_weeks_ago_difference',
+      monthDifference: true,
       totalKey: '',
       content: 'Fans',
       topByEngagementKey: 'top_posts_by_engagement',
     },
     impressions: {
-      infoMonth: 'analytics.extended.unique_page_impressions_by_month',
-      infoWeek: 'analytics.extended.unique_page_impressions_by_weeks_ago',
+      infoMonth: 'analytics.extended.unique_page_impressions_by_months_ago_difference',
+      infoWeek: 'analytics.extended.unique_page_impressions_by_weeks_ago_difference',
+      monthDifference: true,
       totalKey: '',
       content: 'Impressions',
       topByEngagementKey: 'top_posts_by_engagement',
@@ -190,22 +193,22 @@ class MainInfo extends React.Component {
     const { activeChannel, isMonth, subChannel } = this.props;
     const channel = activeChannel.getIn(['connection', 'channel']);
     return {
-      ...rules[channel][subChannel],
-      info: rules[channel][subChannel][isMonth ? 'infoMonth' : 'infoWeek'],
+      ..._.get(rules, `${channel}.${subChannel}`),
+      info: _.get(rules, `${channel}.${subChannel}.${isMonth ? 'infoMonth' : 'infoWeek'}`),
     };
   }
 
   getInfos() {
     const { activeChannel } = this.props;
     const channel = activeChannel.getIn(['connection', 'channel']);
-    return rules[channel].infos;
+    return _.get(rules, `${channel}.infos`, {});
   }
 
   getTotaldata() {
     let total = 0;
     const { activeChannel, isMonth } = this.props;
     const rule = this.getRule();
-    const info = activeChannel.getIn(rule.info.split('.')) || Map();
+    const info = activeChannel.getIn(rule.info ? rule.info.split('.') : []) || Map();
     const keys = Object.keys(info.toJS());
     const last = keys[0];
     let re = `0 ${rule.reLabel}`;
@@ -243,10 +246,10 @@ class MainInfo extends React.Component {
     const data = [];
     const { activeChannel, isMonth } = this.props;
     const rule = this.getRule();
-    const info = activeChannel.getIn(rule.info.split('.')) || List();
+    const info = activeChannel.getIn(rule.info ? rule.info.split('.') : []) || List();
     const length = isMonth ? 3 : 12;
     Array(length).fill(0).forEach((zeroItem, index) => {
-      const infoItem = isMonth
+      const infoItem = isMonth && !rule.monthDifference
         ? info.filter((item, key) => parseInt(key, 10) - 1 === ((new Date().getMonth() - index) + 12) % 12).first()
         : info.filter((item, key) => parseInt(key, 10) === index).first();
       let value = 0;
@@ -267,7 +270,7 @@ class MainInfo extends React.Component {
     const { activeChannel } = this.props;
     const rule = this.getRule();
     const { infoMonth, items, imageUrlKey, createTimeKey, descriptionKey } = this.getInfos();
-    const itemInfo = activeChannel.getIn((infoMonth || rule.infoMonth).split('.')) || Map();
+    const itemInfo = activeChannel.getIn((infoMonth || rule.infoMonth) ? (infoMonth || rule.infoMonth).split('.') : []) || Map();
     const keys = Object.keys(itemInfo.toJS());
     const last = keys[0];
     if (last !== null) {

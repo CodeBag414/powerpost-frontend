@@ -77,7 +77,7 @@ class SignupCheckout extends Component {
           }
           this.props.postSubscription(payload);
         } else {
-          toastr.error(error.toString());
+          toastr.error(error.message);
           this.setState({
             loading: false,
           });
@@ -97,18 +97,20 @@ class SignupCheckout extends Component {
             selectedPlan: nextProps.location.query.plan_id,
           });
         } else {
-          toastr.error(error.toString());
+          toastr.error(error.message);
           this.setState({
             loading: false,
           });
         }
       }
     } else if (this.props.currentPlan !== nextProps.currentPlan) {
-      const { fetching, error } = nextProps.subscription;
+      const { fetching, error } = nextProps.currentPlan;
 
       if (!fetching) {
-        if (error) {
-          toastr.error(error.toString());
+        if (!error) {
+          browserHistory.push('/');
+        } else {
+          toastr.error(error.message);
           this.setState({
             loading: false,
           });

@@ -163,23 +163,6 @@ export function createRoutes(store, auth) {
           },
         },
         {
-          path: '/account(/:account_id)/workflow',
-          name: 'workflow',
-          getComponent(nextState, cb) {
-            const importModules = Promise.all([
-              System.import('containers/Workflow'),
-            ]);
-
-            const renderRoute = loadModule(cb);
-
-            importModules.then(([component]) => {
-              renderRoute(component);
-            });
-
-            importModules.catch(errorLoading);
-          },
-        },
-        {
           path: '/account(/:account_id)/feed/:connection_id',
           name: 'Social Feed',
           getComponent(nextState, cb) {
@@ -201,7 +184,7 @@ export function createRoutes(store, auth) {
           },
         },
         {
-          path: '/account(/:account_id)/board',
+          path: '/account(/:account_id)/boards',
           name: 'board',
           getComponent(nextState, cb) {
             const importModules = Promise.all([

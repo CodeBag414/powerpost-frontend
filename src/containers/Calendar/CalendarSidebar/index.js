@@ -1,16 +1,16 @@
-import React from 'react';
-
+import React, { PropTypes } from 'react';
 import Checkbox from 'react-toolbox/lib/checkbox';
 
 import Wrapper from './Wrapper';
 
-const checkBoxStyles = {
-  width: 14,
-  height: 14,
-
-};
-
 class CalendarSidebar extends React.Component {
+
+  static propTypes = {
+    posts: PropTypes.array,
+    query: PropTypes.string,
+    onSearch: PropTypes.func,
+    onToggleFilter: PropTypes.func,
+  };
 
   state = {
     showReady: true,
@@ -18,6 +18,14 @@ class CalendarSidebar extends React.Component {
     showDraft: true,
     showIdea: true,
   };
+
+  getUnscheduledPosts = (posts) =>
+    posts.map((post) => {
+      if (!post.post.schedule_time) {
+        return post;
+      }
+      return null;
+    }).filter((post) => post);
 
   handleChangeCheckbox = (value, event) => {
     const { onToggleFilter } = this.props;
@@ -28,17 +36,9 @@ class CalendarSidebar extends React.Component {
     onToggleFilter(filter, value);
   }
 
-  getUnscheduledPosts = (posts) => {
-    return posts.map((post) => {
-      if (!post.post.schedule_time) {
-        return post;
-      }
-    }).filter(post => post);
-  }
-
   render() {
     const { showReady, showReview, showDraft, showIdea } = this.state;
-    const { posts, query, onSearch, onToggleFilter } = this.props;
+    const { posts, query, onSearch } = this.props;
     const unscheduledPosts = this.getUnscheduledPosts(posts);
     return (
       <Wrapper>
@@ -84,13 +84,11 @@ class CalendarSidebar extends React.Component {
             Unscheduled ({unscheduledPosts.length})
           </div>
           {
-            unscheduledPosts.map((post) => {
-              return (
-                <div className="cal-sidebar-unscheduled-item">
-                  {post.post_set.title ? post.post_set.title : 'Untitled post'}
-                </div>
-              );
-            })
+            unscheduledPosts.map((post) =>
+              <div className="cal-sidebar-unscheduled-item">
+                {post.post_set.title ? post.post_set.title : 'Untitled post'}
+              </div>
+            )
           }
         </div>
       </Wrapper>

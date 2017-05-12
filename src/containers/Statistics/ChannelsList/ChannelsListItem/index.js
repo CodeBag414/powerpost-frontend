@@ -14,7 +14,6 @@ class ChannelsListItem extends React.Component {
   }
 
   getStatusLabel() {
-    console.log(this.props.connection);
     switch (this.props.connection.status) {
       case '3':
         return <div className="disconnectedLabel"><i className="fa fa-warning"></i> Reconnect</div>;
@@ -24,9 +23,9 @@ class ChannelsListItem extends React.Component {
   }
 
   render() {
-    const { connection } = this.props;
+    const { connection, connection: { status } } = this.props;
     return (
-      <Wrapper>
+      <Wrapper disconnected={status === '3'}>
         <div className="connectionIcon">
           <i className={`${connection.channel_icon} ${connection.channel}`}></i>
         </div>
@@ -37,12 +36,6 @@ class ChannelsListItem extends React.Component {
           <div className={`${connection.channel} connectionSubName`}>
             {this.getType()[0].toUpperCase() + this.getType().slice(1)}
           </div>
-        </div>
-        <div>
-          <div className="controlBlock">
-            {this.getStatusLabel()}
-          </div>
-          <div className="clearBoth"></div>
         </div>
       </Wrapper>
     );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 import BigCalendar from 'react-big-calendar';
@@ -7,27 +7,9 @@ import moment from 'moment';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-import { UserCanAccount } from 'config.routes/UserRoutePermissions';
-
-import PopupMenu from 'components/PopupMenu';
-
 import Wrapper from './Wrapper';
 import Toolbar from './Toolbar';
-
-const samplePosts = [
-  {
-    id: '1',
-    title: 'First event',
-    start: moment('2017-04-25 3:00:00 am'),
-    end: moment('2017-04-25 11:00:00 am'),
-  },
-  {
-    id: '2',
-    title: 'Second event',
-    start: moment('2017-04-26 3:00:00 am'),
-    end: moment('2017-04-26 6:00:00 am'),
-  },
-];
+import PopupMenu from './PopupMenu';
 
 BigCalendar.setLocalizer(
   BigCalendar.momentLocalizer(moment)
@@ -35,11 +17,19 @@ BigCalendar.setLocalizer(
 
 const DragAndDropCalendar = withDragAndDrop(BigCalendar);
 
-let formats = {
+const formats = {
   dateFormat: 'D',
 };
 
 class CalendarView extends React.Component {
+
+  static propTypes = {
+    posts: PropTypes.array,
+    query: PropTypes.string,
+    filters: PropTypes.array,
+    onMoveEvent: PropTypes.func,
+    onDeleteEvent: PropTypes.func,
+  };
 
   state = {
     showPopup: false,
@@ -47,48 +37,59 @@ class CalendarView extends React.Component {
     currentPost: null,
   };
 
-  eventPropGetter = (event, start, end, isSelected) => {
-    const { post } = event.post;
-    let bgColor, fgColor, borderColor;
-    switch (post.status) {
-      case '3':
-        bgColor = 'rgba(171,230,106,0.5)'; // Ready
-        borderColor = '#ABE76A';
-        fgColor = '#65883D';
-        break;
-      case '5':
-        bgColor = 'rgba(177,113,181,0.5)'; // Review
-        borderColor = '#B171B6';
-        fgColor = '#965B9A';
-        break;
-      case '2':
-        bgColor = 'rgba(103,197,230,0.5)'; // Draft
-        borderColor = '#67C5E7';
-        fgColor = '#428096';
-        break;
-      case '6':
-        bgColor = '#ACB5B8'; // Idea
-        borderColor = '#ABE76A';
-        fgColor = '#65883D';
-        break;
-      default:
-        bgColor = 'EFEFEF'; // Same as Unscheduled (gray)
-        borderColor = '#DBDFE0';
-        fgColor = '#616669';
-        break;
+  eventPropGetter = (event) => {
+    const { post, post_set } = event.post;
+    let bgColor;
+    let fgColor;
+    let borderColor;
+    if (moment().diff(moment.unix(post.schedule_time)) > 0) { // if the post is in the past, it means it's already published. Otherwise, it's an error, so don't show it
+      bgColor = '#F3F6F7';
+      borderColor = '#E7ECEE';
+      fgColor = '#ACB5B8';
+    } else {
+      switch (post_set.status) {
+        case '3':
+          bgColor = 'rgba(171,230,106,0.5)'; // Ready
+          borderColor = '#ABE76A';
+          fgColor = '#65883D';
+          break;
+        case '5':
+          bgColor = 'rgba(177,113,181,0.5)'; // Review
+          borderColor = '#B171B6';
+          fgColor = '#965B9A';
+          break;
+        case '2':
+          bgColor = 'rgba(103,197,230,0.5)'; // Draft
+          borderColor = '#67C5E7';
+          fgColor = '#428096';
+          break;
+        case '6':
+          bgColor = '#ACB5B8'; // Idea
+          borderColor = '#ABE76A';
+          fgColor = '#65883D';
+          break;
+        case '1' && (post.status === '3'):
+          bgColor = '#F3F6F7';
+          borderColor = '#E7ECEE';
+          fgColor = '#ACB5B8';
+          break;
+        default:
+          bgColor = 'EFEFEF'; // Same as Unscheduled (gray)
+          borderColor = '#DBDFE0';
+          fgColor = '#616669';
+          break;
+      }
     }
 
     const style = {
       background: bgColor,
       border: `1px solid ${borderColor}`,
       color: fgColor,
-    }
+    };
+
     return {
       style,
     };
-  }
-
-  moveEvent = ({ event, start, end }) => {
   }
 
   eventSelected = (event, e) => {
@@ -96,7 +97,7 @@ class CalendarView extends React.Component {
     const y = e.nativeEvent.clientY;
     this.setState({
       showPopup: true,
-      popupPosition: {x, y},
+      popupPosition: { x, y },
       currentPost: event.post,
     });
   }
@@ -107,15 +108,19 @@ class CalendarView extends React.Component {
 
   render() {
     const { showPopup, popupPosition, currentPost } = this.state;
-    const { posts, query, filters } = this.props;
+    const { posts, query, filters, onMoveEvent, onDeleteEvent } = this.props;
     // console.log('posts', posts);
     // console.log('filters', filters);
     const queryLower = query.toLowerCase();
     const formattedPosts = posts.map((post) => {
+      if (moment().diff(moment.unix(post.post.schedule_time)) > 0 && post.post.status !== '2') { // Don't show posts in the past & unpublished
+        return null;
+      }
+      if (post.post.status === '0') return null; // Don't show deleted posts
       const titleMatch = !query || (post.post_set.title && post.post_set.title.toLowerCase().indexOf(queryLower) !== -1);
       let tagsMatch = !query;
       if (post.post_set.tags) {
-        for (let i = 0; i < post.post_set.tags.length; i++) {
+        for (let i = 0; i < post.post_set.tags.length; i += 1) {
           const tag = post.post_set.tags[i].toLowerCase();
           if (tag.indexOf(queryLower) !== -1) {
             tagsMatch = true;
@@ -123,34 +128,36 @@ class CalendarView extends React.Component {
           }
         }
       }
-      const filterMatch = filters[post.post.status];
+      const filterMatch = filters[post.post_set.status];
       if ((titleMatch || tagsMatch) && filterMatch) {
         return {
           post,
           title: post.post_set.title ? post.post_set.title : 'Untitled post',
-          start: moment.unix(post.post.schedule_time),
-          end: moment.unix(post.post.schedule_time),
-        }
+          start: new Date(moment.unix(post.post.schedule_time)),
+          end: new Date(moment.unix(post.post.schedule_time)),
+        };
       }
-    }).filter(post => post);
+      return null;
+    }).filter((post) => post);
     return (
       <Wrapper>
         <DragAndDropCalendar
           selectable
+          popup
           events={formattedPosts}
           components={{
             toolbar: Toolbar,
           }}
           formats={formats}
-          // onSelectSlot={(this.slotSelected)}
           onSelectEvent={(this.eventSelected)}
           eventPropGetter={this.eventPropGetter}
-          onEventDrop={this.moveEvent}
+          onEventDrop={onMoveEvent}
         />
         {showPopup &&
           <PopupMenu
             popupPosition={popupPosition}
             onOutsideClick={this.dismissPopup}
+            onDelete={onDeleteEvent}
             post={currentPost}
           />
         }
@@ -159,4 +166,4 @@ class CalendarView extends React.Component {
   }
 }
 
-export default DragDropContext(HTML5Backend)(UserCanAccount(CalendarView));
+export default DragDropContext(HTML5Backend)(CalendarView);

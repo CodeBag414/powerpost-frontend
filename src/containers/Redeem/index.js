@@ -6,6 +6,11 @@ import cookie from 'react-cookie';
 import { get } from 'lodash';
 
 import {
+  setAuthState,
+  setUser,
+} from 'containers/App/actions';
+
+import {
   redeemToken,
 } from './actions';
 import {
@@ -17,6 +22,7 @@ import Wrapper from './Wrapper';
 class Redeem extends Component {
   static propTypes = {
     params: PropTypes.object,
+    location: PropTypes.object,
     redeem: PropTypes.object,
     redeemToken: PropTypes.func,
   }
@@ -32,7 +38,6 @@ class Redeem extends Component {
     if (this.props.redeem !== redeem) {
       const error = redeem.get('error');
       if (error) {
-        alert(error.message);
         if (error.code === '700') {
           browserHistory.push('/login');
         }
@@ -43,7 +48,7 @@ class Redeem extends Component {
         const email = get(detail, 'email');
         const secondaryToken = get(detail, 'secondary_token');
 
-        if (detail.api_key) {
+        if (detail.api_key && procedure !== 'password_reset') {
           cookie.save('token', detail.api_key, { path: '/' });
         }
 
@@ -70,11 +75,19 @@ class Redeem extends Component {
             break;
           case 'password_reset':
             cookie.save('user', detail.user);
-            browserHistory.push('/login/reset-password');
+            browserHistory.push(`/login/reset-password?api_key=${encodeURIComponent(detail.api_key)}`);
             break;
           default: { // activation
             const selectedPlan = get(detail, 'user_own_account.properties.selected_plan');
             const accountTypeId = get(detail, 'user_own_account.account_type_id');
+
+            nextProps.setAuthState(true);
+            nextProps.setUser({
+              user: detail.user,
+              user_own_account: detail.user_own_account,
+              shared_accounts: detail.shared_accounts,
+              subaccounts: detail.subaccounts || [],
+            });
 
             cookie.save('account_id', detail.user_own_account.account_id, { path: '/' });
 
@@ -90,6 +103,19 @@ class Redeem extends Component {
     }
   }
 
+  getContent = () => {
+    const { location: { query } } = this.props;
+
+    switch (query.type) {
+      case 'new_user':
+        return 'We\'re activating your account';
+      case 'password_reset':
+        return 'We are looking up your account!';
+      default:
+        return 'Redeeming!';
+    }
+  }
+
   render() {
     const { redeem } = this.props;
     const error = redeem.get('error');
@@ -97,12 +123,11 @@ class Redeem extends Component {
     return (
       error ?
         <Wrapper>
-          Redemption Failed. Please Try Again!
-          { JSON.stringify(error) }
+          { error.message }
         </Wrapper>
         :
         <Wrapper>
-          Redeeming!
+          { this.getContent() }
         </Wrapper>
     );
   }
@@ -114,6 +139,8 @@ export const mapStateToProps = createStructuredSelector({
 
 export const mapDispatchToProps = (dispatch) => ({
   redeemToken: (token) => dispatch(redeemToken(token)),
+  setAuthState: (authState) => dispatch(setAuthState(authState)),
+  setUser: (user) => dispatch(setUser(user)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Redeem);
