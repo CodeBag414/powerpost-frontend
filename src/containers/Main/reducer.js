@@ -10,6 +10,10 @@ import {
     SET_CONNECTIONS_LIST,
 } from './constants';
 
+import {
+  VALIDATE_CONNECTIONS_SUCCESS,
+} from '../Settings/Connections/constants';
+
 // The initial application state
 const initialState = fromJS({
   menuCollapsed: true,
@@ -75,6 +79,9 @@ function dashboardReducer(state = initialState, action) {
     case SET_CONNECTIONS_LIST:
       return state
             .setIn(['activeBrand', 'connections'], action.connections);
+    case VALIDATE_CONNECTIONS_SUCCESS:
+      return state
+        .setIn(['activeBrand', 'connections'], action.connections);
     default:
       return state;
   }

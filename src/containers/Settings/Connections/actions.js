@@ -12,6 +12,7 @@ import {
     CREATE_SUB_CHANNELS,
     CLEAR_SUB_DATA,
     GET_WORDPRESS_BLOGS,
+    VALIDATE_CONNECTIONS,
 } from './constants';
 
 export function setChannelFilter(channelFilter) {
@@ -62,6 +63,9 @@ export function clearSubData() {
     return { type: CLEAR_SUB_DATA };
 }
 
+export function validateConnections(id) {
+    return { type: VALIDATE_CONNECTIONS, id };
+}
 export function getWordpressBlogs(data) {
     return { type: GET_WORDPRESS_BLOGS, data };
 }

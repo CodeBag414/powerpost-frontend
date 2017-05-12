@@ -22,6 +22,7 @@ import {
   createSubChannels,
   clearSubData,
   getWordpressBlogs,
+  validateConnections,
 } from './actions';
 
 import {
@@ -47,7 +48,6 @@ class Connections extends React.Component {
   }
 
   componentDidMount() {
-    console.log('werwer');
     this.props.getSocialUrl();
     window.addEventListener('message', receiveMessage.bind(this), false);
 
@@ -56,6 +56,8 @@ class Connections extends React.Component {
         this.props.connectionCallback(event.data);
       }
     }
+    
+    this.props.validateConnections(this.props.params.account_id);
   }
 
   setChannelFilter(channelFilter) {
@@ -177,6 +179,7 @@ export function mapDispatchToProps(dispatch) {
     createSubChannels: (data) => dispatch(createSubChannels(data)),
     clearSubData: () => dispatch(clearSubData()),
     getWordpressBlogs: (data) => dispatch(getWordpressBlogs(data)),
+    validateConnections: (id) => dispatch(validateConnections(id)),
   };
 }
 

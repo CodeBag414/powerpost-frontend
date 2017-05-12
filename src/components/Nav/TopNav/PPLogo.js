@@ -5,7 +5,7 @@ import {Link} from 'react-router';
 import Logo from './CornerNavLogo.png';
 
 const Wrapper = styled(Link)`
-  display: block;
+  display: ${(props) => props.isAccountPath ? 'none' : 'block'};
   width: 60px;
   height: 100%;
   background-color: ${(props) => props.theme.primaryColor}
@@ -17,9 +17,9 @@ const Wrapper = styled(Link)`
   }
 `;
 
-const PPLogo = () => {
+const PPLogo = (props) => {
   return(
-    <Wrapper to="/">
+    <Wrapper to="/" {...props}>
       <img src={Logo} />
     </Wrapper>
   );
