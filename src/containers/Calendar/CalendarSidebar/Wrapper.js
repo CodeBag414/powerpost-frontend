@@ -73,11 +73,27 @@ const Wrapper = styled.div`
 
   .cal-sidebar-unscheduled {
     .cal-sidebar-unscheduled-item {
-      padding: 4px 0 6px;
+      padding: 0 20px;
+      margin: 0 -20px;
       color: #616669;
       font-size: 12px;
       font-weight: bold;
-      line-height: 17px;
+      line-height: 28px;
+      height: 28px;
+      position: relative;
+      .fa-ellipsis-h {
+        visibility: hidden;
+        font-size: 15px;
+        float: right;
+        padding: 4px;
+        cursor: pointer;
+      }
+      &:hover, &.active {
+        background-color: #F9FAFA;
+        i {
+          visibility: visible;
+        }
+      }
     }
   }
 `;
