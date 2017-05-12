@@ -133,6 +133,7 @@ class Calendar extends React.Component {
           query={query}
           onSearch={this.handleSearch}
           onToggleFilter={this.handleToggleFilter}
+          onDelete={this.handleDeleteEvent}
         />
         <CalendarView
           posts={posts}

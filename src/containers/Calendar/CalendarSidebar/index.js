@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import Checkbox from 'react-toolbox/lib/checkbox';
 
 import Wrapper from './Wrapper';
+import UnscheduledPost from './UnscheduledPost';
 
 class CalendarSidebar extends React.Component {
 
@@ -10,6 +11,7 @@ class CalendarSidebar extends React.Component {
     query: PropTypes.string,
     onSearch: PropTypes.func,
     onToggleFilter: PropTypes.func,
+    onDelete: PropTypes.func,
   };
 
   state = {
@@ -21,7 +23,7 @@ class CalendarSidebar extends React.Component {
 
   getUnscheduledPosts = (posts) =>
     posts.map((post) => {
-      if (!post.post.schedule_time) {
+      if (post.post.status !== '0' && post.post.schedule_time === '0') {
         return post;
       }
       return null;
@@ -38,8 +40,9 @@ class CalendarSidebar extends React.Component {
 
   render() {
     const { showReady, showReview, showDraft, showIdea } = this.state;
-    const { posts, query, onSearch } = this.props;
+    const { posts, query, onSearch, onDelete } = this.props;
     const unscheduledPosts = this.getUnscheduledPosts(posts);
+    // console.log('CalendarSidebar -- posts', unscheduledPosts);
     return (
       <Wrapper>
         <div className="cal-sidebar-search">
@@ -84,11 +87,7 @@ class CalendarSidebar extends React.Component {
             Unscheduled ({unscheduledPosts.length})
           </div>
           {
-            unscheduledPosts.map((post) =>
-              <div className="cal-sidebar-unscheduled-item">
-                {post.post_set.title ? post.post_set.title : 'Untitled post'}
-              </div>
-            )
+            unscheduledPosts.map((post) => <UnscheduledPost key={post.post.post_id} post={post} onDelete={onDelete} />)
           }
         </div>
       </Wrapper>
