@@ -44,10 +44,16 @@ class ChannelsInfo extends React.Component {
 
   state = { subChannel: '', isMonth: false };
 
+  componentDidMount() {
+    const { params, fetchChannel } = this.props;
+    fetchChannel(params.channel_id);
+  }
+
   componentWillReceiveProps(nextProps) {
-    const { activeChannel, fetchChannelInfo, params } = this.props;
+    const { activeChannel, fetchChannel, fetchChannelInfo, params } = this.props;
     if (nextProps.params.channel_id !== params.channel_id || nextProps.params.account_id !== params.account_id) {
       document.getElementById('main-panel').scrollTop = 0;
+      fetchChannel(nextProps.params.channel_id);
     }
     if (nextProps.activeChannel !== activeChannel) {
       fetchChannelInfo(nextProps.activeChannel);
@@ -177,10 +183,9 @@ class ChannelsInfo extends React.Component {
   }
 
   render() {
-    const { params, fetchChannel, connections, isLoading } = this.props;
+    const { params, connections, isLoading } = this.props;
     const channelId = params.channel_id;
     let channel = {};
-    fetchChannel(channelId);
     channel = connections.filter((connection) =>
       connection.connection_id === channelId
     )[0] || {};
