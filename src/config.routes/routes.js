@@ -385,12 +385,17 @@ export function createRoutes(store, auth) {
           name: 'post editor',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
+              // System.import('containers/PostEditor'),
+              // System.import('containers/PostEditor'),
               System.import('containers/PostEditor'),
             ]);
 
             const renderRoute = loadModule(cb);
 
+            // importModules.then(([reducer, sagas, component]) => {
             importModules.then(([component]) => {
+              // injectReducer('content', reducer.default);
+              // injectSagas(sagas.default);
               renderRoute(component);
             });
 
@@ -403,17 +408,12 @@ export function createRoutes(store, auth) {
               name: 'content',
               getComponent(nextstate, cb) {
                 const importModules = Promise.all([
-                  // System.import('containers/PostEditor/Content/reducer'),
-                  // System.import('containers/PostEditor/Content/sagas'),
                   System.import('containers/PostEditor/Content'),
                 ]);
 
                 const renderRoute = loadModule(cb);
 
-                // importModules.then(([reducer, sagas, component]) => {
                 importModules.then(([component]) => {
-                  // injectReducer('content', reducer.default);
-                  // injectSagas(sagas.default);
                   renderRoute(component);
                 });
               },
@@ -423,17 +423,27 @@ export function createRoutes(store, auth) {
               name: 'channels & times',
               getComponent(nextstate, cb) {
                 const importModules = Promise.all([
-                  // System.import('containers/PostEditor/Channels/reducer'),
-                  // System.import('containers/PostEditor/Channels/sagas'),
                   System.import('containers/PostEditor/Channels'),
                 ]);
 
                 const renderRoute = loadModule(cb);
 
-                // importModules.then(([reducer, sagas, component]) => {
                 importModules.then(([component]) => {
-                  // injectReducer('channels', reducer.default);
-                  // injectSagas(sagas.default);
+                  renderRoute(component);
+                });
+              },
+            },
+            {
+              path: '/account(/:account_id)/postset(/:postset_id)/streams',
+              name: 'channels & times',
+              getComponent(nextstate, cb) {
+                const importModules = Promise.all([
+                  System.import('containers/PostEditor/SharedStreams'),
+                ]);
+
+                const renderRoute = loadModule(cb);
+
+                importModules.then(([component]) => {
                   renderRoute(component);
                 });
               },

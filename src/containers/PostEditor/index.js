@@ -32,6 +32,7 @@ class PostEdtior extends Component {
         <div>
           <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/content`} label="Content" />
           <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/channels`} label="Channels & Times" />
+          <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/streams`} label="Shared Streams" />
         </div>
       </Wrapper>
     );
