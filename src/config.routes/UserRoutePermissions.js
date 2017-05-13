@@ -89,3 +89,14 @@ export const UserCanPostSet = UserAuthWrapper({
   wrapperDisplayName: 'UserCanPostSet',
   allowRedirectBack: false,
 });
+
+export const UserCanPostEdit = UserAuthWrapper({
+  authSelector: (state) => state.get('main'),
+  redirectAction: routerActions.push,
+  authenticatingSelector: (state) => { const main = state.get('main'); return main.get('isFetchingAccount'); },
+  LoadingComponent: Loading,
+  predicate: (auth) => auth.getIn(['activeBrand', 'user_access', 'permissions']).indexOf('post_edit') > -1 && auth.getIn(['activeBrand', 'account_access', 'permissions']).indexOf('post_edit') > -1 && !auth.get('fetchingError'),
+  failureRedirectPath: '/forbidden',
+  wrapperDisplayName: 'UserCanPostEdit',
+  allowRedirectBack: false,
+});
