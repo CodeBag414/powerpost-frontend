@@ -76,7 +76,7 @@ export class UserCard extends Component {
     return (
       <Wrapper>
         <div className="avatar">
-          <PPAvatar image={thumbnail} title={name} backgroundColor={'green'} size={80} />
+          <PPAvatar image={thumbnail} title={name} backgroundColor={'green'} size={80} isClickable={false} />
         </div>
         <div className="detail-pane">
           <div className="name">{name}</div>

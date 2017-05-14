@@ -11,6 +11,7 @@ import TabLink from 'elements/atm.TabLink';
 
 import Wrapper from './Wrapper';
 import GeneralInfo from './GeneralInfo';
+import UserAssignment from './UserAssignment';
 
 class PostEdtior extends Component {
 
@@ -29,13 +30,18 @@ class PostEdtior extends Component {
     const { params, children } = this.props;
     return (
       <Wrapper>
-        <GeneralInfo />
         <div>
-          <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/content`} label="Content" />
-          <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/channels`} label="Channels & Times" />
-          <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/streams`} label="Shared Streams" />
+          <GeneralInfo />
+          <div>
+            <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/content`} label="Content" />
+            <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/channels`} label="Channels & Times" />
+            <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/streams`} label="Shared Streams" />
+          </div>
+          {children}
         </div>
-        {children}
+        <div style={{ width: '200px' }}>
+          <UserAssignment />
+        </div>
       </Wrapper>
     );
   }

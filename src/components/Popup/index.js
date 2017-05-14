@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import enhanceWithClickOutside from 'react-click-outside';
+import { noop } from 'lodash';
 
 const Wrapper = styled.div`
   padding: 10px 0;
@@ -33,6 +34,10 @@ class Popup extends Component {
   static propTypes = {
     children: PropTypes.node,
     onOutsideClick: PropTypes.func,
+  }
+
+  static defaultProps = {
+    onOutsideClick: noop,
   }
 
   handleClickOutside = (e) => {
