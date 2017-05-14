@@ -9,11 +9,11 @@ import styled from 'styled-components';
 import { MenuItem, MenuDivider } from 'react-toolbox/lib/menu';
 import FontIcon from 'react-toolbox/lib/font_icon';
 import withReactRouter from 'elements/hoc.withReactRouter';
+import Popup from 'components/Popup';
 
 import Wrapper from './Wrapper';
 import BrandImage from './BrandImage';
 import BrandTitle from './BrandTitle';
-import Popup from './Popup';
 
 import DeleteBrandDialog from '../../DeleteBrandDialog';
 
