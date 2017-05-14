@@ -30,7 +30,7 @@ class PostEdtior extends Component {
     const { params, children } = this.props;
     return (
       <Wrapper>
-        <div>
+        <div className="main">
           <GeneralInfo />
           <div>
             <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/content`} label="Content" />

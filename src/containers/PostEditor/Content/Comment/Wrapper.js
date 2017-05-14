@@ -24,6 +24,7 @@ const Wrapper = styled.div`
     }
     .comment {
       margin-top: 3px;
+      font-size: 13px;
       color: #616669;
       .person-link {
         cursor: pointer;

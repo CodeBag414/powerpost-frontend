@@ -4,7 +4,7 @@ import Wrapper from './Wrapper';
 
 const getStyledComment = (comment) =>
   comment.split('@').map((cm1, index) =>
-    <span>
+    <span key={index}>
       <span className={index ? 'person-link' : ''}>
         {`${index ? '@' : ''}${cm1.split(' ')[0]}`}
       </span>
