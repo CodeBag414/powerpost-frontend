@@ -553,7 +553,7 @@ export function createRoutes(store, auth) {
 
         importModules.catch(errorLoading);
       },
-      indexRoute: { onEnter: (nextState, replace) => replace('/signup/account') },
+      indexRoute: { onEnter: (nextState, replace) => replace('/signup/account?plan_id=PP01-MULTIBRAND01-MO') },
       childRoutes: [
         {
           path: 'account',
