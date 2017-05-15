@@ -9,6 +9,12 @@ const Wrapper = styled.div`
   flex-wrap: wrap;
 `;
 
+const TextWrapper = styled.p`
+  margin-left: 15px;
+  padding: 0;
+  font-family: 'Lato';
+`;
+
 function compare(a, b) {
   if (a.title.toLowerCase() < b.title.toLowerCase()) {
     return -1;
@@ -31,7 +37,7 @@ function BrandsList({ brands, removeBrand }) {
                 );
     });
   } else {
-    brandsList = 'You currently have no brands';
+    brandsList = <TextWrapper>You currently have no brands.</TextWrapper>;
   }
 
   return (

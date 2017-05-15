@@ -5,7 +5,7 @@ import chroma from 'chroma-js';
 const darken = c => chroma(c).darken();
 
 const Wrapper = styled.div`
-  display: block;
+  display: ${(props) => props.isAccountPath ? 'inline-flex' : 'none'};
   width: ${(props) => props.isCollapsed ? '60px' : '216px'};
   height: 100%;
   background-color: ${(props) => props.color};
@@ -21,7 +21,6 @@ const Wrapper = styled.div`
     padding: ${(props) => props.isCollapsed ? '0px' : '5px'};
     border-radius: ${(props) => props.isCollapsed ? '0px' : '8px'};
   }
-  display: inline-flex;
 `;
 
 const Span = styled.div`

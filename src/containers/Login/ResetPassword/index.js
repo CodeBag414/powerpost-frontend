@@ -16,15 +16,10 @@ import {
 } from './selectors';
 
 const initialState = {
-  password: {
-    value: '',
-    error: '',
-  },
-  confirmPassword: {
-    value: '',
-    error: '',
-  },
-  error: null,
+  password: '',
+  confirmPassword: '',
+  dirty: false,
+  error: 'Please enter password details',
 };
 class ResetPassword extends Component {
   static propTypes = {
@@ -40,6 +35,7 @@ class ResetPassword extends Component {
 
   onFormSubmit = (event) => {
     event.preventDefault();
+
     if (!this.state.error) {
       const { location: { query } } = this.props;
       const user = cookie.load('user');
@@ -50,43 +46,44 @@ class ResetPassword extends Component {
         apiKey: query.api_key,
       });
       this.setState(initialState);
+    } else {
+      this.setState({
+        dirty: true,
+      });
     }
   }
 
-  onFieldChange = (ev) => {
-    const { name, value } = ev.target;
+  onPasswordChange = (ev) => {
+    const { value } = ev.target;
     let error;
 
-    switch (name) {
-      case 'password':
-        if (value !== this.state.confirmPassword.value) {
-          error = 'Password does not match';
-        }
-        return this.setState({
-          password: {
-            value,
-          },
-          confirmPassword: {
-            value: this.state.confirmPassword.value,
-            error,
-          },
-          error,
-        });
-      case 'confirmPassword':
-        if (value !== this.state.password.value) {
-          error = 'Password does not match';
-        }
-        break;
-      default:
-        error = '';
+    if (value.trim() === '') {
+      error = 'Please enter password details';
     }
-
+    if (value !== this.state.confirmPassword) {
+      error = 'Password does not match';
+    }
     this.setState({
-      [name]: {
-        value,
-        error,
-      },
+      password: value,
       error,
+      dirty: true,
+    });
+  }
+
+  onConfirmPasswordChange = (ev) => {
+    const { value } = ev.target;
+    let error;
+
+    if (value.trim() === '') {
+      error = 'Please enter password details';
+    }
+    if (value !== this.state.password) {
+      error = 'Password does not match';
+    }
+    this.setState({
+      confirmPassword: value,
+      error,
+      dirty: true,
     });
   }
 
@@ -100,18 +97,17 @@ class ResetPassword extends Component {
             name="password"
             hintText="Password"
             floatingLabelText="New Password"
-            value={this.state.password.value}
-            errorText={this.state.password.error}
-            onChange={this.onFieldChange}
+            value={this.state.password}
+            onChange={this.onPasswordChange}
           />
           <PPTextField
             type="password"
             name="confirmPassword"
             hintText="Re-enter Password"
             floatingLabelText="Confirm New Password"
-            value={this.state.confirmPassword.value}
-            errorText={this.state.confirmPassword.error}
-            onChange={this.onFieldChange}
+            value={this.state.confirmPassword}
+            errorText={this.state.dirty && this.state.error}
+            onChange={this.onConfirmPasswordChange}
           />
 
           <Center style={{ marginTop: '30px' }}><PPButton type="submit" label="Reset Password" primary disabled={!!this.state.error} /></Center>

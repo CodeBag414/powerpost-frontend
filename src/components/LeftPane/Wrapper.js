@@ -11,4 +11,9 @@ export default styled.div`
   background-size: cover;
   color: white;
   padding: 40px;
+  overflow-y: auto;
+
+  & > div {
+    min-height: 600px;
+  }
 `;

@@ -72,6 +72,7 @@ class PaymentForm extends Component {
         error: '',
       },
       couponViewType: 0,
+      hasError: true,
     };
   }
 
@@ -98,6 +99,10 @@ class PaymentForm extends Component {
   onFormSubmit = (event) => {
     event.preventDefault();
 
+    if (this.state.hasError) {
+      return;
+    }
+
     Stripe.card.createToken({
       number: this.state.cardNumber.value,
       cvc: this.state.cvc.value,
@@ -117,10 +122,34 @@ class PaymentForm extends Component {
 
   onFieldChange = (event) => {
     const { name, value } = event.target;
+    let error;
+    let hasError = false;
+
+    switch (name) {
+      case 'nameOnCard':
+        if (value.trim() === '') {
+          error = 'Please, enter Name on Card';
+        }
+        break;
+      case 'cvc':
+        if (value.trim() === '') {
+          error = 'Enter CVC';
+        }
+        break;
+      default:
+        break;
+    }
+
+    if (!this.state.nameOnCard.value.trim() || !this.state.cvc.value.trim()) {
+      hasError = true;
+    }
+
     this.setState({
       [name]: {
         value,
+        error,
       },
+      hasError,
     });
   }
 

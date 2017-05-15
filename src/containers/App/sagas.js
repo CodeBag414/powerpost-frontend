@@ -5,15 +5,16 @@
 // Sagas help us gather all our side effects (network requests in this case) in one place
 /* eslint-disable camelcase */
 
-import { take, call, put, race, select } from 'redux-saga/effects';
-import { delay } from 'redux-saga';
+import { takeLatest, delay } from 'redux-saga';
+import { take, call, put, race, select, cancel } from 'redux-saga/effects';
+import { LOCATION_CHANGE } from 'react-router-redux';
 import { browserHistory } from 'react-router';
-
+import { toastr } from 'lib/react-redux-toastr';
+import { getData, postData, putData } from 'utils/request';
 import auth from 'utils/auth';
 import { set } from 'utils/localStorage';
+import { makeSelectCurrentAccount } from 'containers/Main/selectors';
 import { makeSelectUser } from './selectors';
-import { toastr } from 'lib/react-redux-toastr';
-import { getData, postData } from 'utils/request';
 
 import {
   SENDING_REQUEST,
@@ -38,6 +39,12 @@ import {
   INVITE_EMAIL_TO_GROUP,
   ADD_USER_TO_GROUP,
   REMOVE_USER_FROM_GROUP,
+  SET_POST_SETS,
+  FETCH_POST_SETS,
+  DELETE_POST_SET_REQUEST,
+  DELETE_POST_SET,
+  CHANGE_POST_SET_REQUEST,
+  CHANGE_POST_SET_STATUS,
 } from './constants';
 
 import {
@@ -47,6 +54,7 @@ import {
   applyCouponError,
   postSubscriptionSuccess,
   postSubscriptionError,
+  fetchCurrentPlanSuccess,
   fetchCurrentPlanError,
   fetchPaymentSourcesSuccess,
   fetchPaymentSourcesError,
@@ -161,9 +169,9 @@ export function* logout() {
  * Log in saga
  */
 export function* loginFlow() {
-  // Because sagas are generators, doing `while (true)` doesn't block our program
+  // Because sagas are generators, doing `for (;;)` doesn't block our program
   // Basically here we say "this saga is always listening for actions"
-  while (true) {
+  for (;;) {
     // And we're listening for `LOGIN_REQUEST` actions and destructuring its payload
     const request = yield take(LOGIN_REQUEST);
     const { email, password } = request.data;
@@ -204,7 +212,7 @@ export function* loginFlow() {
  * as a saga that is always listening to `LOGOUT` actions
  */
 export function* logoutFlow() {
-  while (true) {
+  for (;;) {
     yield take(LOGOUT);
     yield put({ type: SET_AUTH, newAuthState: false });
 
@@ -222,7 +230,7 @@ export function* logoutFlow() {
  * Very similar to log in saga!
  */
 export function* registerFlow() {
-  while (true) {
+  for (;;) {
     // We always listen to `REGISTER_REQUEST` actions
     const request = yield take(REGISTER_REQUEST);
     const { name, password, email, properties, token } = request.data;
@@ -249,7 +257,7 @@ export function* registerFlow() {
  * Very similar to register saga!
  */
 export function* updateFlow() {
-  while (true) {
+  for (;;) {
     // We always listen to `REGISTER_REQUEST` actions
     const request = yield take(UPDATE_REQUEST);
     const data = request.data;
@@ -269,7 +277,7 @@ export function* updateFlow() {
 }
 
 export function* userExistsFlow() {
-  while (true) {
+  for (;;) {
     yield take(CHECK_USER_OBJECT);
     const user = yield select(makeSelectUser());
     if (!user.user_id) {
@@ -280,7 +288,7 @@ export function* userExistsFlow() {
 }
 
 export function* getUserFlow() {
-  while (true) {
+  for (;;) {
     yield take(GET_USER);
 
     const currentUser = yield call(auth.getCurrentUser);
@@ -289,7 +297,7 @@ export function* getUserFlow() {
 }
 
 export function* createPaymentSourceFlow() {
-  while (true) {
+  for (;;) {
     const { payload } = yield take(CREATE_PAYMENT_SOURCE);
 
     try {
@@ -307,7 +315,7 @@ export function* createPaymentSourceFlow() {
 }
 
 export function* applyCouponFlow() {
-  while (true) {
+  for (;;) {
     const { payload } = yield take(APPLY_COUPON);
     if (!payload) {   // remove coupon
       yield put(applyCouponSuccess(null));
@@ -330,7 +338,7 @@ export function* applyCouponFlow() {
 }
 
 export function* postSubscriptionFlow() {
-  while (true) {
+  for (;;) {
     const { payload } = yield take(POST_SUBSCRIPTION);
 
     try {
@@ -349,7 +357,7 @@ export function* postSubscriptionFlow() {
 }
 
 function* fetchCurrentPlanLoop(accountId, selectedPlan) {
-  while (true) {
+  for (;;) {
     const response = yield call(getData, `/payment_api/plan/${accountId}`);
     const { data: { plan_id } = {} } = response;
 
@@ -361,7 +369,7 @@ function* fetchCurrentPlanLoop(accountId, selectedPlan) {
 }
 
 export function* fetchCurrentPlanFlow() {
-  while (true) {
+  for (;;) {
     const { payload: { accountId, selectedPlan } } = yield take(FETCH_CURRENT_PLAN);
 
     try {
@@ -371,7 +379,7 @@ export function* fetchCurrentPlanFlow() {
       });
 
       if (currentPlan) {
-        browserHistory.push('/');
+        yield put(fetchCurrentPlanSuccess({}));
       } else {
         yield put(fetchCurrentPlanError('Timeout'));
       }
@@ -382,7 +390,7 @@ export function* fetchCurrentPlanFlow() {
 }
 
 export function* fetchPaymentSourcesFlow() {
-  while (true) {
+  for (;;) {
     const { payload: { accountId } } = yield take(FETCH_PAYMENT_SOURCES);
 
     try {
@@ -400,7 +408,7 @@ export function* fetchPaymentSourcesFlow() {
 }
 
 export function* fetchPaymentHistoryFlow() {
-  while (true) {
+  for (;;) {
     const { payload: { accountId } } = yield take(FETCH_PAYMENT_HISTORY);
 
     try {
@@ -418,7 +426,7 @@ export function* fetchPaymentHistoryFlow() {
 }
 
 export function* fetchGroupUsersFlow() {
-  while (true) {
+  for (;;) {
     const { payload: { accountId } } = yield take(FETCH_GROUP_USERS);
 
     try {
@@ -435,7 +443,7 @@ export function* fetchGroupUsersFlow() {
 }
 
 export function* inviteEmailToGroupFlow() {
-  while (true) {
+  for (;;) {
     const { payload } = yield take(INVITE_EMAIL_TO_GROUP);
 
     try {
@@ -456,7 +464,7 @@ export function* inviteEmailToGroupFlow() {
 }
 
 export function* addUserToGroupFlow() {
-  while (true) {
+  for (;;) {
     const { payload } = yield take(ADD_USER_TO_GROUP);
 
     try {
@@ -476,7 +484,7 @@ export function* addUserToGroupFlow() {
 }
 
 export function* removeUserFromGroupFlow() {
-  while (true) {
+  for (;;) {
     const { payload } = yield take(REMOVE_USER_FROM_GROUP);
 
     try {
@@ -494,6 +502,95 @@ export function* removeUserFromGroupFlow() {
     }
   }
 }
+
+
+const serialize = function serialize(obj, prefix) {
+  const str = [];
+  let p;
+  for (p in obj) { // eslint-disable-line no-restricted-syntax
+    if (Object.prototype.hasOwnProperty.call(obj, p)) {
+      const k = prefix ? `${prefix}[${p}]` : p, v = obj[p]; // eslint-disable-line
+      str.push((v !== null && typeof v === 'object') ?
+        serialize(v, k) :
+        `${encodeURIComponent(k)}=${encodeURIComponent(v)}`);
+    }
+  }
+  return str.join('&');
+};
+
+export function* getPostSets() {
+  const currentAccount = yield select(makeSelectCurrentAccount());
+  const data = {
+    payload: {
+      statuses: [1, 2, 3, 4, 5, 6],
+    },
+  };
+  const params = serialize(data);
+  const requestUrl = `/post_api/post_sets/${currentAccount.account_id}?${params}`;
+  const result = yield call(getData, requestUrl);
+
+  if (result.data.status === 'success') {
+    const postSets = result.data.post_sets;
+    yield put({ type: SET_POST_SETS, postSets });
+  } else {
+    // console.log(result);
+  }
+}
+
+export function* deletePostSetRequest(payload) {
+  const requestData = {
+    payload: {
+      status: '0',
+    },
+  };
+  const requestUrl = `/post_api/post_set/${payload.id}?`;
+  try {
+    const response = yield call(putData, requestUrl, requestData);
+    const { data } = response;
+    if (data.status === 'success') {
+      yield put({ type: DELETE_POST_SET, id: payload.id });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function* changePostSetRequest(payload) {
+  const requestData = {
+    payload: {
+      status: payload.status,
+    },
+  };
+  const requestUrl = `/post_api/post_set/${payload.id}?`;
+  try {
+    const response = yield call(putData, requestUrl, requestData);
+    const { data } = response;
+    if (data.status === 'success') {
+      yield put({ type: CHANGE_POST_SET_STATUS, id: payload.id, status: payload.status });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function* fetchPostSets() {
+  const watcher = yield takeLatest(FETCH_POST_SETS, getPostSets);
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
+export function* deletePostSet() {
+  const watcher = yield takeLatest(DELETE_POST_SET_REQUEST, deletePostSetRequest);
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
+export function* changePostSetStatus() {
+  const watcher = yield takeLatest(CHANGE_POST_SET_REQUEST, changePostSetRequest);
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
 
 // The root saga is what we actually send to Redux's middleware. In here we fork
 // each saga so that they are all "active" and listening.
@@ -516,10 +613,12 @@ export default [
   inviteEmailToGroupFlow,
   addUserToGroupFlow,
   removeUserFromGroupFlow,
+  fetchPostSets,
+  deletePostSet,
+  changePostSetStatus,
 ];
 
 // Little helper function to abstract going to different pages
 export function* forwardTo(location) {
   yield call(browserHistory.push, location);
 }
-

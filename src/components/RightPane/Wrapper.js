@@ -10,4 +10,5 @@ export default styled.div`
   bottom: 0;
   right: 0;
   padding: 20px;
+  overflow-y: auto;
 `;

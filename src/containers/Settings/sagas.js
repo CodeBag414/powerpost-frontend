@@ -32,7 +32,7 @@ export function* fetchSubscriptionsWorker(action) {
 }
 
 export function* cancelSubscriptionSaga() {
-  while (true) {
+  for (;;) {
     const { payload: { accountId, planId } } = yield take(CANCEL_SUBSCRIPTION);
 
     try {

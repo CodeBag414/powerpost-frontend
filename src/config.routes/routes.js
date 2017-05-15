@@ -69,23 +69,24 @@ export function createRoutes(store, auth) {
           importModules.catch(errorLoading);
         },
       },
-      childRoutes: [{
-        path: '/user/settings',
-        name: 'user settings',
-        getComponent(nextState, cb) {
-          const importModules = Promise.all([
-            System.import('containers/User'),
-          ]);
+      childRoutes: [
+        {
+          path: '/user/settings',
+          name: 'user settings',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/User'),
+            ]);
 
-          const renderRoute = loadModule(cb);
+            const renderRoute = loadModule(cb);
 
-          importModules.then(([component]) => {
-            renderRoute(component);
-          });
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
 
-          importModules.catch(errorLoading);
+            importModules.catch(errorLoading);
+          },
         },
-      },
         {
           path: '/forbidden',
           name: 'No Access',
@@ -304,25 +305,26 @@ export function createRoutes(store, auth) {
             importModules.catch(errorLoading);
           },
           indexRoute: { onEnter: (nextState, replace) => replace(`/account/${nextState.params.account_id}/settings/profile`) },
-          childRoutes: [{
-            path: '/account(/:account_id)/settings/connections',
-            name: 'connections',
-            getComponent(nextstate, cb) {
-              const importModules = Promise.all([
-                System.import('containers/Settings/Connections/reducer'),
-                System.import('containers/Settings/Connections/sagas'),
-                System.import('containers/Settings/Connections'),
-              ]);
+          childRoutes: [
+            {
+              path: '/account(/:account_id)/settings/connections',
+              name: 'connections',
+              getComponent(nextstate, cb) {
+                const importModules = Promise.all([
+                  System.import('containers/Settings/Connections/reducer'),
+                  System.import('containers/Settings/Connections/sagas'),
+                  System.import('containers/Settings/Connections'),
+                ]);
 
-              const renderRoute = loadModule(cb);
+                const renderRoute = loadModule(cb);
 
-              importModules.then(([reducer, sagas, component]) => {
-                injectReducer('connections', reducer.default);
-                injectSagas(sagas.default);
-                renderRoute(component);
-              });
+                importModules.then(([reducer, sagas, component]) => {
+                  injectReducer('connections', reducer.default);
+                  injectSagas(sagas.default);
+                  renderRoute(component);
+                });
+              },
             },
-          },
             {
               path: '/account(/:account_id)/settings/profile',
               name: 'Profile',
@@ -374,6 +376,76 @@ export function createRoutes(store, auth) {
                 });
 
                 importModules.catch(errorLoading);
+              },
+            },
+          ],
+        },
+        {
+          path: '/account(/:account_id)/postset/(:postset_id)',
+          name: 'post editor',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              // System.import('containers/PostEditor'),
+              // System.import('containers/PostEditor'),
+              System.import('containers/PostEditor'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            // importModules.then(([reducer, sagas, component]) => {
+            importModules.then(([component]) => {
+              // injectReducer('content', reducer.default);
+              // injectSagas(sagas.default);
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+          indexRoute: { onEnter: (nextState, replace) => replace(`/account/${nextState.params.account_id}/postset/${nextState.params.postset_id}/content`) },
+          childRoutes: [
+            {
+              path: '/account(/:account_id)/postset(/:postset_id)/content',
+              name: 'content',
+              getComponent(nextstate, cb) {
+                const importModules = Promise.all([
+                  System.import('containers/PostEditor/Content'),
+                ]);
+
+                const renderRoute = loadModule(cb);
+
+                importModules.then(([component]) => {
+                  renderRoute(component);
+                });
+              },
+            },
+            {
+              path: '/account(/:account_id)/postset(/:postset_id)/channels',
+              name: 'channels & times',
+              getComponent(nextstate, cb) {
+                const importModules = Promise.all([
+                  System.import('containers/PostEditor/Channels'),
+                ]);
+
+                const renderRoute = loadModule(cb);
+
+                importModules.then(([component]) => {
+                  renderRoute(component);
+                });
+              },
+            },
+            {
+              path: '/account(/:account_id)/postset(/:postset_id)/streams',
+              name: 'channels & times',
+              getComponent(nextstate, cb) {
+                const importModules = Promise.all([
+                  System.import('containers/PostEditor/SharedStreams'),
+                ]);
+
+                const renderRoute = loadModule(cb);
+
+                importModules.then(([component]) => {
+                  renderRoute(component);
+                });
               },
             },
           ],
@@ -481,7 +553,7 @@ export function createRoutes(store, auth) {
 
         importModules.catch(errorLoading);
       },
-      indexRoute: { onEnter: (nextState, replace) => replace('/signup/account') },
+      indexRoute: { onEnter: (nextState, replace) => replace('/signup/account?plan_id=PP01-MULTIBRAND01-MO') },
       childRoutes: [
         {
           path: 'account',
