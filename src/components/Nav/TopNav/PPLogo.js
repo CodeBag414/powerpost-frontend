@@ -4,7 +4,13 @@ import {Link} from 'react-router';
 
 import Logo from './CornerNavLogo.png';
 
-const Wrapper = styled(Link)`
+const CustomLink = ({isAccountPath, ...rest}) => (
+  <Link {...rest}>
+    {rest.children}
+  </Link>
+);
+
+const Wrapper = styled(CustomLink)`
   display: ${(props) => props.isAccountPath ? 'none' : 'block'};
   width: 60px;
   height: 100%;

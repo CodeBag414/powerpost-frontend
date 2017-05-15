@@ -59,7 +59,13 @@ const Collapser = styled(Collapse)`
 const ReactRouterMenuItem = withReactRouter(PPMenuItem);
 const ReactRouterMenuItemWithTooltip = PPTooltip(ReactRouterMenuItem);
 
-const LinkWithTooltip = PPTooltip(Link);
+const CustomLink = ({theme, isAccountPath, ...rest}) => (
+  <Link {...rest} >
+    {rest.children}
+  </Link>
+);
+
+const LinkWithTooltip = PPTooltip(CustomLink);
 
 class Sidebar extends React.Component {
   constructor(props) {
