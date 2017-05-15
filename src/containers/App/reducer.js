@@ -3,6 +3,7 @@
  */
 import { fromJS } from 'immutable';
 import { find, remove } from 'lodash';
+import auth from 'utils/auth';
 
 import {
   SET_AUTH,
@@ -40,9 +41,10 @@ import {
   REMOVE_USER_FROM_GROUP,
   REMOVE_USER_FROM_GROUP_SUCCESS,
   REMOVE_USER_FROM_GROUP_ERROR,
+  SET_POST_SETS,
+  DELETE_POST_SET,
+  CHANGE_POST_SET_STATUS,
 } from './constants';
-
-import auth from 'utils/auth';
 
 // The initial application state
 const initialState = fromJS({
@@ -62,6 +64,7 @@ const initialState = fromJS({
   paymentHistory: {},
   groupUsers: {},
   inviteEmailToGroup: {},
+  postSets: [],
 });
 
 // Takes care of changing the application state
@@ -261,6 +264,17 @@ function globalReducer(state = initialState, action) {
       return state
         .set('groupUsers', { ...groupUsers });
     }
+    case SET_POST_SETS:
+      return state
+        .set('postSets', fromJS(action.postSets));
+    case DELETE_POST_SET:
+      return state
+        .updateIn(['postSets'], (postSets) => postSets.filter((postSet) => postSet.get('post_set_id') !== action.id));
+    case CHANGE_POST_SET_STATUS:
+      return state
+        .updateIn(['postSets'], (postSets) => postSets.map((postSet) =>
+          postSet.get('post_set_id') !== action.id ? postSet : postSet.set('status', action.status)
+        ));
     default:
       return state;
   }

@@ -12,8 +12,8 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import { UserCanBoard } from 'config.routes/UserRoutePermissions';
 
 import PostSetsGroup from './PostSetsGroup';
-import { getPostSets, deletePostSetRequest, changePostSetStatusRequest } from './actions';
-import { makeSelectPostSets } from './selectors';
+import { getPostSets, deletePostSetRequest, changePostSetStatusRequest } from '../App/actions';
+import { makeSelectPostSets } from '../App/selectors';
 import styles from './styles.scss';
 
 class Board extends React.Component {

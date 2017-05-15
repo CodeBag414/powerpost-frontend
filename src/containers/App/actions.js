@@ -38,6 +38,10 @@ import {
   REMOVE_USER_FROM_GROUP,
   REMOVE_USER_FROM_GROUP_SUCCESS,
   REMOVE_USER_FROM_GROUP_ERROR,
+  FETCH_POST_SETS,
+  SET_POST_SETS,
+  DELETE_POST_SET_REQUEST,
+  CHANGE_POST_SET_REQUEST,
   // CHECK_USER_OBJECT,
 } from './constants';
 
@@ -325,4 +329,20 @@ export function removeUserFromGroupError(payload) {
     type: REMOVE_USER_FROM_GROUP_ERROR,
     payload,
   };
+}
+
+export function getPostSets() {
+  return { type: FETCH_POST_SETS };
+}
+
+export function setPostSets(postSets) {
+  return { type: SET_POST_SETS, postSets };
+}
+
+export function deletePostSetRequest(id) {
+  return { type: DELETE_POST_SET_REQUEST, id };
+}
+
+export function changePostSetStatusRequest(id, status) {
+  return { type: CHANGE_POST_SET_REQUEST, id, status };
 }
