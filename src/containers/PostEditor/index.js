@@ -20,20 +20,24 @@ class PostEdtior extends Component {
       account_id: PropTypes.string,
       postset_id: PropTypes.string,
     }).isRequired,
+    children: PropTypes.node,
   };
 
   static defaultProps = {
   };
 
   render() {
-    const { params } = this.props;
+    const { params, children } = this.props;
     return (
       <Wrapper>
-        <GeneralInfo />
-        <div>
-          <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/content`} label="Content" />
-          <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/channels`} label="Channels & Times" />
-          <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/streams`} label="Shared Streams" />
+        <div className="main">
+          <GeneralInfo />
+          <div>
+            <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/content`} label="Content" />
+            <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/channels`} label="Channels & Times" />
+            <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/streams`} label="Shared Streams" />
+          </div>
+          {children}
         </div>
         <div style={{ width: '200px' }}>
           <UserAssignment />
