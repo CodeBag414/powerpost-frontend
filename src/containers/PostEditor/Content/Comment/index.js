@@ -14,7 +14,11 @@ const getStyledComment = (comment) =>
     </span>
   );
 
-function Comment({ comment: { avatar, name, time, comment } }) {
+function Comment({ comment }) {
+  const avatar = comment.getIn(['user', 'properties', 'thumb_url']);
+  const name = comment.getIn(['user', 'display_name']);
+  const time = comment.getIn(['creation_time']);
+  const text = comment.getIn(['text']);
   return (
     <Wrapper>
       <img
@@ -27,7 +31,7 @@ function Comment({ comment: { avatar, name, time, comment } }) {
           <div className="name">{name}</div>
           <div className="time">{time}</div>
         </div>
-        <div className="comment">{getStyledComment(comment)}</div>
+        <div className="comment">{getStyledComment(text)}</div>
       </div>
     </Wrapper>
   );
