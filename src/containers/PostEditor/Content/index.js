@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import { postCommentRequest } from 'containers/PostEditor/actions';
-import { makeSelectComments } from 'containers/PostEditor/selectors';
+import { postCommentRequest, deleteCommentRequest } from 'containers/PostEditor/actions';
+import { makeSelectComments, makeSelectInProgress } from 'containers/PostEditor/selectors';
 import { makeSelectUser } from 'containers/App/selectors';
 import Comments from './Comments';
 import Comment from './Comment';
@@ -32,9 +32,11 @@ class Content extends Component {
 
   static propTypes = {
     postComment: PropTypes.func,
+    deleteComment: PropTypes.func,
     comments: ImmutablePropTypes.list,
     params: PropTypes.shape(),
     user: PropTypes.shape(),
+    pending: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -42,15 +44,20 @@ class Content extends Component {
   };
 
   render() {
-    const { postComment, comments, user } = this.props;
+    const { postComment, deleteComment, comments, user, pending } = this.props;
     const { params: { postset_id } } = this.props;
     return (
-      <Wrapper>
+      <Wrapper pending={pending}>
         <Comments />
         <CommentInput user={user} postComment={(text) => postComment(postset_id, text)} />
         {
           comments.map((comment) =>
-            <Comment key={comment.get('comment_id')} comment={comment} />
+            <Comment
+              key={comment.get('comment_id')}
+              comment={comment}
+              removable={user.user_id === comment.getIn(['user', 'user_id'])}
+              remove={deleteComment}
+            />
           )
         }
       </Wrapper>
@@ -61,12 +68,14 @@ class Content extends Component {
 export function mapDispatchToProps(dispatch) {
   return {
     postComment: (postSetId, text) => dispatch(postCommentRequest({ postSetId, text })),
+    deleteComment: (commentId) => dispatch(deleteCommentRequest(commentId)),
   };
 }
 
 const mapStateToProps = createStructuredSelector({
   comments: makeSelectComments(),
   user: makeSelectUser(),
+  pending: makeSelectInProgress(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Content);

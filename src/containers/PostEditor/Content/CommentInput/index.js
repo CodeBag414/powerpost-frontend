@@ -11,6 +11,7 @@ function CommentInput({ postComment, user }) {
     if (code === 13 && inputTarget) {
       postComment(inputTarget.value);
       inputTarget.value = '';
+      inputTarget.blur();
     }
   };
 

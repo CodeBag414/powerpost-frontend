@@ -38,6 +38,17 @@ const Wrapper = styled.div`
     border-radius: 4px;
     margin-top: 3px;
   }
+  .ellipsis {
+    float: right;
+    display: inline-block;
+    font-size: 16px;
+    color: #888888;
+    cursor: pointer;
+    position: relative;
+    &:hover {
+      color: #666666;
+    }
+  }
 `;
 
 export default Wrapper;
