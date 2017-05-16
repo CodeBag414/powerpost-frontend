@@ -67,7 +67,7 @@ class UserAssignment extends Component {
           </div>
         </div>
         { userListVisible &&
-          <Popup>
+          <Popup top={45}>
             <AssignBox
               users={adminsOrEditors}
               assignee={assignee}
