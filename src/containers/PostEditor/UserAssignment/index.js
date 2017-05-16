@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import enhanceWithClickOutside from 'react-click-outside';
 import { Map } from 'immutable';
+import { filter } from 'lodash';
 
 import Popup from 'components/Popup';
 import Avatar from 'elements/atm.Avatar';
@@ -50,22 +51,25 @@ class UserAssignment extends Component {
     const { userListVisible } = this.state;
     const { assignee, users } = this.props;
 
+    const adminsOrEditors = filter(users, (u) => u.title === 'admins' || u.title === 'editors');
+    const name = assignee.getIn(['user', 'display_name']);
+
     return (
       <Wrapper>
         <div className="assignee-wrapper" onClick={this.toggleUserList}>
           { assignee.get('user_id') ?
-            <Avatar image={''} title={'Bruno'} backgroundColor="green" size={40} isClickable={false} /> :
+            <Avatar image={assignee.getIn(['user', 'properties', 'thumb_url'])} title={name} backgroundColor="green" size={40} isClickable={false} /> :
             <i className="fa fa-user" />
           }
           <div className="right-box">
             <div className="assigned-to">Assigned To</div>
-            <div className="name">{assignee.getIn(['user', 'display_name']) || 'Unassigned'}</div>
+            <div className="name">{name || 'Unassigned'}</div>
           </div>
         </div>
         { userListVisible &&
           <Popup>
             <AssignBox
-              users={users}
+              users={adminsOrEditors}
               assignee={assignee}
               handleAssignUser={this.handleAssignUser}
             />
