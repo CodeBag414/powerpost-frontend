@@ -4,6 +4,9 @@ import {
   FETCH_POST_SET_REQUEST,
   FETCH_POST_SET_SUCCESS,
   FETCH_POST_SET_ERROR,
+  UPDATE_POST_SET_REQUEST,
+  UPDATE_POST_SET_SUCCESS,
+  UPDATE_POST_SET_ERROR,
 } from '_common/constants';
 
 import {
@@ -18,9 +21,9 @@ import {
 const initialState = fromJS({
   comments: [],
   postSet: {
-    fetching: false,
+    isFetching: false,
     error: null,
-    data: {},
+    details: {},
   },
   pending: false,
 });
@@ -51,20 +54,37 @@ function boardReducer(state = initialState, action) {
         .updateIn(['comments'], (comments) => comments.filter((comment) => comment.get('comment_id') !== action.commentId));
     case FETCH_POST_SET_REQUEST:
       return state
-        .setIn(['postSet', 'fetching'], true);
+        .setIn(['postSet', 'isFetching'], true);
     case FETCH_POST_SET_SUCCESS:
       return state
         .set('postSet', fromJS({
-          fetching: false,
+          isFetching: false,
           error: null,
-          data: action.payload,
+          details: action.payload,
         }));
     case FETCH_POST_SET_ERROR:
       return state
         .set('postSet', fromJS({
-          fetching: false,
+          isFetching: false,
           error: action.payload,
-          data: {},
+          details: {},
+        }));
+    case UPDATE_POST_SET_REQUEST:
+      return state
+        .setIn(['postSet', 'isFetching'], true);
+    case UPDATE_POST_SET_SUCCESS:
+      return state
+        .set('postSet', fromJS({
+          isFetching: false,
+          error: null,
+          details: action.payload,
+        }));
+    case UPDATE_POST_SET_ERROR:
+      return state
+        .set('postSet', fromJS({
+          isFetching: false,
+          error: action.payload,
+          details: {},
         }));
     default: return state;
   }
