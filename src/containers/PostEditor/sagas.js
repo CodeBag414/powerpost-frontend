@@ -1,6 +1,7 @@
 import { takeLatest } from 'redux-saga';
 import { take, call, put, cancel, select } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
+import moment from 'moment';
 import { makeSelectUser } from 'containers/App/selectors';
 
 import {
@@ -19,7 +20,7 @@ export function* getComments(payload) {
   const requestUrl = `/post_api/comments/${payload.postSetId}`;
   const result = yield call(getData, requestUrl);
   if (result.data.result === 'success') {
-    const comments = result.data.comments;
+    const comments = result.data.comments.sort((a, b) => a.creation_time - b.creation_time);
     yield put({ type: SET_COMMENTS, comments });
   } else {
     // console.log(result);
@@ -44,6 +45,7 @@ export function* postCommentRequest(payload) {
         comment: {
           ...data.payload,
           comment_id: data.comment_id,
+          creation_time: moment().unix(),
           user: {
             properties: currentUser.properties,
             display_name: currentUser.display_name,
