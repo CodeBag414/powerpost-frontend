@@ -61,7 +61,7 @@ class PostEditor extends Component {
     const { params, children, user, postSet } = this.props;
     return (
       <Wrapper>
-        <GeneralInfo user={user} postSet={postSet} />
+        <GeneralInfo user={user} postSet={postSet.get('details').toJS()} />
         <div>
           <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/content`} label="Content" />
           <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/channels`} label="Channels & Times" count={0} />
