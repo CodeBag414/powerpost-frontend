@@ -1,5 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import enhanceWithClickOutside from 'react-click-outside';
+import { Map } from 'immutable';
 
 import Popup from 'components/Popup';
 import Avatar from 'elements/atm.Avatar';
@@ -9,12 +11,15 @@ import Wrapper from './Wrapper';
 
 class UserAssignment extends Component {
   static propTypes = {
+    isFetching: PropTypes.bool,
+    postSet: PropTypes.object,
     assignee: PropTypes.object,
     users: PropTypes.array,
+    updatePostSet: PropTypes.func,
   }
 
   static defaultProps = {
-    assignee: {},
+    assignee: new Map(),
   }
 
   state = {
@@ -25,8 +30,13 @@ class UserAssignment extends Component {
     this.toggleUserList(false);
   }
 
-  handleAssignUser = () => {
-    // api call
+  handleAssignUser = (userId) => {
+    const { postSet } = this.props;
+    this.props.updatePostSet({
+      ...postSet,
+      id: postSet.post_set_id,
+      user_assignments: [userId],
+    });
     this.toggleUserList(false);
   }
 
@@ -38,18 +48,18 @@ class UserAssignment extends Component {
 
   render() {
     const { userListVisible } = this.state;
-    const { assignee, users = [{id: 3}, {id: 5}]} = this.props;
+    const { assignee, users } = this.props;
 
     return (
       <Wrapper>
         <div className="assignee-wrapper" onClick={this.toggleUserList}>
-          { assignee.id ?
+          { assignee.get('user_id') ?
             <Avatar image={''} title={'Bruno'} backgroundColor="green" size={40} isClickable={false} /> :
             <i className="fa fa-user" />
           }
           <div className="right-box">
             <div className="assigned-to">Assigned To</div>
-            <div className="name">{assignee.name || 'Unassigned'}</div>
+            <div className="name">{assignee.getIn(['user', 'display_name']) || 'Unassigned'}</div>
           </div>
         </div>
         { userListVisible &&

@@ -1,4 +1,6 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { get } from 'lodash';
 
 import Search from 'elements/atm.Search';
 
@@ -7,15 +9,15 @@ import UserItem from '../UserItem';
 
 class AssignBox extends Component {
   static propTypes = {
-    assignee: PropTypes.object,
-    users: PropTypes.array,
+    assignee: PropTypes.object, // Immutable Map
+    users: PropTypes.array, // Array of JS pure objects
     handleAssignUser: PropTypes.func,
   }
 
   handleSelectUser = (id) => {
     const { assignee, handleAssignUser } = this.props;
 
-    if (assignee.id === id) {
+    if (assignee.get('user_id') === id) {
       return;
     }
 
@@ -28,13 +30,13 @@ class AssignBox extends Component {
     return (
       <Wrapper>
         <Search placeholder="hey" />
-        { users.map((u, index) => (
+        { users.map((u) => (
           <UserItem
-            key={index}
-            avatarUrl={''}
-            name='Bruno'
-            selected={u.id === assignee.id}
-            onClick={() => this.handleSelectUser(u.id)}
+            key={u.user_id}
+            avatarUrl={get(u, 'user.properties.thumb_url')}
+            name={u.display_name}
+            selected={u.user_id === assignee.get('user_id')}
+            onClick={() => this.handleSelectUser(u.user_id)}
           />
           ))
         }

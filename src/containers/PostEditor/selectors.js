@@ -12,7 +12,13 @@ const makeSelectInProgress = () => createSelector(
   (postSetEditor) => postSetEditor.get('pending'),
 );
 
+const selectPostSet = () => createSelector(
+  selectPostSetEditor,
+  (postSetEditor) => postSetEditor.get('postSet'),
+);
+
 export {
   makeSelectComments,
   makeSelectInProgress,
+  selectPostSet,
 };

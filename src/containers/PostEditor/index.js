@@ -8,14 +8,26 @@ import { createStructuredSelector } from 'reselect';
 
 import {
   fetchPostSetRequest,
+  updatePostSetRequest,
 } from '_common/actions';
+import {
+  fetchGroupUsers,
+} from 'containers/App/actions';
 
 import { fetchComments } from 'containers/PostEditor/actions';
+
+import {
+  selectGroupUsers,
+} from 'containers/App/selectors';
 
 // FIXME: Should be changed to UserCanPostEdit
 import { UserCanPostSet } from 'config.routes/UserRoutePermissions';
 
 import TabLink from 'elements/atm.TabLink';
+
+import {
+  selectPostSet,
+} from './selectors';
 
 import Wrapper from './Wrapper';
 import GeneralInfo from './GeneralInfo';
@@ -25,6 +37,8 @@ import Tags from './Tags';
 class PostEdtior extends Component {
 
   static propTypes = {
+    postSet: PropTypes.object,
+    groupUsers: PropTypes.object,
     params: PropTypes.shape({
       account_id: PropTypes.string,
       postset_id: PropTypes.string,
@@ -32,21 +46,25 @@ class PostEdtior extends Component {
     children: PropTypes.node,
     getComments: PropTypes.func,
     fetchPostSet: PropTypes.func,
+    updatePostSet: PropTypes.func,
+    fetchGroupUsers: PropTypes.func,
   };
 
   static defaultProps = {
   };
 
   componentWillMount() {
-    const { params: { postset_id } } = this.props;
+    const { params: { account_id, postset_id } } = this.props;
     this.props.getComments(postset_id);
     this.props.fetchPostSet({
       id: postset_id,
     });
+    const payload = { accountId: account_id };
+    this.props.fetchGroupUsers(payload);
   }
 
   render() {
-    const { params, children } = this.props;
+    const { postSet, groupUsers, params, children, updatePostSet } = this.props;
     return (
       <Wrapper>
         <div className="main">
@@ -59,7 +77,13 @@ class PostEdtior extends Component {
           {children}
         </div>
         <div className="side">
-          <UserAssignment />
+          <UserAssignment
+            isFetching={groupUsers.isFetching || postSet.get('isFetching')}
+            postSet={postSet.get('details').toJS()}
+            assignee={postSet.getIn(['details', 'user_assignments', 0])}
+            users={groupUsers.details ? groupUsers.details.groups_users : []}
+            updatePostSet={updatePostSet}
+          />
           <Tags />
         </div>
       </Wrapper>
@@ -71,9 +95,14 @@ export function mapDispatchToProps(dispatch) {
   return {
     getComments: (postSetId) => dispatch(fetchComments(postSetId)),
     fetchPostSet: (payload) => dispatch(fetchPostSetRequest(payload)),
+    updatePostSet: (payload) => dispatch(updatePostSetRequest(payload)),
+    fetchGroupUsers: (payload) => dispatch(fetchGroupUsers(payload)),
   };
 }
 
-const mapStateToProps = createStructuredSelector({});
+const mapStateToProps = createStructuredSelector({
+  postSet: selectPostSet(),
+  groupUsers: selectGroupUsers(),
+});
 
 export default UserCanPostSet(connect(mapStateToProps, mapDispatchToProps)(PostEdtior));
