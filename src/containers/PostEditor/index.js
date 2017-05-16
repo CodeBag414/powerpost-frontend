@@ -20,6 +20,7 @@ import TabLink from 'elements/atm.TabLink';
 import Wrapper from './Wrapper';
 import GeneralInfo from './GeneralInfo';
 import UserAssignment from './UserAssignment';
+import Tags from './Tags';
 
 class PostEdtior extends Component {
 
@@ -57,8 +58,9 @@ class PostEdtior extends Component {
           </div>
           {children}
         </div>
-        <div style={{ width: '200px' }}>
+        <div className="side">
           <UserAssignment />
+          <Tags />
         </div>
       </Wrapper>
     );
