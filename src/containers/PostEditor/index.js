@@ -20,8 +20,7 @@ import {
   selectGroupUsers,
 } from 'containers/App/selectors';
 
-// FIXME: Should be changed to UserCanPostEdit
-import { UserCanPostSet } from 'config.routes/UserRoutePermissions';
+import { UserCanPostEdit } from 'config.routes/UserRoutePermissions';
 
 import TabLink from 'elements/atm.TabLink';
 
@@ -105,4 +104,4 @@ const mapStateToProps = createStructuredSelector({
   groupUsers: selectGroupUsers(),
 });
 
-export default UserCanPostSet(connect(mapStateToProps, mapDispatchToProps)(PostEdtior));
+export default UserCanPostEdit(connect(mapStateToProps, mapDispatchToProps)(PostEdtior));
