@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import Wrapper from './Wrapper';
 
 const getStyledComment = (comment) =>
@@ -17,7 +18,7 @@ const getStyledComment = (comment) =>
 function Comment({ comment }) {
   const avatar = comment.getIn(['user', 'properties', 'thumb_url']);
   const name = comment.getIn(['user', 'display_name']);
-  const time = comment.getIn(['creation_time']);
+  const time = moment(comment.getIn(['creation_time']) * 1000).fromNow();
   const text = comment.getIn(['text']);
   return (
     <Wrapper>
