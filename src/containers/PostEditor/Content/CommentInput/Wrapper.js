@@ -5,13 +5,18 @@ const Wrapper = styled.div`
   align-items: center;
   .input {
     flex: 1;
-    margin-left: 7px;
+    margin-left: -4px;
+    input {
+      height: 40px;
+      margin-top: -2px;
+    }
   }
   .avatar {
     width: 40px;
     height: 40px;
-    border: 1px solid #eeeeee;
-    border-radisu: 2px;
+    border-radius: 2px;
+    position: relative;
+    z-index: 100;
   }
 `;
 

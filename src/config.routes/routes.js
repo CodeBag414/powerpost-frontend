@@ -385,17 +385,16 @@ export function createRoutes(store, auth) {
           name: 'post editor',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
-              // System.import('containers/PostEditor'),
-              // System.import('containers/PostEditor'),
+              System.import('containers/PostEditor/reducer'),
+              System.import('containers/PostEditor/sagas'),
               System.import('containers/PostEditor'),
             ]);
 
             const renderRoute = loadModule(cb);
 
-            // importModules.then(([reducer, sagas, component]) => {
-            importModules.then(([component]) => {
-              // injectReducer('content', reducer.default);
-              // injectSagas(sagas.default);
+            importModules.then(([reducer, sagas, component]) => {
+              injectReducer('postEditor', reducer.default);
+              injectSagas(sagas.default);
               renderRoute(component);
             });
 

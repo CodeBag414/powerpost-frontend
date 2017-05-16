@@ -3,6 +3,9 @@
  */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { fetchComments } from 'containers/PostEditor/actions';
 
 // FIXME: Should be changed to UserCanPostEdit
 import { UserCanPostSet } from 'config.routes/UserRoutePermissions';
@@ -21,10 +24,16 @@ class PostEdtior extends Component {
       postset_id: PropTypes.string,
     }).isRequired,
     children: PropTypes.node,
+    getComments: PropTypes.func,
   };
 
   static defaultProps = {
   };
+
+  componentWillMount() {
+    const { params: { postset_id } } = this.props;
+    this.props.getComments(postset_id);
+  }
 
   render() {
     const { params, children } = this.props;
@@ -47,4 +56,12 @@ class PostEdtior extends Component {
   }
 }
 
-export default UserCanPostSet(PostEdtior);
+export function mapDispatchToProps(dispatch) {
+  return {
+    getComments: (postSetId) => dispatch(fetchComments(postSetId)),
+  };
+}
+
+const mapStateToProps = createStructuredSelector({});
+
+export default UserCanPostSet(connect(mapStateToProps, mapDispatchToProps)(PostEdtior));
