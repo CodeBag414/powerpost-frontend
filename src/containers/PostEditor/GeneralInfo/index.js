@@ -1,8 +1,12 @@
 import React from 'react';
 
+import Wrapper from './Wrapper';
+
 function GeneralInfo() {
   return (
-    <div>General Info</div>
+    <Wrapper>
+      General Info
+    </Wrapper>
   );
 }
 
