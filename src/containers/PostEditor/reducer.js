@@ -1,6 +1,12 @@
 import { fromJS } from 'immutable';
 
 import {
+  FETCH_POST_SET_REQUEST,
+  FETCH_POST_SET_SUCCESS,
+  FETCH_POST_SET_ERROR,
+} from '_common/constants';
+
+import {
   POST_COMMENT_REQUEST,
   ADD_COMMENT,
   FETCH_COMMENTS_REQUEST,
@@ -11,6 +17,11 @@ import {
 
 const initialState = fromJS({
   comments: [],
+  postSet: {
+    fetching: false,
+    error: null,
+    data: {},
+  },
   pending: false,
 });
 
@@ -38,6 +49,23 @@ function boardReducer(state = initialState, action) {
       return state
         .set('pending', false)
         .updateIn(['comments'], (comments) => comments.filter((comment) => comment.get('comment_id') !== action.commentId));
+    case FETCH_POST_SET_REQUEST:
+      return state
+        .setIn(['postSet', 'fetching'], true);
+    case FETCH_POST_SET_SUCCESS:
+      return state
+        .set('postSet', fromJS({
+          fetching: false,
+          error: null,
+          data: action.payload,
+        }));
+    case FETCH_POST_SET_ERROR:
+      return state
+        .set('postSet', fromJS({
+          fetching: false,
+          error: action.payload,
+          data: {},
+        }));
     default: return state;
   }
 }

@@ -5,6 +5,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+
+import {
+  fetchPostSetRequest,
+} from '_common/actions';
+
 import { fetchComments } from 'containers/PostEditor/actions';
 
 // FIXME: Should be changed to UserCanPostEdit
@@ -25,6 +30,7 @@ class PostEdtior extends Component {
     }).isRequired,
     children: PropTypes.node,
     getComments: PropTypes.func,
+    fetchPostSet: PropTypes.func,
   };
 
   static defaultProps = {
@@ -33,6 +39,9 @@ class PostEdtior extends Component {
   componentWillMount() {
     const { params: { postset_id } } = this.props;
     this.props.getComments(postset_id);
+    this.props.fetchPostSet({
+      id: postset_id,
+    });
   }
 
   render() {
@@ -59,6 +68,7 @@ class PostEdtior extends Component {
 export function mapDispatchToProps(dispatch) {
   return {
     getComments: (postSetId) => dispatch(fetchComments(postSetId)),
+    fetchPostSet: (payload) => dispatch(fetchPostSetRequest(payload)),
   };
 }
 
