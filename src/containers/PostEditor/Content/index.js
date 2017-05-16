@@ -5,7 +5,6 @@ import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import {
-  fetchPostSetRequest,
   updatePostSetRequest,
 } from '_common/actions';
 
@@ -15,13 +14,8 @@ import {
 } from 'containers/App/selectors';
 
 import {
-  fetchGroupUsers,
-} from 'containers/App/actions';
-
-import {
   postCommentRequest,
   deleteCommentRequest,
-  fetchComments,
 } from 'containers/PostEditor/actions';
 
 import {
@@ -66,24 +60,12 @@ class Content extends Component {
     pending: PropTypes.bool,
     postSet: PropTypes.object,
     groupUsers: PropTypes.object,
-    getComments: PropTypes.func,
-    fetchPostSet: PropTypes.func,
     updatePostSet: PropTypes.func,
-    fetchGroupUsers: PropTypes.func,
   };
 
   static defaultProps = {
     params: {},
   };
-  componentWillMount() {
-    const { params: { account_id, postset_id } } = this.props;
-    this.props.getComments(postset_id);
-    this.props.fetchPostSet({
-      id: postset_id,
-    });
-    const payload = { accountId: account_id };
-    this.props.fetchGroupUsers(payload);
-  }
 
   render() {
     const { postComment, deleteComment, comments, user, pending, postSet, groupUsers, updatePostSet } = this.props;
@@ -120,10 +102,7 @@ class Content extends Component {
 export function mapDispatchToProps(dispatch) {
   return {
     postComment: (postSetId, text) => dispatch(postCommentRequest({ postSetId, text })),
-    getComments: (postSetId) => dispatch(fetchComments(postSetId)),
-    fetchPostSet: (payload) => dispatch(fetchPostSetRequest(payload)),
     deleteComment: (commentId) => dispatch(deleteCommentRequest(commentId)),
-    fetchGroupUsers: (payload) => dispatch(fetchGroupUsers(payload)),
     updatePostSet: (payload) => dispatch(updatePostSetRequest(payload)),
   };
 }
