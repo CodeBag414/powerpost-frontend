@@ -12,7 +12,8 @@ function pendingStyle({ pending }) {
 
 const Wrapper = styled.div`
   ${pendingStyle};
-  padding: 20px 10px;
+  margin-top: 27px;
+  width: 50%;
 `;
 
 export default Wrapper;
