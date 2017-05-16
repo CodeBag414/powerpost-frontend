@@ -58,7 +58,7 @@ class PostEdtior extends Component {
           </div>
           {children}
         </div>
-        <div style={{ width: '300px' }}>
+        <div className="side">
           <UserAssignment />
           <Tags />
         </div>

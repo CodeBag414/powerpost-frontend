@@ -5,7 +5,7 @@ const Wrapper = styled.div`
   align-items: center;
   .input {
     flex: 1;
-    margin-left: -4px;
+    margin-left: 8px;
     input {
       height: 40px;
       margin-top: -2px;

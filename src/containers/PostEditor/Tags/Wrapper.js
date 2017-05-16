@@ -13,7 +13,8 @@ function expandedStyle({ expanded }) {
 }
 
 export default styled.div`
-  padding: 20px;
+  padding: 29px 24px;
+  border-top: 1px solid #DBDFE0;
   ${expandedStyle}
   .description {
     font-size: 11px;

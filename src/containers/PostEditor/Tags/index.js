@@ -23,6 +23,7 @@ class Tags extends Component {
       'TH-th': 'Thailand',
       'EN-gb': 'England',
       'EN-en': 'USA',
+      'new-tag': '+ Create New Tag',
     };
     const { tags } = this.state;
     tags.forEach((tag) => delete source[tag.id]);

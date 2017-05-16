@@ -5,10 +5,12 @@
 * i.e. Facebook, LinkedIn, Twitter, Pinterest
 */
 
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import moment from 'moment';
 import enhanceWithClickOutside from 'react-click-outside';
+import { browserHistory } from 'react-router';
 import { Draggable } from 'react-drag-and-drop';
 
 import DeletePostSetDialog from 'components/DeletePostSetDialog';
@@ -17,13 +19,13 @@ import MenuPopover from '../MenuPopover';
 import styles from './styles.scss';
 
 class PostSet extends Component {
-
   componentWillMount() {
     this.setState({ popOver: false, deleteConfirmPopup: false });
   }
 
-  hidePopover = () => {
-    this.setState({ popOver: false });
+  goToPostEditor = () => {
+    const { postSet } = this.props;
+    browserHistory.push(`/account/${postSet.get('account_id')}/postset/${postSet.get('post_set_id')}`);
   }
 
   showPopover = (e) => {
@@ -49,7 +51,7 @@ class PostSet extends Component {
     const title = postSet.get('title');
     const description = postSet.get('message');
     return (
-      <Draggable type="post_set" data={postSet.get('post_set_id')} className={styles.postSet} onClick={this.hidePopover}>
+      <Draggable type="post_set" data={postSet.get('post_set_id')} className={styles.postSet} onClick={this.goToPostEditor}>
         <div className={hasImage ? styles.image : styles.noImage} style={{ backgroundImage: `url(${imgSrc})` }}>
           { hasImage ? null : <i className="fa fa-picture-o" /> }
         </div>
