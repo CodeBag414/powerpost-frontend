@@ -7,6 +7,7 @@ import { makeSelectUser } from 'containers/App/selectors';
 import {
   getData,
   postData,
+  deleteData,
 } from 'utils/request';
 
 import {
@@ -14,6 +15,8 @@ import {
   ADD_COMMENT,
   FETCH_COMMENTS_REQUEST,
   SET_COMMENTS,
+  DELETE_COMMENT_REQUEST,
+  DELETE_COMMENT,
 } from './constants';
 
 export function* getComments(payload) {
@@ -47,11 +50,25 @@ export function* postCommentRequest(payload) {
           comment_id: data.comment_id,
           creation_time: moment().unix(),
           user: {
+            user_id: currentUser.user_id,
             properties: currentUser.properties,
             display_name: currentUser.display_name,
           },
         },
       });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function* deleteCommentRequest(payload) {
+  const requestUrl = `/post_api/comment/${payload.commentId}`;
+  try {
+    const response = yield call(deleteData, requestUrl);
+    const { data } = response;
+    if (data.result === 'success') {
+      yield put({ type: DELETE_COMMENT, commentId: payload.commentId });
     }
   } catch (error) {
     console.log(error);
@@ -70,7 +87,14 @@ export function* postComment() {
   yield cancel(watcher);
 }
 
+export function* deleteComment() {
+  const watcher = yield takeLatest(DELETE_COMMENT_REQUEST, deleteCommentRequest);
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
 export default [
   fetchComments,
   postComment,
+  deleteComment,
 ];

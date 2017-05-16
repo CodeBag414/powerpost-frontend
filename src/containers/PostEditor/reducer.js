@@ -5,6 +5,8 @@ import {
   ADD_COMMENT,
   FETCH_COMMENTS_REQUEST,
   SET_COMMENTS,
+  DELETE_COMMENT_REQUEST,
+  DELETE_COMMENT,
 } from './constants';
 
 const initialState = fromJS({
@@ -29,6 +31,13 @@ function boardReducer(state = initialState, action) {
       return state
         .set('pending', false)
         .set('comments', fromJS(action.comments));
+    case DELETE_COMMENT_REQUEST:
+      return state
+        .set('pending', true);
+    case DELETE_COMMENT:
+      return state
+        .set('pending', false)
+        .updateIn(['comments'], (comments) => comments.filter((comment) => comment.get('comment_id') !== action.commentId));
     default: return state;
   }
 }
