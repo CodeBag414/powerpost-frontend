@@ -29,11 +29,13 @@ class AssignBox extends Component {
 
     return (
       <Wrapper>
-        <Search placeholder="hey" />
+        <div className="search-wrapper">
+          <Search placeholder="hey" />
+        </div>
         { users.map((u) => (
           <UserItem
             key={u.user_id}
-            avatarUrl={get(u, 'user.properties.thumb_url')}
+            avatarUrl={get(u, 'properties.thumb_url')}
             name={u.display_name}
             selected={u.user_id === assignee.get('user_id')}
             onClick={() => this.handleSelectUser(u.user_id)}

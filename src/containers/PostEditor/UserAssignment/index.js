@@ -62,7 +62,7 @@ class UserAssignment extends Component {
             <i className="fa fa-user" />
           }
           <div className="right-box">
-            <div className="assigned-to">Assigned To</div>
+            <div className="assigned-to">Assigned to</div>
             <div className="name">{name || 'Unassigned'}</div>
           </div>
         </div>

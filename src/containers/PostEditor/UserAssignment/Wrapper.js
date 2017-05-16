@@ -5,10 +5,11 @@ export default styled.div`
 
   .assignee-wrapper {
     display: flex;
+    cursor: pointer;
   }
   .right-box {
     display: inline-block;
-    margin-left: 15px;
+    margin-left: 13px;
     .assigned-to {
       font-size: 1.3rem;
     }
