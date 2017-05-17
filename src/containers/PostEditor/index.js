@@ -47,6 +47,10 @@ class PostEditor extends Component {
     postSet: PropTypes.object,
   };
 
+  state = {
+    postTitle: '',
+  };
+
   componentWillMount() {
     const { params: { account_id, postset_id } } = this.props;
     this.props.getComments(postset_id);
@@ -57,11 +61,48 @@ class PostEditor extends Component {
     this.props.fetchGroupUsers(payload);
   }
 
+  componentWillReceiveProps({ postSet }) {
+    this.setState({ postTitle: postSet.getIn(['details', 'title']) });
+  }
+
+  handleTitleChange = (e) => {
+    this.setState({
+      postTitle: e.target.textContent,
+    });
+  }
+
+  handleTitleBlur = (e) => {
+    if (e.target.textContent === '') {
+      this.setState({
+        postTitle: 'Untitled Post',
+      });
+    }
+  }
+
+  handleTitleFocus = () => {
+  }
+
+  handleTitleKeyDown = (e) => {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      e.target.blur();
+    }
+  }
+
   render() {
     const { params, children, user, postSet } = this.props;
+    const { postTitle } = this.state;
     return (
       <Wrapper>
-        <GeneralInfo user={user} postSet={postSet.get('details').toJS()} />
+        <GeneralInfo
+          user={user}
+          postSet={postSet.get('details').toJS()}
+          postTitle={postTitle}
+          handleTitleChange={this.handleTitleChange}
+          handleTitleBlur={this.handleTitleBlur}
+          handleTitleFocus={this.handleTitleFocus}
+          handleTitleKeyDown={this.handleTitleKeyDown}
+        />
         <div>
           <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/content`} label="Content" />
           <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/channels`} label="Channels & Times" count={0} />

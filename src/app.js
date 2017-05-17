@@ -44,6 +44,20 @@ const history = syncHistoryWithStore(historyObj, store, {
 
 const rootRoute = createRoutes(store, auth);
 
+/* eslint-disable no-console */
+/* eslint-disable prefer-template */
+// This is for disabling the console warning due to a known issue of React
+console.error = (() => {
+  const error = console.error;
+  return (exception, ...args) => {
+    if ((exception + '').indexOf('Warning: A component is `contentEditable`') !== 0) {
+      error.apply(console, args);
+    }
+  };
+})();
+/* eslint-enable no-console */
+/* eslint-enable prefer-template */
+
 ReactDOM.render(
   <MuiThemeProvider>
     <ThemeProvider theme={PPTheme}>
