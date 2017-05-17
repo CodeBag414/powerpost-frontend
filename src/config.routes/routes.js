@@ -630,6 +630,25 @@ export function createRoutes(store, auth) {
         importModules.catch(errorLoading);
       },
     },
+    {
+      path: 'public-page',
+      name: 'publicPage',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          System.import('containers/PublicPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([component]) => {
+          // injectReducer('public', reducer.default);
+          // injectSagas(sagas.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
   ];
 
   return {
