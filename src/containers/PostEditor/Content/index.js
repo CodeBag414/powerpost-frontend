@@ -26,6 +26,7 @@ import {
 
 import Wrapper from './Wrapper';
 import Sidebar from './Sidebar';
+import MessageEditor from '../MessageEditor';
 import Comments from './Comments';
 import Comment from './Comment';
 import CommentInput from './CommentInput';
@@ -72,6 +73,7 @@ class Content extends Component {
     const { params: { postset_id } } = this.props;
     return (
       <Wrapper pending={pending}>
+        <MessageEditor />
         <Comments />
         <CommentInput user={user} postComment={(text) => postComment(postset_id, text)} />
         {
