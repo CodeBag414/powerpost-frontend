@@ -6,39 +6,35 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
+import { UserCanPostEdit } from 'config.routes/UserRoutePermissions';
+
 import {
   fetchPostSetRequest,
-  updatePostSetRequest,
 } from '_common/actions';
+
 import {
   fetchGroupUsers,
 } from 'containers/App/actions';
 
-import { fetchComments } from 'containers/PostEditor/actions';
-
 import {
-  selectGroupUsers,
+  makeSelectUser,
 } from 'containers/App/selectors';
 
-// FIXME: Should be changed to UserCanPostEdit
-import { UserCanPostSet } from 'config.routes/UserRoutePermissions';
-
-import TabLink from 'elements/atm.TabLink';
+import {
+  fetchComments,
+} from 'containers/PostEditor/actions';
 
 import {
   selectPostSet,
-} from './selectors';
+} from 'containers/PostEditor/selectors';
 
 import Wrapper from './Wrapper';
 import GeneralInfo from './GeneralInfo';
-import UserAssignment from './UserAssignment';
-import Tags from './Tags';
+import TabLink from './TabLink';
 
-class PostEdtior extends Component {
+class PostEditor extends Component {
 
   static propTypes = {
-    postSet: PropTypes.object,
-    groupUsers: PropTypes.object,
     params: PropTypes.shape({
       account_id: PropTypes.string,
       postset_id: PropTypes.string,
@@ -46,11 +42,9 @@ class PostEdtior extends Component {
     children: PropTypes.node,
     getComments: PropTypes.func,
     fetchPostSet: PropTypes.func,
-    updatePostSet: PropTypes.func,
     fetchGroupUsers: PropTypes.func,
-  };
-
-  static defaultProps = {
+    user: PropTypes.shape(),
+    postSet: PropTypes.object,
   };
 
   componentWillMount() {
@@ -64,28 +58,16 @@ class PostEdtior extends Component {
   }
 
   render() {
-    const { postSet, groupUsers, params, children, updatePostSet } = this.props;
+    const { params, children, user, postSet } = this.props;
     return (
       <Wrapper>
-        <div className="main">
-          <GeneralInfo />
-          <div>
-            <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/content`} label="Content" />
-            <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/channels`} label="Channels & Times" />
-            <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/streams`} label="Shared Streams" />
-          </div>
-          {children}
+        <GeneralInfo user={user} postSet={postSet.get('details').toJS()} />
+        <div>
+          <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/content`} label="Content" />
+          <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/channels`} label="Channels & Times" count={0} />
+          <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/streams`} label="Shared Streams" />
         </div>
-        <div className="side">
-          <UserAssignment
-            isFetching={groupUsers.isFetching || postSet.get('isFetching')}
-            postSet={postSet.get('details').toJS()}
-            assignee={postSet.getIn(['details', 'user_assignments', 0])}
-            users={groupUsers.details ? groupUsers.details.groups_users : []}
-            updatePostSet={updatePostSet}
-          />
-          <Tags />
-        </div>
+        {children}
       </Wrapper>
     );
   }
@@ -95,14 +77,13 @@ export function mapDispatchToProps(dispatch) {
   return {
     getComments: (postSetId) => dispatch(fetchComments(postSetId)),
     fetchPostSet: (payload) => dispatch(fetchPostSetRequest(payload)),
-    updatePostSet: (payload) => dispatch(updatePostSetRequest(payload)),
     fetchGroupUsers: (payload) => dispatch(fetchGroupUsers(payload)),
   };
 }
 
 const mapStateToProps = createStructuredSelector({
+  user: makeSelectUser(),
   postSet: selectPostSet(),
-  groupUsers: selectGroupUsers(),
 });
 
-export default UserCanPostSet(connect(mapStateToProps, mapDispatchToProps)(PostEdtior));
+export default UserCanPostEdit(connect(mapStateToProps, mapDispatchToProps)(PostEditor));
