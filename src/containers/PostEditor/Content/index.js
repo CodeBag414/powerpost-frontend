@@ -6,7 +6,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import {
   updatePostSetRequest,
-} from '_common/actions';
+} from 'containers/App/actions';
 
 import {
   makeSelectUser,
@@ -92,7 +92,10 @@ class Content extends Component {
             users={groupUsers.details ? groupUsers.details.groups_users : []}
             updatePostSet={updatePostSet}
           />
-          <Tags />
+          <Tags
+            updatePostSet={updatePostSet}
+            postSet={postSet.get('details')}
+          />
         </Sidebar>
       </Wrapper>
     );

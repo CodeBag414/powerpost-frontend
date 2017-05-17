@@ -17,6 +17,8 @@ import {
   SET_COMMENTS,
   DELETE_COMMENT_REQUEST,
   DELETE_COMMENT,
+  FETCH_ACCOUNT_TAGS_REQUEST,
+  SET_ACCOUNT_TAGS,
 } from './constants';
 
 export function* getComments(payload) {
@@ -25,6 +27,16 @@ export function* getComments(payload) {
   if (result.data.result === 'success') {
     const comments = result.data.comments.sort((a, b) => a.creation_time - b.creation_time);
     yield put({ type: SET_COMMENTS, comments });
+  } else {
+    // console.log(result);
+  }
+}
+
+export function* getAccountTags(payload) {
+  const requestUrl = `/post_api/tags/${payload.accountId}`;
+  const result = yield call(getData, requestUrl);
+  if (result.data.result === 'success') {
+    yield put({ type: SET_ACCOUNT_TAGS, accountTags: result.data.tags });
   } else {
     // console.log(result);
   }
@@ -93,8 +105,15 @@ export function* deleteComment() {
   yield cancel(watcher);
 }
 
+export function* fetchAccountTags() {
+  const watcher = yield takeLatest(FETCH_ACCOUNT_TAGS_REQUEST, getAccountTags);
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
 export default [
   fetchComments,
   postComment,
   deleteComment,
+  fetchAccountTags,
 ];

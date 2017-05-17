@@ -30,23 +30,6 @@ export default styled.div`
           color: #616669;
           margin-right: 20px;
         }
-        .account-setting {
-          background: transparent;
-          box-shadow: none;
-          border: none;
-          border-radius: 50%;
-          &:hover {
-            box-shadow: 0px 2px 5px #aaa;
-          }
-        }
-        i {
-          font-family: FontAwesome;
-          font-size: 16px;
-          color: #8C9496;
-          transform: rotate(90deg);
-          -ms-transform: rotate(90deg);
-          -webkit-transform: rotate(90deg);
-        }
         p {
           font-size: 12px;
           color: #888888;

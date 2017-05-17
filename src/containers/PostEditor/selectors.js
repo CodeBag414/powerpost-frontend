@@ -17,8 +17,14 @@ const selectPostSet = () => createSelector(
   (postSetEditor) => postSetEditor.get('postSet'),
 );
 
+const makeSelectAccountTags = () => createSelector(
+  selectPostSetEditor,
+  (postSetEditor) => postSetEditor.get('accountTags'),
+);
+
 export {
   makeSelectComments,
+  makeSelectAccountTags,
   makeSelectInProgress,
   selectPostSet,
 };

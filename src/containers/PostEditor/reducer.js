@@ -7,7 +7,7 @@ import {
   UPDATE_POST_SET_REQUEST,
   UPDATE_POST_SET_SUCCESS,
   UPDATE_POST_SET_ERROR,
-} from '_common/constants';
+} from 'containers/App/constants';
 
 import {
   POST_COMMENT_REQUEST,
@@ -16,6 +16,8 @@ import {
   SET_COMMENTS,
   DELETE_COMMENT_REQUEST,
   DELETE_COMMENT,
+  FETCH_ACCOUNT_TAGS_REQUEST,
+  SET_ACCOUNT_TAGS,
 } from './constants';
 
 const initialState = fromJS({
@@ -24,6 +26,11 @@ const initialState = fromJS({
     isFetching: false,
     error: null,
     details: {},
+  },
+  accountTags: {
+    isFetching: false,
+    error: null,
+    data: [],
   },
   pending: false,
 });
@@ -54,7 +61,11 @@ function boardReducer(state = initialState, action) {
         .updateIn(['comments'], (comments) => comments.filter((comment) => comment.get('comment_id') !== action.commentId));
     case FETCH_POST_SET_REQUEST:
       return state
-        .setIn(['postSet', 'isFetching'], true);
+        .set('postSet', fromJS({
+          isFetching: true,
+          error: null,
+          details: {},
+        }));
     case FETCH_POST_SET_SUCCESS:
       return state
         .set('postSet', fromJS({
@@ -85,6 +96,20 @@ function boardReducer(state = initialState, action) {
           isFetching: false,
           error: action.payload,
           details: {},
+        }));
+    case FETCH_ACCOUNT_TAGS_REQUEST:
+      return state
+        .set('accountTags', fromJS({
+          isFetching: true,
+          error: null,
+          data: [],
+        }));
+    case SET_ACCOUNT_TAGS:
+      return state
+        .set('accountTags', fromJS({
+          isFetching: false,
+          error: null,
+          data: action.accountTags,
         }));
     default: return state;
   }

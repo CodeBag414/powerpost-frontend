@@ -6,15 +6,15 @@ import CloseButtonWrapper from './CloseButtonWrapper';
 function Tag({ remove, tag }) {
   return (
     <Wrapper>
-      <span className="title">{tag.value}</span>
-      <CloseButtonWrapper onClick={() => remove(tag.id)}>x</CloseButtonWrapper>
+      <span className="title">{tag}</span>
+      <CloseButtonWrapper onClick={() => remove(tag)}>x</CloseButtonWrapper>
     </Wrapper>
   );
 }
 
 Tag.propTypes = {
   remove: PropTypes.func,
-  tag: PropTypes.shape(),
+  tag: PropTypes.string,
 };
 
 export default Tag;

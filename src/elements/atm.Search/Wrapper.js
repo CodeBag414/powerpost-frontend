@@ -8,6 +8,7 @@ const Search = styled.div`
     border: 1px solid #C8CED0;
     border-radius: ${(props) => props.borderRadius}px;
     font-size: 1.2rem;
+    outline: none;
   }
   i {
     position: absolute;

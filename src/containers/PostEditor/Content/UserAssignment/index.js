@@ -33,10 +33,11 @@ class UserAssignment extends Component {
 
   handleAssignUser = (userId) => {
     const { postSet } = this.props;
+
     this.props.updatePostSet({
       ...postSet,
       id: postSet.post_set_id,
-      user_assignments: [userId],
+      user_assignment_ids: [userId],
     });
     this.toggleUserList(false);
   }
