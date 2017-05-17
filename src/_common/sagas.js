@@ -1,4 +1,5 @@
-import { takeLatest, call, put } from 'redux-saga/effects';
+import { takeLatest, call, put, take, cancel } from 'redux-saga/effects';
+import { LOCATION_CHANGE } from 'react-router-redux';
 
 import { getData, putData } from 'utils/request';
 
@@ -37,6 +38,7 @@ export function* updatePostSetWorker(action) {
     const response = yield call(putData, `/post_api/post_set/${payload.id}`, { payload });
     const { data } = response;
     if (data.status === 'success') {
+      console.log(data.post_set);
       yield put(updatePostSetSuccess(data.post_set));
     } else {
       throw data.message;
@@ -47,8 +49,11 @@ export function* updatePostSetWorker(action) {
 }
 
 export function* commonSaga() {
-  yield takeLatest(FETCH_POST_SET_REQUEST, fetchPostSetWorker);
-  yield takeLatest(UPDATE_POST_SET_REQUEST, updatePostSetWorker);
+  const watcher1 = yield takeLatest(FETCH_POST_SET_REQUEST, fetchPostSetWorker);
+  const watcher2 = yield takeLatest(UPDATE_POST_SET_REQUEST, updatePostSetWorker);
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher1);
+  yield cancel(watcher2);
   // Not killing saga when LOCATION_CHANGE happens. It just stops when parent-level routing happens
 }
 
