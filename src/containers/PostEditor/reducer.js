@@ -7,7 +7,7 @@ import {
   UPDATE_POST_SET_REQUEST,
   UPDATE_POST_SET_SUCCESS,
   UPDATE_POST_SET_ERROR,
-} from '_common/constants';
+} from 'containers/App/constants';
 
 import {
   POST_COMMENT_REQUEST,

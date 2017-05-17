@@ -6,7 +6,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import {
   updatePostSetRequest,
-} from '_common/actions';
+} from 'containers/App/actions';
 
 import {
   makeSelectUser,
