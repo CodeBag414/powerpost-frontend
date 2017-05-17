@@ -36,7 +36,7 @@ class UserAssignment extends Component {
     this.props.updatePostSet({
       ...postSet,
       id: postSet.post_set_id,
-      user_assignments: [userId],
+      user_assignment_ids: [userId],
     });
     this.toggleUserList(false);
   }
