@@ -6,7 +6,7 @@ import Wrapper from './Wrapper';
 import Title from './Title';
 import Subtitle from './Subtitle';
 
-function GeneralInfo({ user, postSet }) {
+function GeneralInfo({ user, postSet, postTitle, handleTitleChange, handleTitleBlur, handleTitleFocus, handleTitleKeyDown }) {
   // console.log('user', user);
   // console.log('postSet', postSet);
   if (!postSet.post_set_id) return null;
@@ -14,7 +14,16 @@ function GeneralInfo({ user, postSet }) {
   const creationTime = moment.unix(postSet.creation_time).format('M/DD/YYYY hh:mma');
   return (
     <Wrapper>
-      <Title>{postSet.title || 'Untitled Post'}</Title>
+      <Title
+        contentEditable
+        onInput={handleTitleChange}
+        onBlur={handleTitleBlur}
+        onFocus={handleTitleFocus}
+        onKeyDown={handleTitleKeyDown}
+      >
+        {postTitle}
+      </Title>
+      <br />
       <Subtitle>{`Created by ${userName} \u00a0\u00a0 | \u00a0\u00a0 ${creationTime}`}</Subtitle>
     </Wrapper>
   );
@@ -23,6 +32,11 @@ function GeneralInfo({ user, postSet }) {
 GeneralInfo.propTypes = {
   user: PropTypes.shape(),
   postSet: PropTypes.object,
-}
+  postTitle: PropTypes.string,
+  handleTitleChange: PropTypes.func,
+  handleTitleBlur: PropTypes.func,
+  handleTitleFocus: PropTypes.func,
+  handleTitleKeyDown: PropTypes.func,
+};
 
 export default GeneralInfo;
