@@ -9,11 +9,8 @@ import { createStructuredSelector } from 'reselect';
 import { UserCanPostEdit } from 'config.routes/UserRoutePermissions';
 
 import {
-  fetchPostSetRequest,
-} from '_common/actions';
-
-import {
   fetchGroupUsers,
+  fetchPostSetRequest,
 } from 'containers/App/actions';
 
 import {
