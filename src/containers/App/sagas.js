@@ -6,8 +6,7 @@
 /* eslint-disable camelcase */
 
 import { takeLatest, delay } from 'redux-saga';
-import { take, call, put, race, select, cancel } from 'redux-saga/effects';
-import { LOCATION_CHANGE } from 'react-router-redux';
+import { take, call, put, race, select } from 'redux-saga/effects';
 import { browserHistory } from 'react-router';
 import { toastr } from 'lib/react-redux-toastr';
 import { getData, postData, putData } from 'utils/request';
@@ -613,21 +612,15 @@ export function* updatePostSetWorker(action) {
 }
 
 export function* fetchPostSets() {
-  const watcher = yield takeLatest(FETCH_POST_SETS, getPostSets);
-  yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
+  yield takeLatest(FETCH_POST_SETS, getPostSets);
 }
 
 export function* deletePostSet() {
-  const watcher = yield takeLatest(DELETE_POST_SET_REQUEST, deletePostSetRequest);
-  yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
+  yield takeLatest(DELETE_POST_SET_REQUEST, deletePostSetRequest);
 }
 
 export function* changePostSetStatus() {
-  const watcher = yield takeLatest(CHANGE_POST_SET_REQUEST, changePostSetRequest);
-  yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
+  yield takeLatest(CHANGE_POST_SET_REQUEST, changePostSetRequest);
 }
 
 export function* fetchPostSetSaga() {
