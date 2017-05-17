@@ -1,33 +1,59 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import ImmutablePropTypes from 'react-immutable-proptypes';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import Heading from 'components/Heading';
 import Autocomplete from 'react-toolbox/lib/autocomplete';
 import SmoothCollapse from 'react-smooth-collapse';
 import _ from 'lodash';
 
+import { makeSelectAccountTags } from 'containers/PostEditor/selectors';
 import Wrapper from './Wrapper';
 import TagsWrapper from './TagsWrapper';
 import Tag from './Tag';
 
 class Tags extends Component {
 
-  state = { isExpanded: true, tags: [] };
+  static propTypes = {
+    accountTags: ImmutablePropTypes.map,
+    postSet: ImmutablePropTypes.map,
+    updatePostSet: PropTypes.func,
+  };
 
-  onRemove = (tagId) => {
-    const newTags = this.state.tags.filter((tag) => tag.id !== tagId);
-    this.setState({ tags: newTags });
+  state = { isExpanded: true, input: '' };
+
+  onRemove = (removedTag) => {
+    const { postSet, updatePostSet } = this.props;
+    const updatedTags = this.getTags().filter((tag) => (tag !== removedTag));
+    updatePostSet({
+      ...postSet.toJS(),
+      id: postSet.get('post_set_id'),
+      tags: updatedTags,
+    });
+  }
+
+  onQueryChange = (input) => {
+    this.setState({ input });
   }
 
   getSource = () => {
-    const source = {
-      'ES-es': 'Spain',
-      'TH-th': 'Thailand',
-      'EN-gb': 'England',
-      'EN-en': 'USA',
-      'new-tag': '+ Create New Tag',
-    };
-    const { tags } = this.state;
-    tags.forEach((tag) => delete source[tag.id]);
+    const { accountTags } = this.props;
+    const source = {};
+    const tags = this.getTags();
+    accountTags.get('data').forEach((tag) => (source[tag] = tag));
+    const { input } = this.state;
+    _.values(tags).forEach((tag) => delete source[tag]);
+    if (input && _.values(source).indexOf(input) === -1) {
+      source['new-tag'] = `${input} +`;
+    }
     return source;
+  }
+
+  getTags = () => {
+    const { postSet } = this.props;
+    const tags = postSet.get('tags');
+    return tags ? _.values(tags.toJS()) : {};
   }
 
   expand = (isExpanded) => {
@@ -35,13 +61,22 @@ class Tags extends Component {
   }
 
   handleChange = (tags) => {
-    const source = this.getSource();
-    const newTags = _.concat(this.state.tags, tags.filter((tag) => source[tag]).map((tag) => ({ id: tag, value: source[tag] })));
-    this.setState({ tags: newTags });
+    const { postSet, updatePostSet } = this.props;
+    const { input } = this.state;
+    const updatedTags = this.getTags().concat(
+      tags.map((tag) => (tag === 'new-tag' ? input : tag))
+    );
+    this.setState({ input: '' });
+    updatePostSet({
+      ...postSet.toJS(),
+      id: postSet.get('post_set_id'),
+      tags: updatedTags,
+    });
   }
 
   render() {
-    const { isExpanded, tags } = this.state;
+    const { isExpanded } = this.state;
+    const tags = this.getTags();
     const source = this.getSource();
     return (
       <Wrapper expanded={isExpanded}>
@@ -61,11 +96,12 @@ class Tags extends Component {
             source={source}
             value={this.state.tags}
             className="auto-complete"
+            onQueryChange={this.onQueryChange}
           />
           <TagsWrapper>
             {
-              tags.map((tag) =>
-                <Tag key={tag.id} tag={tag} remove={this.onRemove} />
+              _.values(tags).map((tag) =>
+                <Tag key={tag} tag={tag} remove={this.onRemove} />
               )
             }
           </TagsWrapper>
@@ -75,4 +111,12 @@ class Tags extends Component {
   }
 }
 
-export default Tags;
+function mapDispatchToProps() {
+  return {};
+}
+
+const mapStateToProps = createStructuredSelector({
+  accountTags: makeSelectAccountTags(),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Tags);

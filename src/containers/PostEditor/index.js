@@ -22,6 +22,7 @@ import {
 
 import {
   fetchComments,
+  fetchAccountTags,
 } from 'containers/PostEditor/actions';
 
 import {
@@ -41,6 +42,7 @@ class PostEditor extends Component {
     }).isRequired,
     children: PropTypes.node,
     getComments: PropTypes.func,
+    getAccountTags: PropTypes.func,
     fetchPostSet: PropTypes.func,
     fetchGroupUsers: PropTypes.func,
     user: PropTypes.shape(),
@@ -54,6 +56,7 @@ class PostEditor extends Component {
   componentWillMount() {
     const { params: { account_id, postset_id } } = this.props;
     this.props.getComments(postset_id);
+    this.props.getAccountTags(account_id);
     this.props.fetchPostSet({
       id: postset_id,
     });
@@ -116,6 +119,7 @@ class PostEditor extends Component {
 
 export function mapDispatchToProps(dispatch) {
   return {
+    getAccountTags: (accountId) => dispatch(fetchAccountTags(accountId)),
     getComments: (postSetId) => dispatch(fetchComments(postSetId)),
     fetchPostSet: (payload) => dispatch(fetchPostSetRequest(payload)),
     fetchGroupUsers: (payload) => dispatch(fetchGroupUsers(payload)),

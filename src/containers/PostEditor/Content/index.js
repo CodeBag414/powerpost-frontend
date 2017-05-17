@@ -92,7 +92,10 @@ class Content extends Component {
             users={groupUsers.details ? groupUsers.details.groups_users : []}
             updatePostSet={updatePostSet}
           />
-          <Tags />
+          <Tags
+            updatePostSet={updatePostSet}
+            postSet={postSet.get('details')}
+          />
         </Sidebar>
       </Wrapper>
     );
