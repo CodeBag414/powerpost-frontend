@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { noop } from 'lodash';
 
@@ -8,8 +9,8 @@ import Wrapper from './Wrapper';
 
 function UserItem({ avatarUrl, name, selected, onClick }) {
   return (
-    <Wrapper onClick={onClick}>
-      <Avatar image={avatarUrl} title={name} backgroundColor="green" size={30} isClickable={false} />
+    <Wrapper className={classnames({ selected })} onClick={onClick}>
+      <Avatar image={avatarUrl} title={name} backgroundColor="green" size={24} isClickable={false} />
       <span>{name}</span>
       <i className={classnames('fa fa-check', { hidden: !selected })} />
     </Wrapper>

@@ -130,6 +130,7 @@ export function* authorizeUpdate(data) {
 
     yield call(auth.updateUser, data);
     yield call(auth.updateOwnAccount, data);
+    yield call(auth.updateTags, data);
 
     yield put({ type: GET_USER });
 

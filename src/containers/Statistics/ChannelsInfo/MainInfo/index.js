@@ -78,8 +78,8 @@ const rules = {
       topByEngagementKey: 'top_posts_by_engagement',
     },
     impressions: {
-      infoMonth: 'analytics.extended.unique_page_impressions_by_months_ago_difference',
-      infoWeek: 'analytics.extended.unique_page_impressions_by_weeks_ago_difference',
+      infoMonth: 'analytics.extended.unique_page_impressions_by_months_ago',
+      infoWeek: 'analytics.extended.unique_page_impressions_by_weeks_ago',
       monthDifference: true,
       totalKey: '',
       content: 'Impressions',

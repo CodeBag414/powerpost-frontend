@@ -9,7 +9,7 @@ const Wrapper = styled.div`
   position: absolute;
   background: white;
   z-index: 10;
-  top: 30px;
+  top: ${(props) => props.top}px;
   left: -10px;
   -webkit-filter: drop-shadow(0 1px 5px rgba(60, 92, 129, 0.42));
   filter        : drop-shadow(0 1px 5px rgba(60, 92, 129, 0.42));
@@ -32,11 +32,13 @@ const Wrapper = styled.div`
 
 class Popup extends Component {
   static propTypes = {
+    top: PropTypes.number,
     children: PropTypes.node,
     onOutsideClick: PropTypes.func,
   }
 
   static defaultProps = {
+    top: 30,
     onOutsideClick: noop,
   }
 
@@ -45,8 +47,10 @@ class Popup extends Component {
   }
 
   render() {
+    const { top } = this.props;
+
     return (
-      <Wrapper>
+      <Wrapper top={top}>
         {this.props.children}
       </Wrapper>
     );

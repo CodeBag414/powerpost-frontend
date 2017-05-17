@@ -2,7 +2,9 @@ import styled from 'styled-components';
 
 export default styled.div`
   display: flex;
-  align-item: center;
+  align-items: center;
+  padding: 4px 9px 4px 4px;
+  cursor: pointer;
 
   span {
     flex: 1;
@@ -11,5 +13,9 @@ export default styled.div`
 
   .hidden {
     visibility: hidden;
+  }
+
+  &.selected {
+    background-color: rgba(231,236,238,0.6);
   }
 `;
