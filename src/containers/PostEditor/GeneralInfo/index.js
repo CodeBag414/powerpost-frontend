@@ -6,7 +6,14 @@ import Wrapper from './Wrapper';
 import Title from './Title';
 import Subtitle from './Subtitle';
 
-function GeneralInfo({ user, postSet, postTitle, handleTitleChange, handleTitleBlur, handleTitleFocus, handleTitleKeyDown }) {
+function handleTitleKeyDown(e) {
+  if (e.keyCode === 13) {
+    e.preventDefault();
+    e.target.blur();
+  }
+}
+
+function GeneralInfo({ user, postSet, postTitle, handleTitleChange, handleTitleBlur }) {
   // console.log('user', user);
   // console.log('postSet', postSet);
   if (!postSet.post_set_id) return null;
@@ -18,7 +25,6 @@ function GeneralInfo({ user, postSet, postTitle, handleTitleChange, handleTitleB
         contentEditable
         onInput={handleTitleChange}
         onBlur={handleTitleBlur}
-        onFocus={handleTitleFocus}
         onKeyDown={handleTitleKeyDown}
       >
         {postTitle}
@@ -35,8 +41,6 @@ GeneralInfo.propTypes = {
   postTitle: PropTypes.string,
   handleTitleChange: PropTypes.func,
   handleTitleBlur: PropTypes.func,
-  handleTitleFocus: PropTypes.func,
-  handleTitleKeyDown: PropTypes.func,
 };
 
 export default GeneralInfo;

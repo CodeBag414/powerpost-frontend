@@ -11,6 +11,9 @@ const LimitIndicator = styled.span`
   vertical-align: top;
   margin-right: 15px;
   float: right;
+  &.negative {
+    color: #e81c64;
+  }
 `;
 
 export default LimitIndicator;
