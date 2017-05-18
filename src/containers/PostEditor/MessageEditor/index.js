@@ -1,15 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import MultiLineInput from 'components/MultiLineInput';
+
 import Wrapper from './Wrapper';
 import MessageToolbar from './MessageToolbar';
-import MessageInput from './MessageInput';
 
 function MessageEditor({ message, handleMessageChange, characterLimit }) {
   return (
     <Wrapper>
       <MessageToolbar characterLimit={characterLimit} />
-      <MessageInput
+      <MultiLineInput
         message={message}
         handleMessageChange={handleMessageChange}
       />
