@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Toggle from 'react-toggle';
 import classnames from 'classnames';
 
+import MultiLineInput from 'components/MultiLineInput';
 import PopupBorder from 'components/PopupBorder';
 
 import Wrapper from './Wrapper';
@@ -15,27 +16,50 @@ const streams = [
 ];
 
 class SharedStreams extends Component {
-  state = {
-    includePost: true,
-    streamIndex: 0,   // defaults to facevook
-    message: '',
-    streamMessage: {},
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      includePost: true,
+      streamIndex: 0,   // defaults to facevook
+      message: '123',
+      allMessage: '123',
+      streamMessage: {},
+    };
   }
 
-  getStreamMessage = () => {
-    const { streamIndex, message, streamMessage } = this.state;
+  handleMessageChange = (value) => {
+    this.setState({
+      message: value,
+    });
+  }
+
+  handleMessageSave = () => {
+    const { message, streamMessage, streamIndex } = this.state;
+
     const streamName = streams[streamIndex].name;
 
-    return streamMessage[streamName] || message;
+    this.setState({
+      streamMessage: {
+        ...streamMessage,
+        [streamName]: message,
+      },
+    });
+
+    console.log('call me', streamMessage);
   }
 
   switchStream = (streamIndex) => {
-    if (!this.state.includePost) {
+    const { includePost, allMessage, streamMessage } = this.state;
+    if (!includePost) {
       return;
     }
 
+    const streamName = streams[streamIndex].name;
+
     this.setState({
       streamIndex,
+      message: streamMessage[streamName] || allMessage,
     });
   }
 
@@ -46,7 +70,7 @@ class SharedStreams extends Component {
   }
 
   render() {
-    const { includePost, streamIndex } = this.state;
+    const { includePost, streamIndex, message } = this.state;
 
     return (
       <Wrapper>
@@ -87,7 +111,12 @@ class SharedStreams extends Component {
               borderColor={streams[streamIndex].color}
             >
               <div className="message-wrapper">
-                { this.getStreamMessage() }
+                <MultiLineInput
+                  highlightFocus={false}
+                  message={message}
+                  handleMessageChange={this.handleMessageChange}
+                  onBlur={this.handleMessageSave}
+                />
               </div>
             </PopupBorder>
           </div>

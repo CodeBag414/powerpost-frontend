@@ -49,7 +49,6 @@ export default styled.div`
     position: relative;
   }
   .message-wrapper {
-    padding: 19px 16px;
     width: 408px;
     min-height: 95px;
   }

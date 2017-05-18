@@ -8,6 +8,7 @@ const Wrapper = styled.div`
   position: absolute;
   background: white;
   border: 1px solid ${(props) => props.borderColor};
+  border-radius: 4px;
   z-index: 10;
   top: ${(props) => props.top}px;
   left: ${(props) => props.left}px;
