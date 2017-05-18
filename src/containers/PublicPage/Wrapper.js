@@ -16,6 +16,7 @@ const Wrapper = styled.div`
   .content {
     display: flex;
     padding: 36px 43px;
+    align-items: flex-start;
   }
 `;
 
