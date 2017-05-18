@@ -79,16 +79,6 @@ class PostEditor extends Component {
     }
   }
 
-  handleTitleFocus = () => {
-  }
-
-  handleTitleKeyDown = (e) => {
-    if (e.keyCode === 13) {
-      e.preventDefault();
-      e.target.blur();
-    }
-  }
-
   render() {
     const { params, children, user, postSet } = this.props;
     const { postTitle } = this.state;

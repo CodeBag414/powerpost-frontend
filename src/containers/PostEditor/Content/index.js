@@ -26,6 +26,7 @@ import {
 
 import Wrapper from './Wrapper';
 import Sidebar from './Sidebar';
+import MessageEditor from '../MessageEditor';
 import Comments from './Comments';
 import Comment from './Comment';
 import CommentInput from './CommentInput';
@@ -67,11 +68,28 @@ class Content extends Component {
     params: {},
   };
 
+  state = {
+    globalMessage: '',
+    characterLimit: 140,
+  };
+
+  handleMessageChange = (value) => {
+    const globalMessage = value;
+    const characterLimit = 140 - globalMessage.length;
+    this.setState({ globalMessage, characterLimit });
+  }
+
   render() {
     const { postComment, deleteComment, comments, user, pending, postSet, groupUsers, updatePostSet } = this.props;
+    const { globalMessage, characterLimit } = this.state;
     const { params: { postset_id } } = this.props;
     return (
       <Wrapper pending={pending}>
+        <MessageEditor
+          message={globalMessage}
+          characterLimit={characterLimit}
+          handleMessageChange={this.handleMessageChange}
+        />
         <Comments />
         <CommentInput user={user} postComment={(text) => postComment(postset_id, text)} />
         {
