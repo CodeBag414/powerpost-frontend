@@ -629,7 +629,7 @@ export function createRoutes(store, auth) {
       },
     },
     {
-      path: 'public-page',
+      path: 'posts/:id',
       name: 'publicPage',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
