@@ -10,7 +10,7 @@ const Wrapper = styled.div`
 
   .info-wrapper {
     display: flex;
-    img {
+    .avatar-wrapper {
       width: 64px;
       height: 64px;
       border-radius: 3px;

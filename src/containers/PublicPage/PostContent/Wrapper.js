@@ -19,7 +19,7 @@ const Wrapper = styled.div`
     font-size: 14px;
     line-height: 21px;
   }
-  .content {
+  .mediaContent {
     margin-top: 24px;
   }
 `;
