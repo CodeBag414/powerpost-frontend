@@ -5,10 +5,6 @@ import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import {
-  updatePostSetRequest,
-} from 'containers/App/actions';
-
-import {
   makeSelectUser,
 } from 'containers/App/selectors';
 
@@ -86,7 +82,6 @@ export function mapDispatchToProps(dispatch) {
   return {
     postComment: (postSetId, text) => dispatch(postCommentRequest({ postSetId, text })),
     deleteComment: (commentId) => dispatch(deleteCommentRequest(commentId)),
-    updatePostSet: (payload) => dispatch(updatePostSetRequest(payload)),
   };
 }
 

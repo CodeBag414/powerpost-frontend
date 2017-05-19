@@ -11,6 +11,7 @@ import { UserCanPostEdit } from 'config.routes/UserRoutePermissions';
 import {
   fetchGroupUsers,
   fetchPostSetRequest,
+  updatePostSetRequest,
 } from 'containers/App/actions';
 
 import {
@@ -129,6 +130,7 @@ export function mapDispatchToProps(dispatch) {
     getComments: (postSetId) => dispatch(fetchComments(postSetId)),
     fetchPostSet: (payload) => dispatch(fetchPostSetRequest(payload)),
     fetchGroupUsers: (payload) => dispatch(fetchGroupUsers(payload)),
+    updatePostSet: (payload) => dispatch(updatePostSetRequest(payload)),
   };
 }
 
