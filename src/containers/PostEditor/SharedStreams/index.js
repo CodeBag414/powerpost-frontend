@@ -1,31 +1,55 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Toggle from 'react-toggle';
 import classnames from 'classnames';
+import { createStructuredSelector } from 'reselect';
+import { connect } from 'react-redux';
 
 import MultiLineInput from 'components/MultiLineInput';
 import PopupBorder from 'components/PopupBorder';
 
+import {
+  updatePostSetRequest,
+} from 'containers/App/actions';
+
+import {
+  selectPostSet,
+} from 'containers/PostEditor/selectors';
+
 import Wrapper from './Wrapper';
 
 const streams = [
-  { name: 'facebook', icon: 'fa fa-facebook-square', color: '#39579A' },
-  { name: 'twitter', icon: 'fa fa-twitter-square', color: '#44ABF6' },
-  { name: 'linkedin', icon: 'fa fa-linkedin-square', color: '#2278B8' },
-  { name: 'pinterest', icon: 'fa fa-pinterest-square', color: '#BD081C' },
-  { name: 'google', icon: 'fa fa-google-plus-square', color: '#DD4E41' },
+  { name: 'message_facebook', icon: 'fa fa-facebook-square', color: '#39579A' },
+  { name: 'message_twitter', icon: 'fa fa-twitter-square', color: '#44ABF6' },
+  { name: 'message_linkedin', icon: 'fa fa-linkedin-square', color: '#2278B8' },
+  { name: 'message_pinterest', icon: 'fa fa-pinterest-square', color: '#BD081C' },
+  { name: 'message_google', icon: 'fa fa-google-plus-square', color: '#DD4E41' },
 ];
 
 class SharedStreams extends Component {
-  constructor(props) {
-    super(props);
+  static propTypes = {
+    postSet: PropTypes.object,
+    updatePostSet: PropTypes.func,
+  }
 
-    this.state = {
-      includePost: true,
-      streamIndex: 0,   // defaults to facevook
-      message: '123',
-      allMessage: '123',
-      streamMessage: {},
-    };
+  state = {
+    includePost: true,
+    streamIndex: 0,   // defaults to facebook
+    message: '',
+    allMessage: '',
+    streamMessage: {},
+  };
+
+  componentWillReceiveProps(nextProps) {
+    const { postSet } = nextProps;
+
+    if (this.props.postSet !== nextProps.postSet) {
+      const postDetails = postSet.get('details');
+      this.setState({
+        allMessage: postDetails.get('message'),
+        streamMessage: postDetails.get('properties'),
+      });
+    }
   }
 
   handleMessageChange = (value) => {
@@ -35,17 +59,24 @@ class SharedStreams extends Component {
   }
 
   handleMessageSave = () => {
+    const { postSet, updatePostSet } = this.props;
     const { message, streamMessage, streamIndex } = this.state;
 
+    const postDetails = postSet.get('details').toJS();
     const streamName = streams[streamIndex].name;
-
+    const newStreamMessage = {
+      ...streamMessage,
+      [streamName]: message,
+    };
     this.setState({
-      streamMessage: {
-        ...streamMessage,
-        [streamName]: message,
-      },
+      streamMessage: newStreamMessage,
     });
 
+    updatePostSet({
+      ...postDetails,
+      id: postDetails.post_set_id,
+      properties: newStreamMessage,
+    });
     console.log('call me', streamMessage);
   }
 
@@ -126,4 +157,15 @@ class SharedStreams extends Component {
   }
 }
 
-export default SharedStreams;
+const mapStateToProps = createStructuredSelector({
+  postSet: selectPostSet(),
+});
+
+export function mapDispatchToProps(dispatch) {
+  return {
+    updatePostSet: (payload) => dispatch(updatePostSetRequest(payload)),
+  };
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(SharedStreams);
