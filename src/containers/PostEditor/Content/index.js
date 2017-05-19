@@ -10,7 +10,6 @@ import {
 
 import {
   makeSelectUser,
-  selectGroupUsers,
 } from 'containers/App/selectors';
 
 import {
@@ -21,34 +20,13 @@ import {
 import {
   makeSelectComments,
   makeSelectInProgress,
-  selectPostSet,
 } from 'containers/PostEditor/selectors';
 
 import Wrapper from './Wrapper';
-import Sidebar from './Sidebar';
 import MessageEditor from '../MessageEditor';
 import Comments from './Comments';
 import Comment from './Comment';
 import CommentInput from './CommentInput';
-import UserAssignment from './UserAssignment';
-import Tags from './Tags';
-
-/* const comments = [
-  {
-    id: 1,
-    avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRx7Ebla9_lEucRaCo8BKLE1eEsu0fmxyxDYtHmIVMEp0fX95Fs',
-    name: 'Olivia Smith',
-    time: '2 hrs ago',
-    comment: 'I\'ll update the copy. @katiejansen can you replace the image with the close up shot of the two Rum Swizzles. Thanks!',
-  },
-  {
-    id: 2,
-    avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSK30k4bBK8fadg26VmfdOIbENRIWYaundUQiRGpKHbikRtrOaCuQ',
-    name: 'Katie Green',
-    time: '15 mins ago',
-    comment: 'Sounds Good.',
-  },
-]; */
 
 class Content extends Component {
 
@@ -59,9 +37,6 @@ class Content extends Component {
     params: PropTypes.shape(),
     user: PropTypes.shape(),
     pending: PropTypes.bool,
-    postSet: PropTypes.object,
-    groupUsers: PropTypes.object,
-    updatePostSet: PropTypes.func,
   };
 
   static defaultProps = {
@@ -80,7 +55,7 @@ class Content extends Component {
   }
 
   render() {
-    const { postComment, deleteComment, comments, user, pending, postSet, groupUsers, updatePostSet } = this.props;
+    const { postComment, deleteComment, comments, user, pending } = this.props;
     const { globalMessage, characterLimit } = this.state;
     const { params: { postset_id } } = this.props;
     return (
@@ -102,19 +77,6 @@ class Content extends Component {
             />
           )
         }
-        <Sidebar>
-          <UserAssignment
-            isFetching={groupUsers.isFetching || postSet.get('isFetching')}
-            postSet={postSet.get('details').toJS()}
-            assignee={postSet.getIn(['details', 'user_assignments', 0])}
-            users={groupUsers.details ? groupUsers.details.groups_users : []}
-            updatePostSet={updatePostSet}
-          />
-          <Tags
-            updatePostSet={updatePostSet}
-            postSet={postSet.get('details')}
-          />
-        </Sidebar>
       </Wrapper>
     );
   }
@@ -132,8 +94,6 @@ const mapStateToProps = createStructuredSelector({
   comments: makeSelectComments(),
   user: makeSelectUser(),
   pending: makeSelectInProgress(),
-  postSet: selectPostSet(),
-  groupUsers: selectGroupUsers(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Content);
