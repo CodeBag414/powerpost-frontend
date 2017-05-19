@@ -62,6 +62,8 @@ function boardReducer(state = initialState, action) {
     case FETCH_POST_SET_REQUEST:
       return state
         .set('postSet', fromJS({
+          [`${action.section}-fetching`]: true,
+          [`${action.section}-error`]: null,
           isFetching: true,
           error: null,
           details: {},
@@ -69,6 +71,8 @@ function boardReducer(state = initialState, action) {
     case FETCH_POST_SET_SUCCESS:
       return state
         .set('postSet', fromJS({
+          [`${action.section}-fetching`]: false,
+          [`${action.section}-error`]: null,
           isFetching: false,
           error: null,
           details: action.payload,
@@ -76,6 +80,8 @@ function boardReducer(state = initialState, action) {
     case FETCH_POST_SET_ERROR:
       return state
         .set('postSet', fromJS({
+          [`${action.section}-fetching`]: false,
+          [`${action.section}-error`]: action.payload,
           isFetching: false,
           error: action.payload,
           details: {},

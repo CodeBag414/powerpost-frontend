@@ -3,6 +3,11 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   padding: 40px 40px 24px 40px;
   width: 440px;
+  display: flex;
+  flex-direction: column;
+  .main-content {
+    flex: 1;
+  }
 
   .heading {
     display: flex;
@@ -28,12 +33,25 @@ const Wrapper = styled.div`
     margin-top: 11px;
   }
 
-  .post-on-ready {
+  .post-style {
     color: #616669;
     font-size: 12px;
     line-height: 15px;
     text-decoration: underline;
     margin-top: 11px;
+    cursor: pointer;
+  }
+
+  .schedules-block {
+    margin-top: 25px;
+  }
+
+  .channels-block {
+    margin-top: 25px;
+  }
+
+  .schedule-selected-channels {
+    margin-top: 20px;
   }
 `;
 
