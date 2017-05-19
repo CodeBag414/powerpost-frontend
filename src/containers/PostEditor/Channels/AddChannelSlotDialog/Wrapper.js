@@ -7,6 +7,8 @@ const Wrapper = styled.div`
   flex-direction: column;
   .main-content {
     flex: 1;
+    overflow: auto;
+    max-height: 400px;
   }
 
   .heading {

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   padding-top: 40px;
+  position: relative;
   .title {
     color: #888888;
     font-size: 16px;
@@ -23,6 +24,14 @@ const Wrapper = styled.div`
   }
   .content {
     margin-top: 35px;
+  }
+  .overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.5);
   }
 `;
 

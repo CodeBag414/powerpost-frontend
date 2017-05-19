@@ -14,7 +14,8 @@ const Wrapper = styled.div`
       margin-right: 8px;
     }
     .action {
-      width: 14px;
+      width: 10px;
+      margin-right: 8px;
       font-size: 14px;
       text-align: right;
     }
