@@ -374,23 +374,26 @@ export function fetchPostSetError(payload) {
   };
 }
 
-export function updatePostSetRequest(payload) {
+export function updatePostSetRequest(payload, section) {
   return {
     type: UPDATE_POST_SET_REQUEST,
     payload,
+    section,
   };
 }
 
-export function updatePostSetSuccess(payload) {
+export function updatePostSetSuccess(payload, section) {
   return {
     type: UPDATE_POST_SET_SUCCESS,
     payload,
+    section,
   };
 }
 
-export function updatePostSetError(payload) {
+export function updatePostSetError(payload, section) {
   return {
     type: UPDATE_POST_SET_ERROR,
     payload,
+    section,
   };
 }

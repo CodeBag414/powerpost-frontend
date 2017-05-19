@@ -596,18 +596,18 @@ export function* fetchPostSetWorker(action) {
 }
 
 export function* updatePostSetWorker(action) {
-  const { payload } = action;
+  const { payload, section } = action;
 
   try {
     const response = yield call(putData, `/post_api/post_set/${payload.id}`, { payload });
     const { data } = response;
     if (data.status === 'success') {
-      yield put(updatePostSetSuccess(data.post_set));
+      yield put(updatePostSetSuccess(data.post_set, section));
     } else {
       throw data.message;
     }
   } catch (error) {
-    yield put(updatePostSetError(error));
+    yield put(updatePostSetError(error, section));
   }
 }
 

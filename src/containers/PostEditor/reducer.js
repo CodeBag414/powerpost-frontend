@@ -18,6 +18,9 @@ import {
   DELETE_COMMENT,
   FETCH_ACCOUNT_TAGS_REQUEST,
   SET_ACCOUNT_TAGS,
+  ADD_POST_TO_POSTSET,
+  SUBMIT_BUNCH_POSTS_REQUEST,
+  SUBMIT_BUNCH_POSTS_SUCCESS,
 } from './constants';
 
 const initialState = fromJS({
@@ -82,21 +85,20 @@ function boardReducer(state = initialState, action) {
         }));
     case UPDATE_POST_SET_REQUEST:
       return state
-        .setIn(['postSet', 'isFetching'], true);
+        .setIn(['postSet', `${action.section}-fetching`], true)
+        .setIn(['postSet', `${action.section}-error`], null)
+        .setIn(['postSet', 'isFetching'], true)
+        .setIn(['postSet', 'error'], null);
     case UPDATE_POST_SET_SUCCESS:
       return state
-        .set('postSet', fromJS({
-          isFetching: false,
-          error: null,
-          details: action.payload,
-        }));
+        .setIn(['postSet', `${action.section}-fetching`], false)
+        .setIn(['postSet', 'isFetching'], false)
+        .setIn(['postSet', 'details'], fromJS(action.payload));
     case UPDATE_POST_SET_ERROR:
       return state
-        .set('postSet', fromJS({
-          isFetching: false,
-          error: action.payload,
-          details: {},
-        }));
+        .setIn(['postSet', `${action.section}-fetching`], false)
+        .setIn(['postSet', `${action.section}-error`], fromJS(action.payload))
+        .setIn(['postSet', 'error'], fromJS(action.payload));
     case FETCH_ACCOUNT_TAGS_REQUEST:
       return state
         .set('accountTags', fromJS({
@@ -111,6 +113,15 @@ function boardReducer(state = initialState, action) {
           error: null,
           data: action.accountTags,
         }));
+    case SUBMIT_BUNCH_POSTS_REQUEST:
+      return state
+        .setIn(['postSet', 'bunch_post_fetching'], true);
+    case SUBMIT_BUNCH_POSTS_SUCCESS:
+      return state
+        .setIn(['postSet', 'bunch_post_fetching'], false);
+    case ADD_POST_TO_POSTSET:
+      return state
+        .updateIn(['postSet', 'details', 'posts'], (posts) => posts.push(fromJS(action.post)));
     default: return state;
   }
 }
