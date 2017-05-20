@@ -7,11 +7,12 @@ import Wrapper from './Wrapper';
 
 import theme from './styles.scss';
 
-function MultiLineInput({ highlightFocus, name, placeholder, message, handleMessageChange, onBlur }) {
+function MultiLineInput({ disabled, highlightFocus, name, placeholder, message, handleMessageChange, onBlur }) {
   return (
     <Wrapper className={highlightFocus ? theme.highlightFocus : ''}>
       <PPInput
         multiline
+        disabled={disabled}
         type="text"
         hint={placeholder}
         name={name}
@@ -25,6 +26,7 @@ function MultiLineInput({ highlightFocus, name, placeholder, message, handleMess
 }
 
 MultiLineInput.propTypes = {
+  disabled: PropTypes.bool,
   highlightFocus: PropTypes.bool,
   name: PropTypes.string,
   placeholder: PropTypes.string,
@@ -34,6 +36,7 @@ MultiLineInput.propTypes = {
 };
 
 MultiLineInput.defaultProps = {
+  disabled: false,
   highlightFocus: true,
   name: 'messageInput',
   placeholder: 'Write something here',
