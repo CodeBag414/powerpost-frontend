@@ -16,9 +16,10 @@ class LinkEditor extends React.Component {
     }
     
     this.state = {
-      titleValue: this.props.urlContent.title || '',
-      descriptionValue: this.props.urlContent.description || '',
+      titleValue: this.props.urlContent.title || false,
+      descriptionValue: this.props.urlContent.description || false,
       selectedImage: selectedImage,
+      url: '',
       selectedImageIndex: 0,
     };
     
@@ -29,16 +30,32 @@ class LinkEditor extends React.Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    if(!this.state.titleValue && nextProps.urlContent.title) {
+    if (!this.state.titleValue && nextProps.urlContent.title) {
       this.setState({ titleValue: nextProps.urlContent.title });
     }
-    if(!this.state.captionValue && nextProps.urlContent.description) {
+    if (!this.state.captionValue && nextProps.urlContent.description) {
       this.setState({ descriptionValue: nextProps.urlContent.description});
     }
-    if(nextProps.urlContent.images && nextProps.urlContent.images.length && !this.state.selectedImage) {
+    if (!this.state.url && nextProps.urlContent.original_url) {
+      this.setState({ url: nextProps.urlContent.original_url });
+    }
+    if (!this.state.url && (nextProps.linkItem && nextProps.linkItem.properties && nextProps.linkItem.properties.link)) {
+      this.setState({ url: nextProps.linkItem.properties.link });
+    }
+    if (!this.state.titleValue && (nextProps.linkItem && nextProps.linkItem.properties && nextProps.linkItem.properties.title)) {
+      this.setState({ titleValue: nextProps.linkItem.properties.title });
+    }
+    if (!this.state.captionValue && (nextProps.linkItem && nextProps.linkItem.properties && nextProps.linkItem.properties.description)) {
+      console.log('in update');
+      this.setState({ descriptionValue: nextProps.linkItem.properties.description});
+    }
+    if (nextProps.urlContent.images && nextProps.urlContent.images.length && !this.state.selectedImage) {
       this.setState({ selectedImage: nextProps.urlContent.images[0], selectedImageIndex: 0 });
     }
-    if (!this.props.linkEditorDialog) {
+    if (nextProps.linkItem && nextProps.linkItem.properties && nextProps.linkItem.properties.picture && !this.state.selectedImage) {
+      this.setState({ selectedImage: {url: nextProps.linkItem.properties.picture} });
+    }
+    if (!nextProps.linkEditorDialog) {
       this.setState({
         selectedImage: false,
         titleValue: '',
@@ -84,18 +101,35 @@ class LinkEditor extends React.Component {
     if (this.state.selectedImage) {
       imageUrl = this.state.selectedImage.url;
     }
-    const linkItem = {
-      url: this.props.urlContent.url,
-      description: this.state.titleValue,
-      caption: this.state.descriptionValue,
-      picture: imageUrl,
-    };
-    
+    let linkItem = {};
+    if (Object.keys(this.props.linkItem).length > 0) {
+      const {properties, ...rest} = this.props.linkItem;
+      const {title, description, ...other} = properties;
+      linkItem = {
+        action: 'update',
+        properties: {
+          ...other,
+          title: this.state.titleValue,
+          description: this.state.descriptionValue,
+        },
+        ...rest,
+      };
+      console.log(linkItem);
+    } else {
+      linkItem = {
+        action: 'create',
+        url: this.props.urlContent.url,
+        title: this.state.titleValue,
+        description: this.state.descriptionValue,
+        picture: imageUrl,
+      };
+    }
     this.setState({
       selectedImage: false,
       titleValue: '',
       descriptionValue: '',
       selectedImageIndex: 0,
+      url: '',
     });
     
     this.props.handleLinkEditorSave(linkItem);
@@ -112,16 +146,16 @@ class LinkEditor extends React.Component {
         type="large"
       >
         <Wrapper>
-          { !this.props.urlContent.images && <Spinner /> }
-          { this.props.urlContent.images &&
+          { !this.props.urlContent.images && !this.props.linkItem && <Spinner /> }
+          { (this.props.urlContent.images || this.props.linkItem) &&
             <div>
-              <Input type='text' label='Destination URL' value={this.props.urlContent.original_url} disabled />
+              <Input type='text' label='Destination URL' value={this.state.url} disabled />
               <div className="row">
                 <div className="col-sm-6">
                   <h2>Link Information</h2>
                   <Input type="text" value={this.state.titleValue} label="Link Title" onChange={this.handleInputChange.bind(this, 'titleValue')} />
                   <Input type="text" multiline value={this.state.descriptionValue} label="Link Description" onChange={this.handleInputChange.bind(this, 'descriptionValue')} />
-                  { this.props.urlContent.images.length > 0 &&
+                  { (this.props.urlContent.images && this.props.urlContent.images.length > 0) &&
                     <div>
                         <div>Images returned from URL:</div>
                         <div style={{ marginTop: '20px', minHeight: '100px' }}>
@@ -151,7 +185,9 @@ class LinkEditor extends React.Component {
               </div>
             </div>
           }
-        <Button label="Save Link" primary style={{ float: 'right' }} onClick={this.prepareLinkItem} />
+        <div style={{height: '60px', textAlign: 'right'}}>
+          <Button label="Save Link" primary style={{ marginTop: '20px' }} onClick={this.prepareLinkItem} />
+        </div>
         </Wrapper>
       </PPDialog>    
     );

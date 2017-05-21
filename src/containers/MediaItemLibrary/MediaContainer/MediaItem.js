@@ -55,6 +55,7 @@ const ImageContainer = styled.div`
   width: 250px;
   height: calc(252px - 48px + 25px);
   text-align: center;
+  line-height: 229px;
 `;
 
 const ActionBar = styled.div`
@@ -62,18 +63,28 @@ const ActionBar = styled.div`
   text-align: right;
 `;
 
+const IconPlaceholder = styled.i`
+  width: 100%;
+  height: 100%;
+  font-size: 64px;
+  color: #8C9497;
+`;
+
 const MediaItem = (props) => {
-  console.log(props.mediaItem);
-  const coverImage = props.mediaItem.properties.thumb_url || '';
+  const coverImage = props.mediaItem.properties.thumb_url || props.mediaItem.properties.picture || '';
   const mediaType = props.mediaItem.type;
   const creationTime = props.mediaItem.creation_time;
   const title = props.mediaItem.properties.title || props.mediaItem.properties.filename || props.mediaItem.properties.description;
   let icon = 'photo';
+  let fa = 'fa-picture-o'
   if (props.mediaItem.type === 'link') {
+    fa = 'fa-link';
     icon = 'link';
   } else if (props.mediaItem.type === 'video') {
+    fa = 'fa-video-camera';
     icon = 'videocam';
-  } else if (props.mediaItem.type === 'blog') {
+  } else if (props.mediaItem.type === 'blog' || props.mediaItem.type === 'document') {
+    fa = 'fa-file-text';
     icon = 'description';
   }
   if ( props.mediaItem.status === 0) {
@@ -83,13 +94,14 @@ const MediaItem = (props) => {
   return(
     <Wrapper>
       <ImageContainer>
-        <CoverImage src={coverImage} />
+      { coverImage ? (<CoverImage src={coverImage} />) : (<IconPlaceholder className={`fa ${fa}`} />) }
       </ImageContainer>
       <Footer>
         <Title>{title}</Title>
         <Icon><FontIcon value={icon} /></Icon>
       </Footer>
       <ActionBar>
+        <IconButtonTooltip icon='edit' tooltip="Edit" onClick={() => props.openEditor(props.mediaItem)} />
         <IconButtonTooltip icon='remove_red_eye' tooltip="View" onClick={() => props.openPreview(props.mediaItem)} />
         <IconButtonTooltip icon='add' tooltip="Add to post" />
         <IconButtonTooltip icon='delete_forever' tooltip="Delete" onClick={() => props.onDelete(props.mediaItem.media_item_id)} />

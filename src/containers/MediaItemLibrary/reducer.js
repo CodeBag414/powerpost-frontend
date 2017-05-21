@@ -21,8 +21,13 @@ import {
    SHOW_IMAGES,
    SHOW_VIDEOS,
    SET_SEARCH_FILTER,
+   SET_SORT_ORDER,
    CREATE_MEDIA_ITEM_SUCCESS,
    DELETE_MEDIA_ITEM_SUCCESS,
+   VIDEO_PROCESSING_DONE,
+   SET_PROCESSING_ITEM,
+   UPDATE_MEDIA_ITEM_SUCCESS,
+   CREATE_RSS_FEED_SUCCESS,
 } from './constants';
 
 // The initial application state
@@ -32,9 +37,11 @@ const initialState = fromJS({
   addView: false,
   isFetching: true,
   error: false,
+  processingItem: false,
   feeds: [],
   rssItems: [],
   searchFilter: null,
+  sort: 'date',
   urlContent: {},
   filter: SHOW_ALL,
   collections: [{}],
@@ -78,6 +85,9 @@ function mediaLibraryReducer(state = initialState, action) {
     case SEARCH_BING_SUCCESS:
       return state
         .set('searchResults', action.webResults);
+    case CREATE_RSS_FEED_SUCCESS:
+      return state
+        .update('feeds', feeds => feeds.concat([action.feed]));
     case FETCH_RSS_FEEDS_SUCCESS:
       return state
         .set('feeds', action.feeds);
@@ -87,18 +97,53 @@ function mediaLibraryReducer(state = initialState, action) {
     case SET_VISIBILITY_FILTER:
       return state
         .set('filter', action.filter);
+    case SET_SORT_ORDER:
+      return state
+        .set('sort', action.sortOrder);
     case SET_SEARCH_FILTER:
       return state
         .set('searchFilter', action.searchFilter);
     case CREATE_MEDIA_ITEM_SUCCESS:
       return state
         .update('mediaItems', mediaItems => mediaItems.concat(action.mediaItems));
+    case VIDEO_PROCESSING_DONE:
+      return state
+        .update('mediaItems', mediaItems => mediaItems.concat(action.mediaItem));
+    case SET_PROCESSING_ITEM:
+      return state
+        .set('processingItem', action.processingItem);
     case DELETE_MEDIA_ITEM_SUCCESS:
       return state
-        .set('mediaItems', state.get('mediaItems').filter(t => t.id != action.id));
+        .set('mediaItems', deleteObjectInArray(state.get('mediaItems'), action));
+    case UPDATE_MEDIA_ITEM_SUCCESS:
+      return state
+        .set('mediaItems', updateObjectInArray(state.get('mediaItems'), action));
     default:
       return state;
   }
 }
 
 export default mediaLibraryReducer;
+
+function updateObjectInArray(array, action) {
+    return array.map( (item, index) => {
+        if(item.media_item_id !== action.mediaItems[0].media_item_id) {
+            // This isn't the item we care about - keep it as-is
+            return item;
+        }
+
+        // Otherwise, this is the one we want - return an updated value
+        return {
+            ...item,
+            ...action.mediaItems[0],
+        };    
+    });
+}
+
+function deleteObjectInArray(array, action) {
+  return array.map((item, index) => {
+    if(item.media_item_id !== action.id) {
+      return item; 
+    }
+  });
+}

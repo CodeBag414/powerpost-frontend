@@ -24,6 +24,11 @@ const makeSelectMediaItems = () => createSelector(
   (library) => library.get('mediaItems')
 );
 
+const makeSelectProcessingItem = () => createSelector(
+  [selectLibrary],
+  (library) => library.get('processingItem')
+);
+
 const makeSelectSearchResults = () => createSelector(
   selectLibrary,
   (library) => library.get('searchResults')
@@ -49,10 +54,34 @@ const makeSelectSearchFilter = () => createSelector(
   (library) => library.get('searchFilter')
 );
 
+const makeSelectSortOrder = () => createSelector(
+  [selectLibrary],
+  (library) => library.get('sort')
+);
+
+const makeSelectMediaItemsSorted = () => createSelector(
+  [makeSelectMediaItems(), makeSelectSortOrder()],
+  (mediaItems, sortOrder) => {
+    console.log(sortOrder);
+    if (sortOrder === 'date') {
+      return mediaItems.sort((a, b) => b.creation_time - a.creation_time);
+    } else if (sortOrder === 'title') {
+      return mediaItems.sort((a, b) => {
+        if(a.properties.title && (b.properties.title || b.properties.filename)) {
+          return a.properties.title.localeCompare(b.properties.title || b.properties.filename);
+        } else if (a.properties.filename && (b.properties.title || b.properties.filename)) {
+          return a.properties.filename.localeCompare(b.properties.title || b.properties.filename);
+        }
+      });
+    } else {
+      return mediaItems;
+    }
+  }
+);
+
 const makeSelectVisibleMediaItems = () => createSelector(
-  [makeSelectMediaItems(), makeSelectFilter()],
+  [makeSelectMediaItemsSorted(), makeSelectFilter()],
   (mediaItems, filter) => {
-    console.log(filter);
     switch (filter) {
       case SHOW_ALL:
         return mediaItems;
@@ -86,4 +115,6 @@ export {
     makeSelectRSSItems,
     makeSelectFilter,
     makeSelectVisibleMediaItemsWithSearch,
+    makeSelectMediaItemsSorted,
+    makeSelectProcessingItem,
 };
