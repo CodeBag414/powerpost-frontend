@@ -2,7 +2,7 @@ import React from 'react';
 
 import Wrapper from './Wrapper';
 
-const Avatar = ({ children, onClick }) => (<Wrapper onClick={ onClick }>
+const Avatar = ({ children, onClick }) => (<Wrapper onClick={onClick}>
   { children }
 </Wrapper>);
 
