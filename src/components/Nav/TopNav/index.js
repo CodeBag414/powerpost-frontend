@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 
 import PPButton from 'elements/atm.Button';
+import PPAvatar from 'elements/atm.Avatar';
 import PPMenuItem from 'elements/atm.MenuItem';
 import PPIconMenu from 'elements/atm.IconMenu';
 import withReactRouter from 'elements/hoc.withReactRouter';
@@ -94,7 +95,15 @@ class TopNav extends Component {
     let menuOptions = {
       isOpen: this.state.userMenuOpen,
       close: this.handleRequestClose,
-      toggle: <Avatar avatarSrc={avatar} onClick={this.toggle.bind(this)} />,
+      toggle: <Avatar onClick={this.toggle.bind(this)}>
+                <PPAvatar
+                  size={40}
+                  image={avatar}
+                  backgroundColor={color}
+                  title={this.props.user.display_name}
+                  isClickable = {false}
+                />
+              </Avatar>,
       align: 'left',
     };
     
