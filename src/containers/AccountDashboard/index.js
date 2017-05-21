@@ -10,8 +10,6 @@ import { createStructuredSelector } from 'reselect';
 import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 
 import PPAvatar from 'elements/atm.Avatar';
-import PPButton from 'elements/atm.Button';
-import PPTooltip from 'elements/atm.Tooltip';
 import withReactRouter from 'elements/hoc.withReactRouter';
 
 import {
@@ -24,9 +22,6 @@ import SimpleCapsule from './SimpleCapsule';
 
 const ReactRouterSimpleCapsule = withReactRouter(SimpleCapsule);
 const ReactRouterCapsule = withReactRouter(Capsule);
-
-const ReactRouterButton = withReactRouter(PPButton);
-const PPTooltipRouter = PPTooltip(ReactRouterButton);
 
 class AccountDashboard extends Component {
 
@@ -63,15 +58,6 @@ class AccountDashboard extends Component {
             <div className="avatar-text">
               <div>
                 <h5>{account.title}</h5>
-                <PPTooltipRouter
-                  className="account-setting"
-                  to={`/account/${account.account_id}/settings`}
-                  floating mini
-                  tooltip="Settings"
-                  tooltipPosition="right"
-                >
-                  <i className="fa fa-sliders fa-4x"></i>
-                </PPTooltipRouter>
               </div>
               <p>{`Your Role: ${account.user_access_level}`}</p>
             </div>
@@ -92,6 +78,10 @@ class AccountDashboard extends Component {
           <ReactRouterSimpleCapsule to={`/account/${account.account_id}/settings/connections`}>
             <h5>Manage Connections</h5>
             <p>Go here to add and manage connections, such as Facebook and Twitter.</p>
+          </ReactRouterSimpleCapsule>
+          <ReactRouterSimpleCapsule to={`/account/${account.account_id}/settings`}>
+            <h5>Manage Settings</h5>
+            <p>Go here to manage this account&apos;s settings, such as the team, connections and plan info.</p>
           </ReactRouterSimpleCapsule>
         </div>
         <div className="rightPane">

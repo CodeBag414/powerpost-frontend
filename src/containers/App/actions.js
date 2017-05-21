@@ -42,6 +42,12 @@ import {
   SET_POST_SETS,
   DELETE_POST_SET_REQUEST,
   CHANGE_POST_SET_REQUEST,
+  FETCH_POST_SET_REQUEST,
+  FETCH_POST_SET_SUCCESS,
+  FETCH_POST_SET_ERROR,
+  UPDATE_POST_SET_REQUEST,
+  UPDATE_POST_SET_SUCCESS,
+  UPDATE_POST_SET_ERROR,
   // CHECK_USER_OBJECT,
 } from './constants';
 
@@ -345,4 +351,49 @@ export function deletePostSetRequest(id) {
 
 export function changePostSetStatusRequest(id, status) {
   return { type: CHANGE_POST_SET_REQUEST, id, status };
+}
+
+export function fetchPostSetRequest(payload) {
+  return {
+    type: FETCH_POST_SET_REQUEST,
+    payload,
+  };
+}
+
+export function fetchPostSetSuccess(payload) {
+  return {
+    type: FETCH_POST_SET_SUCCESS,
+    payload,
+  };
+}
+
+export function fetchPostSetError(payload) {
+  return {
+    type: FETCH_POST_SET_ERROR,
+    payload,
+  };
+}
+
+export function updatePostSetRequest(payload, section) {
+  return {
+    type: UPDATE_POST_SET_REQUEST,
+    payload,
+    section,
+  };
+}
+
+export function updatePostSetSuccess(payload, section) {
+  return {
+    type: UPDATE_POST_SET_SUCCESS,
+    payload,
+    section,
+  };
+}
+
+export function updatePostSetError(payload, section) {
+  return {
+    type: UPDATE_POST_SET_ERROR,
+    payload,
+    section,
+  };
 }

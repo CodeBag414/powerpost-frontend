@@ -6,8 +6,7 @@
 /* eslint-disable camelcase */
 
 import { takeLatest, delay } from 'redux-saga';
-import { take, call, put, race, select, cancel } from 'redux-saga/effects';
-import { LOCATION_CHANGE } from 'react-router-redux';
+import { take, call, put, race, select } from 'redux-saga/effects';
 import { browserHistory } from 'react-router';
 import { toastr } from 'lib/react-redux-toastr';
 import { getData, postData, putData } from 'utils/request';
@@ -45,6 +44,8 @@ import {
   DELETE_POST_SET,
   CHANGE_POST_SET_REQUEST,
   CHANGE_POST_SET_STATUS,
+  FETCH_POST_SET_REQUEST,
+  UPDATE_POST_SET_REQUEST,
 } from './constants';
 
 import {
@@ -68,6 +69,10 @@ import {
   addUserToGroupError,
   removeUserFromGroupSuccess,
   removeUserFromGroupError,
+  fetchPostSetSuccess,
+  fetchPostSetError,
+  updatePostSetSuccess,
+  updatePostSetError,
 } from './actions';
 
 /**
@@ -574,24 +579,57 @@ export function* changePostSetRequest(payload) {
   }
 }
 
+export function* fetchPostSetWorker(action) {
+  const { payload } = action;
+
+  try {
+    const response = yield call(getData, `/post_api/post_set/${payload.id}`);
+    const { data } = response;
+    if (data.status === 'success') {
+      yield put(fetchPostSetSuccess(data.post_set));
+    } else {
+      throw data.message;
+    }
+  } catch (error) {
+    yield put(fetchPostSetError(error));
+  }
+}
+
+export function* updatePostSetWorker(action) {
+  const { payload, section } = action;
+
+  try {
+    const response = yield call(putData, `/post_api/post_set/${payload.id}`, { payload });
+    const { data } = response;
+    if (data.status === 'success') {
+      yield put(updatePostSetSuccess(data.post_set, section));
+    } else {
+      throw data.message;
+    }
+  } catch (error) {
+    yield put(updatePostSetError(error, section));
+  }
+}
+
 export function* fetchPostSets() {
-  const watcher = yield takeLatest(FETCH_POST_SETS, getPostSets);
-  yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
+  yield takeLatest(FETCH_POST_SETS, getPostSets);
 }
 
 export function* deletePostSet() {
-  const watcher = yield takeLatest(DELETE_POST_SET_REQUEST, deletePostSetRequest);
-  yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
+  yield takeLatest(DELETE_POST_SET_REQUEST, deletePostSetRequest);
 }
 
 export function* changePostSetStatus() {
-  const watcher = yield takeLatest(CHANGE_POST_SET_REQUEST, changePostSetRequest);
-  yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
+  yield takeLatest(CHANGE_POST_SET_REQUEST, changePostSetRequest);
 }
 
+export function* fetchPostSetSaga() {
+  yield takeLatest(FETCH_POST_SET_REQUEST, fetchPostSetWorker);
+}
+
+export function* updatePostSetSaga() {
+  yield takeLatest(UPDATE_POST_SET_REQUEST, updatePostSetWorker);
+}
 
 // The root saga is what we actually send to Redux's middleware. In here we fork
 // each saga so that they are all "active" and listening.
@@ -617,6 +655,8 @@ export default [
   fetchPostSets,
   deletePostSet,
   changePostSetStatus,
+  fetchPostSetSaga,
+  updatePostSetSaga,
 ];
 
 // Little helper function to abstract going to different pages

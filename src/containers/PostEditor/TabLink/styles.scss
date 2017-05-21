@@ -20,6 +20,10 @@
     border-right: 1px solid #DBDFE0;
     border-bottom: 1px solid transparent !important;
     color: #424647 !important;
+
+    .countStyle {
+        display: none;
+    }
 }
 
 .graySelectActive {
@@ -27,7 +31,8 @@
 }
 
 .countStyle {
-    height: 16px;
+    line-height: 13px;
+    vertical-align: top;
     padding: 0 4px;
     display: inline-block;
     margin-left: 6px;

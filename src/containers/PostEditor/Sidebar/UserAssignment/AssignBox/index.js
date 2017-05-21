@@ -14,6 +14,10 @@ class AssignBox extends Component {
     handleAssignUser: PropTypes.func,
   }
 
+  state = {
+    filter: '',
+  }
+
   handleSelectUser = (id) => {
     const { assignee, handleAssignUser } = this.props;
 
@@ -24,22 +28,30 @@ class AssignBox extends Component {
     handleAssignUser(id);
   }
 
+  handleSearch = (ev) => {
+    this.setState({
+      filter: ev.target.value,
+    });
+  }
+
   render() {
     const { assignee, users } = this.props;
+    const { filter } = this.state;
 
     return (
       <Wrapper>
         <div className="search-wrapper">
-          <Search placeholder="hey" />
+          <Search placeholder="Assign task to..." onChange={this.handleSearch} />
         </div>
-        { users.map((u) => (
-          <UserItem
-            key={u.user_id}
-            avatarUrl={get(u, 'properties.thumb_url')}
-            name={u.display_name}
-            selected={u.user_id === assignee.get('user_id')}
-            onClick={() => this.handleSelectUser(u.user_id)}
-          />
+        { users.filter((u) => u.display_name.indexOf(filter) >= 0)
+          .map((u) => (
+            <UserItem
+              key={u.user_id}
+              avatarUrl={get(u, 'properties.thumb_url')}
+              name={u.display_name}
+              selected={u.user_id === assignee.get('user_id')}
+              onClick={() => this.handleSelectUser(u.user_id)}
+            />
           ))
         }
       </Wrapper>
