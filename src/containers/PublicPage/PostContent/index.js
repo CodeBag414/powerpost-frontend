@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import VideoPlayer from 'react-player';
+import renderHTML from 'react-render-html';
 
 import Wrapper from './Wrapper';
 
@@ -66,6 +67,13 @@ const showContent = (items) => {
           <LinkTitle>{item.getIn(['properties', 'description'])}</LinkTitle>
           <LinkDescription>{item.getIn(['properties', 'caption'])}</LinkDescription>
           <LinkUrl>{item.getIn(['properties', 'link'])}</LinkUrl></div>);
+        break;
+      case 'blog':
+        media = (<div>
+          <LinkTitle>{item.getIn(['properties', 'caption'])}</LinkTitle>
+          <LinkDescription>{item.getIn(['properties', 'title'])}</LinkDescription>
+          {renderHTML(item.getIn(['properties', 'html']))}
+        </div>);
         break;
       default:
         media = <Image src={item.getIn(['properties', 'thumb_url'])} />;
