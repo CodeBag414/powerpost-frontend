@@ -141,6 +141,107 @@ export function createRoutes(store, auth) {
 
             importModules.catch(errorLoading);
           },
+          indexRoute: {
+            getComponent(nextState, cb) {
+              const importModules = Promise.all([
+                  // System.import('../App/views/Main/views/Dashboard/state/reducer'),
+                  // System.import('../App/views/Main/views/Dashboard/state/sagas'),
+                System.import('containers/MediaItemLibrary/Library'),
+              ]);
+    
+              const renderRoute = loadModule(cb);
+    
+              importModules.then(([component]) => {
+                renderRoute(component);
+              });
+    
+              importModules.catch(errorLoading);
+            },
+          },
+          childRoutes: [
+            {
+              path: 'blog(/:media_id)',
+              name: 'Create Blog',
+              getComponent(nextState, cb) {
+                const importModules = Promise.all([
+                  System.import('containers/MediaItemLibrary/Blog'),  
+                ]);
+                
+                const renderRoute = loadModule(cb);
+                
+                importModules.then(([component]) => {
+                  renderRoute(component);
+                });
+                
+                importModules.catch(errorLoading);
+              },
+            },
+            {
+              path: 'search',
+              name: 'Search the Web',
+              getComponent(nextState, cb) {
+                const importModules = Promise.all([
+                  System.import('containers/MediaItemLibrary/Search'),
+                ]);
+                
+                const renderRoute = loadModule(cb);
+                
+                importModules.then(([component]) => {
+                  renderRoute(component);
+                });
+              
+                importModules.catch(errorLoading);
+              }
+            },
+            {
+              path: 'rss',
+              name: 'RSS Feeds',
+              getComponent(nextState, cb) {
+                const importModules = Promise.all([
+                  System.import('containers/MediaItemLibrary/RSS'),  
+                ]);
+                const renderRoute = loadModule(cb);
+                
+                importModules.then(([component]) => {
+                  renderRoute(component);
+                });
+              
+                importModules.catch(errorLoading);
+              },
+            },
+            {
+              path: 'shared_streams/subscriptions',
+              name: 'Shared Streams',
+              getComponent(nextState, cb) {
+                const importModules = Promise.all([
+                  System.import('containers/MediaItemLibrary/Subscriptions'),  
+                ]);
+                const renderRoute = loadModule(cb);
+                
+                importModules.then(([component]) => {
+                  renderRoute(component);
+                });
+              
+                importModules.catch(errorLoading);
+              },
+            },
+            {
+              path: 'shared_streams/owned',
+              name: 'Shared Streams',
+              getComponent(nextState, cb) {
+                const importModules = Promise.all([
+                  System.import('containers/MediaItemLibrary/Owned'),  
+                ]);
+                const renderRoute = loadModule(cb);
+                
+                importModules.then(([component]) => {
+                  renderRoute(component);
+                });
+              
+                importModules.catch(errorLoading);
+              },
+            },
+          ],
         },
         {
           path: '/account(/:account_id)/calendar',

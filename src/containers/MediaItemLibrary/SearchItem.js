@@ -26,13 +26,14 @@ const Description = styled.div`
 `;
 
 const Image = styled.img`
-
+  max-width: 100%;
+  height: auto;
 `;
 
 const SearchItem = (props) => {
   
   return(
-    <Wrapper className="row">
+    <Wrapper className="row" style={{marginLeft: '0px', marginRight: '0px'}}>
       <div className={ props.item.media_type === 'link' ? 'col-md-12' : 'col-md-8'}>
         <UrlHeader>{props.item.source_provider || props.item.media_base_url || props.item.media_url }</UrlHeader>
         <Title>{props.item.title}</Title>
