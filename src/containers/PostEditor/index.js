@@ -72,14 +72,18 @@ class PostEditor extends Component {
     this.setState({ postTitle: postSet.getIn(['details', 'title']) });
   }
 
-  handleTitleChange = (e) => {
-    this.setState({
-      postTitle: e.target.textContent,
-    });
+  handleTitleChange = () => {
   }
 
   handleTitleBlur = (e) => {
-    if (e.target.textContent === '') {
+    const { updatePostSet, postSet } = this.props;
+    const titleText = e.target.textContent;
+    updatePostSet({
+      ...postSet.get('details').toJS(),
+      id: postSet.getIn(['details', 'post_set_id']),
+      title: titleText,
+    });
+    if (titleText === '') {
       this.setState({
         postTitle: 'Untitled Post',
       });
