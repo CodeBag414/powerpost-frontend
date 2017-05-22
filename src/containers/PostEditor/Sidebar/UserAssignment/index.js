@@ -59,7 +59,7 @@ class UserAssignment extends Component {
       <Wrapper>
         <div className="assignee-wrapper" onClick={this.toggleUserList}>
           { assignee.get('user_id') ?
-            <Avatar image={assignee.getIn(['user', 'properties', 'thumb_url'])} title={name} backgroundColor="green" size={40} isClickable={false} /> :
+            <Avatar image={assignee.getIn(['user', 'properties', 'thumb_url'])} title={name} backgroundColor="green" size={36} isClickable={false} /> :
             <i className="fa fa-user" />
           }
           <div className="right-box">
