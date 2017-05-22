@@ -13,12 +13,16 @@ const Wrapper = styled.div`
     font-size: 11px;
     line-height: 13px;
   }
+
   .description {
-    margin-top: 12px;
     color: #616669;
-    font-size: 14px;
-    line-height: 21px;
+    font-family: Lato;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 18px;
+    margin-top: 10px;
   }
+
   .mediaContent {
     margin-top: 24px;
   }

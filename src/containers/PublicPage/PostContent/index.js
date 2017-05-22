@@ -14,25 +14,32 @@ const Image = styled.img`
 
 const LinkTitle = styled.div`
   color: #424647;
-  font-weight: 700;
   font-size: 15px;
+  font-weight: bold;
+  line-height: 16px;
   text-align: left;
   margin-top: 20px;
+  font-family: Lato;
 `;
 
 const LinkDescription = styled.div`
   font-size: 12px;
   color: #424647;
   text-align: left;
-  margin-bottom: 10px;
+  margin-top: 5px;
+  line-height: 16px;
+  font-family: Lato;
 `;
 
 const LinkUrl = styled.div`
   text-transform: uppercase;
   text-align: left;
-  font-size: 10px;
-  font-weight: 700;
   color: #8C9496;
+  font-family: Lato;
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 12px;
+  margin-top: 16px;
 `;
 
 const showContent = (items) => {
@@ -46,7 +53,12 @@ const showContent = (items) => {
         media = <Image src={item.getIn(['properties', 'thumb_url'])} />;
         break;
       case 'video':
-        media = <VideoPlayer style={{ margin: '0 auto' }}url={item.getIn(['properties', 'source_url'])} controls />;
+        media = (<VideoPlayer
+          style={{ margin: '0 auto' }}
+          width={'initial'}
+          height={'initial'}
+          url={item.getIn(['properties', 'source_url'])} controls
+        />);
         break;
       case 'link':
         media = (<div>
