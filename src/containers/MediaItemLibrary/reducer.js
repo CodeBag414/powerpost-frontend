@@ -28,11 +28,12 @@ import {
    SET_PROCESSING_ITEM,
    UPDATE_MEDIA_ITEM_SUCCESS,
    CREATE_RSS_FEED_SUCCESS,
+   SET_ACTIVE_MEDIA_ITEM_ID,
 } from './constants';
 
 // The initial application state
 const initialState = fromJS({
-  activeMediaItem: {},
+  activeMediaItemId: false,
   detailView: false,
   addView: false,
   isFetching: true,
@@ -118,6 +119,9 @@ function mediaLibraryReducer(state = initialState, action) {
     case UPDATE_MEDIA_ITEM_SUCCESS:
       return state
         .set('mediaItems', updateObjectInArray(state.get('mediaItems'), action));
+    case SET_ACTIVE_MEDIA_ITEM_ID:
+      return state
+        .set('activeMediaItemId', action.id);
     default:
       return state;
   }

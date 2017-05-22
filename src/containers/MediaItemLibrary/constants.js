@@ -39,3 +39,4 @@ export const VIDEO_PROCESSING_DONE = 'MediaItemLibrary/VIDEO_PROCESSING_DONE';
 export const SET_PROCESSING_ITEM = 'MediaItemLibrary/SET_PROCESSING_ITEM';
 export const UPDATE_MEDIA_ITEM = 'MediaItemLibrary/UPDATE_MEDIA_ITEM';
 export const UPDATE_MEDIA_ITEM_SUCCESS = 'MediaItemLibrary/UPDATE_MEDIA_ITEM_SUCCESS';
+export const SET_ACTIVE_MEDIA_ITEM_ID = 'MediaItemLibrary/SET_ACTIVE_MEDIA_ITEM_ID';

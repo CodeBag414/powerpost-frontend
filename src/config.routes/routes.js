@@ -160,7 +160,7 @@ export function createRoutes(store, auth) {
           },
           childRoutes: [
             {
-              path: 'blog',
+              path: 'blog(/:media_id)',
               name: 'Create Blog',
               getComponent(nextState, cb) {
                 const importModules = Promise.all([

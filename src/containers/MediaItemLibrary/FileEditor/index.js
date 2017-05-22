@@ -32,8 +32,8 @@ class FileEditor extends React.Component {
     if (!this.state.source && nextProps.fileItem.properties) {
       this.setState({ source: nextProps.fileItem.source_url || nextProps.fileItem.properties.url });
     }
-    if (nextProps.fileItem.properties && nextProps.fileItem.properties.thumb_url && !this.state.selectedImage) {
-      this.setState({ selectedImage: {url:nextProps.fileItem.properties.thumb_url} });
+    if (nextProps.fileItem.properties && nextProps.fileItem.properties.picture && !this.state.selectedImage) {
+      this.setState({ selectedImage: {url:nextProps.fileItem.properties.picture} });
     }
     if (!nextProps.isOpen) {
      this.setState({
@@ -64,6 +64,7 @@ class FileEditor extends React.Component {
           ...other,
           title: this.state.titleValue || title || '',
           description: this.state.descriptionValue || description || '',
+          picture: this.state.selectedImage.url,
         },
         ...rest,
       };
@@ -75,6 +76,7 @@ class FileEditor extends React.Component {
         properties: {
           title: this.state.titleValue,
           description: this.state.descriptionValue,
+          picture: this.state.selectedImage.url,
           ...this.props.fileItem.properties,
         }
       };
@@ -115,14 +117,14 @@ class FileEditor extends React.Component {
   }
   
   handleFilePickerSuccess(mediaItem) {
-    this.setState({ selectedImage: mediaItem, selectedImageIndex: false, });
+    this.setState({ selectedImage: mediaItem });
   }
   
   render() {
     return(
       <PPDialog
         active={this.props.isOpen}
-        title='Video Editor'
+        title='File Editor'
         onEscKeyDown={this.props.closeAllDialog}
         onOverlayClick={this.props.closeAllDialog}
         actions={this.props.actions}
@@ -131,9 +133,9 @@ class FileEditor extends React.Component {
         <Wrapper>
           <div className="row">
             <div className="col-sm-6">
-              <h2>Video Information</h2>
-              <Input type="text" value={this.state.titleValue} label="Video Title" onChange={this.handleInputChange.bind(this, 'titleValue')} />
-              <Input type="text" multiline value={this.state.descriptionValue} label="Video Description" onChange={this.handleInputChange.bind(this, 'descriptionValue')} />
+              <h2>File Information</h2>
+              <Input type="text" value={this.state.titleValue} label="File Title" onChange={this.handleInputChange.bind(this, 'titleValue')} />
+              <Input type="text" multiline value={this.state.descriptionValue} label="File Description" onChange={this.handleInputChange.bind(this, 'descriptionValue')} />
             </div>
             <div className="col-md-6">
               { this.state.selectedImage &&

@@ -4,8 +4,11 @@ import moment from 'moment';
 import { IconButton } from 'react-toolbox/lib/button';
 import FontIcon from 'react-toolbox/lib/font_icon';
 import Tooltip from 'react-toolbox/lib/tooltip';
+import withReactRouter from 'elements/hoc.withReactRouter';
+
 
 const IconButtonTooltip = Tooltip(IconButton);
+const IconLink = withReactRouter(IconButtonTooltip);
 
 const Wrapper = styled.div`
   width: 250px;
@@ -71,7 +74,7 @@ const IconPlaceholder = styled.i`
 `;
 
 const MediaItem = (props) => {
-  const coverImage = props.mediaItem.properties.thumb_url || props.mediaItem.properties.picture || '';
+  const coverImage = props.mediaItem.properties.picture || props.mediaItem.properties.thumb_url || '';
   const mediaType = props.mediaItem.type;
   const creationTime = props.mediaItem.creation_time;
   const title = props.mediaItem.properties.title || props.mediaItem.properties.filename || props.mediaItem.properties.description;
@@ -90,7 +93,10 @@ const MediaItem = (props) => {
   if ( props.mediaItem.status === 0) {
     return;
   }
-  
+  let EditorLink = <IconButtonTooltip icon='edit' tooltip="Edit" onClick={() => props.openEditor(props.mediaItem)} />;
+  if (props.mediaItem.type === 'blog') {
+    EditorLink = <IconLink to={`/account/${props.mediaItem.account_id}/library/blog/${props.mediaItem.media_item_id}`} icon="edit" tooltip="Edit" />;
+  }
   return(
     <Wrapper>
       <ImageContainer>
@@ -101,7 +107,7 @@ const MediaItem = (props) => {
         <Icon><FontIcon value={icon} /></Icon>
       </Footer>
       <ActionBar>
-        <IconButtonTooltip icon='edit' tooltip="Edit" onClick={() => props.openEditor(props.mediaItem)} />
+        {EditorLink}
         <IconButtonTooltip icon='remove_red_eye' tooltip="View" onClick={() => props.openPreview(props.mediaItem)} />
         <IconButtonTooltip icon='add' tooltip="Add to post" />
         <IconButtonTooltip icon='delete_forever' tooltip="Delete" onClick={() => props.onDelete(props.mediaItem.media_item_id)} />

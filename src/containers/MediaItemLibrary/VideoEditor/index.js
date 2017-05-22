@@ -14,6 +14,7 @@ class VideoEditor extends React.Component {
       titleValue: this.props.videoItem.properties && this.props.videoItem.properties.title || '',
       descriptionValue: this.props.videoItem.properties && this.props.videoItem.properties.description || '',
       source: false,
+      selectedImage: false,
     };
     
     this.prepareItem = this.prepareItem.bind(this);
@@ -65,6 +66,7 @@ class VideoEditor extends React.Component {
           ...other,
           title: this.state.titleValue || title || '',
           description: this.state.descriptionValue || description || '',
+          picture: this.state.selectedImage.url,
         },
         ...rest,
       };
@@ -76,6 +78,7 @@ class VideoEditor extends React.Component {
         properties: {
           title: this.state.titleValue,
           description: this.state.descriptionValue,
+          picture: this.state.selectedImage.url || '',
           ...this.props.videoItem.properties,
         }
       };

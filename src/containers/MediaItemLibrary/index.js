@@ -37,6 +37,7 @@ import {
   toggleProccessingItem,
   updateMediaItem,
   setSortOrder,
+  setActiveMediaItemId,
 } from './actions';
 
 import {
@@ -48,6 +49,7 @@ import {
   makeSelectRSSItems,
   makeSelectFilter,
   makeSelectProcessingItem,
+  makeSelectActiveMediaItem,
 } from './selectors';
 
 import {
@@ -152,7 +154,7 @@ class Library extends React.Component {
   }
 
   openFileEditor(fileItem) {
-    this.setState({ fileItemDialog: true, fileItem: fileItem });
+    this.setState({ fileEditorDialog: true, fileItem: fileItem });
   }
   
   openImageEditor(imageItem) {
@@ -212,20 +214,64 @@ class Library extends React.Component {
   handleVideoEditorSave(videoItem) {
     this.setState({ videoEditorDialog: false, videoItem: {} });
     const {action, ...item} = videoItem;
-    if (action === 'update') {
-      this.props.updateMediaItem(item);
-    } else if (action === 'create') {
-      this.props.createMediaItem(item);
+    const filepicker = require('filepicker-js');
+    filepicker.setKey(this.props.filePickerKey);
+    if(item.picture) {
+      filepicker.storeUrl('https://process.filestackapi.com/' + this.props.filePickerKey + '/' + item.picture, (Blob) => {
+        console.log(Blob);
+        item.picture = Blob.url;
+        item.picture_key = Blob.key;
+        filepicker.storeUrl(
+          'https://process.filestackapi.com/' + this.props.filePickerKey + '/resize=width:300,height:300,fit:clip/' + item.picture,
+           (Blob) => {
+            item.thumb_key = Blob.key;
+            item.collection_id = this.props.activeCollection.collection_id;
+            item.mediaItemType="link";
+            if (action === 'create') {
+              this.props.createMediaItem(item);
+            } else if (action === 'update') {
+              this.props.updateMediaItem(item);
+            }
+          });
+      });
+    } else {
+      if (action === 'update') {
+        this.props.updateMediaItem(item);
+      } else if (action === 'create') {
+        this.props.createMediaItem(item);
+      }
     }
   }
   
-  handleFileEditorSave(fileItem) {
+  handleFileEditorSave(item) {
     this.setState({ fileEditorDialog: false, fileItem: {} });
-    const {action, ...item} = fileItem;
-    if (action === 'update') {
-      this.props.updateMediaItem(item);
-    } else if (action === 'create') {
-      this.props.createMediaItem(item);
+    const {action, ...fileItem} = item;
+    const filepicker = require('filepicker-js');
+    filepicker.setKey(this.props.filePickerKey);
+    if(fileItem.picture) {
+      filepicker.storeUrl('https://process.filestackapi.com/' + this.props.filePickerKey + '/' + fileItem.picture, (Blob) => {
+        console.log(Blob);
+        fileItem.picture = Blob.url;
+        fileItem.picture_key = Blob.key;
+        filepicker.storeUrl(
+          'https://process.filestackapi.com/' + this.props.filePickerKey + '/resize=width:300,height:300,fit:clip/' + fileItem.picture,
+           (Blob) => {
+            fileItem.thumb_key = Blob.key;
+            fileItem.collection_id = this.props.activeCollection.collection_id;
+            fileItem.mediaItemType="link";
+            if (action === 'create') {
+              this.props.createMediaItem(fileItem);
+            } else if (action === 'update') {
+              this.props.updateMediaItem(fileItem);
+            }
+          });
+      });
+    } else {
+      if (action === 'update') {
+        this.props.updateMediaItem(fileItem);
+      } else if (action === 'create') {
+        this.props.createMediaItem(fileItem);
+      }
     }
   }
   
@@ -408,6 +454,7 @@ export function mapDispatchToProps(dispatch) {
     deleteMediaItem: (id) => dispatch(deleteMediaItem(id)),
     setProcessingItem: (processingItem) => dispatch(toggleProccessingItem(processingItem)),
     updateMediaItem: (mediaItem) => dispatch(updateMediaItem(mediaItem)),
+    setActiveMediaItemId: (id) => dispatch(setActiveMediaItemId(id)),
   };
 }
 
@@ -421,6 +468,7 @@ const mapStateToProps = createStructuredSelector({
   rssItems: makeSelectRSSItems(),
   filter: makeSelectFilter(),
   processingItem: makeSelectProcessingItem(),
+  activeMediaItem: makeSelectActiveMediaItem(),
 });
 
 Library.propTypes = {

@@ -71,7 +71,7 @@ class RSS extends React.Component  {
       <Wrapper>
         <div style={{ clear: 'both' }}>
             <div className="row">
-              <div className="col-md-5">
+              <div install react-summernoteiv className="col-md-5">
                 <TextField floatingLabelText='RSS Feed URL' type='text' onChange={this.handleInputChangeURL} />
               </div>
               <div className="col-md-5">

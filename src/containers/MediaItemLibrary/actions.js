@@ -13,6 +13,7 @@ import {
   SET_PROCESSING_ITEM,
   UPDATE_MEDIA_ITEM,
   SET_SORT_ORDER,
+  SET_ACTIVE_MEDIA_ITEM_ID,
 } from './constants';
 
 export function fetchCollections(accountId) {
@@ -108,5 +109,12 @@ export function updateMediaItem(mediaItem) {
   return {
     type: UPDATE_MEDIA_ITEM,
     mediaItem,
+  };
+}
+
+export function setActiveMediaItemId(id) {
+  return {
+    type: SET_ACTIVE_MEDIA_ITEM_ID,
+    id,
   };
 }

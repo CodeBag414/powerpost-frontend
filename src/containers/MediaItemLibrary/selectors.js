@@ -59,6 +59,16 @@ const makeSelectSortOrder = () => createSelector(
   (library) => library.get('sort')
 );
 
+const makeSelectActiveMediaItemId = () => createSelector(
+  [selectLibrary],
+  (library) => library.get('activeMediaItemId')
+);
+
+const makeSelectActiveMediaItem = () => createSelector(
+  [makeSelectActiveMediaItemId(), makeSelectMediaItems()],
+  (id, mediaItems) => mediaItems.find(x => x.media_item_id === id)
+);
+
 const makeSelectMediaItemsSorted = () => createSelector(
   [makeSelectMediaItems(), makeSelectSortOrder()],
   (mediaItems, sortOrder) => {
@@ -117,4 +127,5 @@ export {
     makeSelectVisibleMediaItemsWithSearch,
     makeSelectMediaItemsSorted,
     makeSelectProcessingItem,
+    makeSelectActiveMediaItem,
 };

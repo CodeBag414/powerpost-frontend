@@ -111,6 +111,7 @@ class LinkEditor extends React.Component {
           ...other,
           title: this.state.titleValue,
           description: this.state.descriptionValue,
+          picture: imageUrl,
         },
         ...rest,
       };
