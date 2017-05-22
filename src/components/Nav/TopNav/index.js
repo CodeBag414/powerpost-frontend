@@ -117,7 +117,7 @@ class TopNav extends Component {
             <PPMenuItem caption="Logout" onTouchTap={this.props.logout} />
           </DropDownMenu>
         </AvatarWrapper>
-        <DashboardLink to={'/'}><i className="fa fa-send-o" /></DashboardLink>
+        <DashboardLink to={'/'}><i className="fa fa-home" /></DashboardLink>
       </Wrapper>
     );
   }

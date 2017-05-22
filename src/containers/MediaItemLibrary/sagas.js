@@ -1,6 +1,7 @@
-import { takeLatest } from 'redux-saga';
-import { take, call, put, cancel, select } from 'redux-saga/effects';
+import { takeLatest, takeEvery } from 'redux-saga';
+import { take, call, put, cancel, select, race } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
+import { toastr } from 'lib/react-redux-toastr';
 
 import { 
   getData,
@@ -21,6 +22,9 @@ import {
   FETCH_URL_CONTENT,
   FETCH_URL_CONTENT_SUCCESS,
   MEDIA_ERROR,
+  VIDEO_PROCESSING,
+  SET_PROCESSING_ITEM,
+  VIDEO_PROCESSING_DONE,
   CREATE_MEDIA_ITEM,
   SEARCH_BING,
   SEARCH_BING_SUCCESS,
@@ -33,6 +37,8 @@ import {
   CREATE_MEDIA_ITEM_SUCCESS,
   DELETE_MEDIA_ITEM,
   DELETE_MEDIA_ITEM_SUCCESS,
+  UPDATE_MEDIA_ITEM,
+  UPDATE_MEDIA_ITEM_SUCCESS,
 } from './constants';
 
 export function* getCollections(action) {
@@ -150,7 +156,27 @@ export function* createRSSFeed(action) {
   
   const results = yield call(postData, '/feed_api/feed', data);
   console.log(results);
+  if (results.data.status === 'success') {
+    const feed = results.data.feed;
+    yield put({ type: CREATE_RSS_FEED_SUCCESS, feed});
+  }
 }
+
+export function* updateMediaItem(action) {
+ console.log(action); 
+ const { mediaItemType, ...item } = action.mediaItem;
+ const data = {
+   payload: item,
+ };
+ 
+ const results = yield call(putData, `/media_api/media_item/${item.media_item_id}`, data);
+ console.log(results);
+ if (results.data.result === 'success') {
+   const mediaItems = results.data.media_items;
+   yield put({ type: UPDATE_MEDIA_ITEM_SUCCESS, mediaItems });
+ }
+}
+
 export function* createMediaItem(action) {
   console.log(action);
   const { mediaItemType, ...item } = action.mediaItem;
@@ -167,7 +193,7 @@ export function* createMediaItem(action) {
     url = '/media_api/files';
     data = {
       payload: {
-        media_items:item,
+        media_items:[{...item.properties}],
       }
     };
   }
@@ -177,12 +203,44 @@ export function* createMediaItem(action) {
     console.log(data);
     const res = yield call(postData, url, data);
     if (res.data.result === 'success') {
-      const mediaItems = res.data.media_items;
-      yield put({ type: CREATE_MEDIA_ITEM_SUCCESS, mediaItems }) 
+      if(res.data.media_items[0].status === '3') {
+        let id = res.data.media_items[0].media_item_id;
+        yield put({ type: VIDEO_PROCESSING, id });
+      } else {
+        const mediaItems = res.data.media_items;
+        yield put({ type: CREATE_MEDIA_ITEM_SUCCESS, mediaItems });
+      }
     }
   }
 }
 
+export function* pollData(action) {
+  console.log(action);
+  let processingItem = true;
+  yield put({ type: SET_PROCESSING_ITEM, processingItem });
+  try {
+    yield call(delay, 5000);
+    let id = action.id;
+    const res = yield call(getData, `/media_api/media_item/${id}`);
+    console.log(res);
+    if(res.data.result === 'success') {
+      if(res.data.media_item.status === '1') {
+        const mediaItem = res.data.media_item;
+        processingItem = false;
+        yield put({ type: VIDEO_PROCESSING_DONE, mediaItem });
+        yield put({ type: SET_PROCESSING_ITEM, processingItem });
+      } else if(res.data.media_item.status === '3') {
+        yield put({ type: VIDEO_PROCESSING, id });
+      }
+    }
+  } catch (error) {
+    return;
+  }
+}
+
+export function* showError(action) {
+  toastr.error('Error!', action.error);
+}
 export function* linkData() {
   const watcher = yield takeLatest(FETCH_URL_CONTENT, getLinkData);
   
@@ -231,11 +289,29 @@ export function* createFeed() {
   yield cancel(watcher);
 }
 
+export function* watchPollData() {
+    const watcher = yield takeEvery(VIDEO_PROCESSING, pollData);
+    yield take(VIDEO_PROCESSING_DONE);
+    yield cancel(watcher);
+}
+
 export function* deleteMediaItem() {
   const watcher = yield takeLatest(DELETE_MEDIA_ITEM, deleteItem);
   
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
+}
+
+export function* updateMedia() {
+  const watcher = yield takeLatest(UPDATE_MEDIA_ITEM, updateMediaItem);
+  
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
+export function* errorWatcher() {
+  const watcher = yield takeLatest(MEDIA_ERROR, showError);
+  
 }
 export default [
   collectionData,
@@ -246,7 +322,17 @@ export default [
   getFeedItems,
   createFeed,
   deleteMediaItem,
+  watchPollData,
+  updateMedia,
+  errorWatcher,
 ];
+
+const delay = (millis) => {  
+    const promise = new Promise(resolve => {
+        setTimeout(() => resolve(true), millis);
+    });
+    return promise;
+};
 
 const serialize = (obj, prefix) => {
   const str = [];

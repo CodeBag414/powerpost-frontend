@@ -3,12 +3,14 @@ import MediaContainer from './MediaContainer';
 import { createStructuredSelector } from 'reselect';
 import {
   makeSelectVisibleMediaItemsWithSearch,
-  makeSelectMediaItems,
+  makeSelectMediaItemsSorted,
+  makeSelectProcessingItem,
 } from '../selectors';
 
 const mapStateToProps = createStructuredSelector({
-  mediaItems: makeSelectMediaItems(),
+  mediaItems: makeSelectMediaItemsSorted(),
   visibleMediaItems: makeSelectVisibleMediaItemsWithSearch(),
+  processingItem: makeSelectProcessingItem(),
 });
 
 const VisibleMediaContainer = connect(
