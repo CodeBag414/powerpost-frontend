@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export default styled.div`
   position: relative;
-  padding: 35px 0 24px 24px;
+  margin: 35px 0 24px 24px;
 
   .assignee-wrapper {
     display: flex;
