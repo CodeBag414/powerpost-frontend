@@ -7,6 +7,7 @@ import {
   DELETE_COMMENT,
   FETCH_ACCOUNT_TAGS_REQUEST,
   SET_ACCOUNT_TAGS,
+  SUBMIT_BUNCH_POSTS_REQUEST,
 } from './constants';
 
 export function fetchComments(postSetId) {
@@ -39,4 +40,8 @@ export function fetchAccountTags(accountId) {
 
 export function setAccountTags(accountTags) {
   return { type: SET_ACCOUNT_TAGS, accountTags };
+}
+
+export function submitPostsRequest(posts) {
+  return { type: SUBMIT_BUNCH_POSTS_REQUEST, posts };
 }

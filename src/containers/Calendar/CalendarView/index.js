@@ -25,6 +25,7 @@ class CalendarView extends React.Component {
 
   static propTypes = {
     posts: PropTypes.array,
+    currentAccount: PropTypes.object,
     query: PropTypes.string,
     filters: PropTypes.array,
     onMoveEvent: PropTypes.func,
@@ -108,7 +109,7 @@ class CalendarView extends React.Component {
 
   render() {
     const { showPopup, popupPosition, currentPost } = this.state;
-    const { posts, query, filters, onMoveEvent, onDeleteEvent } = this.props;
+    const { posts, query, filters, onMoveEvent, onDeleteEvent, currentAccount } = this.props;
     // console.log('posts', posts);
     // console.log('filters', filters);
     const queryLower = query.toLowerCase();
@@ -159,6 +160,7 @@ class CalendarView extends React.Component {
             onOutsideClick={this.dismissPopup}
             onDelete={onDeleteEvent}
             post={currentPost}
+            currentAccount={currentAccount}
           />
         }
       </Wrapper>

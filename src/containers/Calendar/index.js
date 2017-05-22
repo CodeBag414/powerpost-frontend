@@ -5,6 +5,10 @@ import moment from 'moment';
 
 import { UserCanPostSet } from 'config.routes/UserRoutePermissions';
 
+import {
+  makeSelectCurrentAccount,
+} from 'containers/Main/selectors';
+
 import DeletePostSetDialog from 'components/DeletePostSetDialog';
 
 import Wrapper from './Wrapper';
@@ -30,6 +34,7 @@ class Calendar extends React.Component {
     getPosts: PropTypes.func,
     updatePost: PropTypes.func,
     posts: PropTypes.any,
+    currentAccount: PropTypes.object,
   };
 
   state = {
@@ -124,7 +129,7 @@ class Calendar extends React.Component {
 
   render() {
     const { query, filters, showDeletePopup } = this.state;
-    const { posts } = this.props;
+    const { posts, currentAccount } = this.props;
     if (posts == null || posts.length === 0 || !Array.isArray(posts)) return null;
     return (
       <Wrapper>
@@ -137,6 +142,7 @@ class Calendar extends React.Component {
         />
         <CalendarView
           posts={posts}
+          currentAccount={currentAccount}
           query={query}
           filters={filters}
           onMoveEvent={this.handleMoveEvent}
@@ -161,6 +167,7 @@ const mapDispatchToProps = (dispatch) => (
 
 const mapStateToProps = createStructuredSelector({
   posts: makeSelectPosts(),
+  currentAccount: makeSelectCurrentAccount(),
 });
 
 export default UserCanPostSet(connect(mapStateToProps, mapDispatchToProps)(Calendar));

@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import enhanceWithClickOutside from 'react-click-outside';
 import moment from 'moment';
+import { browserHistory } from 'react-router';
 
 import Button from 'elements/atm.Button';
 
@@ -10,6 +11,7 @@ class PopupMenu extends Component {
 
   static propTypes = {
     post: PropTypes.object,
+    currentAccount: PropTypes.object,
     popupPosition: PropTypes.object,
     onDelete: PropTypes.func,
   };
@@ -41,9 +43,9 @@ class PopupMenu extends Component {
   }
 
   handleClickEdit = () => {
-    /* eslint-disable no-alert */
-    alert('This will direct you to the Post editor.');
-    /* eslint-enable no-alert */
+    const { post, currentAccount } = this.props;
+    const postSet = post.post_set;
+    browserHistory.push(`/account/${currentAccount.account_id}/postset/${postSet.post_set_id}`);
   }
 
   buildTags = (post) => {

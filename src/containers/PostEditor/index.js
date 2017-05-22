@@ -11,10 +11,12 @@ import { UserCanPostEdit } from 'config.routes/UserRoutePermissions';
 import {
   fetchGroupUsers,
   fetchPostSetRequest,
+  updatePostSetRequest,
 } from 'containers/App/actions';
 
 import {
   makeSelectUser,
+  selectGroupUsers,
 } from 'containers/App/selectors';
 
 import {
@@ -29,6 +31,9 @@ import {
 import Wrapper from './Wrapper';
 import GeneralInfo from './GeneralInfo';
 import TabLink from './TabLink';
+import Sidebar from './Sidebar';
+import UserAssignment from './Sidebar/UserAssignment';
+import Tags from './Sidebar/Tags';
 
 class PostEditor extends Component {
 
@@ -44,6 +49,8 @@ class PostEditor extends Component {
     fetchGroupUsers: PropTypes.func,
     user: PropTypes.shape(),
     postSet: PropTypes.object,
+    groupUsers: PropTypes.object,
+    updatePostSet: PropTypes.func,
   };
 
   state = {
@@ -79,18 +86,8 @@ class PostEditor extends Component {
     }
   }
 
-  handleTitleFocus = () => {
-  }
-
-  handleTitleKeyDown = (e) => {
-    if (e.keyCode === 13) {
-      e.preventDefault();
-      e.target.blur();
-    }
-  }
-
   render() {
-    const { params, children, user, postSet } = this.props;
+    const { params, children, user, postSet, groupUsers, updatePostSet } = this.props;
     const { postTitle } = this.state;
     return (
       <Wrapper>
@@ -109,6 +106,19 @@ class PostEditor extends Component {
           <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/streams`} label="Shared Streams" />
         </div>
         {children}
+        <Sidebar>
+          <UserAssignment
+            isFetching={groupUsers.isFetching || postSet.get('isFetching')}
+            postSet={postSet.get('details').toJS()}
+            assignee={postSet.getIn(['details', 'user_assignments', 0])}
+            users={groupUsers.details ? groupUsers.details.groups_users : []}
+            updatePostSet={updatePostSet}
+          />
+          <Tags
+            updatePostSet={updatePostSet}
+            postSet={postSet.get('details')}
+          />
+        </Sidebar>
       </Wrapper>
     );
   }
@@ -120,12 +130,14 @@ export function mapDispatchToProps(dispatch) {
     getComments: (postSetId) => dispatch(fetchComments(postSetId)),
     fetchPostSet: (payload) => dispatch(fetchPostSetRequest(payload)),
     fetchGroupUsers: (payload) => dispatch(fetchGroupUsers(payload)),
+    updatePostSet: (payload) => dispatch(updatePostSetRequest(payload)),
   };
 }
 
 const mapStateToProps = createStructuredSelector({
   user: makeSelectUser(),
   postSet: selectPostSet(),
+  groupUsers: selectGroupUsers(),
 });
 
 export default UserCanPostEdit(connect(mapStateToProps, mapDispatchToProps)(PostEditor));

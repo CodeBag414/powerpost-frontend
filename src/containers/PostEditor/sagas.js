@@ -1,5 +1,5 @@
 import { takeLatest } from 'redux-saga';
-import { take, call, put, cancel, select } from 'redux-saga/effects';
+import { take, call, put, cancel, select, fork } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import moment from 'moment';
 import { makeSelectUser } from 'containers/App/selectors';
@@ -19,6 +19,9 @@ import {
   DELETE_COMMENT,
   FETCH_ACCOUNT_TAGS_REQUEST,
   SET_ACCOUNT_TAGS,
+  SUBMIT_BUNCH_POSTS_REQUEST,
+  SUBMIT_BUNCH_POSTS_SUCCESS,
+  ADD_POST_TO_POSTSET,
 } from './constants';
 
 export function* getComments(payload) {
@@ -74,6 +77,34 @@ export function* postCommentRequest(payload) {
   }
 }
 
+export function* submitPost(post) {
+  const requestUrl = '/post_api/post';
+  const requestData = {
+    payload: post,
+  };
+  try {
+    const response = yield call(postData, requestUrl, requestData);
+    const { data } = response;
+    if (data.result === 'success') {
+      yield put({ type: ADD_POST_TO_POSTSET, post: data.post });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function* submitAllPosts(posts) {
+  for (const key in posts) {
+    const post = posts[key];
+    yield fork(submitPost, post);
+  }
+}
+
+function* submitBunchPosts({ posts }) {
+  yield call(submitAllPosts, posts);
+  yield put({ type: SUBMIT_BUNCH_POSTS_SUCCESS });
+}
+
 export function* deleteCommentRequest(payload) {
   const requestUrl = `/post_api/comment/${payload.commentId}`;
   try {
@@ -111,9 +142,16 @@ export function* fetchAccountTags() {
   yield cancel(watcher);
 }
 
+export function* submitBunchPostsRequest() {
+  const watcher = yield takeLatest(SUBMIT_BUNCH_POSTS_REQUEST, submitBunchPosts);
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
 export default [
   fetchComments,
   postComment,
   deleteComment,
   fetchAccountTags,
+  submitBunchPostsRequest,
 ];

@@ -13,6 +13,7 @@ function pendingStyle({ pending }) {
 const Wrapper = styled.div`
   ${pendingStyle};
   margin-top: 27px;
+  max-width: 408px;
   width: 50%;
 `;
 
