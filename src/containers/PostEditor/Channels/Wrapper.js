@@ -3,6 +3,8 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   padding-top: 40px;
   position: relative;
+  display: flex;
+  width: calc(100% - 272px);
   .title {
     color: #888888;
     font-size: 16px;
@@ -24,6 +26,12 @@ const Wrapper = styled.div`
   }
   .content {
     margin-top: 35px;
+  }
+
+  .right {
+    margin-left: 16px;
+    border-left: 1.1px solid #DBDFE0;
+    padding-left: 23px;
   }
   .overlay {
     position: absolute;
