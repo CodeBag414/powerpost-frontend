@@ -87,7 +87,6 @@ class TopNav extends Component {
   }
   render() {
     const isAccountPath = this.props.location.pathname.includes('/account/');
-    console.log(isAccountPath);
     const avatar = this.props.user && this.props.user.properties ? this.props.user.properties.thumb_url : '#E7ECEE';
     const color = this.props.activeBrand && this.props.activeBrand.properties.color ? this.props.activeBrand.properties.color : '#E7ECEE';
     const thumbnail = this.props.activeBrand && this.props.activeBrand.properties.thumb_url ? this.props.activeBrand.properties.thumb_url : '';
