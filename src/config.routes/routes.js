@@ -628,6 +628,27 @@ export function createRoutes(store, auth) {
         importModules.catch(errorLoading);
       },
     },
+    {
+      path: 'posts/:id',
+      name: 'publicPage',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          System.import('containers/PublicPage/reducer'),
+          System.import('containers/PublicPage/sagas'),
+          System.import('containers/PublicPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('publicPage', reducer.default);
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
   ];
 
   return {
