@@ -83,8 +83,13 @@ const selectInviteEmailToGroup = () => createSelector(
 );
 
 const makeSelectPostSets = () => createSelector(
-  selectAuth,
-  (board) => board.get('postSets'),
+    selectAuth,
+    (auth) => auth.get('postSets'),
+);
+
+const makeSelectPosts = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('posts'),
 );
 
 export {
@@ -106,4 +111,5 @@ export {
     selectGroupUsers,
     selectInviteEmailToGroup,
     makeSelectPostSets,
+    makeSelectPosts,
 };

@@ -46,6 +46,8 @@ import {
   CHANGE_POST_SET_STATUS,
   FETCH_POST_SET_REQUEST,
   UPDATE_POST_SET_REQUEST,
+  FETCH_POSTS,
+  UPDATE_POST_REQUEST,
 } from './constants';
 
 import {
@@ -73,6 +75,7 @@ import {
   fetchPostSetError,
   updatePostSetSuccess,
   updatePostSetError,
+  setPosts,
 } from './actions';
 
 /**
@@ -631,6 +634,42 @@ export function* updatePostSetSaga() {
   yield takeLatest(UPDATE_POST_SET_REQUEST, updatePostSetWorker);
 }
 
+function* getPostsWorker({ accountId }) {
+  const requestUrl = `/post_api/posts/${accountId}`;
+
+  const response = yield call(getData, requestUrl);
+  if (response.data.status === 'success') {
+    const posts = response.data.posts;
+    yield put(setPosts(posts));
+  } else {
+    console.log(response);
+  }
+}
+
+function* updatePostRequestWorker({ post }) {
+  const requestUrl = `/post_api/post/${post.post_id}`;
+  const requestData = {
+    payload: {
+      ...post,
+    },
+  };
+
+  const response = yield call(putData, requestUrl, requestData);
+  if (response.data.result === 'success') {
+    yield put({ type: 'UPDATE_POST_SUCCESS', post: response.data.post });
+  } else {
+    console.log(response);
+  }
+}
+
+export function* fetchPostsSaga() {
+  yield takeLatest(FETCH_POSTS, getPostsWorker);
+}
+
+export function* updatePostSaga() {
+  yield takeLatest(UPDATE_POST_REQUEST, updatePostRequestWorker);
+}
+
 // The root saga is what we actually send to Redux's middleware. In here we fork
 // each saga so that they are all "active" and listening.
 // Sagas are fired once at the start of an app and can be thought of as processes running
@@ -657,6 +696,8 @@ export default [
   changePostSetStatus,
   fetchPostSetSaga,
   updatePostSetSaga,
+  fetchPostsSaga,
+  updatePostSaga,
 ];
 
 // Little helper function to abstract going to different pages
