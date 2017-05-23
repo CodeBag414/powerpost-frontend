@@ -22,9 +22,15 @@ const makeSelectAccountTags = () => createSelector(
   (postSetEditor) => postSetEditor.get('accountTags'),
 );
 
+const makeSelectMediaItem = () => createSelector(
+  selectPostSetEditor,
+  (postSetEditor) => postSetEditor.getIn(['postSet', 'details', 'media_items']),
+);
+
 export {
   makeSelectComments,
   makeSelectAccountTags,
   makeSelectInProgress,
   selectPostSet,
+  makeSelectMediaItem,
 };

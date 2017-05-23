@@ -8,7 +8,7 @@ const MediaContainer = (props) => {
     <Wrapper className='row'>
       { !props.visibleMediaItems && <span>You don't have any media items yet.</span> }
       { props.processingItem && <ProcessingItem />}
-      { props.visibleMediaItems && props.visibleMediaItems.map((item, i) => <MediaItem key={i} mediaItem={item} onDelete={props.onConfirmDelete} openPreview={props.openPreview} openEditor={props.openEditor} />)}
+      { props.visibleMediaItems && props.visibleMediaItems.map((item, i) => <MediaItem key={i} mediaItem={item} query={props.query} pushToEditor={props.pushToEditor} onDelete={props.onConfirmDelete} openPreview={props.openPreview} openEditor={props.openEditor} />)}
     </Wrapper>
   );
 };

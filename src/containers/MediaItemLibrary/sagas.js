@@ -55,7 +55,6 @@ export function* getCollections(action) {
   yield put({ type: FETCH_COLLECTIONS_SUCCESS, collections });
 
   const activeCollection = yield select(makeSelectActiveCollection());
-  console.log(activeCollection.collection_id);
 
   const mediaItems = yield call(getData, `/media_api/collection/${activeCollection.collection_id}`);
   if (!mediaItems.data.error) {
@@ -92,7 +91,6 @@ export function* getLinkData(action) {
   const params = serialize(data);
   
   const result = yield call(getData, `/media_api/url_content?${params}`);
-  console.log(result);
   if (result.data.result === 'success') {
     const urlData = result.data.url_data[0];
     yield put({ type: FETCH_URL_CONTENT_SUCCESS, urlData });
@@ -111,9 +109,7 @@ export function* getRSSFeeds(action) {
   };
   
   const params = serialize(data);
-  console.log('fetch RSS FEEDS');
   const results = yield call(getData, `/feed_api/feeds?${params}`);
-  console.log(results);
   if (results.data.status === 'success') {
     const feeds = results.data.feeds;
     yield put({ type: FETCH_RSS_FEEDS_SUCCESS, feeds });
@@ -128,14 +124,13 @@ export function* deleteItem(action) {
     },
   };
   const results = yield call(putData, `/media_api/media_item/${id}`, data);
-  console.log(results);
   if(results.data.result === 'success') {
     yield put({ type: DELETE_MEDIA_ITEM_SUCCESS, id});
   }
 }
 export function* getRSSFeedItems(action) {
   const results = yield call(getData, `/feed_api/feed/${action.feedId}`);
-  console.log(results);
+
   if (results.data.result === 'success') {
     const rssItems = results.data.feed_items;
     yield put({ type: FETCH_RSS_ITEMS_SUCCESS, rssItems });
@@ -155,7 +150,6 @@ export function* createRSSFeed(action) {
   };
   
   const results = yield call(postData, '/feed_api/feed', data);
-  console.log(results);
   if (results.data.status === 'success') {
     const feed = results.data.feed;
     yield put({ type: CREATE_RSS_FEED_SUCCESS, feed});
@@ -163,14 +157,12 @@ export function* createRSSFeed(action) {
 }
 
 export function* updateMediaItem(action) {
- console.log(action); 
  const { mediaItemType, ...item } = action.mediaItem;
  const data = {
    payload: item,
  };
  
  const results = yield call(putData, `/media_api/media_item/${item.media_item_id}`, data);
- console.log(results);
  if (results.data.result === 'success') {
    const mediaItems = results.data.media_items;
    yield put({ type: UPDATE_MEDIA_ITEM_SUCCESS, mediaItems });
@@ -178,7 +170,6 @@ export function* updateMediaItem(action) {
 }
 
 export function* createMediaItem(action) {
-  console.log(action);
   const { mediaItemType, ...item } = action.mediaItem;
   
   let url = '';
@@ -199,8 +190,6 @@ export function* createMediaItem(action) {
   }
   
   if (url !== '') {
-    console.log('send api');
-    console.log(data);
     const res = yield call(postData, url, data);
     if (res.data.result === 'success') {
       if(res.data.media_items[0].status === '3') {
@@ -215,14 +204,12 @@ export function* createMediaItem(action) {
 }
 
 export function* pollData(action) {
-  console.log(action);
   let processingItem = true;
   yield put({ type: SET_PROCESSING_ITEM, processingItem });
   try {
     yield call(delay, 5000);
     let id = action.id;
     const res = yield call(getData, `/media_api/media_item/${id}`);
-    console.log(res);
     if(res.data.result === 'success') {
       if(res.data.media_item.status === '1') {
         const mediaItem = res.data.media_item;

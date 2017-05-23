@@ -6,10 +6,10 @@ import ToolbarButton from './ToolbarButton';
 import Divider from './Divider';
 import LimitIndicator from './LimitIndicator';
 
-function MessageToolbar({ characterLimit, openFilePicker }) {
+function MessageToolbar({ characterLimit, openFilePicker, accountId, pushToLibrary, postSetId }) {
   return (
     <Wrapper>
-      <ToolbarButton width={53}><i className="fa fa-database" /></ToolbarButton>
+      <ToolbarButton width={53} onClick={() => pushToLibrary(postSetId, accountId)}><i className="fa fa-database" /></ToolbarButton>
       <Divider />
       <ToolbarButton width={30} marginLeft={12} onClick={openFilePicker}><i className="fa fa-upload" /></ToolbarButton>
       <ToolbarButton width={30} marginRight={12}><i className="fa fa-link" /></ToolbarButton>

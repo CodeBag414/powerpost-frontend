@@ -21,6 +21,10 @@ import {
   ADD_POST_TO_POSTSET,
   SUBMIT_BUNCH_POSTS_REQUEST,
   SUBMIT_BUNCH_POSTS_SUCCESS,
+  CREATE_MEDIA_ITEM_SUCCESS,
+  UPDATE_MEDIA_ITEM_SUCCESS,
+  REMOVE_MEDIA_ITEM,
+  SET_MEDIA_ITEM,
 } from './constants';
 
 const initialState = fromJS({
@@ -122,8 +126,39 @@ function boardReducer(state = initialState, action) {
     case ADD_POST_TO_POSTSET:
       return state
         .updateIn(['postSet', 'details', 'posts'], (posts) => posts.push(fromJS(action.post)));
+    case UPDATE_MEDIA_ITEM_SUCCESS:
+      return state
+        .updateIn(['postSet', 'details', 'media_items'], (media_items) => media_items.set(0, fromJS(action.mediaItems[0])));
+    case CREATE_MEDIA_ITEM_SUCCESS:
+      return state
+        .updateIn(['postSet', 'details', 'media_items'], (media_items) => media_items.set(0, fromJS(action.mediaItems[0])))
+        .updateIn(['postSet', 'details', 'media_item_ids'], (media_item_ids) => media_item_ids.set(0, action.mediaItems[0].media_item_id) );
+    case REMOVE_MEDIA_ITEM:
+      return state
+        .updateIn(['postSet', 'details', 'media_items'], (media_items) => fromJS([]) )
+        .updateIn(['postSet', 'details', 'media_item_ids'], (media_item_ids) => fromJS([]) );
+    case SET_MEDIA_ITEM:
+      return state
+        .updateIn(['postSet', 'details', 'media_items'], (media_items) => media_items.set(0, fromJS(action.mediaItem)))
+        .updateIn(['postSet', 'details', 'media_item_ids'], (media_item_ids) => media_item_ids.set(0, action.mediaItem.media_item_id) );      
     default: return state;
   }
 }
 
 export default boardReducer;
+
+
+function updateObjectInArray(array, action) {
+    return array.map( (item, index) => {
+        if(item.media_item_id !== action.mediaItems[0].media_item_id) {
+            // This isn't the item we care about - keep it as-is
+            return item;
+        }
+
+        // Otherwise, this is the one we want - return an updated value
+        return {
+            ...item,
+            ...action.mediaItems[0],
+        };    
+    });
+}
