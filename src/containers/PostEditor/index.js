@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { browserHistory } from 'react-router';
 
 import { UserCanPostEdit } from 'config.routes/UserRoutePermissions';
 
@@ -34,15 +35,13 @@ import TabLink from './TabLink';
 import Sidebar from './Sidebar';
 import UserAssignment from './Sidebar/UserAssignment';
 import Tags from './Sidebar/Tags';
+import Content from './Content';
+import Channels from './Channels';
+import SharedStreams from './SharedStreams';
 
 class PostEditor extends Component {
 
   static propTypes = {
-    params: PropTypes.shape({
-      account_id: PropTypes.string,
-      postset_id: PropTypes.string,
-    }).isRequired,
-    children: PropTypes.node,
     getComments: PropTypes.func,
     getAccountTags: PropTypes.func,
     fetchPostSet: PropTypes.func,
@@ -51,25 +50,32 @@ class PostEditor extends Component {
     postSet: PropTypes.object,
     groupUsers: PropTypes.object,
     updatePostSet: PropTypes.func,
+    id: PropTypes.string,
+    accountId: PropTypes.string,
   };
 
   state = {
     postTitle: '',
+    selectedTab: 'Content',
   };
 
   componentWillMount() {
-    const { params: { account_id, postset_id } } = this.props;
-    this.props.getComments(postset_id);
-    this.props.getAccountTags(account_id);
+    const { accountId, id } = this.props;
+    this.props.getComments(id);
+    this.props.getAccountTags(accountId);
     this.props.fetchPostSet({
-      id: postset_id,
+      id,
     });
-    const payload = { accountId: account_id };
+    const payload = { accountId };
     this.props.fetchGroupUsers(payload);
   }
 
   componentWillReceiveProps({ postSet }) {
     this.setState({ postTitle: postSet.getIn(['details', 'title']) });
+  }
+
+  onBack = () => {
+    browserHistory.goBack();
   }
 
   handleTitleChange = () => {
@@ -91,10 +97,18 @@ class PostEditor extends Component {
   }
 
   render() {
-    const { params, children, user, postSet, groupUsers, updatePostSet } = this.props;
-    const { postTitle } = this.state;
+    const { user, postSet, groupUsers, updatePostSet } = this.props;
+    const { postTitle, selectedTab } = this.state;
+    const tabs = [
+      { name: 'Content', component: <Content postSet={postSet} /> },
+      { name: 'Channels & Times', component: <Channels postSet={postSet} /> },
+      { name: 'Shared Streams', component: <SharedStreams postSet={postSet} /> },
+    ];
     return (
       <Wrapper>
+        <div className="back-button" onClick={this.onBack}>
+          <i className="fa fa-hand-o-left icon" aria-hidden="true" />
+        </div>
         <GeneralInfo
           user={user}
           postSet={postSet.get('details').toJS()}
@@ -105,11 +119,23 @@ class PostEditor extends Component {
           handleTitleKeyDown={this.handleTitleKeyDown}
         />
         <div>
-          <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/content`} label="Content" />
-          <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/channels`} label="Channels & Times" count={0} />
-          <TabLink to={`/account/${params.account_id}/postset/${params.postset_id}/streams`} label="Shared Streams" />
+          {
+            tabs.map((tab) =>
+              <span
+                key={tab.name}
+                className={tab.name === selectedTab ? 'active-link' : ''}
+                onClick={() => this.setState({ selectedTab: tab.name })}
+              >
+                <TabLink
+                  label={tab.name}
+                />
+              </span>
+            )
+          }
         </div>
-        {children}
+        {
+          tabs.map((tab) => (tab.name === selectedTab ? tab.component : null))
+        }
         <Sidebar>
           <UserAssignment
             isFetching={groupUsers.isFetching || postSet.get('isFetching')}
