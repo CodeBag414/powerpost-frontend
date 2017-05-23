@@ -103,7 +103,7 @@ class PostEditor extends Component {
     const { postTitle, selectedTab } = this.state;
     const tabs = [
       { name: 'Power Post', component: <Content postSet={postSet} /> },
-      { name: 'Channels & Times', component: <Channels postSet={postSet} updatePost={updatePost} /> },
+      { name: 'Channels & Times', component: <Channels postSet={postSet} updatePost={updatePost} />, count: 0 },
       { name: 'Shared Streams', component: <SharedStreams postSet={postSet} /> },
     ];
     return (
@@ -130,6 +130,7 @@ class PostEditor extends Component {
               >
                 <TabLink
                   label={tab.name}
+                  count={tab.count}
                 />
               </span>
             )
