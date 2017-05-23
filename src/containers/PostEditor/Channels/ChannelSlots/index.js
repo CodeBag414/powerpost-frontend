@@ -15,10 +15,16 @@ function ChannelSlots({ posts, connections, handleClickTimestamp, currentPost })
             item.connection_id === connectionId,
           )[0];
 
+          // TODO: Remove below after connections are correctly fetched
           if (!connection || postItems.length === 0) return null;
 
           return (
-            <ChannelSlot postItems={postItems} connection={connection} handleClickTimestamp={handleClickTimestamp} currentPost={currentPost} />
+            <ChannelSlot
+              postItems={postItems}
+              connection={connection}
+              handleClickTimestamp={handleClickTimestamp}
+              currentPost={currentPost}
+            />
           );
         })
       }

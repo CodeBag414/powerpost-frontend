@@ -105,8 +105,10 @@ class PostEditor extends Component {
     const posts = {};
     if (postsArray) {
       postsArray.map((post) => {
-        if (!posts[post.get('connection_id')]) posts[post.get('connection_id')] = [];
-        if (post.get('status') !== '0') posts[post.get('connection_id')].push(post);
+        if (post.get('status') !== '0') {
+          if (!posts[post.get('connection_id')]) posts[post.get('connection_id')] = [];
+          posts[post.get('connection_id')].push(post);
+        }
         return true;
       });
     }

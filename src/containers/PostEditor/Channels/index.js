@@ -24,11 +24,20 @@ class Channels extends Component {
     updatePost: PropTypes.func,
   };
 
-  state = {
-    isDialogShown: false,
-    currentPost: null,
-    message: '',
-  };
+  constructor(props) {
+    super(props);
+    const { posts, connections } = props;
+    const currentPost = posts[Object.keys(posts)[0]][0];
+    const connection = connections.filter((item) =>
+      item.connection_id === currentPost.get('connection_id'),
+    )[0];
+    this.state = {
+      currentPost,
+      currentPostConnection: connection,
+      isDialogShown: false,
+      message: '',
+    };
+  }
 
   componentWillReceiveProps(/* nextProps */) {
     // const { currentPost } = this.state;
