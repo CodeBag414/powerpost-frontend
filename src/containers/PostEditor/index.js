@@ -13,6 +13,7 @@ import {
   fetchGroupUsers,
   fetchPostSetRequest,
   updatePostSetRequest,
+  updatePostRequest,
 } from 'containers/App/actions';
 
 import {
@@ -50,6 +51,7 @@ class PostEditor extends Component {
     postSet: PropTypes.object,
     groupUsers: PropTypes.object,
     updatePostSet: PropTypes.func,
+    updatePost: PropTypes.func,
     id: PropTypes.string,
     accountId: PropTypes.string,
   };
@@ -97,11 +99,11 @@ class PostEditor extends Component {
   }
 
   render() {
-    const { user, postSet, groupUsers, updatePostSet } = this.props;
+    const { user, postSet, groupUsers, updatePostSet, updatePost } = this.props;
     const { postTitle, selectedTab } = this.state;
     const tabs = [
       { name: 'Power Post', component: <Content postSet={postSet} /> },
-      { name: 'Channels & Times', component: <Channels postSet={postSet} /> },
+      { name: 'Channels & Times', component: <Channels postSet={postSet} updatePost={updatePost} /> },
       { name: 'Shared Streams', component: <SharedStreams postSet={postSet} /> },
     ];
     return (
@@ -161,6 +163,7 @@ export function mapDispatchToProps(dispatch) {
     fetchPostSet: (payload) => dispatch(fetchPostSetRequest(payload)),
     fetchGroupUsers: (payload) => dispatch(fetchGroupUsers(payload)),
     updatePostSet: (payload) => dispatch(updatePostSetRequest(payload)),
+    updatePost: (payload) => dispatch(updatePostRequest(payload)),
   };
 }
 

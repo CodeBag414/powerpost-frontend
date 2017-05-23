@@ -20,6 +20,7 @@ class Channels extends Component {
   static propTypes = {
     postSet: ImmutablePropTypes.map,
     connections: PropTypes.array,
+    updatePost: PropTypes.func,
   };
 
   state = {
@@ -54,6 +55,15 @@ class Channels extends Component {
   handleMessageBlur = () => {
   }
 
+  handleRemoveSlot = (postToDelete) => {
+    const { updatePost } = this.props;
+    const newPost = {
+      ...postToDelete.toJS(),
+      status: 0,
+    };
+    updatePost(newPost);
+  }
+
   render() {
     const { postSet, connections } = this.props;
     const { isDialogShown, currentPost, currentPostConnection } = this.state;
@@ -86,7 +96,7 @@ class Channels extends Component {
 
         { hasContent && currentPost &&
           <div className="right">
-            <PostDetails post={currentPost} connection={currentPostConnection} handleMessageChange={this.handleMessageChange} handleMessageBlur={this.handleMessageBlur} />
+            <PostDetails post={currentPost} connection={currentPostConnection} handleMessageChange={this.handleMessageChange} handleMessageBlur={this.handleMessageBlur} handleRemoveSlot={this.handleRemoveSlot} />
           </div>
         }
 

@@ -10,7 +10,7 @@ function ChannelSlots({ postSet, connections, handleClickTimestamp, currentPost 
   const posts = {};
   postsArray.map((post) => {
     if (!posts[post.get('connection_id')]) posts[post.get('connection_id')] = [];
-    posts[post.get('connection_id')].push(post);
+    if (post.get('status') !== '0') posts[post.get('connection_id')].push(post);
     return true;
   });
   return (
@@ -22,7 +22,7 @@ function ChannelSlots({ postSet, connections, handleClickTimestamp, currentPost 
             item.connection_id === connectionId,
           )[0];
 
-          if (!connection) return null;
+          if (!connection || postItems.length === 0) return null;
 
           return (
             <ChannelSlot postItems={postItems} connection={connection} handleClickTimestamp={handleClickTimestamp} currentPost={currentPost} />

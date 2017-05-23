@@ -71,6 +71,7 @@ import {
   addUserToGroupError,
   removeUserFromGroupSuccess,
   removeUserFromGroupError,
+  fetchPostSetRequest,
   fetchPostSetSuccess,
   fetchPostSetError,
   updatePostSetSuccess,
@@ -657,6 +658,7 @@ function* updatePostRequestWorker({ post }) {
   const response = yield call(putData, requestUrl, requestData);
   if (response.data.result === 'success') {
     yield put({ type: 'UPDATE_POST_SUCCESS', post: response.data.post });
+    yield put(fetchPostSetRequest({ id: response.data.post.post_set_id }));
   } else {
     console.log(response);
   }
