@@ -56,7 +56,7 @@ class PostEditor extends Component {
 
   state = {
     postTitle: '',
-    selectedTab: 'Content',
+    selectedTab: 'Power Post',
   };
 
   componentWillMount() {
@@ -100,7 +100,7 @@ class PostEditor extends Component {
     const { user, postSet, groupUsers, updatePostSet } = this.props;
     const { postTitle, selectedTab } = this.state;
     const tabs = [
-      { name: 'Content', component: <Content postSet={postSet} /> },
+      { name: 'Power Post', component: <Content postSet={postSet} /> },
       { name: 'Channels & Times', component: <Channels postSet={postSet} /> },
       { name: 'Shared Streams', component: <SharedStreams postSet={postSet} /> },
     ];
