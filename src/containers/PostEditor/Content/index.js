@@ -87,7 +87,9 @@ class Content extends Component {
           handleMessageBlur={this.handleMessageBlur}
         />
         <Comments />
-        <CommentInput user={user} postComment={(text) => postComment(postset_id, text)} />
+        <div className="comment-input">
+          <CommentInput user={user} postComment={(text) => postComment(postset_id, text)} />
+        </div>
         {
           comments.map((comment) =>
             <Comment

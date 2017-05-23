@@ -8,6 +8,8 @@ const Wrapper = styled.div`
   .content {
     flex: 1;
     margin-left: 11px;
+    white-space: pre-wrap;
+    word-break: break-all;
     .heading {
       display: flex;
       line-height: 18px;
