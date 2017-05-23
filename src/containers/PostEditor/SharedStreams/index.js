@@ -9,9 +9,6 @@ import {
 import {
   makeSelectUserAccount,
 } from 'containers/App/selectors';
-import {
-  selectPostSet,
-} from 'containers/PostEditor/selectors';
 
 import SharedStreamsComponent from './Component';
 
@@ -35,7 +32,6 @@ SharedStreams.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  postSet: selectPostSet(),
   userAccount: makeSelectUserAccount(),
 });
 

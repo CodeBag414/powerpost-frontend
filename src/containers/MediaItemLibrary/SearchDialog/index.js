@@ -54,7 +54,7 @@ class SearchDialog extends React.Component  {
         <Wrapper>
           <div style={{ clear: 'both' }}>
             <TextField floatingLabelText='Search' type='text' onChange={this.handleInputChange} style={{ float: 'left' }}/>
-            <Button primary label='Search' onClick={this.searchWeb} style={{ float: 'left'}} />
+            <Button primary label='Search' onClick={this.searchWeb} style={{ float: 'left', marginTop: '30px', marginLeft: '10px'}} />
           </div>
           <SearchResultsContainer>
             { this.state.isLoading && <Spinner /> }

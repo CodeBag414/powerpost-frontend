@@ -141,6 +141,107 @@ export function createRoutes(store, auth) {
 
             importModules.catch(errorLoading);
           },
+          indexRoute: {
+            getComponent(nextState, cb) {
+              const importModules = Promise.all([
+                  // System.import('../App/views/Main/views/Dashboard/state/reducer'),
+                  // System.import('../App/views/Main/views/Dashboard/state/sagas'),
+                System.import('containers/MediaItemLibrary/Library'),
+              ]);
+
+              const renderRoute = loadModule(cb);
+
+              importModules.then(([component]) => {
+                renderRoute(component);
+              });
+
+              importModules.catch(errorLoading);
+            },
+          },
+          childRoutes: [
+            {
+              path: 'blog(/:media_id)',
+              name: 'Create Blog',
+              getComponent(nextState, cb) {
+                const importModules = Promise.all([
+                  System.import('containers/MediaItemLibrary/Blog'),
+                ]);
+
+                const renderRoute = loadModule(cb);
+
+                importModules.then(([component]) => {
+                  renderRoute(component);
+                });
+
+                importModules.catch(errorLoading);
+              },
+            },
+            {
+              path: 'search',
+              name: 'Search the Web',
+              getComponent(nextState, cb) {
+                const importModules = Promise.all([
+                  System.import('containers/MediaItemLibrary/Search'),
+                ]);
+
+                const renderRoute = loadModule(cb);
+
+                importModules.then(([component]) => {
+                  renderRoute(component);
+                });
+
+                importModules.catch(errorLoading);
+              },
+            },
+            {
+              path: 'rss',
+              name: 'RSS Feeds',
+              getComponent(nextState, cb) {
+                const importModules = Promise.all([
+                  System.import('containers/MediaItemLibrary/RSS'),
+                ]);
+                const renderRoute = loadModule(cb);
+
+                importModules.then(([component]) => {
+                  renderRoute(component);
+                });
+
+                importModules.catch(errorLoading);
+              },
+            },
+            {
+              path: 'shared_streams/subscriptions',
+              name: 'Shared Streams',
+              getComponent(nextState, cb) {
+                const importModules = Promise.all([
+                  System.import('containers/MediaItemLibrary/Subscriptions'),
+                ]);
+                const renderRoute = loadModule(cb);
+
+                importModules.then(([component]) => {
+                  renderRoute(component);
+                });
+
+                importModules.catch(errorLoading);
+              },
+            },
+            {
+              path: 'shared_streams/owned',
+              name: 'Shared Streams',
+              getComponent(nextState, cb) {
+                const importModules = Promise.all([
+                  System.import('containers/MediaItemLibrary/Owned'),
+                ]);
+                const renderRoute = loadModule(cb);
+
+                importModules.then(([component]) => {
+                  renderRoute(component);
+                });
+
+                importModules.catch(errorLoading);
+              },
+            },
+          ],
         },
         {
           path: '/account(/:account_id)/calendar',
@@ -149,14 +250,17 @@ export function createRoutes(store, auth) {
             const importModules = Promise.all([
               System.import('containers/Calendar/reducer'),
               System.import('containers/Calendar/sagas'),
+              System.import('containers/PostEditor/reducer'),
+              System.import('containers/PostEditor/sagas'),
               System.import('containers/Calendar'),
             ]);
 
             const renderRoute = loadModule(cb);
 
-            importModules.then(([reducer, sagas, component]) => {
-              injectReducer('posts', reducer.default);
-              injectSagas(sagas.default);
+            importModules.then(([calendarReducer, calendarSagas, postEditorReducer, postEditorSagas, component]) => {
+              injectReducer('posts', calendarReducer.default);
+              injectReducer('postEditor', postEditorReducer.default);
+              injectSagas(calendarSagas.default.concat(postEditorSagas.default));
               renderRoute(component);
             });
 
@@ -191,14 +295,17 @@ export function createRoutes(store, auth) {
             const importModules = Promise.all([
               System.import('containers/Board/reducer'),
               System.import('containers/Board/sagas'),
+              System.import('containers/PostEditor/reducer'),
+              System.import('containers/PostEditor/sagas'),
               System.import('containers/Board'),
             ]);
 
             const renderRoute = loadModule(cb);
 
-            importModules.then(([reducer, sagas, component]) => {
-              injectReducer('board', reducer.default);
-              injectSagas(sagas.default);
+            importModules.then(([boardReducer, boardSagas, postEditorReducer, postEditorSagas, component]) => {
+              injectReducer('board', boardReducer.default);
+              injectReducer('postEditor', postEditorReducer.default);
+              injectSagas(boardSagas.default.concat(postEditorSagas.default));
               renderRoute(component);
             });
 
@@ -376,75 +483,6 @@ export function createRoutes(store, auth) {
                 });
 
                 importModules.catch(errorLoading);
-              },
-            },
-          ],
-        },
-        {
-          path: '/account(/:account_id)/postset/(:postset_id)',
-          name: 'post editor',
-          getComponent(nextState, cb) {
-            const importModules = Promise.all([
-              System.import('containers/PostEditor/reducer'),
-              System.import('containers/PostEditor/sagas'),
-              System.import('containers/PostEditor'),
-            ]);
-
-            const renderRoute = loadModule(cb);
-
-            importModules.then(([reducer, postEditorSagas, component]) => {
-              injectReducer('postEditor', reducer.default);
-              injectSagas(postEditorSagas.default);
-              renderRoute(component);
-            });
-
-            importModules.catch(errorLoading);
-          },
-          indexRoute: { onEnter: (nextState, replace) => replace(`/account/${nextState.params.account_id}/postset/${nextState.params.postset_id}/content`) },
-          childRoutes: [
-            {
-              path: '/account(/:account_id)/postset(/:postset_id)/content',
-              name: 'content',
-              getComponent(nextstate, cb) {
-                const importModules = Promise.all([
-                  System.import('containers/PostEditor/Content'),
-                ]);
-
-                const renderRoute = loadModule(cb);
-
-                importModules.then(([component]) => {
-                  renderRoute(component);
-                });
-              },
-            },
-            {
-              path: '/account(/:account_id)/postset(/:postset_id)/channels',
-              name: 'channels & times',
-              getComponent(nextstate, cb) {
-                const importModules = Promise.all([
-                  System.import('containers/PostEditor/Channels'),
-                ]);
-
-                const renderRoute = loadModule(cb);
-
-                importModules.then(([component]) => {
-                  renderRoute(component);
-                });
-              },
-            },
-            {
-              path: '/account(/:account_id)/postset(/:postset_id)/streams',
-              name: 'channels & times',
-              getComponent(nextstate, cb) {
-                const importModules = Promise.all([
-                  System.import('containers/PostEditor/SharedStreams'),
-                ]);
-
-                const renderRoute = loadModule(cb);
-
-                importModules.then(([component]) => {
-                  renderRoute(component);
-                });
               },
             },
           ],

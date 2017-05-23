@@ -10,6 +10,10 @@ import {
   SET_VISIBILITY_FILTER,
   SET_SEARCH_FILTER,
   DELETE_MEDIA_ITEM,
+  SET_PROCESSING_ITEM,
+  UPDATE_MEDIA_ITEM,
+  SET_SORT_ORDER,
+  SET_ACTIVE_MEDIA_ITEM_ID,
 } from './constants';
 
 export function fetchCollections(accountId) {
@@ -80,9 +84,37 @@ export function setSearchFilter(searchFilter) {
   };
 }
 
+export function setSortOrder(sortOrder) {
+  return {
+    type: SET_SORT_ORDER,
+    sortOrder,
+  };
+}
+
 export function deleteMediaItem(id) {
   return {
     type: DELETE_MEDIA_ITEM,
+    id,
+  };
+}
+
+export function toggleProccessingItem(processingItem) {
+  return {
+    type: SET_PROCESSING_ITEM,
+    processingItem,
+  };
+}
+
+export function updateMediaItem(mediaItem) {
+  return {
+    type: UPDATE_MEDIA_ITEM,
+    mediaItem,
+  };
+}
+
+export function setActiveMediaItemId(id) {
+  return {
+    type: SET_ACTIVE_MEDIA_ITEM_ID,
     id,
   };
 }

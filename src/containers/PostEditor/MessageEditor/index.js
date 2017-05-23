@@ -6,13 +6,14 @@ import MultiLineInput from 'components/MultiLineInput';
 import Wrapper from './Wrapper';
 import MessageToolbar from './MessageToolbar';
 
-function MessageEditor({ message, handleMessageChange, characterLimit }) {
+function MessageEditor({ message, handleMessageChange, handleMessageBlur, characterLimit }) {
   return (
     <Wrapper>
       <MessageToolbar characterLimit={characterLimit} />
       <MultiLineInput
         message={message}
         handleMessageChange={handleMessageChange}
+        onBlur={handleMessageBlur}
       />
     </Wrapper>
   );
@@ -21,6 +22,7 @@ function MessageEditor({ message, handleMessageChange, characterLimit }) {
 MessageEditor.propTypes = {
   message: PropTypes.string,
   handleMessageChange: PropTypes.func,
+  handleMessageBlur: PropTypes.func,
   characterLimit: PropTypes.number,
 };
 

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export default styled.div`
   position: relative;
+  margin: 35px 0 24px 24px;
 
   .assignee-wrapper {
     display: flex;
@@ -9,15 +10,19 @@ export default styled.div`
   }
   .right-box {
     display: inline-block;
-    margin-left: 13px;
+    margin-left: 14px;
+    color: #888888;
     .assigned-to {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
+      line-height: 1.5rem;
     }
     .name {
-      font-size: 1.8rem;
+      margin-top: 2px;
+      font-size: 1.6rem;
+      line-height: 1.9rem;
     }
   }
   .fa-user {
-    font-size: 4.5rem;
+    font-size: 4rem;
   }
 `;

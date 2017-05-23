@@ -11,6 +11,7 @@ import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { UserCanBoard } from 'config.routes/UserRoutePermissions';
 
+import PostEditor from 'containers/PostEditor';
 import PostSetsGroup from './PostSetsGroup';
 import { getPostSets, deletePostSetRequest, changePostSetStatusRequest } from '../App/actions';
 import { makeSelectPostSets } from '../App/selectors';
@@ -43,7 +44,7 @@ class Board extends React.Component {
       { status: 2, statusColor: '#67C5E6', name: 'Draft' },
       { status: 6, statusColor: '#ACB5B8', name: 'Idea' },
     ];
-    const { postSets, deletePostSetAction } = this.props;
+    const { postSets, deletePostSetAction, params, location: { hash } } = this.props;
     const { moveStatus } = this.state;
     const postSetsGroups = groups.map((group) => {
       const { name, status, statusColor } = group;
@@ -55,8 +56,9 @@ class Board extends React.Component {
         status_id: status,
       };
     });
+    const postsetId = hash.startsWith('#postset') ? hash.split('-')[1] : 0;
     return (
-      <div className={styles.board}>
+      <div className={`${styles.board} ${postsetId ? styles.modalOpen : ''}`}>
         {
           postSetsGroups.map((postSetsGroup) =>
             <PostSetsGroup
@@ -71,6 +73,9 @@ class Board extends React.Component {
             />
           )
         }
+        <div className={styles.postEditor}>
+          { postsetId ? <PostEditor id={postsetId} accountId={params.account_id} /> : null}
+        </div>
       </div>
     );
   }
@@ -85,6 +90,12 @@ Board.propTypes = {
 
     })
   ).isRequired,
+  location: PropTypes.shape({
+    hash: PropTypes.string,
+  }),
+  params: PropTypes.shape({
+    account_id: PropTypes.string,
+  }),
 };
 
 export function mapDispatchToProps(dispatch) {

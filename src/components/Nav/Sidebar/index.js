@@ -134,7 +134,7 @@ class Sidebar extends React.Component {
           { this.props.location.pathname.match('/account/') &&
             <MainNavWrapper isCollapsed={this.props.isMenuCollapsed} key="mainNavKey" isMultiBrand={this.props.activeBrand && (this.props.activeBrand.account_type_id == 2 || this.props.activeBrand.account_type_id == 3 || this.props.activeBrand.account_type_id == 7)}>
               <PPMenu isSidebar selectable>
-                <ReactRouterMenuItem caption="Dashboard" activeClassName={styles.active} isSidebar icon={<i className="fa fa-send-o" />} to={`/account/${this.props.accountId}`} />
+                <ReactRouterMenuItem caption="Dashboard" activeClassName={styles.active} isSidebar icon={<i className="fa fa-home" />} to={`/account/${this.props.accountId}`} />
                 { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('brands') > -1 &&
                 <ReactRouterMenuItem caption="Brands" activeClassName={styles.active} isSidebar icon={<FontIcon>library_add</FontIcon>} to={`/account/${this.props.accountId}/brands`} />
                 }
@@ -194,7 +194,7 @@ class Sidebar extends React.Component {
         { this.props.location.pathname.match('/account/') &&
         <CollapsedWrapper isCollapsed={this.props.isMenuCollapsed}>
           <PPMenu isSidebar selectable={true} >
-            <ReactRouterMenuItemWithTooltip tooltip="Dashboard" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-send-o" />} style={{width: '60px'}} to={`/account/${this.props.accountId}`} />
+            <ReactRouterMenuItemWithTooltip tooltip="Dashboard" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-home" />} style={{width: '60px'}} to={`/account/${this.props.accountId}`} />
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('brands') > -1 &&
               <ReactRouterMenuItemWithTooltip tooltip="Brands" tooltipPosition="right" isCollapsed style={{width: '60px'}} isSidebar icon={<FontIcon>library_add</FontIcon>} to={`/account/${this.props.accountId}/brands`} />
             }
