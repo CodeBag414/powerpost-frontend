@@ -251,7 +251,7 @@ class settingsUser extends Component {
                     name="email"
                     floatingLabelText="Email"
                     value={this.state.email}
-                    onChange={this.handleChange}
+                    disabled
                   />
                   <PPTextField
                     type="tel"
