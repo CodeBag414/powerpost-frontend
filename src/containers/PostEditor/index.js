@@ -101,9 +101,19 @@ class PostEditor extends Component {
   render() {
     const { user, postSet, groupUsers, updatePostSet, updatePost } = this.props;
     const { postTitle, selectedTab } = this.state;
+    const postsArray = postSet.getIn(['details', 'posts']);
+    const posts = {};
+    if (postsArray) {
+      postsArray.map((post) => {
+        if (!posts[post.get('connection_id')]) posts[post.get('connection_id')] = [];
+        if (post.get('status') !== '0') posts[post.get('connection_id')].push(post);
+        return true;
+      });
+    }
+
     const tabs = [
       { name: 'Power Post', component: <Content postSet={postSet} /> },
-      { name: 'Channels & Times', component: <Channels postSet={postSet} updatePost={updatePost} />, count: 0 },
+      { name: 'Channels & Times', component: <Channels postSet={postSet} posts={posts} updatePost={updatePost} />, count: Object.keys(posts).length },
       { name: 'Shared Streams', component: <SharedStreams postSet={postSet} /> },
     ];
     return (

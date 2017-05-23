@@ -19,6 +19,7 @@ class Channels extends Component {
 
   static propTypes = {
     postSet: ImmutablePropTypes.map,
+    posts: PropTypes.array,
     connections: PropTypes.array,
     updatePost: PropTypes.func,
   };
@@ -65,10 +66,9 @@ class Channels extends Component {
   }
 
   render() {
-    const { postSet, connections } = this.props;
+    const { postSet, connections, posts } = this.props;
     const { isDialogShown, currentPost, currentPostConnection } = this.state;
-    const posts = postSet.getIn(['details', 'posts']);
-    const hasContent = posts && posts.size;
+    const hasContent = posts && Object.keys(posts).length;
     const isBunchPosting = postSet.get('bunch_post_fetching');
     return (
       <Wrapper>
@@ -88,7 +88,7 @@ class Channels extends Component {
           <div className="content">
             {
               hasContent
-                ? <ChannelSlots postSet={postSet} connections={connections} handleClickTimestamp={this.handleClickTimestamp} currentPost={this.state.currentPost} />
+                ? <ChannelSlots posts={posts} connections={connections} handleClickTimestamp={this.handleClickTimestamp} currentPost={this.state.currentPost} />
                 : <NoContent />
             }
           </div>

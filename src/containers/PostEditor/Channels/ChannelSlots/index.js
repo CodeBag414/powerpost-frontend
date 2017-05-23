@@ -5,14 +5,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import Wrapper from './Wrapper';
 import ChannelSlot from './ChannelSlot';
 
-function ChannelSlots({ postSet, connections, handleClickTimestamp, currentPost }) {
-  const postsArray = postSet.getIn(['details', 'posts']);
-  const posts = {};
-  postsArray.map((post) => {
-    if (!posts[post.get('connection_id')]) posts[post.get('connection_id')] = [];
-    if (post.get('status') !== '0') posts[post.get('connection_id')].push(post);
-    return true;
-  });
+function ChannelSlots({ posts, connections, handleClickTimestamp, currentPost }) {
   return (
     <Wrapper>
       {
@@ -34,8 +27,8 @@ function ChannelSlots({ postSet, connections, handleClickTimestamp, currentPost 
 }
 
 ChannelSlots.propTypes = {
-  postSet: ImmutablePropTypes.map,
   currentPost: ImmutablePropTypes.map,
+  posts: PropTypes.array,
   connections: PropTypes.array,
   handleClickTimestamp: PropTypes.func,
 };
