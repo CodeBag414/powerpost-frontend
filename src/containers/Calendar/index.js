@@ -10,7 +10,7 @@ import {
 } from 'containers/Main/selectors';
 
 import DeletePostSetDialog from 'components/DeletePostSetDialog';
-
+import PostEditor from 'containers/PostEditor';
 import Wrapper from './Wrapper';
 import CalendarSidebar from './CalendarSidebar';
 import CalendarView from './CalendarView';
@@ -35,6 +35,9 @@ class Calendar extends React.Component {
     updatePost: PropTypes.func,
     posts: PropTypes.any,
     currentAccount: PropTypes.object,
+    params: PropTypes.shape({
+      account_id: PropTypes.string,
+    }),
   };
 
   state = {
@@ -49,7 +52,7 @@ class Calendar extends React.Component {
 
   componentWillReceiveProps(props) {
     if (this.props.location !== props.location) {
-      this.fetchPosts(props);
+      // this.fetchPosts(props);
     }
   }
 
@@ -129,10 +132,11 @@ class Calendar extends React.Component {
 
   render() {
     const { query, filters, showDeletePopup } = this.state;
-    const { posts, currentAccount } = this.props;
+    const { posts, currentAccount, params, location: { hash } } = this.props;
     if (posts == null || posts.length === 0 || !Array.isArray(posts)) return null;
+    const postsetId = hash.startsWith('#postset') ? hash.split('-')[1] : 0;
     return (
-      <Wrapper>
+      <Wrapper className={postsetId ? 'modal-open' : ''}>
         <CalendarSidebar
           posts={posts}
           query={query}
@@ -153,6 +157,9 @@ class Calendar extends React.Component {
           handleDialogToggle={this.hideDeletePopup}
           deletePostSet={this.onDeletePostSet}
         />
+        <div className="post-editor">
+          { postsetId ? <PostEditor id={postsetId} accountId={params.account_id} /> : null}
+        </div>
       </Wrapper>
     );
   }
