@@ -6,10 +6,10 @@ import MultiLineInput from 'components/MultiLineInput';
 import Wrapper from './Wrapper';
 import MessageToolbar from './MessageToolbar';
 
-function MessageEditor({ message, handleMessageChange, handleMessageBlur, characterLimit }) {
+function MessageEditor({ message, handleMessageChange,handleMessageBlur, characterLimit, openFilePicker }) {
   return (
     <Wrapper>
-      <MessageToolbar characterLimit={characterLimit} />
+      <MessageToolbar characterLimit={characterLimit} openFilePicker={openFilePicker} />
       <MultiLineInput
         message={message}
         handleMessageChange={handleMessageChange}
