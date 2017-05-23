@@ -88,7 +88,7 @@ class Tags extends Component {
           isExpanded={isExpanded}
         />
         <SmoothCollapse expanded={isExpanded}>
-          <div className="description">Add Tags lorem ipsum anoajvas</div>
+          <div className="description">Add Tags</div>
           <Autocomplete
             direction="down"
             selectedPosition="above"
