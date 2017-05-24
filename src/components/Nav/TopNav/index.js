@@ -43,6 +43,23 @@ const Wrapper = styled.div`
   box-shadow: 0 1px 5px 0 rgba(60,92,129,0.20);
   background-color: #fff;
   width: ${(props) => props.isNotFullWidth ? 'calc(100% - 60px)' : '100%'};
+
+  .new-post-button {
+    margin-top: 13px;
+    margin-right: 10px;
+    float: right;
+    color: #ffffff;
+    padding: 0 20px;
+    .button-plus {
+      font-size: 19px;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+    .button-title {
+      font-size: 12px;
+      vertical-align: middle;
+    }
+  }
 `;
 
 const DashboardLink = styled(Link)`
@@ -116,6 +133,17 @@ class TopNav extends Component {
             <PPMenuItem caption="Logout" onTouchTap={this.props.logout} />
           </DropDownMenu>
         </AvatarWrapper>
+        <PPButton
+          label={
+            <div>
+              <span className="button-plus">+</span>
+              <span className="button-title">New Power Post</span>
+            </div>
+          }
+          className="new-post-button"
+          onClick={() => {}}
+          primary
+        />
         <DashboardLink to={'/'}><i className="fa fa-home" /></DashboardLink>
       </Wrapper>
     );
