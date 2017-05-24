@@ -9,6 +9,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 
 import Nav from 'components/Nav';
 
@@ -18,11 +19,13 @@ import { makeSelectUser,
          makeSelectSharedAccounts,
          makeSelectSubAccounts,
          makeSelectUserAvatar,
+         makeSelectPostSet,
 } from 'containers/App/selectors';
 
 import { checkUser,
          logout,
          getPostSets,
+         createPostSetRequest,
 } from 'containers/App/actions';
 
 import { toggleMenu,
@@ -51,6 +54,8 @@ class Main extends React.Component {
     subAccounts: PropTypes.shape(),
     children: PropTypes.node,
     fetchAccount: PropTypes.func,
+    createPostSet: PropTypes.func,
+    postSet: PropTypes.object,
     getPostSetsAction: PropTypes.func,
     toggleMenuCollapse: PropTypes.func,
     logout: PropTypes.func,
@@ -71,10 +76,26 @@ class Main extends React.Component {
     if (nextProps.params.account_id !== this.props.params.account_id) {
       this.props.fetchAccount(nextProps.params.account_id);
     }
+    const { postSet, userAccount } = nextProps;
+    if (postSet && postSet.createSuccess && (!this.props.postSet || this.props.postSet.post_set_id !== postSet.post_set_id)) {
+      browserHistory.push(`/account/${userAccount.account_id}/calendar#postset-${postSet.post_set_id}`);
+    }
   }
 
   handleMenuToggle() {
     this.props.toggleMenuCollapse(!this.props.menuCollapsed);
+  }
+
+  createPostSet = () => {
+    const { userAccount, createPostSet } = this.props;
+    const postSet = {
+      account_id: userAccount.account_id,
+      message: '',
+      type: 'text',
+      status: '6',
+      title: '',
+    };
+    createPostSet(postSet);
   }
 
   render() {
@@ -94,6 +115,7 @@ class Main extends React.Component {
           userAccount={this.props.userAccount}
           sharedAccounts={this.props.sharedAccounts}
           subAccounts={this.props.subAccounts}
+          createPostSet={this.createPostSet}
         />
         <div id="main-panel" className={[viewContentStyle, styles.viewContent].join(' ')}>
           {this.props.children}
@@ -114,6 +136,7 @@ export function mapDispatchToProps(dispatch) {
     toggleMenuCollapse: (isCollapsed) => dispatch(toggleMenu(isCollapsed)),
     logout: () => dispatch(logout()),
     fetchAccount: (accountId) => dispatch(fetchCurrentAccount(accountId)),
+    createPostSet: (postSet) => dispatch(createPostSetRequest(postSet)),
   };
 }
 
@@ -127,6 +150,7 @@ const mapStateToProps = () => {
   const selectUserAvatar = makeSelectUserAvatar();
   const selectAccountPermissions = makeSelectAccountPermissions();
   const selectUserPermissions = makeSelectUserPermissions();
+  const selectPostSet = makeSelectPostSet();
   return (state, ownProps) => ({
     user: selectUser(state),
     menuCollapsed: selectMenuCollapsed(state),
@@ -137,6 +161,7 @@ const mapStateToProps = () => {
     userAvatar: selectUserAvatar(state),
     accountPermissions: selectAccountPermissions(state),
     userPermissions: selectUserPermissions(state),
+    postSet: selectPostSet(state),
     location: ownProps.location,
   });
 };
