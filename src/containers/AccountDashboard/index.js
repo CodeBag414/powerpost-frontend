@@ -89,18 +89,13 @@ class AccountDashboard extends Component {
           <p style={{ marginBottom: '30px' }}>Be everywhere in one click. Connect your high-impact content to specific audiences.</p>
 
           <ReactRouterCapsule to={`/account/${account.account_id}/library`}>
+            <i className="fa fa-database" />
             <span>
-              <h5>Content Manager</h5>
+              <h5>Planet Content</h5>
               <p>Go here to upload, find and modify content to be used in your posts.</p>
             </span>
           </ReactRouterCapsule>
-          <ReactRouterCapsule to={`/account/${account.account_id}/calendar`}>
-            <span>
-              <h5>Calendar</h5>
-              <p>Go here to plan, create, sort and view scheduled posts on a calendar.</p>
-            </span>
-          </ReactRouterCapsule>
-          <ReactRouterCapsule to={`/account/${account.account_id}/list`}>
+          {/* <ReactRouterCapsule to={`/account/${account.account_id}/list`}>
             <span>
               <h5>List</h5>
               <p>Go here to easily view the content of both past and upcoming posts.</p>
@@ -111,17 +106,25 @@ class AccountDashboard extends Component {
               <h5>Workflow</h5>
               <p>Go here to easily view and change the status of your posts.</p>
             </span>
-          </ReactRouterCapsule>
+          </ReactRouterCapsule>*/}
           <ReactRouterCapsule to={`/account/${account.account_id}/statistics`}>
+            <i className="fa fa-line-chart" />
             <span>
               <h5>Statistics</h5>
               <p>Go here to get a snapshot of how well your posts are performing on your channels.</p>
             </span>
           </ReactRouterCapsule>
-          <ReactRouterCapsule to={`/account/${account.account_id}/boards`}>
+          {/* <ReactRouterCapsule to={`/account/${account.account_id}/boards`}>
             <span>
               <h5>Board</h5>
               <p>Go here to easily view and edit the posts.</p>
+            </span>
+          </ReactRouterCapsule>*/}
+          <ReactRouterCapsule to={`/account/${account.account_id}/calendar`}>
+            <i className="fa fa-paper-plane" />
+            <span>
+              <h5>Publishing</h5>
+              <p>Go here to prepare and publish posts across your channels.</p>
             </span>
           </ReactRouterCapsule>
         </div>

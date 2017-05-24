@@ -9,6 +9,16 @@ const Capsule = styled.div`
   background-color: #FFFFFF;
   box-shadow: 0 1px 5px 0 rgba(60,92,129,0.22);
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  i {
+    font-family: FontAwesome;
+    font-size: 24px;
+    color: #616669;
+    float: left;
+    line-height: 70px;
+    margin-right: 20px;
+  }
+
   span {
     display: inline-block;
     width: calc(100% - 75px);
@@ -23,15 +33,6 @@ const Capsule = styled.div`
     }
   }
 
-  &:before {
-    content: "\\f1b2";
-    font-family: FontAwesome;
-    font-size: 24px;
-    color: #616669;
-    float: left;
-    line-height: 70px;
-    margin-right: 20px;
-  }
   &:after {
     content: "\\f105";
     font-family: FontAwesome;
