@@ -102,6 +102,7 @@ class TopNav extends Component {
   handleTouch(event) {
     console.log('in handleTouch', event);
   }
+
   render() {
     const isAccountPath = this.props.location.pathname.includes('/account/');
     const avatar = this.props.user && this.props.user.properties ? this.props.user.properties.thumb_url : '#E7ECEE';
@@ -141,7 +142,7 @@ class TopNav extends Component {
             </div>
           }
           className="new-post-button"
-          onClick={() => {}}
+          onClick={this.props.createPostSet}
           primary
         />
         <DashboardLink to={'/'}><i className="fa fa-home" /></DashboardLink>
@@ -156,6 +157,7 @@ TopNav.propTypes = {
   user: PropTypes.object,
   logout: PropTypes.func,
   handleMenuToggle: PropTypes.func,
+  createPostSet: PropTypes.func,
 };
 
 export default TopNav;

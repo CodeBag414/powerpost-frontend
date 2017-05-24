@@ -27,9 +27,9 @@ class Channels extends Component {
   constructor(props) {
     super(props);
     const { posts, connections } = props;
-    const currentPost = posts[Object.keys(posts)[0]][0];
-    const connection = connections.filter((item) =>
-      item.connection_id === currentPost.get('connection_id'),
+    const currentPost = Object.keys(posts).length && posts[Object.keys(posts)[0]][0];
+    const connection = connections && connections.filter((item) =>
+      currentPost && item.connection_id === currentPost.get('connection_id'),
     )[0];
     this.state = {
       currentPost,
@@ -77,7 +77,7 @@ class Channels extends Component {
   render() {
     const { postSet, connections, posts } = this.props;
     const { isDialogShown, currentPost, currentPostConnection } = this.state;
-    const hasContent = posts && Object.keys(posts).length;
+    const hasContent = posts && Object.keys(posts).length && connections;
     const isBunchPosting = postSet.get('bunch_post_fetching');
     return (
       <Wrapper>
@@ -103,10 +103,12 @@ class Channels extends Component {
           </div>
         </div>
 
-        { hasContent && currentPost &&
+        { hasContent && currentPost ?
           <div className="right">
             <PostDetails post={currentPost} connection={currentPostConnection} handleMessageChange={this.handleMessageChange} handleMessageBlur={this.handleMessageBlur} handleRemoveSlot={this.handleRemoveSlot} />
           </div>
+        :
+          null
         }
 
         <AddChannelSlotDialog
