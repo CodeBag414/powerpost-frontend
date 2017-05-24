@@ -13,7 +13,7 @@ const Image = styled.img`
   margin: 0 auto;
 `;
 
-const LinkTitle = styled.div`
+const Title = styled.div`
   color: #424647;
   font-size: 15px;
   font-weight: bold;
@@ -23,7 +23,7 @@ const LinkTitle = styled.div`
   font-family: Lato;
 `;
 
-const LinkDescription = styled.div`
+const Description = styled.div`
   font-size: 12px;
   color: #424647;
   text-align: left;
@@ -32,7 +32,7 @@ const LinkDescription = styled.div`
   font-family: Lato;
 `;
 
-const LinkUrl = styled.div`
+const Url = styled.div`
   text-transform: uppercase;
   text-align: left;
   color: #8C9496;
@@ -45,6 +45,7 @@ const LinkUrl = styled.div`
 
 const showContent = (items) => {
   const contents = [];
+
   items.map((item) => {
     const type = item.get('type');
     const thumbSrc = item.getIn(['properties', 'thumb_url'])
@@ -68,14 +69,14 @@ const showContent = (items) => {
       case 'link':
         media = (<div>
           <Image src={thumbSrc} />
-          <LinkTitle>{item.getIn(['properties', 'description'])}</LinkTitle>
-          <LinkDescription>{item.getIn(['properties', 'caption'])}</LinkDescription>
-          <LinkUrl>{item.getIn(['properties', 'link'])}</LinkUrl></div>);
+          <Title>{item.getIn(['properties', 'description'])}</Title>
+          <Description>{item.getIn(['properties', 'caption'])}</Description>
+          <Url>{item.getIn(['properties', 'link'])}</Url></div>);
         break;
       case 'blog':
         media = (<div>
-          <LinkTitle>{item.getIn(['properties', 'caption'])}</LinkTitle>
-          <LinkDescription>{item.getIn(['properties', 'title'])}</LinkDescription>
+          <Title>{item.getIn(['properties', 'caption'])}</Title>
+          <Description>{item.getIn(['properties', 'title'])}</Description>
           {renderHTML(item.getIn(['properties', 'html']))}
         </div>);
         break;
