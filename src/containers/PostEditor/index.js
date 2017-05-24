@@ -106,11 +106,13 @@ class PostEditor extends Component {
     const { postTitle, selectedTab } = this.state;
     const postsArray = postSet.getIn(['details', 'posts']);
     const posts = {};
+    let totalTimeslots = 0;
     if (postsArray) {
       postsArray.map((post) => {
         if (post.get('status') !== '0') {
           if (!posts[post.get('connection_id')]) posts[post.get('connection_id')] = [];
           posts[post.get('connection_id')].push(post);
+          totalTimeslots += 1;
         }
         return true;
       });
@@ -118,7 +120,7 @@ class PostEditor extends Component {
 
     const tabs = [
       { name: 'Power Post', component: <Content postSet={postSet} /> },
-      { name: 'Channels & Times', component: <Channels postSet={postSet} posts={posts} updatePost={updatePost} />, count: Object.keys(posts).length },
+      { name: 'Channels & Times', component: <Channels postSet={postSet} posts={posts} updatePost={updatePost} />, count: totalTimeslots },
       { name: 'Shared Streams', component: <SharedStreams postSet={postSet} /> },
     ];
     return (
