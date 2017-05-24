@@ -10,7 +10,7 @@ import PPButton from 'elements/atm.Button';
 import MultiLineInput from 'components/MultiLineInput';
 import Wrapper from './Wrapper';
 
-function PostDetails({ post, postMessage, connection, handleRemoveSlot, handleChangeDate, handleMessageChange, handleMessageBlur }) {
+function PostDetails({ post, postMessage, postTime, connection, handleRemoveSlot, handleDateChange, handleMessageChange, handleMessageBlur }) {
   const minDate = new Date();
   minDate.setDate(minDate.getDate() - 1);
   return (
@@ -23,10 +23,10 @@ function PostDetails({ post, postMessage, connection, handleRemoveSlot, handleCh
       </div>
       <div className="date-pickers">
         <div className="date-picker">
-          <DatePicker minDate={minDate} value={moment.unix(post.get('schedule_time')).toDate()} onChange={handleChangeDate} />
+          <DatePicker minDate={minDate} value={moment.unix(postTime).toDate()} onChange={handleDateChange} />
         </div>
         <div className="time-picker">
-          <TimePicker format="ampm" value={moment.unix(post.get('schedule_time')).toDate()} onChange={handleChangeDate} />
+          <TimePicker format="ampm" value={moment.unix(postTime).toDate()} onChange={handleDateChange} />
         </div>
       </div>
       <div className="section-title modify-content">
@@ -52,11 +52,12 @@ function PostDetails({ post, postMessage, connection, handleRemoveSlot, handleCh
 PostDetails.propTypes = {
   post: ImmutablePropTypes.map,
   connection: PropTypes.object,
-  handleChangeDate: PropTypes.func,
+  handleDateChange: PropTypes.func,
   handleMessageChange: PropTypes.func,
   handleMessageBlur: PropTypes.func,
   handleRemoveSlot: PropTypes.func,
   postMessage: PropTypes.string,
+  postTime: PropTypes.string,
 };
 
 export default PostDetails;
