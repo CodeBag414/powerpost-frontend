@@ -28,16 +28,16 @@ const Panel = styled(Collapse.Panel)`
           content: '\f067' !important;
       }
       &.pinterest-icon-color {
-        color: ${props => props.theme.pinterestColor} !important;
+        color: ${(props) => props.theme.pinterestColor} !important;
       }
       &.twitter-icon-color {
-        color: ${props => props.theme.twitterColor} !important;
+        color: ${(props) => props.theme.twitterColor} !important;
       }
       &.facebook-icon-color {
-        color: ${props => props.theme.facebookColor} !important;
+        color: ${(props) => props.theme.facebookColor} !important;
       }
       &.linkedin-icon-color {
-        color: ${props => props.theme.linkedinColor} !important;
+        color: ${(props) => props.theme.linkedinColor} !important;
       }
    }
   & > div:first-of-type {
@@ -53,13 +53,12 @@ const Panel = styled(Collapse.Panel)`
 const Collapser = styled(Collapse)`
   background-color: transparent !important;
   border: none !important;
-  }
 `;
 
 const ReactRouterMenuItem = withReactRouter(PPMenuItem);
 const ReactRouterMenuItemWithTooltip = PPTooltip(ReactRouterMenuItem);
 
-const CustomLink = ({theme, isAccountPath, ...rest}) => (
+const CustomLink = ({ theme, isAccountPath, ...rest }) => (
   <Link {...rest} >
     {rest.children}
   </Link>
@@ -81,7 +80,7 @@ class Sidebar extends React.Component {
     if (!nextProps.isMenuCollapsed && !isNextPathAccount) {
       this.props.handleMenuToggle(false);
     } else if (nextProps.isMenuCollapsed && isNextPathAccount && !isPrevPathAccount) {
-      //this.props.handleMenuToggle(true);
+      // this.props.handleMenuToggle(true);
     }
     return true;
   }
@@ -89,21 +88,21 @@ class Sidebar extends React.Component {
   renderFull() {
     return (
       <div>
-      { this.props.activeBrand && (this.props.activeBrand.account_type_id == 2 || this.props.activeBrand.account_type_id == 3 || this.props.activeBrand.account_type_id == 7) && !this.props.isMenuCollapsed &&
+        { this.props.activeBrand && (this.props.activeBrand.account_type_id == 2 || this.props.activeBrand.account_type_id == 3 || this.props.activeBrand.account_type_id == 7) && !this.props.isMenuCollapsed &&
         <BrandNavWrapper>
             { this.props.activeBrand && this.props.activeBrand.subAccounts.length > 0 &&
-               <LinkWithTooltip tooltip={this.props.activeBrand.title} tooltipPosition="right" to={`/account/${this.props.activeBrand.account_id}`} key={this.props.activeBrand.account_id}>
-                <BrandIcon isActive={this.props.accountId === this.props.activeBrand.account_id} thumbnail={this.props.activeBrand.properties && this.props.activeBrand.properties.thumb_url ? this.props.activeBrand.properties.thumb_url : null} color={this.props.activeBrand.properties && this.props.activeBrand.properties.color ? this.props.activeBrand.properties.color : '#E52466'}>
-                  {this.props.activeBrand.title && ((this.props.activeBrand.properties && !this.props.activeBrand.properties.thumb_url) || (!this.props.activeBrand.properties)) ? this.props.activeBrand.title.slice(0, 2).toUpperCase() : ''}
-                </BrandIcon>
-              </LinkWithTooltip>
+            <LinkWithTooltip tooltip={this.props.activeBrand.title} tooltipPosition="right" to={`/account/${this.props.activeBrand.account_id}`} key={this.props.activeBrand.account_id}>
+              <BrandIcon isActive={this.props.accountId === this.props.activeBrand.account_id} thumbnail={this.props.activeBrand.properties && this.props.activeBrand.properties.thumb_url ? this.props.activeBrand.properties.thumb_url : null} color={this.props.activeBrand.properties && this.props.activeBrand.properties.color ? this.props.activeBrand.properties.color : '#E52466'}>
+                {this.props.activeBrand.title && ((this.props.activeBrand.properties && !this.props.activeBrand.properties.thumb_url) || (!this.props.activeBrand.properties)) ? this.props.activeBrand.title.slice(0, 2).toUpperCase() : ''}
+              </BrandIcon>
+            </LinkWithTooltip>
             }
             { this.props.activeBrand && this.props.activeBrand.parentAccount &&
-               <LinkWithTooltip tooltip={this.props.activeBrand.parentAccount.title} tooltipPosition="right" to={`/account/${this.props.activeBrand.parentAccount.account_id}`} key={this.props.activeBrand.parentAccount.account_id}>
-                <BrandIcon isActive={this.props.accountId === this.props.activeBrand.parentAccount.account_id} thumbnail={this.props.activeBrand.parentAccount.properties && this.props.activeBrand.parentAccount.properties.thumb_url ? this.props.activeBrand.parentAccount.properties.thumb_url : null} color={this.props.activeBrand.parentAccount.properties && this.props.activeBrand.parentAccount.properties.color ? this.props.activeBrand.parentAccount.properties.color : '#E52466'}>
-                  {this.props.activeBrand.parentAccount.title && ((this.props.activeBrand.parentAccount.properties && !this.props.activeBrand.parentAccount.properties.thumb_url) || (!this.props.activeBrand.parentAccount.properties)) ? this.props.activeBrand.parentAccount.title.slice(0, 2).toUpperCase() : ''}
-                </BrandIcon>
-              </LinkWithTooltip>
+            <LinkWithTooltip tooltip={this.props.activeBrand.parentAccount.title} tooltipPosition="right" to={`/account/${this.props.activeBrand.parentAccount.account_id}`} key={this.props.activeBrand.parentAccount.account_id}>
+              <BrandIcon isActive={this.props.accountId === this.props.activeBrand.parentAccount.account_id} thumbnail={this.props.activeBrand.parentAccount.properties && this.props.activeBrand.parentAccount.properties.thumb_url ? this.props.activeBrand.parentAccount.properties.thumb_url : null} color={this.props.activeBrand.parentAccount.properties && this.props.activeBrand.parentAccount.properties.color ? this.props.activeBrand.parentAccount.properties.color : '#E52466'}>
+                {this.props.activeBrand.parentAccount.title && ((this.props.activeBrand.parentAccount.properties && !this.props.activeBrand.parentAccount.properties.thumb_url) || (!this.props.activeBrand.parentAccount.properties)) ? this.props.activeBrand.parentAccount.title.slice(0, 2).toUpperCase() : ''}
+              </BrandIcon>
+            </LinkWithTooltip>
             }
             { this.props.activeBrand && this.props.activeBrand.subAccounts.map((account) =>
               <LinkWithTooltip tooltip={account.title} tooltipPosition="right" to={`/account/${account.account_id}`} key={account.account_id}>
@@ -112,7 +111,7 @@ class Sidebar extends React.Component {
                 </BrandIcon>
               </LinkWithTooltip>)
             }
-            { this.props.activeBrand && this.props.activeBrand.parentAccount && this.props.activeBrand.parentAccount.subaccounts.map((account) => 
+            { this.props.activeBrand && this.props.activeBrand.parentAccount && this.props.activeBrand.parentAccount.subaccounts.map((account) =>
               <LinkWithTooltip tooltip={account.title} tooltipPosition="right" to={`/account/${account.account_id}`} key={account.account_id}>
                 <BrandIcon isActive={this.props.accountId === account.account_id} thumbnail={account.properties && account.properties.thumb_url ? account.properties.thumb_url : null} color={account.properties && account.properties.color ? account.properties.color : '#E52466'}>
                   {account.title && ((account.properties && !account.properties.thumb_url) || (!account.properties)) ? account.title.slice(0, 2).toUpperCase() : ''}
@@ -161,7 +160,7 @@ class Sidebar extends React.Component {
                   <ReactRouterMenuItem caption="Settings" activeClassName={styles.active} isSidebar icon={<i className="fa fa-cog" />} to={`/account/${this.props.accountId}/settings`} />
                 }
                 { this.props.activeBrand.connections && this.props.activeBrand.connections.length > 0 &&
-                <Collapser accordion={true} className={styles.collapser}>
+                <Collapser accordion className={styles.collapser}>
                   <Panel header="Social Feeds" headerClass={styles.collapserHeader}>
                     {this.props.activeBrand.connections &&
                     this.props.activeBrand.connections.map((connection) =>
@@ -193,32 +192,32 @@ class Sidebar extends React.Component {
       <div>
         { this.props.location.pathname.match('/account/') &&
         <CollapsedWrapper isCollapsed={this.props.isMenuCollapsed}>
-          <PPMenu isSidebar selectable={true} >
-            <ReactRouterMenuItemWithTooltip tooltip="Dashboard" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-home" />} style={{width: '60px'}} to={`/account/${this.props.accountId}`} />
+          <PPMenu isSidebar selectable >
+            <ReactRouterMenuItemWithTooltip tooltip="Dashboard" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-home" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}`} />
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('brands') > -1 &&
-              <ReactRouterMenuItemWithTooltip tooltip="Brands" tooltipPosition="right" isCollapsed style={{width: '60px'}} isSidebar icon={<FontIcon>library_add</FontIcon>} to={`/account/${this.props.accountId}/brands`} />
+              <ReactRouterMenuItemWithTooltip tooltip="Brands" tooltipPosition="right" isCollapsed style={{ width: '60px' }} isSidebar icon={<FontIcon>library_add</FontIcon>} to={`/account/${this.props.accountId}/brands`} />
             }
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('content_library') > -1 &&
-            <ReactRouterMenuItemWithTooltip tooltip="Media Library" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-database" />} style={{width: '60px'}} to={`/account/${this.props.accountId}/library`} />
+            <ReactRouterMenuItemWithTooltip tooltip="Media Library" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-database" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/library`} />
             }
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
             <div>
-              <ReactRouterMenuItemWithTooltip tooltip="Calendar" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-calendar" />} style={{width: '60px'}} to={`/account/${this.props.accountId}/calendar`} />
-              <ReactRouterMenuItemWithTooltip tooltip="Status Boards" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-columns" />} style={{width: '60px'}} to={`/account/${this.props.accountId}/boards`} />
-              <ReactRouterMenuItemWithTooltip tooltip="List" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-list-ul" />} style={{width: '60px'}} to={`/account/${this.props.accountId}/list`} />
+              <ReactRouterMenuItemWithTooltip tooltip="Calendar" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-calendar" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/calendar`} />
+              <ReactRouterMenuItemWithTooltip tooltip="Status Boards" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-columns" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/boards`} />
+              <ReactRouterMenuItemWithTooltip tooltip="List" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-list-ul" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/list`} />
             </div>
             }
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('statistics') > -1 &&
-              <ReactRouterMenuItemWithTooltip tooltip="Statistics" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-line-chart" />} style={{width: '60px'}} to={`/account/${this.props.accountId}/statistics`} />
+              <ReactRouterMenuItemWithTooltip tooltip="Statistics" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-line-chart" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/statistics`} />
             }
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('connections') > -1 &&
-              <ReactRouterMenuItemWithTooltip tooltip="Connections" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-exchange" />} style={{width: '60px'}} to={`/account/${this.props.accountId}/settings/connections`} />
+              <ReactRouterMenuItemWithTooltip tooltip="Connections" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-exchange" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/settings/connections`} />
             }
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('team') > -1 &&
-              <ReactRouterMenuItemWithTooltip tooltip="Team" tooltipPosition="right"  isCollapsed isSidebar icon={<i className="fa fa-group" />} style={{width: '60px'}} to={`/account/${this.props.accountId}/settings/team`} />
+              <ReactRouterMenuItemWithTooltip tooltip="Team" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-group" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/settings/team`} />
             }
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('settings') > -1 &&
-              <ReactRouterMenuItemWithTooltip tooltip="Settings" tooltipPosition="right"  isCollapsed isSidebar icon={<i className="fa fa-cog" />} style={{width: '60px' }} to={`/account/${this.props.accountId}/settings`} />
+              <ReactRouterMenuItemWithTooltip tooltip="Settings" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-cog" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/settings`} />
             }
           </PPMenu>
         </CollapsedWrapper>
