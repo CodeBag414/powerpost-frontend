@@ -13,7 +13,7 @@ function ChannelSlot({ postItems, connection, handleClickTimestamp, currentPost 
         postItems.map((post) =>
           <ChannelSlotTimestamp
             post={post}
-            handleClickTimestamp={(clickedPost) => handleClickTimestamp(clickedPost, connection)}
+            handleClickTimestamp={handleClickTimestamp}
             currentPost={currentPost}
           />
         )
