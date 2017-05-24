@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import VideoPlayer from 'react-player';
 import renderHTML from 'react-render-html';
 
+import PlaceholderImage from 'assets/images/placeholder.jpg';
+
 const Image = styled.img`
   height: auto;
   width: 100%;
@@ -45,11 +47,15 @@ const showContent = (items) => {
   const contents = [];
   items.map((item) => {
     const type = item.get('type');
+    const thumbSrc = item.getIn(['properties', 'thumb_url'])
+      || item.getIn(['properties', 'picture'])
+      || PlaceholderImage;
+
     let media = <div />;
 
     switch (type) {
       case 'image':
-        media = (<Image src={item.getIn(['properties', 'thumb_url'])} />);
+        media = (<Image src={thumbSrc} />);
         break;
       case 'video':
         media = (<VideoPlayer
@@ -61,7 +67,7 @@ const showContent = (items) => {
         break;
       case 'link':
         media = (<div>
-          <Image src={item.getIn(['properties', 'thumb_url'])} />
+          <Image src={thumbSrc} />
           <LinkTitle>{item.getIn(['properties', 'description'])}</LinkTitle>
           <LinkDescription>{item.getIn(['properties', 'caption'])}</LinkDescription>
           <LinkUrl>{item.getIn(['properties', 'link'])}</LinkUrl></div>);
@@ -74,7 +80,7 @@ const showContent = (items) => {
         </div>);
         break;
       default:
-        media = <Image src={item.getIn(['properties', 'thumb_url'])} />;
+        media = <Image src={thumbSrc} />;
         break;
     }
     return contents.push(media);
