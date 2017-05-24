@@ -7,9 +7,9 @@ import Wrapper from './Wrapper';
 
 import theme from './styles.scss';
 
-function MultiLineInput({ disabled, highlightFocus, name, placeholder, message, handleMessageChange, onBlur, noPadding }) {
+function MultiLineInput({ disabled, highlightFocus, name, placeholder, message, handleMessageChange, onBlur, noPadding, hasBorder }) {
   return (
-    <Wrapper className={`${highlightFocus ? theme.highlightFocus : ''} ${noPadding && theme.noPadding}`}>
+    <Wrapper className={`${highlightFocus ? theme.highlightFocus : ''} ${noPadding && theme.noPadding} ${hasBorder && theme.hasBorder}`}>
       <PPInput
         multiline
         disabled={disabled}
@@ -33,7 +33,8 @@ MultiLineInput.propTypes = {
   message: PropTypes.string,
   handleMessageChange: PropTypes.func,
   onBlur: PropTypes.func,
-  noPadding: PropTypes.string,
+  noPadding: PropTypes.bool,
+  hasBorder: PropTypes.bool,
 };
 
 MultiLineInput.defaultProps = {
