@@ -19,14 +19,25 @@ class Channels extends Component {
 
   static propTypes = {
     postSet: ImmutablePropTypes.map,
+    posts: PropTypes.array,
     connections: PropTypes.array,
+    updatePost: PropTypes.func,
   };
 
-  state = {
-    isDialogShown: false,
-    currentPost: null,
-    message: '',
-  };
+  constructor(props) {
+    super(props);
+    const { posts, connections } = props;
+    const currentPost = posts[Object.keys(posts)[0]][0];
+    const connection = connections.filter((item) =>
+      item.connection_id === currentPost.get('connection_id'),
+    )[0];
+    this.state = {
+      currentPost,
+      currentPostConnection: connection,
+      isDialogShown: false,
+      message: '',
+    };
+  }
 
   componentWillReceiveProps(/* nextProps */) {
     // const { currentPost } = this.state;
@@ -54,11 +65,19 @@ class Channels extends Component {
   handleMessageBlur = () => {
   }
 
+  handleRemoveSlot = (postToDelete) => {
+    const { updatePost } = this.props;
+    const newPost = {
+      ...postToDelete.toJS(),
+      status: 0,
+    };
+    updatePost(newPost);
+  }
+
   render() {
-    const { postSet, connections } = this.props;
+    const { postSet, connections, posts } = this.props;
     const { isDialogShown, currentPost, currentPostConnection } = this.state;
-    const posts = postSet.getIn(['details', 'posts']);
-    const hasContent = posts && posts.size;
+    const hasContent = posts && Object.keys(posts).length;
     const isBunchPosting = postSet.get('bunch_post_fetching');
     return (
       <Wrapper>
@@ -78,7 +97,7 @@ class Channels extends Component {
           <div className="content">
             {
               hasContent
-                ? <ChannelSlots postSet={postSet} connections={connections} handleClickTimestamp={this.handleClickTimestamp} currentPost={this.state.currentPost} />
+                ? <ChannelSlots posts={posts} connections={connections} handleClickTimestamp={this.handleClickTimestamp} currentPost={this.state.currentPost} />
                 : <NoContent />
             }
           </div>
@@ -86,7 +105,7 @@ class Channels extends Component {
 
         { hasContent && currentPost &&
           <div className="right">
-            <PostDetails post={currentPost} connection={currentPostConnection} handleMessageChange={this.handleMessageChange} handleMessageBlur={this.handleMessageBlur} />
+            <PostDetails post={currentPost} connection={currentPostConnection} handleMessageChange={this.handleMessageChange} handleMessageBlur={this.handleMessageBlur} handleRemoveSlot={this.handleRemoveSlot} />
           </div>
         }
 

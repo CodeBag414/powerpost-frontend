@@ -6,6 +6,15 @@ import moment from 'moment';
 import { UserCanPostSet } from 'config.routes/UserRoutePermissions';
 
 import {
+  fetchPosts,
+  updatePostRequest,
+} from 'containers/App/actions';
+
+import {
+  makeSelectPosts,
+} from 'containers/App/selectors';
+
+import {
   makeSelectCurrentAccount,
 } from 'containers/Main/selectors';
 
@@ -15,14 +24,6 @@ import Wrapper from './Wrapper';
 import CalendarSidebar from './CalendarSidebar';
 import CalendarView from './CalendarView';
 
-import {
-  fetchPosts,
-  updatePostRequest,
-} from './actions';
-
-import {
-  makeSelectPosts,
-} from './selectors';
 
 /**
  * Calendar component for posts

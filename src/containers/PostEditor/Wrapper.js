@@ -4,13 +4,20 @@ const Wrapper = styled.div`
   padding: 40px;
   .active-link {
     a {
-      border-bottom: 2px solid #E52466;
-      color: #4A4A4A !important;
+      color: #424647 !important;
+      border-top: 2px solid #E81C64;
+      border-left: 1px solid #DBDFE0;
+      border-right: 1px solid #DBDFE0;
+      border-bottom: 1px solid transparent !important;
+      span {
+        display: none;
+      }
     }
   }
   a {
     transition: border-bottom 0.3s, color 0.3s;
     cursor: pointer;
+    
   }
   .back-button {
     font-size: 20px;
