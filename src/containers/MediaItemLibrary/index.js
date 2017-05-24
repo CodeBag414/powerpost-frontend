@@ -24,6 +24,10 @@ import PostEditor from 'containers/PostEditor';
 import DropdownMenu from 'react-dd-menu';
 
 import { 
+  createPostSetRequest,
+} from 'containers/App/actions';
+
+import { 
   fetchCollections,
   fetchUrlData,
   clearUrlContent,
@@ -392,8 +396,17 @@ class Library extends React.Component {
     this.setState({ addMenuOpen: !this.state.addMenuOpen });
   }
   
-  openPostEditor = () => {
-    //browserHistory.push(`/account/${currentAccount.account_id}/calendar#postset-${postSet.post_set_id}`);
+  createPostSet = (mediaItem) => {
+    const { params: { account_id }, createPostSet } = this.props;
+    const postSet = {
+      account_id: account_id,
+      message: '',
+      type: 'text',
+      status: '6',
+      title: '',
+      media_item_ids: [mediaItem.media_item_id],
+    };
+    createPostSet(postSet);
   }
 
   render() {
@@ -434,7 +447,7 @@ class Library extends React.Component {
           </Menu>
         </SidebarWrapper>
         <ContentWrapper>
-        {React.cloneElement(this.props.children, { ...this.props, openImageEditor:this.openImageEditor, openLinkEditor:this.openLinkEditor, openVideoEditor: this.openVideoEditor, openFileEditor: this.openFileEditor, handleAddLinkValueFromDialog: this.handleAddLinkValueFromDialog })}
+        {React.cloneElement(this.props.children, { ...this.props, createPostSet: this.createPostSet, openImageEditor:this.openImageEditor, openLinkEditor:this.openLinkEditor, openVideoEditor: this.openVideoEditor, openFileEditor: this.openFileEditor, handleAddLinkValueFromDialog: this.handleAddLinkValueFromDialog })}
         </ContentWrapper>
         <LinkEditor actions={actions} closeAllDialog={this.closeAllDialog} handleLinkEditorSave={this.handleLinkEditorSave.bind(this)} linkEditorDialog={this.state.linkEditorDialog} urlContent={this.props.urlContent} filePickerKey={this.props.filePickerKey} linkItem={this.state.linkItem} />
         <ImageEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleImageEditorSave.bind(this)} isOpen={this.state.imageEditorDialog} filePickerKey={this.props.filePickerKey} imageItem={this.state.imageItem} />
@@ -466,6 +479,7 @@ export function mapDispatchToProps(dispatch) {
     setProcessingItem: (processingItem) => dispatch(toggleProccessingItem(processingItem)),
     updateMediaItem: (mediaItem) => dispatch(updateMediaItem(mediaItem)),
     setActiveMediaItemId: (id) => dispatch(setActiveMediaItemId(id)),
+    createPostSet: (postSet) => dispatch(createPostSetRequest(postSet)),
   };
 }
 
