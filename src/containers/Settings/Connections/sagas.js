@@ -24,7 +24,7 @@ import {
     CLEAR_SUB_DATA,
     GET_WORDPRESS_BLOGS,
     VALIDATE_CONNECTIONS,
-    VALIDATE_CONNECTIONS_SUCCESS
+    VALIDATE_CONNECTIONS_SUCCESS,
 } from './constants';
 
 export function* getSocialUrls(action, dispatch) { // eslint-disable-line no-unused-vars
@@ -181,15 +181,13 @@ export function* validateConnections(action) {
   const data = {
     payload: {
       account_id: accountId,
-      status: [1,3,4],
+      status: [1, 3, 4],
       postable: 1,
     },
   };
   const params = serialize(data);
   const result = yield call(getData, `/connection_api/connections?${params}`);
-  console.log(result);
-  if(result.data.status === 'success') {
-    console.log('success');
+  if (result.data.status === 'success') {
     const connections = result.data.connections;
     yield put({ type: VALIDATE_CONNECTIONS_SUCCESS, connections });
   }
@@ -255,7 +253,7 @@ export function* watchWordpress() {
 
 export function* getConnections() {
   const watcher = yield takeLatest(VALIDATE_CONNECTIONS, validateConnections);
-  
+
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
 }

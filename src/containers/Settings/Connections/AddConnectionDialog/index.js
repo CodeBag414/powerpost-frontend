@@ -215,9 +215,10 @@ class AddConnectionDialog extends React.Component {
         channel: 'googleplus',
         sub: false,
         url: this.props.socialUrls ? this.props.socialUrls.google : '',
-      }
+      },
     ];
-    if (Object.getOwnPropertyNames(this.props.subChannel).length !== 0) {
+    const len = ((this.props.subChannel && Object.getOwnPropertyNames(this.props.subChannel)) || []).length;
+    if (len !== 0) {
       let subChannelType = 'Page';
       if (this.state.channel === 'pinterest') {
         subChannelType = 'Board';
@@ -234,7 +235,6 @@ class AddConnectionDialog extends React.Component {
       } else if (this.state.channel === 'twitter') {
         channelIcons = 'fa fa-twitter-square';
       }
-
       return (
         <div>
           <div>
@@ -246,8 +246,8 @@ class AddConnectionDialog extends React.Component {
           </div>
           <div>
             <hr />
-            { !this.props.subChannels || this.props.subChannels.length == 0 &&
-              <p>There are no associated { subChannelType } with this account.</p>
+            { !this.props.subChannels || (this.props.subChannels.length === 0 &&
+              <p>There are no associated { subChannelType } with this account.</p>)
             }
             { this.props.subChannels.connected && this.props.subChannels.connected.map((channel, i) =>
               <ConnectionsListItem key={i} connectionIcons={channelIcons} connection={channel} hidden={channel.status === '1' ? true : false} subChannel channelType={`${channel.channel} ${subChannelType}`} toggleConnection={this.toggleConnection} /> // eslint-disable-line no-unneeded-ternary
@@ -314,7 +314,7 @@ class AddConnectionDialog extends React.Component {
     ];
 
     return (
-      <PPFullScreenDialog title="Connect a Channel" active={this.props.dialogShown} actions={labelActions} style={{overflow: 'scroll'}}>
+      <PPFullScreenDialog title="Connect a Channel" active={this.props.dialogShown} actions={labelActions} style={{ overflow: 'scroll' }}>
         { this.renderContent() }
       </PPFullScreenDialog>
     );
@@ -333,6 +333,10 @@ AddConnectionDialog.propTypes = {
   setSubCallback: PropTypes.func,
   subChannel: PropTypes.object,
   createSubChannels: PropTypes.func,
+};
+
+AddConnectionDialog.defaultProps = {
+  subChannels: [],
 };
 
 export default AddConnectionDialog;

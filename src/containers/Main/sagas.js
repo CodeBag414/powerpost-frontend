@@ -1,10 +1,9 @@
 import { takeLatest, takeEvery } from 'redux-saga';
-import { take, call, put, cancel, select } from 'redux-saga/effects';
+import { take, call, put, cancel } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 
 import { getData } from 'utils/request';
 
-import { makeSelectCurrentAccount } from './selectors';
 import {
     FETCH_ACCOUNT,
     FETCH_ACCOUNT_SUCCESS,

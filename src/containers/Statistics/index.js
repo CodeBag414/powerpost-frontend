@@ -74,7 +74,6 @@ class Statistics extends React.Component {
     const { channelFilter, channelType } = this.props;
     return connections.filter((connection) => {
       let matched = true;
-
       if (channelFilter) {
         matched = matched && (connection.display_name.toLowerCase().indexOf(channelFilter.toLowerCase()) > -1);
       }
@@ -84,7 +83,6 @@ class Statistics extends React.Component {
       }
 
       if (connection.type === 'facebook_profile') return false;
-
       return matched;
     });
   }
