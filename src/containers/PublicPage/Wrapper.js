@@ -17,6 +17,8 @@ const Wrapper = styled.div`
     display: flex;
     padding: 36px 43px;
     align-items: flex-start;
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
   }
 `;
 
