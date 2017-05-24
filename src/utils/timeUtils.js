@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 export function getFormattedDate(time) {
-  return moment(time).format('MMM dd - hh:mm a');
+  return moment(time).format('MMM DD - hh:mm a');
 }
 
 export function getCurrentMonth() {
