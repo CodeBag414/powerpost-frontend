@@ -54,7 +54,7 @@ const Dashboard = (props) => {
               : ''
             }
             {
-              accountType ==='5'
+              accountType === '5'
               ? <a href="https://www.powerpost.digital/pricing/" target="_blank">Upgrade to a Premium Account!</a>
               : null
             }
@@ -104,7 +104,7 @@ const Dashboard = (props) => {
                       image={avatarUrl}
                       title={userInfo.display_name}
                       backgroundColor={avatarClr}
-                      isClickable = {false}
+                      isClickable={false}
                     />
                   </div>
 
