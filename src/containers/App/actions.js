@@ -51,6 +51,8 @@ import {
   FETCH_POSTS,
   SET_POSTS,
   UPDATE_POST_REQUEST,
+  FETCH_CONNECTIONS,
+  SET_CONNECTIONS,
   // CHECK_USER_OBJECT,
 } from './constants';
 
@@ -411,4 +413,12 @@ export function setPosts(posts) {
 
 export function updatePostRequest(post) {
   return { type: UPDATE_POST_REQUEST, post };
+}
+
+export function fetchConnections(accountId) {
+  return { type: FETCH_CONNECTIONS, accountId };
+}
+
+export function setConnections(connections) {
+  return { type: SET_CONNECTIONS, connections };
 }

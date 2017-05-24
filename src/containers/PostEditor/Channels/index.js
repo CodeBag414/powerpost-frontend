@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
 import {
-  makeSelectAccountConnections,
-} from 'containers/Main/selectors';
+  selectConnections,
+} from 'containers/App/selectors';
 
 import NoContent from './NoContent';
 import ChannelSlots from './ChannelSlots';
@@ -124,7 +124,7 @@ function mapDispatchToProps() {
 }
 
 const mapStateToProps = createStructuredSelector({
-  connections: makeSelectAccountConnections(),
+  connections: selectConnections(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Channels);

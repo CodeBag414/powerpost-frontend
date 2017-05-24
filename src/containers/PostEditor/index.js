@@ -14,6 +14,7 @@ import {
   fetchPostSetRequest,
   updatePostSetRequest,
   updatePostRequest,
+  fetchConnections,
 } from 'containers/App/actions';
 
 import {
@@ -47,6 +48,7 @@ class PostEditor extends Component {
     getAccountTags: PropTypes.func,
     fetchPostSet: PropTypes.func,
     fetchGroupUsers: PropTypes.func,
+    fetchConnections: PropTypes.func,
     user: PropTypes.shape(),
     postSet: PropTypes.object,
     groupUsers: PropTypes.object,
@@ -70,6 +72,7 @@ class PostEditor extends Component {
     });
     const payload = { accountId };
     this.props.fetchGroupUsers(payload);
+    this.props.fetchConnections(accountId);
   }
 
   componentWillReceiveProps({ postSet }) {
@@ -177,6 +180,7 @@ export function mapDispatchToProps(dispatch) {
     fetchGroupUsers: (payload) => dispatch(fetchGroupUsers(payload)),
     updatePostSet: (payload) => dispatch(updatePostSetRequest(payload)),
     updatePost: (payload) => dispatch(updatePostRequest(payload)),
+    fetchConnections: (payload) => dispatch(fetchConnections(payload)),
   };
 }
 
