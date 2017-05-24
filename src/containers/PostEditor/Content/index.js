@@ -20,7 +20,6 @@ import {
 import {
   makeSelectComments,
   makeSelectInProgress,
-  selectPostSet,
 } from 'containers/PostEditor/selectors';
 
 import Wrapper from './Wrapper';
@@ -35,7 +34,6 @@ class Content extends Component {
     postComment: PropTypes.func,
     deleteComment: PropTypes.func,
     comments: ImmutablePropTypes.list,
-    params: PropTypes.shape(),
     user: PropTypes.shape(),
     pending: PropTypes.bool,
     postSet: PropTypes.object,
@@ -77,7 +75,7 @@ class Content extends Component {
   render() {
     const { postComment, deleteComment, comments, user, pending } = this.props;
     const { globalMessage, characterLimit } = this.state;
-    const { params: { postset_id } } = this.props;
+    const { postSet } = this.props;
     return (
       <Wrapper pending={pending}>
         <MessageEditor
@@ -88,7 +86,7 @@ class Content extends Component {
         />
         <Comments />
         <div className="comment-input">
-          <CommentInput user={user} postComment={(text) => postComment(postset_id, text)} />
+          <CommentInput user={user} postComment={(text) => postComment(postSet.getIn(['details', 'post_set_id']), text)} />
         </div>
         {
           comments.map((comment) =>
@@ -117,7 +115,6 @@ const mapStateToProps = createStructuredSelector({
   comments: makeSelectComments(),
   user: makeSelectUser(),
   pending: makeSelectInProgress(),
-  postSet: selectPostSet(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Content);

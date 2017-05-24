@@ -9,10 +9,6 @@ import {
   makeSelectAccountConnections,
 } from 'containers/Main/selectors';
 
-import {
-  selectPostSet,
-} from 'containers/PostEditor/selectors';
-
 import NoContent from './NoContent';
 import ChannelSlots from './ChannelSlots';
 import AddChannelSlotDialog from './AddChannelSlotDialog';
@@ -32,7 +28,7 @@ class Channels extends Component {
     message: '',
   };
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(/* nextProps */) {
     // const { currentPost } = this.state;
     // if (currentPost.get('message') === nextProps.post.get('message') || currentPost.isEmpty()) {
     //   this.setState({
@@ -110,7 +106,6 @@ function mapDispatchToProps() {
 
 const mapStateToProps = createStructuredSelector({
   connections: makeSelectAccountConnections(),
-  postSet: selectPostSet(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Channels);
