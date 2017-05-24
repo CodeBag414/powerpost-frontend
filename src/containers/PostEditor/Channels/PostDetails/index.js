@@ -10,7 +10,7 @@ import PPButton from 'elements/atm.Button';
 import MultiLineInput from 'components/MultiLineInput';
 import Wrapper from './Wrapper';
 
-function PostDetails({ post, connection, handleRemoveSlot, handleChangeDate, handleMessageChange, handleMessageBlur }) {
+function PostDetails({ post, postMessage, connection, handleRemoveSlot, handleChangeDate, handleMessageChange, handleMessageBlur }) {
   const minDate = new Date();
   minDate.setDate(minDate.getDate() - 1);
   return (
@@ -41,7 +41,7 @@ function PostDetails({ post, connection, handleRemoveSlot, handleChangeDate, han
       </div>
       <MultiLineInput
         hasBorder
-        message={post.get('message')}
+        message={postMessage}
         handleMessageChange={handleMessageChange}
         onBlur={handleMessageBlur}
       />
@@ -56,6 +56,7 @@ PostDetails.propTypes = {
   handleMessageChange: PropTypes.func,
   handleMessageBlur: PropTypes.func,
   handleRemoveSlot: PropTypes.func,
+  postMessage: PropTypes.string,
 };
 
 export default PostDetails;

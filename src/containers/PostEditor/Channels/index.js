@@ -26,43 +26,46 @@ class Channels extends Component {
 
   constructor(props) {
     super(props);
-    const { posts, connections } = props;
+    const { posts } = props;
     const currentPost = Object.keys(posts).length && posts[Object.keys(posts)[0]][0];
-    const connection = connections && connections.filter((item) =>
-      currentPost && item.connection_id === currentPost.get('connection_id'),
-    )[0];
     this.state = {
       currentPost,
-      currentPostConnection: connection,
       isDialogShown: false,
-      message: '',
+      postMessage: currentPost ? currentPost.get('message') : '',
     };
-  }
-
-  componentWillReceiveProps(/* nextProps */) {
-    // const { currentPost } = this.state;
-    // if (currentPost.get('message') === nextProps.post.get('message') || currentPost.isEmpty()) {
-    //   this.setState({
-    //     currentPost: nextProps.post,
-    //   });
-    // }
   }
 
   handleDialogToggle = () => {
     this.setState({ isDialogShown: !this.state.isDialogShown });
   }
 
-  handleClickTimestamp = (post, connection) => {
+  handleClickTimestamp = (post) => {
+    const { postSet } = this.props;
+    // console.log('post.getIn', postSet.toJS());
     this.setState({
       currentPost: post,
-      currentPostConnection: connection,
+      postMessage: post.getIn(['properties', 'edited']) ? post.get('message') : postSet.getIn(['details', 'message']),
     });
   }
 
-  handleMessageChange = () => {
+  handleMessageChange = (value) => {
+    this.setState({
+      postMessage: value,
+    });
   }
 
   handleMessageBlur = () => {
+    const { updatePost } = this.props;
+    const { currentPost, postMessage } = this.state;
+    // console.log('currentPost', currentPost.toJS());
+    const newPost = {
+      ...currentPost.toJS(),
+      message: postMessage,
+      properties: {
+        edited: true,
+      },
+    };
+    updatePost(newPost);
   }
 
   handleRemoveSlot = (postToDelete) => {
@@ -76,8 +79,11 @@ class Channels extends Component {
 
   render() {
     const { postSet, connections, posts } = this.props;
-    const { isDialogShown, currentPost, currentPostConnection } = this.state;
+    const { isDialogShown, currentPost, postMessage } = this.state;
     const hasContent = posts && Object.keys(posts).length && connections;
+    const connection = connections && connections.filter((item) =>
+      currentPost && item.connection_id === currentPost.get('connection_id'),
+    )[0];
     const isBunchPosting = postSet.get('bunch_post_fetching');
     return (
       <Wrapper>
@@ -105,7 +111,14 @@ class Channels extends Component {
 
         { hasContent && currentPost ?
           <div className="right">
-            <PostDetails post={currentPost} connection={currentPostConnection} handleMessageChange={this.handleMessageChange} handleMessageBlur={this.handleMessageBlur} handleRemoveSlot={this.handleRemoveSlot} />
+            <PostDetails
+              post={currentPost}
+              postMessage={postMessage}
+              connection={connection}
+              handleMessageChange={this.handleMessageChange}
+              handleMessageBlur={this.handleMessageBlur}
+              handleRemoveSlot={this.handleRemoveSlot}
+            />
           </div>
         :
           null
