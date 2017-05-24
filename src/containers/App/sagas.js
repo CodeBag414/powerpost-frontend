@@ -48,6 +48,7 @@ import {
   UPDATE_POST_SET_REQUEST,
   FETCH_POSTS,
   UPDATE_POST_REQUEST,
+  FETCH_CONNECTIONS,
 } from './constants';
 
 import {
@@ -77,6 +78,7 @@ import {
   updatePostSetSuccess,
   updatePostSetError,
   setPosts,
+  setConnections,
 } from './actions';
 
 /**
@@ -672,6 +674,26 @@ export function* updatePostSaga() {
   yield takeLatest(UPDATE_POST_REQUEST, updatePostRequestWorker);
 }
 
+function* fetchConnectionsWorker({ accountId }) {
+  const data = {
+    payload: {
+      account_id: accountId,
+    },
+  };
+  const params = serialize(data);
+
+  const response = yield call(getData, `/connection_api/connections?${params}`);
+  if (response.data.status === 'success') {
+    yield put(setConnections(response.data.connections));
+  } else {
+    console.log(response);
+  }
+}
+
+export function* fetchConnectionsSaga() {
+  yield takeLatest(FETCH_CONNECTIONS, fetchConnectionsWorker);
+}
+
 // The root saga is what we actually send to Redux's middleware. In here we fork
 // each saga so that they are all "active" and listening.
 // Sagas are fired once at the start of an app and can be thought of as processes running
@@ -700,6 +722,7 @@ export default [
   updatePostSetSaga,
   fetchPostsSaga,
   updatePostSaga,
+  fetchConnectionsSaga,
 ];
 
 // Little helper function to abstract going to different pages

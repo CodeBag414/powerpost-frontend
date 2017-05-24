@@ -47,6 +47,7 @@ import {
   FETCH_POSTS,
   SET_POSTS,
   UPDATE_POST_SUCCESS,
+  SET_CONNECTIONS,
 } from './constants';
 
 // The initial application state
@@ -290,6 +291,8 @@ function globalReducer(state = initialState, action) {
         return reducedPosts;
       });
     }
+    case SET_CONNECTIONS:
+      return state.set('connections', action.connections);
     default:
       return state;
   }

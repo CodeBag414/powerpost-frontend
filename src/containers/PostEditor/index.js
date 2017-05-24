@@ -14,6 +14,7 @@ import {
   fetchPostSetRequest,
   updatePostSetRequest,
   updatePostRequest,
+  fetchConnections,
 } from 'containers/App/actions';
 
 import {
@@ -47,6 +48,7 @@ class PostEditor extends Component {
     getAccountTags: PropTypes.func,
     fetchPostSet: PropTypes.func,
     fetchGroupUsers: PropTypes.func,
+    fetchConnections: PropTypes.func,
     user: PropTypes.shape(),
     postSet: PropTypes.object,
     groupUsers: PropTypes.object,
@@ -70,6 +72,7 @@ class PostEditor extends Component {
     });
     const payload = { accountId };
     this.props.fetchGroupUsers(payload);
+    this.props.fetchConnections(accountId);
   }
 
   componentWillReceiveProps({ postSet }) {
@@ -103,11 +106,13 @@ class PostEditor extends Component {
     const { postTitle, selectedTab } = this.state;
     const postsArray = postSet.getIn(['details', 'posts']);
     const posts = {};
+    let totalTimeslots = 0;
     if (postsArray) {
       postsArray.map((post) => {
         if (post.get('status') !== '0') {
           if (!posts[post.get('connection_id')]) posts[post.get('connection_id')] = [];
           posts[post.get('connection_id')].push(post);
+          totalTimeslots += 1;
         }
         return true;
       });
@@ -115,7 +120,7 @@ class PostEditor extends Component {
 
     const tabs = [
       { name: 'Power Post', component: <Content postSet={postSet} /> },
-      { name: 'Channels & Times', component: <Channels postSet={postSet} posts={posts} updatePost={updatePost} />, count: Object.keys(posts).length },
+      { name: 'Channels & Times', component: <Channels postSet={postSet} posts={posts} updatePost={updatePost} />, count: totalTimeslots },
       { name: 'Shared Streams', component: <SharedStreams postSet={postSet} /> },
     ];
     return (
@@ -177,6 +182,7 @@ export function mapDispatchToProps(dispatch) {
     fetchGroupUsers: (payload) => dispatch(fetchGroupUsers(payload)),
     updatePostSet: (payload) => dispatch(updatePostSetRequest(payload)),
     updatePost: (payload) => dispatch(updatePostRequest(payload)),
+    fetchConnections: (payload) => dispatch(fetchConnections(payload)),
   };
 }
 
