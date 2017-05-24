@@ -26,12 +26,12 @@ class Channels extends Component {
 
   constructor(props) {
     super(props);
-    const { posts } = props;
+    const { posts, postSet } = props;
     const currentPost = Object.keys(posts).length && posts[Object.keys(posts)[0]][0];
     this.state = {
       currentPost,
       isDialogShown: false,
-      postMessage: currentPost ? currentPost.get('message') : '',
+      postMessage: currentPost && currentPost.getIn(['properties', 'edited']) ? currentPost.get('message') : postSet.getIn(['details', 'message']),
     };
   }
 
