@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import * as dialogs from 'react-toolbox-dialogs'
 import { UserCanAccount } from 'config.routes/UserRoutePermissions';
+import { routerActions } from 'react-router-redux'
 
 import { 
   fetchCollections,
@@ -62,9 +63,9 @@ class MediaItemLibrary extends React.Component {
     this.openEditor = this.openEditor.bind(this);
   }
 
-//  componentDidMount() {
- //   this.props.getMediaItems(this.props.params.account_id);
-//  }
+  componentDidMount() {
+    this.props.getMediaItems(this.props.params.account_id);
+  }
 
   
   openPreview(item) {
@@ -140,7 +141,7 @@ class MediaItemLibrary extends React.Component {
     return (
       <Wrapper>
         <MediaNav filter={this.props.filter} setSortOrder={this.setSortOrder} setSearchFilter={this.setSearchFilter} openAddFile={this.openAddFile} openAddRSS={this.openAddRSS} openAddLink={this.openAddLink} openAddBlog={this.openAddBlog} openSearch={this.openSearch} />
-        <MediaContainer processingItem={this.props.processingItem} mediaItems={this.props.mediaItems} onConfirmDelete={this.onConfirmDelete.bind(this)} openPreview={this.openPreview} openEditor={this.openEditor} />
+        <MediaContainer createPostSet={this.props.createPostSet} pushToEditor={this.props.pushToEditor} query={this.props.location.query} processingItem={this.props.processingItem} mediaItems={this.props.mediaItems} onConfirmDelete={this.onConfirmDelete.bind(this)} openPreview={this.openPreview} openEditor={this.openEditor} />
         <PreviewDialog actions={actions} closeAllDialog={this.closeAllDialog} previewDialog={this.state.previewDialog} mediaItem={this.state.previewItem} />
       </Wrapper>
     );
@@ -154,6 +155,7 @@ export function mapDispatchToProps(dispatch) {
     setSearchFilter: (searchFilter) => dispatch(setSearchFilter(searchFilter)),
     deleteMediaItem: (id) => dispatch(deleteMediaItem(id)),
     setProcessingItem: (processingItem) => dispatch(toggleProccessingItem(processingItem)),
+    pushToEditor: (accountId, postSetId, mediaItem) => dispatch(routerActions.push({ pathname: postSetId, query: { item: JSON.stringify(mediaItem) } })),
   };
 }
 

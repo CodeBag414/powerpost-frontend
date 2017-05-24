@@ -8,7 +8,12 @@ import {
   getData,
   postData,
   deleteData,
+  putData,
 } from 'utils/request';
+
+import {
+  makeSelectActiveCollection,
+} from './selectors';
 
 import {
   POST_COMMENT_REQUEST,
@@ -22,6 +27,20 @@ import {
   SUBMIT_BUNCH_POSTS_REQUEST,
   SUBMIT_BUNCH_POSTS_SUCCESS,
   ADD_POST_TO_POSTSET,
+  VIDEO_PROCESSING,
+  CREATE_MEDIA_ITEM,
+  CREATE_MEDIA_ITEM_SUCCESS,
+  UPDATE_MEDIA_ITEM,
+  UPDATE_MEDIA_ITEM_SUCCESS,
+  FETCH_URL_CONTENT,
+  FETCH_URL_CONTENT_SUCCESS,
+  POST_EDITOR_ERROR,
+  GET_MEDIA_ITEM,
+  GET_MEDIA_ITEM_SUCCESS,
+  FETCH_COLLECTIONS,
+  FETCH_COLLECTIONS_SUCCESS,
+  FETCH_MEDIA_ITEMS_ERROR,
+  FETCH_MEDIA_ITEMS_SUCCESS,
 } from './constants';
 
 export function* getComments(payload) {
@@ -32,6 +51,25 @@ export function* getComments(payload) {
     yield put({ type: SET_COMMENTS, comments });
   } else {
     // console.log(result);
+  }
+}
+
+export function* getLinkData(action) {
+  
+  const data = {
+    payload: {
+      url: action.url,
+    },
+  };
+  
+  const params = serialize(data);
+  
+  const result = yield call(getData, `/media_api/url_content?${params}`);
+  if (result.data.result === 'success') {
+    const urlData = result.data.url_data[0];
+    yield put({ type: FETCH_URL_CONTENT_SUCCESS, urlData });
+  } else {
+    yield put({ type: POST_EDITOR_ERROR, error: 'Error getting url content' });
   }
 }
 
@@ -118,6 +156,94 @@ export function* deleteCommentRequest(payload) {
   }
 }
 
+export function* getMediaItem(action) {
+  try {
+    const response = yield call(getData, `/media_api/media_item/${action.mediaItemId}`);
+    const { data } = response;
+    if (data.result == 'result') {
+      const mediaItem = [data.media_item];
+      yield put({ type: GET_MEDIA_ITEM_SUCCESS, mediaItem });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function* createMediaItem(action) {
+  const { mediaItemType, ...item } = action.mediaItem;
+  
+  let url = '';
+  let data = {};
+  
+  if (mediaItemType === 'link') {
+    url = '/media_api/link';
+    data = {
+      payload: item,
+    };
+  } else if (mediaItemType === 'file') {
+    url = '/media_api/files';
+    data = {
+      payload: {
+        media_items:[{...item.properties}],
+      }
+    };
+  }
+  
+  if (url !== '') {
+    console.log(data);
+    const res = yield call(postData, url, data);
+    console.log(res);
+    if (res.data.result === 'success') {
+      if(res.data.media_items[0].status === '3') {
+        const id = res.data.media_items[0].media_item_id;
+        yield put({ type: VIDEO_PROCESSING, id });
+        const mediaItems = res.data.media_items;
+        yield put({ type: CREATE_MEDIA_ITEM_SUCCESS, mediaItems });
+      } else {
+        const mediaItems = res.data.media_items;
+        yield put({ type: CREATE_MEDIA_ITEM_SUCCESS, mediaItems });
+        return true;
+      }
+    }
+  }
+}
+
+export function* updateMediaItem(action) {
+ const { mediaItemType, ...item } = action.mediaItem;
+ const data = {
+   payload: item,
+ };
+ 
+ const results = yield call(putData, `/media_api/media_item/${item.media_item_id}`, data);
+ if (results.data.result === 'success') {
+   const mediaItems = results.data.media_items;
+   yield put({ type: UPDATE_MEDIA_ITEM_SUCCESS, mediaItems });
+ }
+}
+
+export function* getCollections(action) {
+  const accountId = action.accountId;
+
+  const data = {
+    payload: {
+      account_id: accountId,
+    } };
+
+  const params = serialize(data);
+  const collections = yield call(getData, `/media_api/collections?${params}`);
+
+  yield put({ type: FETCH_COLLECTIONS_SUCCESS, collections });
+
+  const activeCollection = yield select(makeSelectActiveCollection());
+
+  const mediaItems = yield call(getData, `/media_api/collection/${activeCollection.collection_id}`);
+  if (!mediaItems.data.error) {
+    yield put({ type: FETCH_MEDIA_ITEMS_SUCCESS, mediaItems });
+  } else {
+    yield put({ type: FETCH_MEDIA_ITEMS_ERROR, mediaItems });
+  }
+}
+
 export function* fetchComments() {
   const watcher = yield takeLatest(FETCH_COMMENTS_REQUEST, getComments);
   yield take(LOCATION_CHANGE);
@@ -148,10 +274,64 @@ export function* submitBunchPostsRequest() {
   yield cancel(watcher);
 }
 
+export function* mediaItem() {
+  const watcher = yield takeLatest(CREATE_MEDIA_ITEM, createMediaItem);
+  
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
+export function* updateMedia() {
+  const watcher = yield takeLatest(UPDATE_MEDIA_ITEM, updateMediaItem);
+  
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
+export function* linkData() {
+  const watcher = yield takeLatest(FETCH_URL_CONTENT, getLinkData);
+  
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
+export function* getItem() {
+  const watcher = yield takeLatest(GET_MEDIA_ITEM, getMediaItem);
+  
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
+export function* collectionData() {
+  const watcher = yield takeLatest(FETCH_COLLECTIONS, getCollections);
+
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
 export default [
   fetchComments,
   postComment,
   deleteComment,
   fetchAccountTags,
   submitBunchPostsRequest,
+  collectionData,
+  mediaItem,
+  updateMedia,
+  linkData,
+  getItem,
 ];
+
+const serialize = (obj, prefix) => {
+  const str = [];
+  const keys = Object.keys(obj);
+  for (let i = 0; i < keys.length; i += 1) {
+    const p = keys[i];
+    const k = prefix ? `${prefix}[${p}]` : p;
+    const v = obj[p];
+    str.push((v !== null && typeof v === 'object') ?
+      serialize(v, k) :
+      `${encodeURIComponent(k)}=${encodeURIComponent(v)}`);
+  }
+  return str.join('&');
+};

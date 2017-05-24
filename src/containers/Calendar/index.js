@@ -159,7 +159,7 @@ class Calendar extends React.Component {
           deletePostSet={this.onDeletePostSet}
         />
         <div className="post-editor">
-          { postsetId ? <PostEditor id={postsetId} accountId={params.account_id} /> : null}
+          { postsetId ? <PostEditor id={postsetId} accountId={params.account_id} location={this.props.location} /> : null}
         </div>
       </Wrapper>
     );

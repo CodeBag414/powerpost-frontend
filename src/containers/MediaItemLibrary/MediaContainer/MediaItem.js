@@ -107,9 +107,9 @@ const MediaItem = (props) => {
         <Icon><FontIcon value={icon} /></Icon>
       </Footer>
       <ActionBar>
+        <IconButtonTooltip icon='add' tooltip="Add to Post" onClick={() => props.createPostSet(props.mediaItem)} />
         {EditorLink}
         <IconButtonTooltip icon='remove_red_eye' tooltip="View" onClick={() => props.openPreview(props.mediaItem)} />
-        <IconButtonTooltip icon='add' tooltip="Add to post" />
         <IconButtonTooltip icon='delete_forever' tooltip="Delete" onClick={() => props.onDelete(props.mediaItem.media_item_id)} />
       </ActionBar>
     </Wrapper>
