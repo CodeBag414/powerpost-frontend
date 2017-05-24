@@ -71,7 +71,7 @@ class AddChannelSlotDialog extends Component {
           posts.push({
             connection_id: channel.connection.get('connection_id'),
             status: '1',
-            schedule_time: scheduleTime,
+            schedule_time: scheduleTime / 1000,
             post_set_id: postSet.getIn(['details', 'post_set_id']),
             message: postSet.getIn(['details', 'message']),
           });
