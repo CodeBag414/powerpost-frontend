@@ -48,6 +48,9 @@ import {
   UPDATE_POST_SET_REQUEST,
   UPDATE_POST_SET_SUCCESS,
   UPDATE_POST_SET_ERROR,
+  FETCH_POSTS,
+  SET_POSTS,
+  UPDATE_POST_REQUEST,
   // CHECK_USER_OBJECT,
 } from './constants';
 
@@ -396,4 +399,16 @@ export function updatePostSetError(payload, section) {
     payload,
     section,
   };
+}
+
+export function fetchPosts(accountId) {
+  return { type: FETCH_POSTS, accountId };
+}
+
+export function setPosts(posts) {
+  return { type: SET_POSTS, posts };
+}
+
+export function updatePostRequest(post) {
+  return { type: UPDATE_POST_REQUEST, post };
 }

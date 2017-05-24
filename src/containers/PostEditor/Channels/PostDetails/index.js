@@ -5,16 +5,21 @@ import DatePicker from 'react-toolbox/lib/date_picker';
 import TimePicker from 'react-toolbox/lib/time_picker';
 import moment from 'moment';
 
+import PPButton from 'elements/atm.Button';
+
 import MultiLineInput from 'components/MultiLineInput';
 import Wrapper from './Wrapper';
 
-function PostDetails({ post, connection, handleChangeDate, handleMessageChange, handleMessageBlur }) {
+function PostDetails({ post, connection, handleRemoveSlot, handleChangeDate, handleMessageChange, handleMessageBlur }) {
   const minDate = new Date();
   minDate.setDate(minDate.getDate() - 1);
   return (
     <Wrapper>
       <div className="section-title">
         Schedule
+        <PPButton className="remove-slot" onClick={() => handleRemoveSlot(post)}>
+          Remove Slot
+        </PPButton>
       </div>
       <div className="date-pickers">
         <div className="date-picker">
@@ -50,6 +55,7 @@ PostDetails.propTypes = {
   handleChangeDate: PropTypes.func,
   handleMessageChange: PropTypes.func,
   handleMessageBlur: PropTypes.func,
+  handleRemoveSlot: PropTypes.func,
 };
 
 export default PostDetails;

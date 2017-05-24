@@ -13,6 +13,7 @@ import {
   fetchGroupUsers,
   fetchPostSetRequest,
   updatePostSetRequest,
+  updatePostRequest,
 } from 'containers/App/actions';
 
 import {
@@ -50,13 +51,14 @@ class PostEditor extends Component {
     postSet: PropTypes.object,
     groupUsers: PropTypes.object,
     updatePostSet: PropTypes.func,
+    updatePost: PropTypes.func,
     id: PropTypes.string,
     accountId: PropTypes.string,
   };
 
   state = {
     postTitle: '',
-    selectedTab: 'Content',
+    selectedTab: 'Power Post',
   };
 
   componentWillMount() {
@@ -97,11 +99,23 @@ class PostEditor extends Component {
   }
 
   render() {
-    const { user, postSet, groupUsers, updatePostSet } = this.props;
+    const { user, postSet, groupUsers, updatePostSet, updatePost } = this.props;
     const { postTitle, selectedTab } = this.state;
+    const postsArray = postSet.getIn(['details', 'posts']);
+    const posts = {};
+    if (postsArray) {
+      postsArray.map((post) => {
+        if (post.get('status') !== '0') {
+          if (!posts[post.get('connection_id')]) posts[post.get('connection_id')] = [];
+          posts[post.get('connection_id')].push(post);
+        }
+        return true;
+      });
+    }
+
     const tabs = [
-      { name: 'Content', component: <Content postSet={postSet} /> },
-      { name: 'Channels & Times', component: <Channels postSet={postSet} /> },
+      { name: 'Power Post', component: <Content postSet={postSet} /> },
+      { name: 'Channels & Times', component: <Channels postSet={postSet} posts={posts} updatePost={updatePost} />, count: Object.keys(posts).length },
       { name: 'Shared Streams', component: <SharedStreams postSet={postSet} /> },
     ];
     return (
@@ -128,6 +142,7 @@ class PostEditor extends Component {
               >
                 <TabLink
                   label={tab.name}
+                  count={tab.count}
                 />
               </span>
             )
@@ -161,6 +176,7 @@ export function mapDispatchToProps(dispatch) {
     fetchPostSet: (payload) => dispatch(fetchPostSetRequest(payload)),
     fetchGroupUsers: (payload) => dispatch(fetchGroupUsers(payload)),
     updatePostSet: (payload) => dispatch(updatePostSetRequest(payload)),
+    updatePost: (payload) => dispatch(updatePostRequest(payload)),
   };
 }
 

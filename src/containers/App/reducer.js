@@ -44,6 +44,9 @@ import {
   SET_POST_SETS,
   DELETE_POST_SET,
   CHANGE_POST_SET_STATUS,
+  FETCH_POSTS,
+  SET_POSTS,
+  UPDATE_POST_SUCCESS,
 } from './constants';
 
 // The initial application state
@@ -275,6 +278,18 @@ function globalReducer(state = initialState, action) {
         .updateIn(['postSets'], (postSets) => postSets.map((postSet) =>
           postSet.get('post_set_id') !== action.id ? postSet : postSet.set('status', action.status)
         ));
+    case FETCH_POSTS:
+      return state.set('posts', []);
+    case SET_POSTS:
+      return state.set('posts', action.posts);
+    case UPDATE_POST_SUCCESS: {
+      const index = state.get('posts').findIndex((post) => post.post.post_id === action.post.post_id);
+      return state.update('posts', (posts) => {
+        const reducedPosts = [...posts];
+        reducedPosts[index].post = action.post;
+        return reducedPosts;
+      });
+    }
     default:
       return state;
   }

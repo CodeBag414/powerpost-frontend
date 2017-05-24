@@ -44,14 +44,19 @@ class Content extends Component {
     params: {},
   };
 
-  state = {
-    globalMessage: '',
-    characterLimit: 140,
-  };
+  constructor(props) {
+    super(props);
+    const globalMessage = !props.postSet.get('details').isEmpty() ? props.postSet.getIn(['details', 'message']) : '';
+    const characterLimit = 140 - globalMessage.length;
+    this.state = {
+      globalMessage,
+      characterLimit,
+    };
+  }
 
   componentWillReceiveProps({ postSet }) {
     const newMessage = postSet.getIn(['details', 'message']);
-    if (newMessage === this.state.globalMessage || this.props.postSet.get('details').isEmpty()) {
+    if (this.props.postSet.get('details').isEmpty() || newMessage === this.state.globalMessage) {
       this.setState({ globalMessage: newMessage });
     }
   }

@@ -56,7 +56,7 @@ class Connections extends React.Component {
         this.props.connectionCallback(event.data);
       }
     }
-    
+
     this.props.validateConnections(this.props.params.account_id);
   }
 
@@ -163,6 +163,10 @@ Connections.propTypes = {
   channelFilter: React.PropTypes.string,
   setSubChannel: React.PropTypes.func,
   subChannel: React.PropTypes.object,
+  validateConnections: React.PropTypes.func,
+  params: React.PropTypes.shape({
+    account_id: React.PropTypes.string,
+  }),
 };
 
 export function mapDispatchToProps(dispatch) {
