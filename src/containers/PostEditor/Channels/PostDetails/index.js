@@ -40,7 +40,7 @@ function PostDetails({ post, connection, handleRemoveSlot, handleChangeDate, han
         </div>
       </div>
       <MultiLineInput
-        noPadding
+        hasBorder
         message={post.get('message')}
         handleMessageChange={handleMessageChange}
         onBlur={handleMessageBlur}

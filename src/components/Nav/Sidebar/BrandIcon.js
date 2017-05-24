@@ -1,12 +1,8 @@
-import React from 'react';
 import styled from 'styled-components';
-import chroma from 'chroma-js';
-
-const darken = c => chroma(c).darken();
 
 const BrandIcon = styled.div`
   border-radius: 2.5px;
-  background-image: ${props => props.thumbnail ? `url(${props.thumbnail})` : `linear-gradient(-180deg, ${props.color} 26%, ${props.color} 100%)`};
+  background-image: ${(props) => props.thumbnail ? `url(${props.thumbnail})` : `linear-gradient(-180deg, ${props.color} 26%, ${props.color} 100%)`};
   opacity: 1;
   width: ${(props) => props.isActive ? '36px' : '24px'};
   height: ${(props) => props.isActive ? '36px' : '24px'};
