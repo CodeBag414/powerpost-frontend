@@ -41,7 +41,6 @@ class Channels extends Component {
 
   handleClickTimestamp = (post) => {
     const { postSet } = this.props;
-    // console.log('post.getIn', postSet.toJS());
     this.setState({
       currentPost: post,
       postMessage: post.getIn(['properties', 'edited']) ? post.get('message') : postSet.getIn(['details', 'message']),
