@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router';
 import DropdownMenu from 'react-dd-menu';
 
-import Wrapper from './Wrapper';
+//import Wrapper from './Wrapper';
 import AccountLogo from './AccountLogo';
 import PPLogo from './PPLogo';
 import Avatar from './Avatar';
@@ -31,6 +31,18 @@ const DropDownMenu = styled(DropdownMenu)`
       text-align:center;
     }
   }
+`;
+
+const Wrapper = styled.div`
+  position:fixed;
+  top: 0;
+  z-index: 10000;
+  height: 60px;
+  right: 0;
+  transition: transform .3s ease-in-out, width .3s ease-in-out;
+  box-shadow: 0 1px 5px 0 rgba(60,92,129,0.20);
+  background-color: #fff;
+  width: ${(props) => props.isNotFullWidth ? 'calc(100% - 60px)' : '100%'};
 `;
 
 const DashboardLink = styled(Link)`
@@ -104,17 +116,6 @@ class TopNav extends Component {
             <PPMenuItem caption="Logout" onTouchTap={this.props.logout} />
           </DropDownMenu>
         </AvatarWrapper>
-        <PPButton
-          label={
-            <div>
-              <span className="button-plus">+</span>
-              <span className="button-title">New Power Post</span>
-            </div>
-          }
-          className="new-post-button"
-          onClick={() => {}}
-          primary
-        />
         <DashboardLink to={'/'}><i className="fa fa-home" /></DashboardLink>
       </Wrapper>
     );
