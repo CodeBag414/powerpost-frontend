@@ -39,11 +39,12 @@ class Channels extends Component {
     this.setState({ isDialogShown: !this.state.isDialogShown });
   }
 
-  handleClickTimestamp = (post, connection) => {
+  handleClickTimestamp = (post) => {
+    const { postSet } = this.props;
+    // console.log('post.getIn', postSet.toJS());
     this.setState({
       currentPost: post,
-      currentPostConnection: connection,
-      postMessage: post ? post.get('message') : '',
+      postMessage: post.getIn(['properties', 'edited']) ? post.get('message') : postSet.getIn(['details', 'message']),
     });
   }
 
@@ -60,6 +61,9 @@ class Channels extends Component {
     const newPost = {
       ...currentPost.toJS(),
       message: postMessage,
+      properties: {
+        edited: true,
+      },
     };
     updatePost(newPost);
   }
