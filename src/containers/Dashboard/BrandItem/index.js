@@ -46,12 +46,12 @@ const BrandItem = (props) => {
       <div className="itemLink">
         <PPTooltipRouter
           className="link"
-          to={`${brandURL}/list`}
+          to={brandURL}
           floating mini
-          tooltip="List"
+          tooltip="Dashboard"
           tooltipPosition="top"
         >
-          <i className="fa fa-paper-plane"></i>
+          <i className="fa fa-home"></i>
         </PPTooltipRouter>
 
         <PPTooltipRouter
