@@ -63,9 +63,9 @@ class MediaItemLibrary extends React.Component {
     this.openEditor = this.openEditor.bind(this);
   }
 
-//  componentDidMount() {
- //   this.props.getMediaItems(this.props.params.account_id);
-//  }
+  componentDidMount() {
+    this.props.getMediaItems(this.props.params.account_id);
+  }
 
   
   openPreview(item) {
@@ -155,7 +155,7 @@ export function mapDispatchToProps(dispatch) {
     setSearchFilter: (searchFilter) => dispatch(setSearchFilter(searchFilter)),
     deleteMediaItem: (id) => dispatch(deleteMediaItem(id)),
     setProcessingItem: (processingItem) => dispatch(toggleProccessingItem(processingItem)),
-    pushToEditor: (accountId, postSetId, mediaItem) => dispatch(routerActions.push({ pathname: `/account/${accountId}/postset/${postSetId}/content`, query: { item: mediaItem } })),
+    pushToEditor: (accountId, postSetId, mediaItem) => dispatch(routerActions.push({ pathname: postSetId, query: { item: JSON.stringify(mediaItem) } })),
   };
 }
 

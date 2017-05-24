@@ -19,6 +19,7 @@ import LinkEditor from './LinkEditor';
 import ImageEditor from './ImageEditor';
 import VideoEditor from './VideoEditor';
 import FileEditor from './FileEditor';
+import PostEditor from 'containers/PostEditor';
 
 import DropdownMenu from 'react-dd-menu';
 
@@ -391,7 +392,14 @@ class Library extends React.Component {
     this.setState({ addMenuOpen: !this.state.addMenuOpen });
   }
   
-  render() {    
+  openPostEditor = () => {
+    //browserHistory.push(`/account/${currentAccount.account_id}/calendar#postset-${postSet.post_set_id}`);
+  }
+
+  render() {
+    const { location: { hash } } = this.props;
+    const postsetId = hash.startsWith('#postset') ? hash.split('-')[1] : 0;
+    
     const actions = [
       { label: "close", onClick: this.closeAllDialog },
     ];
@@ -433,6 +441,9 @@ class Library extends React.Component {
         <LinkDialog actions={actions} closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue.bind(this)} handleSubmit={this.handleAddLinkSubmit} value={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
         <VideoEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleVideoEditorSave.bind(this)} isOpen={this.state.videoEditorDialog} filePickerKey={this.props.filePickerKey} videoItem={this.state.videoItem} />
         <FileEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave.bind(this)} isOpen={this.state.fileEditorDialog} filePickerKey={this.props.filePickerKey} fileItem={this.state.fileItem} />
+         <div className="post-editor">
+          { postsetId ? <PostEditor id={postsetId} accountId={this.props.params.account_id} location={this.props.location} /> : null}
+        </div>
       </div>
     );
   }

@@ -15,7 +15,15 @@ import {
   CLEAR_URL_CONTENT,
   GET_MEDIA_ITEM,
   SET_MEDIA_ITEM,
+  FETCH_COLLECTIONS,
 } from './constants';
+
+export function fetchCollections(accountId) {
+  return {
+    type: FETCH_COLLECTIONS,
+    accountId,
+  };
+}
 
 export function fetchComments(postSetId) {
   return { type: FETCH_COMMENTS_REQUEST, postSetId };

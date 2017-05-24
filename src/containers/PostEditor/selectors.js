@@ -12,9 +12,19 @@ const makeSelectInProgress = () => createSelector(
   (postSetEditor) => postSetEditor.get('pending'),
 );
 
+const makeSelectUrlContent = () => createSelector(
+  selectPostSetEditor,
+  (postSetEditor) => postSetEditor.get('urlContent')
+);
+
 const selectPostSet = () => createSelector(
   selectPostSetEditor,
   (postSetEditor) => postSetEditor.get('postSet'),
+);
+
+const makeSelectActiveCollection = () => createSelector(
+   selectPostSetEditor,
+    (postSetEditor) => postSetEditor.get('activeCollection')
 );
 
 const makeSelectAccountTags = () => createSelector(
@@ -27,10 +37,18 @@ const makeSelectMediaItem = () => createSelector(
   (postSetEditor) => postSetEditor.getIn(['postSet', 'details', 'media_items']),
 );
 
+const makeSelectMediaItems = () => createSelector(
+  [selectPostSetEditor],
+  (selectPostSetEditor) => selectPostSetEditor.get('mediaItems')
+);
+
 export {
   makeSelectComments,
   makeSelectAccountTags,
   makeSelectInProgress,
+  makeSelectActiveCollection,
   selectPostSet,
+  makeSelectUrlContent,
   makeSelectMediaItem,
+  makeSelectMediaItems,
 };

@@ -8,8 +8,10 @@ import FileEditor from 'containers/MediaItemLibrary/FileEditor';
 import VideoEditor from 'containers/MediaItemLibrary/VideoEditor';
 import LinkDialog from 'containers/MediaItemLibrary/LinkDialog';
 import ImageEditor from 'containers/MediaItemLibrary/ImageEditor';
+import MediaLibraryDialog from '../MediaLibraryDialog';
+
 import { fromJS } from 'immutable';
-import { routerActions } from 'react-router-redux'
+import { routerActions } from 'react-router-redux';
 
 import {
   updatePostSetRequest,
@@ -27,11 +29,16 @@ import {
   updateMediaItem,
   removeMediaItem,
   setMediaItem,
+  fetchUrlData,
+  clearUrlContent,
+  fetchCollections,
 } from 'containers/PostEditor/actions';
 
 import {
   makeSelectComments,
+  makeSelectMediaItems,
   makeSelectInProgress,
+  makeSelectUrlContent,
 } from 'containers/PostEditor/selectors';
 
 import Wrapper from './Wrapper';
@@ -55,7 +62,7 @@ class Content extends Component {
   static defaultProps = {
     params: {},
   };
-
+  
   constructor(props) {
     super(props);
     const globalMessage = !props.postSet.get('details').isEmpty() ? props.postSet.getIn(['details', 'message']) : '';
@@ -74,6 +81,10 @@ class Content extends Component {
     };
   }
 
+  componentDidMount() {
+    this.props.fetchCollections(this.props.accountId);
+  }
+
   componentWillReceiveProps({ postSet, location }) {
 
     const newMessage = postSet.getIn(['details', 'message']);
@@ -89,12 +100,13 @@ class Content extends Component {
     if (newMediaItem.length == 0 && this.state.item.media_item_id) {
       this.setState({ item: {} });
     }
-    if(location.query.item) {
-      const item = JSON.parse(location.query.item);
-      this.props.setMediaItem(item);
-      location.query = {};
-      location.search = '';
-    }
+    
+   // if(location.query.item) {
+    //  const item = JSON.parse(location.query.item);
+   //   this.props.setMediaItem(item);
+   //   location.query = {};
+   //   location.search = '';
+   // }
   }
 
   handleMessageChange = (value) => {
@@ -125,6 +137,10 @@ class Content extends Component {
     this.setState({ fileEditor: true, mediaItem: fileItem });
   }
   
+  openMediaLibrary = () => {
+    this.setState({ mediaLibrary: true });
+  }
+
   openImageEditor = (imageItem) => {
     this.setState({ imageEditor: true, mediaItem: imageItem });
   }
@@ -144,12 +160,50 @@ class Content extends Component {
       videoEditor: false,
       imageEditor: false,
       fileEditor: false,
+      mediaLibrary: false,
       mediaItem: {},
       urlContent: {},
       addLinkValue: '',
     });
+    this.props.clearUrlContent();
   }
 
+  handleLinkEditorSave = (item) => {
+    this.closeAllDialog();
+    const {action, ...linkItem} = item;
+    const filepicker = require('filepicker-js');
+    filepicker.setKey(this.props.filePickerKey);
+    if(linkItem.picture) {
+      filepicker.storeUrl('https://process.filestackapi.com/' + this.props.filePickerKey + '/' + linkItem.picture, (Blob) => {
+        console.log(Blob);
+        linkItem.picture = Blob.url;
+        linkItem.picture_key = Blob.key;
+        filepicker.storeUrl(
+          'https://process.filestackapi.com/' + this.props.filePickerKey + '/resize=width:300,height:300,fit:clip/' + linkItem.picture,
+           (Blob) => {
+            linkItem.thumb_key = Blob.key;
+            linkItem.account_id = this.props.accountId;
+            console.log(linkItem);
+            linkItem.mediaItemType="link";
+            if (action === 'create') {
+              this.props.createMediaItem(linkItem);
+            } else if (action === 'update') {
+              this.props.updateMediaItem(linkItem);
+            }
+          });
+      });
+    } else {
+      linkItem.mediaItemType="link";
+      linkItem.account_id = this.props.accountId;
+      if (action === 'create') {
+        this.props.createMediaItem(linkItem);
+      } else if (action === 'update') {
+        this.props.updateMediaItem(linkItem);
+      }
+    }
+    setTimeout(() => { this.handleMessageBlur()}, 5000);
+  }
+  
   openFilePicker = () => {
     const filepicker = require('filepicker-js');
     filepicker.setKey(this.props.filePickerKey);
@@ -188,7 +242,7 @@ class Content extends Component {
           'https://process.filestackapi.com/' + this.props.filePickerKey + '/resize=width:300,height:300,fit:clip/' + item.picture,
            (Blob) => {
             item.thumb_key = Blob.key;
-            item.collection_id = this.props.activeCollection.collection_id;
+            item.account_id = this.props.accountId;
             item.mediaItemType="link";
             if (action === 'create') {
               this.props.createMediaItem(item);
@@ -217,7 +271,7 @@ class Content extends Component {
         'https://process.filestackapi.com/' + this.props.filePickerKey + '/resize=width:300,height:300,fit:clip/' + mediaItem[0].url,
         (Blob) => {
           mediaItem[0]["thumb_key"] = Blob.key;
-          mediaItem[0].account_id = this.props.params.account_id;
+          mediaItem[0].account_id = this.props.accountId;
           const imageItem = {
             mediaItemType: 'file',
             properties: {
@@ -228,7 +282,7 @@ class Content extends Component {
           this.openImageEditor(imageItem);
         }); 
     } else if(mediaItem[0].mimetype.match('video')) {
-      mediaItem[0].account_id = this.props.params.account_id;
+      mediaItem[0].account_id = this.props.accountId;
       const videoItem = {
         mediaItemType: 'file',
         properties: {
@@ -239,7 +293,7 @@ class Content extends Component {
       this.openVideoEditor(videoItem);
     } else  {
       console.log(mediaItem);
-      mediaItem[0].account_id = this.props.params.account_id;
+      mediaItem[0].account_id = this.props.accountId;
       const fileItem = {
         mediaItemType: 'file',
         properties: {
@@ -264,7 +318,7 @@ class Content extends Component {
           'https://process.filestackapi.com/' + this.props.filePickerKey + '/resize=width:300,height:300,fit:clip/' + fileItem.picture,
            (Blob) => {
             fileItem.thumb_key = Blob.key;
-            fileItem.collection_id = this.props.activeCollection.collection_id;
+            fileItem.account_id = this.props.accountId;
             fileItem.mediaItemType="link";
             if (action === 'create') {
               this.props.createMediaItem(fileItem);
@@ -282,7 +336,31 @@ class Content extends Component {
     }
     setTimeout(() => { this.handleMessageBlur()}, 3000);
   }
+
+  handleAddLinkValue(event) {
+    this.setState({ addLinkValue: event.target.value });    
+  }
   
+  handleAddLinkValueFromDialog(link) {
+    this.setState({ addLinkValue: link }, () => this.handleAddLinkSubmit());
+  } 
+  
+  handleAddLinkSubmit = () => {
+    console.log('in handle add link submit');
+    if(this.state.addLinkValue === '') {
+      console.log('no link value, abort');
+      this.setState({ addLinkValueError: 'A link URL is required'});
+      return;
+    }
+    const linkItem = {
+      source: this.state.addLinkValue,
+    };
+    
+    this.setState({ addLinkValue: '', linkDialog: false,  linkEditor: true });
+    
+    this.props.fetchUrlData(this.state.addLinkValue);
+  }
+
   handleImageEditorSave = (imageItem) => {
     this.setState({ imageEditor: false, mediaItem: {} });
     const {action, ...rest} = imageItem;
@@ -310,9 +388,16 @@ class Content extends Component {
       this.openFileEditor(mediaItem);
     }
   }
+  
+  addToPost = (mediaItem) => {
+    this.props.setMediaItem(mediaItem);
+    this.closeAllDialog();
+    
+    setTimeout(() => { this.handleMessageBlur()}, 3000);    
+  }
 
   render() {
-    const { postComment, deleteComment, comments, user, pending, pushToLibrary } = this.props;
+    const { postComment, deleteComment, comments, user, pending, pushToLibrary, id, accountId } = this.props;
     const { globalMessage, characterLimit, item } = this.state;
     const { params: { postset_id, account_id } } = this.props;
     const actions = [
@@ -331,12 +416,14 @@ class Content extends Component {
           openFilePicker={this.openFilePicker}
           openEditor={this.openEditor}
           pushToLibrary={pushToLibrary}
-          accountId={account_id}
-          postSetId={postset_id}
+          accountId={accountId}
+          postSetId={id}
+          openLinkDialog={this.openLinkDialog}
+          openMediaLibrary={this.openMediaLibrary}
         />
         <Comments />
         <div className="comment-input">
-          <CommentInput user={user} postComment={(text) => postComment(postset_id, text)} />
+          <CommentInput user={user} postComment={(text) => postComment(id, text)} />
         </div>
         {
           comments.map((comment) =>
@@ -348,11 +435,12 @@ class Content extends Component {
             />
           )
         }
-        <LinkEditor actions={actions} closeAllDialog={this.closeAllDialog} handleLinkEditorSave={this.handleLinkEditorSave} linkEditorDialog={this.state.linkEditor} urlContent={this.state.urlContent} filePickerKey={this.props.filePickerKey} linkItem={this.state.mediaItem} />
+        <LinkEditor actions={actions} closeAllDialog={this.closeAllDialog} handleLinkEditorSave={this.handleLinkEditorSave} linkEditorDialog={this.state.linkEditor} urlContent={this.props.urlContent} filePickerKey={this.props.filePickerKey} linkItem={this.state.mediaItem} />
         <ImageEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleImageEditorSave.bind(this)} isOpen={this.state.imageEditor} filePickerKey={this.props.filePickerKey} imageItem={this.state.mediaItem} />
-        <LinkDialog actions={actions} closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue} handleSubmit={this.handleAddLinkSubmit} value={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
+        <LinkDialog actions={actions} closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue.bind(this)} handleSubmit={this.handleAddLinkSubmit} value={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
         <VideoEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleVideoEditorSave.bind(this)} isOpen={this.state.videoEditor} filePickerKey={this.props.filePickerKey} videoItem={this.state.mediaItem} />
         <FileEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave.bind(this)} isOpen={this.state.fileEditor} filePickerKey={this.props.filePickerKey} fileItem={this.state.mediaItem} />
+        <MediaLibraryDialog actions={actions} closeAllDialog={this.closeAllDialog} isOpen={this.state.mediaLibrary} mediaItems={this.props.mediaItems} addToPost={this.addToPost}/>
       </Wrapper>
     );
   }
@@ -366,8 +454,11 @@ export function mapDispatchToProps(dispatch) {
     createMediaItem: (mediaItem) => dispatch(createMediaItem(mediaItem)),
     updateMediaItem: (mediaItem) => dispatch(updateMediaItem(mediaItem)),
     removeMediaItem: () => dispatch(removeMediaItem()),
-    pushToLibrary: (postSetId, accountId) => dispatch(routerActions.push({ pathname: `/account/${accountId}/library`, query: { postSet: postSetId } })),
+    pushToLibrary: (redirectUrl, accountId) => dispatch(routerActions.push({ pathname: `/account/${accountId}/library`, query: { postSet: redirectUrl } })),
     setMediaItem: (mediaItem) => dispatch(setMediaItem(mediaItem)),
+    fetchUrlData: (url) => dispatch(fetchUrlData(url)),
+    clearUrlContent: () => dispatch(clearUrlContent()),
+    fetchCollections: (accountId) => dispatch(fetchCollections(accountId)),
   };
 }
 
@@ -376,6 +467,8 @@ const mapStateToProps = createStructuredSelector({
   user: makeSelectUser(),
   pending: makeSelectInProgress(),
   filePickerKey: makeSelectFilePickerKey(),
+  urlContent: makeSelectUrlContent(),
+  mediaItems: makeSelectMediaItems(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Content);

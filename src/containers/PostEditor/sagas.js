@@ -12,6 +12,10 @@ import {
 } from 'utils/request';
 
 import {
+  makeSelectActiveCollection,
+} from './selectors';
+
+import {
   POST_COMMENT_REQUEST,
   ADD_COMMENT,
   FETCH_COMMENTS_REQUEST,
@@ -33,6 +37,10 @@ import {
   POST_EDITOR_ERROR,
   GET_MEDIA_ITEM,
   GET_MEDIA_ITEM_SUCCESS,
+  FETCH_COLLECTIONS,
+  FETCH_COLLECTIONS_SUCCESS,
+  FETCH_MEDIA_ITEMS_ERROR,
+  FETCH_MEDIA_ITEMS_SUCCESS,
 } from './constants';
 
 export function* getComments(payload) {
@@ -213,6 +221,29 @@ export function* updateMediaItem(action) {
  }
 }
 
+export function* getCollections(action) {
+  const accountId = action.accountId;
+
+  const data = {
+    payload: {
+      account_id: accountId,
+    } };
+
+  const params = serialize(data);
+  const collections = yield call(getData, `/media_api/collections?${params}`);
+
+  yield put({ type: FETCH_COLLECTIONS_SUCCESS, collections });
+
+  const activeCollection = yield select(makeSelectActiveCollection());
+
+  const mediaItems = yield call(getData, `/media_api/collection/${activeCollection.collection_id}`);
+  if (!mediaItems.data.error) {
+    yield put({ type: FETCH_MEDIA_ITEMS_SUCCESS, mediaItems });
+  } else {
+    yield put({ type: FETCH_MEDIA_ITEMS_ERROR, mediaItems });
+  }
+}
+
 export function* fetchComments() {
   const watcher = yield takeLatest(FETCH_COMMENTS_REQUEST, getComments);
   yield take(LOCATION_CHANGE);
@@ -271,12 +302,20 @@ export function* getItem() {
   yield cancel(watcher);
 }
 
+export function* collectionData() {
+  const watcher = yield takeLatest(FETCH_COLLECTIONS, getCollections);
+
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
 export default [
   fetchComments,
   postComment,
   deleteComment,
   fetchAccountTags,
   submitBunchPostsRequest,
+  collectionData,
   mediaItem,
   updateMedia,
   linkData,
