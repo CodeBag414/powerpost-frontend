@@ -42,7 +42,7 @@ class PPAvatar extends Component {
       cropRatio: 1 / 1,
       buttonText: 'Choose',
       container: 'modal',
-      multiple: false,
+      multiple: true,
       maxFiles: 1,
       imageQuality: 80,
       imageMax: [1200, 1200],
