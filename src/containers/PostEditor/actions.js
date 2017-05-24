@@ -8,7 +8,22 @@ import {
   FETCH_ACCOUNT_TAGS_REQUEST,
   SET_ACCOUNT_TAGS,
   SUBMIT_BUNCH_POSTS_REQUEST,
+  CREATE_MEDIA_ITEM,
+  UPDATE_MEDIA_ITEM,
+  REMOVE_MEDIA_ITEM,
+  FETCH_URL_CONTENT,
+  CLEAR_URL_CONTENT,
+  GET_MEDIA_ITEM,
+  SET_MEDIA_ITEM,
+  FETCH_COLLECTIONS,
 } from './constants';
+
+export function fetchCollections(accountId) {
+  return {
+    type: FETCH_COLLECTIONS,
+    accountId,
+  };
+}
 
 export function fetchComments(postSetId) {
   return { type: FETCH_COMMENTS_REQUEST, postSetId };
@@ -44,4 +59,49 @@ export function setAccountTags(accountTags) {
 
 export function submitPostsRequest(posts) {
   return { type: SUBMIT_BUNCH_POSTS_REQUEST, posts };
+}
+
+export function removeMediaItem() {
+  return { type: REMOVE_MEDIA_ITEM };
+}
+
+export function updateMediaItem(mediaItem) {
+  return {
+    type: UPDATE_MEDIA_ITEM,
+    mediaItem,
+  };
+}
+
+export function fetchUrlData(url) {
+  return {
+    type: FETCH_URL_CONTENT,
+    url,
+  };
+}
+
+export function clearUrlContent() {
+  return {
+    type: CLEAR_URL_CONTENT,
+  };
+}
+
+export function getMediaItem(mediaItemId) {
+  return {
+    type: GET_MEDIA_ITEM,
+    mediaItemId,
+  };
+}
+
+export function setMediaItem(mediaItem) {
+  return {
+    type: SET_MEDIA_ITEM,
+    mediaItem,
+  };
+}
+
+export function createMediaItem(mediaItem) {
+  return {
+    type: CREATE_MEDIA_ITEM,
+    mediaItem,
+  };
 }

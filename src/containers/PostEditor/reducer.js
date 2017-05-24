@@ -18,13 +18,36 @@ import {
   DELETE_COMMENT,
   FETCH_ACCOUNT_TAGS_REQUEST,
   SET_ACCOUNT_TAGS,
+  FETCH_COLLECTIONS_SUCCESS,
+  FETCH_MEDIA_ITEMS_ERROR,
+  FETCH_MEDIA_ITEMS_SUCCESS,
   ADD_POST_TO_POSTSET,
   SUBMIT_BUNCH_POSTS_REQUEST,
   SUBMIT_BUNCH_POSTS_SUCCESS,
+  CREATE_MEDIA_ITEM_SUCCESS,
+  UPDATE_MEDIA_ITEM_SUCCESS,
+  REMOVE_MEDIA_ITEM,
+  SET_MEDIA_ITEM,
+  FETCH_URL_CONTENT_SUCCESS,
 } from './constants';
 
 const initialState = fromJS({
   comments: [],
+  collections: [{}],
+  activeCollection: {
+    collection_id: false,
+    user_id: false,
+    account_id: false,
+    type: false,
+    status: false,
+    creation_time: false,
+    properties: [],
+    name: false,
+    title: false,
+    parent_collection_id: false,
+  },
+  mediaItems: [],
+  urlContent: {},
   postSet: {
     isFetching: false,
     error: null,
@@ -122,6 +145,34 @@ function boardReducer(state = initialState, action) {
     case ADD_POST_TO_POSTSET:
       return state
         .updateIn(['postSet', 'details', 'posts'], (posts) => posts.push(fromJS(action.post)));
+    case UPDATE_MEDIA_ITEM_SUCCESS:
+      return state
+        .updateIn(['postSet', 'details', 'media_items'], (media_items) => media_items.set(0, fromJS(action.mediaItems[0])));
+    case CREATE_MEDIA_ITEM_SUCCESS:
+      return state
+        .updateIn(['postSet', 'details', 'media_items'], (media_items) => media_items.set(0, fromJS(action.mediaItems[0])))
+        .updateIn(['postSet', 'details', 'media_item_ids'], (media_item_ids) => media_item_ids.set(0, action.mediaItems[0].media_item_id) );
+    case REMOVE_MEDIA_ITEM:
+      return state
+        .updateIn(['postSet', 'details', 'media_items'], (media_items) => fromJS([]) )
+        .updateIn(['postSet', 'details', 'media_item_ids'], (media_item_ids) => fromJS([]) );
+    case SET_MEDIA_ITEM:
+      return state
+        .updateIn(['postSet', 'details', 'media_items'], (media_items) => media_items.set(0, fromJS(action.mediaItem)))
+        .updateIn(['postSet', 'details', 'media_item_ids'], (media_item_ids) => media_item_ids.set(0, action.mediaItem.media_item_id) );
+    case FETCH_URL_CONTENT_SUCCESS:
+      return state
+        .set('urlContent', action.urlData);
+    case FETCH_COLLECTIONS_SUCCESS:
+      return state
+        .set('collections', action.collections.data.collections)
+        .set('activeCollection', action.collections.data.collections.map((coll) => (coll.parent_collection_id == null) && coll)[0]);
+    case FETCH_MEDIA_ITEMS_SUCCESS:
+      return state
+        .set('mediaItems', action.mediaItems.data.collection.media_items.filter(t => t.status !== '0'));
+    case FETCH_MEDIA_ITEMS_ERROR:
+      return state
+        .set('error', action.mediaItems.data.message);
     default: return state;
   }
 }

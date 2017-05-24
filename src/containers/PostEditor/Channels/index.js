@@ -26,12 +26,13 @@ class Channels extends Component {
 
   constructor(props) {
     super(props);
-    const { posts } = props;
+    const { posts, postSet } = props;
     const currentPost = Object.keys(posts).length && posts[Object.keys(posts)[0]][0];
     this.state = {
       currentPost,
       isDialogShown: false,
-      postMessage: currentPost ? currentPost.get('message') : '',
+      postMessage: currentPost && currentPost.getIn(['properties', 'edited']) ? currentPost.get('message') : postSet.getIn(['details', 'message']),
+      postTime: currentPost && currentPost.get('schedule_time'),
     };
   }
 
@@ -41,11 +42,27 @@ class Channels extends Component {
 
   handleClickTimestamp = (post) => {
     const { postSet } = this.props;
-    // console.log('post.getIn', postSet.toJS());
     this.setState({
       currentPost: post,
       postMessage: post.getIn(['properties', 'edited']) ? post.get('message') : postSet.getIn(['details', 'message']),
+      postTime: post && post.get('schedule_time'),
     });
+  }
+
+  handleDateChange = (date) => {
+    const { updatePost } = this.props;
+    const { currentPost } = this.state;
+
+    const newDate = new Date(date).getTime() / 1000;
+    this.setState({
+      postTime: newDate,
+    });
+
+    const newPost = {
+      ...currentPost.toJS(),
+      schedule_time: newDate,
+    };
+    updatePost(newPost);
   }
 
   handleMessageChange = (value) => {
@@ -79,7 +96,7 @@ class Channels extends Component {
 
   render() {
     const { postSet, connections, posts } = this.props;
-    const { isDialogShown, currentPost, postMessage } = this.state;
+    const { isDialogShown, currentPost, postMessage, postTime } = this.state;
     const hasContent = posts && Object.keys(posts).length && connections;
     const connection = connections && connections.filter((item) =>
       currentPost && item.connection_id === currentPost.get('connection_id'),
@@ -114,10 +131,12 @@ class Channels extends Component {
             <PostDetails
               post={currentPost}
               postMessage={postMessage}
+              postTime={postTime}
               connection={connection}
               handleMessageChange={this.handleMessageChange}
               handleMessageBlur={this.handleMessageBlur}
               handleRemoveSlot={this.handleRemoveSlot}
+              handleDateChange={this.handleDateChange}
             />
           </div>
         :
