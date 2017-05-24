@@ -53,6 +53,8 @@ import {
   UPDATE_POST_REQUEST,
   FETCH_CONNECTIONS,
   SET_CONNECTIONS,
+  CREATE_POST_SET_REQUEST,
+  CREATE_POST_SET_SUCCESS,
   // CHECK_USER_OBJECT,
 } from './constants';
 
@@ -421,4 +423,12 @@ export function fetchConnections(accountId) {
 
 export function setConnections(connections) {
   return { type: SET_CONNECTIONS, connections };
+}
+
+export function createPostSetRequest(postSet) {
+  return { type: CREATE_POST_SET_REQUEST, postSet };
+}
+
+export function createPostSetSuccess(postSet) {
+  return { type: CREATE_POST_SET_SUCCESS, postSet };
 }

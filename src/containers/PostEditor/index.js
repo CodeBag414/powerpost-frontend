@@ -76,7 +76,8 @@ class PostEditor extends Component {
   }
 
   componentWillReceiveProps({ postSet }) {
-    this.setState({ postTitle: postSet.getIn(['details', 'title']) });
+    const titleText = postSet.getIn(['details', 'title']);
+    this.setState({ postTitle: titleText || 'Untitled Post' });
   }
 
   onBack = () => {

@@ -48,6 +48,7 @@ import {
   SET_POSTS,
   UPDATE_POST_SUCCESS,
   SET_CONNECTIONS,
+  CREATE_POST_SET_SUCCESS,
 } from './constants';
 
 // The initial application state
@@ -293,6 +294,11 @@ function globalReducer(state = initialState, action) {
     }
     case SET_CONNECTIONS:
       return state.set('connections', action.connections);
+    case CREATE_POST_SET_SUCCESS:
+      return state.set('post_set', {
+        ...action.postSet,
+        createSuccess: true,
+      });
     default:
       return state;
   }
