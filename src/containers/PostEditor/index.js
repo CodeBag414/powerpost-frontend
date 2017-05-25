@@ -36,6 +36,7 @@ import GeneralInfo from './GeneralInfo';
 import TabLink from './TabLink';
 import Sidebar from './Sidebar';
 import UserAssignment from './Sidebar/UserAssignment';
+import StatusChooser from './Sidebar/StatusChooser';
 import Tags from './Sidebar/Tags';
 import Content from './Content';
 import Channels from './Channels';
@@ -161,6 +162,10 @@ class PostEditor extends Component {
             postSet={postSet.get('details').toJS()}
             assignee={postSet.getIn(['details', 'user_assignments', 0])}
             users={groupUsers.details ? groupUsers.details.groups_users : []}
+            updatePostSet={updatePostSet}
+          />
+          <StatusChooser
+            postSet={postSet}
             updatePostSet={updatePostSet}
           />
           <Tags
