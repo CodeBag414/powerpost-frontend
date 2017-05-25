@@ -106,12 +106,9 @@ class PPAvatar extends Component {
 
     return (
       <Wrapper>
-        { this.props.header
-          ? <h6>{this.props.header}</h6>
-          : null
-        }
+        { this.props.header && <h6>{this.props.header}</h6> }
         <div className={['avatar-photo', this.props.className].join(' ')} style={style.image} onClick={isClickable && this.openFilePicker} type="button">
-          <img src={avatar ? avatar : blankAvatar} alt="avatar" />
+          <img src={avatar || blankAvatar} alt="avatar" />
           { avatar
             ? null
             : <div className="avatar-initial">
