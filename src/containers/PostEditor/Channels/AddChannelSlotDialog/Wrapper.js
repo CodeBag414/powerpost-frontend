@@ -2,13 +2,15 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   padding: 40px 40px 24px 40px;
-  width: 440px;
+  width: 100%;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  position: relative;
   .main-content {
     flex: 1;
     overflow: auto;
-    max-height: 400px;
+    margin-top: 20px;
   }
 
   .heading {
@@ -45,7 +47,7 @@ const Wrapper = styled.div`
   }
 
   .schedules-block {
-    margin-top: 25px;
+    margin-top: 5px;
   }
 
   .channels-block {
