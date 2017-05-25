@@ -134,7 +134,7 @@ class Calendar extends React.Component {
   render() {
     const { query, filters, showDeletePopup } = this.state;
     const { posts, currentAccount, params, location: { hash } } = this.props;
-    if (posts == null || posts.length === 0 || !Array.isArray(posts)) return null;
+    if (posts == null || !Array.isArray(posts)) return null;
     const postsetId = hash.startsWith('#postset') ? hash.split('-')[1] : 0;
     return (
       <Wrapper className={postsetId ? 'modal-open' : ''}>
