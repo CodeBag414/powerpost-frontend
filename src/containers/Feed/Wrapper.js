@@ -3,8 +3,7 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   .feed-header {
     width: 100%;
-    position: absolute;
-    top: 0;
+    position: fixed;
     background: #fff;
     font-size: 16px;
     color: #5e5e5e;
