@@ -39,6 +39,7 @@ class PPAvatar extends Component {
     const tthis = this;
     filepicker.setKey(this.props.filePickerKey);
     const filePickerOptions = {
+      mimetype: 'image/*',
       cropRatio: 1 / 1,
       buttonText: 'Choose',
       container: 'modal',
