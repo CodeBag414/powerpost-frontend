@@ -210,11 +210,11 @@ export function createRoutes(store, auth) {
               },
             },
             {
-              path: 'shared_streams/subscriptions',
+              path: 'shared_streams/subscriptions/:id',
               name: 'Shared Streams',
               getComponent(nextState, cb) {
                 const importModules = Promise.all([
-                  System.import('containers/MediaItemLibrary/Subscriptions'),
+                  System.import('containers/MediaItemLibrary/PowerStream/Subscriptions.js'),
                 ]);
                 const renderRoute = loadModule(cb);
 
@@ -230,7 +230,7 @@ export function createRoutes(store, auth) {
               name: 'Shared Streams',
               getComponent(nextState, cb) {
                 const importModules = Promise.all([
-                  System.import('containers/MediaItemLibrary/Owned'),
+                  System.import('containers/MediaItemLibrary/PowerStream/Owned.js'),
                 ]);
                 const renderRoute = loadModule(cb);
 
