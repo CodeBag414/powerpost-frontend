@@ -95,6 +95,20 @@ class AccountDashboard extends Component {
               <p>Go here to upload, find and modify content to be used in your posts.</p>
             </span>
           </ReactRouterCapsule>
+          <ReactRouterCapsule to={`/account/${account.account_id}/calendar`}>
+            <i className="fa fa-paper-plane" />
+            <span>
+              <h5>Publishing</h5>
+              <p>Go here to prepare and publish posts across your channels.</p>
+            </span>
+          </ReactRouterCapsule>
+          <ReactRouterCapsule to={`/account/${account.account_id}/statistics`}>
+            <i className="fa fa-line-chart" />
+            <span>
+              <h5>Power Score</h5>
+              <p>Go here to get a snapshot of how well your posts are performing on your channels.</p>
+            </span>
+          </ReactRouterCapsule>
           {/* <ReactRouterCapsule to={`/account/${account.account_id}/list`}>
             <span>
               <h5>List</h5>
@@ -107,26 +121,12 @@ class AccountDashboard extends Component {
               <p>Go here to easily view and change the status of your posts.</p>
             </span>
           </ReactRouterCapsule>*/}
-          <ReactRouterCapsule to={`/account/${account.account_id}/statistics`}>
-            <i className="fa fa-line-chart" />
-            <span>
-              <h5>Statistics</h5>
-              <p>Go here to get a snapshot of how well your posts are performing on your channels.</p>
-            </span>
-          </ReactRouterCapsule>
           {/* <ReactRouterCapsule to={`/account/${account.account_id}/boards`}>
             <span>
               <h5>Board</h5>
               <p>Go here to easily view and edit the posts.</p>
             </span>
           </ReactRouterCapsule>*/}
-          <ReactRouterCapsule to={`/account/${account.account_id}/calendar`}>
-            <i className="fa fa-paper-plane" />
-            <span>
-              <h5>Publishing</h5>
-              <p>Go here to prepare and publish posts across your channels.</p>
-            </span>
-          </ReactRouterCapsule>
         </div>
       </Wrapper>
     );
