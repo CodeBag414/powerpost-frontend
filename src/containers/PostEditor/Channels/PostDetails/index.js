@@ -36,7 +36,13 @@ function PostDetails({ post, postMessage, postTime, connection, handleRemoveSlot
         <i className={connection.channel_icon} />
         <div className="summary-right">
           <span className="channel-name">{connection.display_name}</span>
-          <span className="timestamp">{moment.unix(post.get('schedule_time')).format('MMMM D, YYYY [at] hh:mma')}</span>
+          <span className="timestamp">
+            {
+              post.get('schedule_time')
+              ? moment.unix(post.get('schedule_time')).format('MMMM D, YYYY [at] hh:mma')
+              : 'Post when ready'
+            }
+          </span>
         </div>
       </div>
       <MultiLineInput

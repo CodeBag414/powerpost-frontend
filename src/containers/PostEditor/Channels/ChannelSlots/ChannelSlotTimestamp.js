@@ -9,7 +9,11 @@ function ChannelSlotTimestamp({ post, handleClickTimestamp, currentPost }) {
   return (
     <div className="slot-timestamp">
       <PPButton className={currentPost === post && 'active'} onClick={() => handleClickTimestamp(post)}>
-        {moment.unix(post.get('schedule_time')).format('MMMM D, YYYY [at] hh:mma')}
+        {
+          post.get('schedule_time')
+          ? moment.unix(post.get('schedule_time')).format('MMMM D, YYYY [at] hh:mma')
+          : 'Post when ready'
+        }
       </PPButton>
     </div>
   );
