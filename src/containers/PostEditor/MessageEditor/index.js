@@ -9,6 +9,7 @@ import MessageToolbar from './MessageToolbar';
 import Popup from 'containers/Calendar/CalendarSidebar/Popup';
 import { MenuItem } from 'react-toolbox/lib/menu';
 import styled from 'styled-components';
+import Spinner from 'elements/atm.Spinner';
 
 const CustomMenuItem = styled(MenuItem)`
   width: 170px;
@@ -71,7 +72,7 @@ class MessageEditor extends React.Component {
   }
   
   render() {
-    const { message, handleMessageChange,handleMessageBlur, characterLimit, openFilePicker, mediaItem, removeMediaItem, openEditor, pushToLibrary, accountId, postSetId, openLinkDialog, openMediaLibrary } = this.props;
+    const { message, isProcessing, handleMessageChange,handleMessageBlur, characterLimit, openFilePicker, mediaItem, removeMediaItem, openEditor, pushToLibrary, accountId, postSetId, openLinkDialog, openMediaLibrary } = this.props;
     const { menuVisible } = this.state;
     return (
     <Wrapper>
@@ -81,7 +82,10 @@ class MessageEditor extends React.Component {
         handleMessageChange={handleMessageChange}
         onBlur={handleMessageBlur}
       />
-      {mediaItem.media_item_id &&
+      {isProcessing && 
+        <Spinner />
+      }
+      {mediaItem.media_item_id && !isProcessing &&
       <ItemWrapper>
       <IMenu className="fa fa-ellipsis-h" onClick={this.handleShowPopup} />
         {menuVisible &&

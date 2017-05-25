@@ -41,6 +41,8 @@ import {
   FETCH_COLLECTIONS_SUCCESS,
   FETCH_MEDIA_ITEMS_ERROR,
   FETCH_MEDIA_ITEMS_SUCCESS,
+  PROCESS_ITEM,
+  PROCESS_ITEM_SUCCESS,
 } from './constants';
 
 export function* getComments(payload) {
@@ -171,7 +173,7 @@ export function* getMediaItem(action) {
 
 export function* createMediaItem(action) {
   const { mediaItemType, ...item } = action.mediaItem;
-  
+  yield put({ type: PROCESS_ITEM });
   let url = '';
   let data = {};
   
@@ -199,10 +201,11 @@ export function* createMediaItem(action) {
         yield put({ type: VIDEO_PROCESSING, id });
         const mediaItems = res.data.media_items;
         yield put({ type: CREATE_MEDIA_ITEM_SUCCESS, mediaItems });
+        yield put({ type: PROCESS_ITEM_SUCCESS });
       } else {
         const mediaItems = res.data.media_items;
         yield put({ type: CREATE_MEDIA_ITEM_SUCCESS, mediaItems });
-        return true;
+        yield put({ type: PROCESS_ITEM_SUCCESS });
       }
     }
   }

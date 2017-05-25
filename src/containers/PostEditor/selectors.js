@@ -12,6 +12,11 @@ const makeSelectInProgress = () => createSelector(
   (postSetEditor) => postSetEditor.get('pending'),
 );
 
+const makeSelectIsProcessing = () => createSelector(
+  selectPostSetEditor,
+  (postSetEditor) => postSetEditor.get('isProcessing')
+);
+
 const makeSelectUrlContent = () => createSelector(
   selectPostSetEditor,
   (postSetEditor) => postSetEditor.get('urlContent')
@@ -51,4 +56,5 @@ export {
   makeSelectUrlContent,
   makeSelectMediaItem,
   makeSelectMediaItems,
+  makeSelectIsProcessing,
 };

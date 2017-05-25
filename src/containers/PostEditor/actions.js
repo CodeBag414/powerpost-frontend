@@ -16,6 +16,7 @@ import {
   GET_MEDIA_ITEM,
   SET_MEDIA_ITEM,
   FETCH_COLLECTIONS,
+  PROCESS_ITEM,
 } from './constants';
 
 export function fetchCollections(accountId) {
