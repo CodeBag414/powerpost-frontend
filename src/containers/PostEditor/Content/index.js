@@ -39,6 +39,7 @@ import {
   makeSelectMediaItems,
   makeSelectInProgress,
   makeSelectUrlContent,
+  makeSelectIsProcessing,
 } from 'containers/PostEditor/selectors';
 
 import Wrapper from './Wrapper';
@@ -215,7 +216,7 @@ class Content extends Component {
         maxFiles: 1, 
         imageQuality: 80, 
         imageMax: [1200, 1200], 
-        services: [ 'COMPUTER', 'WEBCAM', 'VIDEO', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
+        services: [ 'CONVERT', 'COMPUTER', 'WEBCAM', 'VIDEO', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
         conversions: ['crop', 'filter'],
     }; 
     const filePickerStoreOptions = {
@@ -420,6 +421,7 @@ class Content extends Component {
           postSetId={id}
           openLinkDialog={this.openLinkDialog}
           openMediaLibrary={this.openMediaLibrary}
+          isProcessing={this.props.isProcessing}
         />
         <Comments />
         <div className="comment-input">
@@ -469,6 +471,7 @@ const mapStateToProps = createStructuredSelector({
   filePickerKey: makeSelectFilePickerKey(),
   urlContent: makeSelectUrlContent(),
   mediaItems: makeSelectMediaItems(),
+  isProcessing: makeSelectIsProcessing(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Content);

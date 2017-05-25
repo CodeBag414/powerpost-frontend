@@ -144,7 +144,6 @@ class Sidebar extends React.Component {
                 <div>
                   <ReactRouterMenuItem caption="Calendar" activeClassName={styles.active} isSidebar icon={<i className="fa fa-calendar" />} to={`/account/${this.props.accountId}/calendar`} />
                   <ReactRouterMenuItem caption="Status Boards" activeClassName={styles.active} isSidebar icon={<i className="fa fa-columns" />} to={`/account/${this.props.accountId}/boards`} />
-                  <ReactRouterMenuItem caption="List" activeClassName={styles.active} isSidebar icon={<i className="fa fa-list-ul" />} to={`/account/${this.props.accountId}/list`} />
                 </div>
                 }
                 { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('statistics') > -1 &&
@@ -204,7 +203,6 @@ class Sidebar extends React.Component {
             <div>
               <ReactRouterMenuItemWithTooltip tooltip="Calendar" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-calendar" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/calendar`} />
               <ReactRouterMenuItemWithTooltip tooltip="Status Boards" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-columns" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/boards`} />
-              <ReactRouterMenuItemWithTooltip tooltip="List" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-list-ul" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/list`} />
             </div>
             }
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('statistics') > -1 &&

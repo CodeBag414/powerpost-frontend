@@ -187,7 +187,7 @@ class Library extends React.Component {
         maxFiles: 1, 
         imageQuality: 80, 
         imageMax: [1200, 1200], 
-        services: [ 'COMPUTER', 'WEBCAM', 'VIDEO', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
+        services: [ 'CONVERT','COMPUTER', 'WEBCAM', 'VIDEO', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
         conversions: ['crop', 'filter'],
     }; 
     const filePickerStoreOptions = {

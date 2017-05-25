@@ -29,6 +29,8 @@ import {
   REMOVE_MEDIA_ITEM,
   SET_MEDIA_ITEM,
   FETCH_URL_CONTENT_SUCCESS,
+  PROCESS_ITEM,
+  PROCESS_ITEM_SUCCESS,
 } from './constants';
 
 const initialState = fromJS({
@@ -48,6 +50,7 @@ const initialState = fromJS({
   },
   mediaItems: [],
   urlContent: {},
+  isProcessing: false,
   postSet: {
     isFetching: false,
     error: null,
@@ -173,6 +176,12 @@ function boardReducer(state = initialState, action) {
     case FETCH_MEDIA_ITEMS_ERROR:
       return state
         .set('error', action.mediaItems.data.message);
+    case PROCESS_ITEM: 
+      return state
+        .set('isProcessing', true);
+    case PROCESS_ITEM_SUCCESS:
+      return state
+        .set('isProcessing', false);
     default: return state;
   }
 }
