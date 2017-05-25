@@ -32,6 +32,21 @@ const DropdownControl = styled.div`
   &:hover {
     border-color: ${(props) => props.isOpen ? '#E52466' : '#8C9497'};
   }
+  >div {
+    span {
+      vertical-align: middle;
+    }
+    &::before {
+      vertical-align: middle;
+      display: ${(props) => props.color ? 'inline-block' : 'none'};
+      margin-right: 12px;
+      content: '';
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+      background-color: ${(props) => props.color};
+    }
+  }
 `;
 
 const DropdownArrow = styled.span`
@@ -83,6 +98,19 @@ const DropdownOption = styled.div`
     background-color: #E52466;
     color: white;
   }
+  span {
+    vertical-align: middle;
+  }
+  &::before {
+    vertical-align: middle;
+    display: ${(props) => props.color ? 'inline-block' : 'none'};
+    margin-right: 12px;
+    content: '';
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    background-color: ${(props) => props.color};
+  }
 `;
 
 class Dropdown extends React.Component {
@@ -120,11 +148,12 @@ class Dropdown extends React.Component {
     document.removeEventListener('touchend', this.handleDocumentClick, false);
   }
 
-  setValue(value, label) {
+  setValue(value, label, color) {
     const newState = {
       selected: {
         value,
         label,
+        color,
       },
       isOpen: false,
     };
@@ -186,12 +215,13 @@ class Dropdown extends React.Component {
   renderOption(option) {
     const value = option.value || option.label || option;
     const label = option.label || option.value || option;
+    const color = option.color;
 
     const isSelected = (option.value === this.state.selected.value) && (option.label === this.state.selected.label);
 
     return (
-      <DropdownOption key={value} isSelected={isSelected} onMouseDown={this.setValue.bind(this, value, label)} onClick={this.setValue.bind(this, value, label)}>
-        {label}
+      <DropdownOption key={value} isSelected={isSelected} onMouseDown={this.setValue.bind(this, value, label, color)} onClick={this.setValue.bind(this, value, label, color)} color={option.color}>
+        <span>{label}</span>
       </DropdownOption>
     );
   }
@@ -199,14 +229,14 @@ class Dropdown extends React.Component {
   render() {
     const { small } = this.props;
     const placeHolderValue = typeof this.state.selected === 'string' ? this.state.selected : this.state.selected.label;
-    const value = (<div>{placeHolderValue}</div>);
+    const value = (<div><span>{placeHolderValue}</span></div>);
 
     const menu = this.state.isOpen ? <DropdownMenu>{this.buildMenu()}</DropdownMenu> : null;
 
     return (
       <DropdownWrapper small={small}>
         {this.props.label !== undefined && <DropdownLabel>{this.props.label}</DropdownLabel>}
-        <DropdownControl isOpen={this.state.isOpen} onMouseDown={this.handleMouseDown.bind(this)} onTouchEnd={this.handleMouseDown.bind(this)} small={small}>
+        <DropdownControl isOpen={this.state.isOpen} onMouseDown={this.handleMouseDown.bind(this)} onTouchEnd={this.handleMouseDown.bind(this)} small={small} color={this.state.selected.color}>
           {value}
           <DropdownArrow isOpen={this.state.isOpen}>
             { this.state.isOpen ? <FontIcon value="keyboard_arrow_up" style={{ verticalAlign: 'middle', color: '#E52466' }} /> : <FontIcon value="keyboard_arrow_down" style={{ verticalAlign: 'middle' }} /> }
