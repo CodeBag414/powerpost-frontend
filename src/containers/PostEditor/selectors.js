@@ -39,7 +39,7 @@ const makeSelectMediaItem = () => createSelector(
 
 const makeSelectMediaItems = () => createSelector(
   [selectPostSetEditor],
-  (selectPostSetEditor) => selectPostSetEditor.get('mediaItems')
+  (postSetEditor) => postSetEditor.get('mediaItems')
 );
 
 export {
