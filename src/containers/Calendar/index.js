@@ -69,8 +69,7 @@ class Calendar extends React.Component {
 
   fetchPosts = (props) => {
     const { location, getPosts } = props;
-    const pathParts = location.pathname.split('/');
-    const accountId = pathParts[pathParts.length - 2];
+    const accountId = props.params.account_id;
     getPosts(accountId);
   }
 

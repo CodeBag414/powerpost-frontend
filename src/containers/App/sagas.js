@@ -640,6 +640,7 @@ export function* updatePostSetSaga() {
 }
 
 function* getPostsWorker({ accountId }) {
+  console.log(accountId);
   const requestUrl = `/post_api/posts/${accountId}`;
 
   const response = yield call(getData, requestUrl);

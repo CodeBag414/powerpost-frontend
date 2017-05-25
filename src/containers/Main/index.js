@@ -80,7 +80,7 @@ class Main extends React.Component {
     if (postSet && postSet.createSuccess && (!this.props.postSet || this.props.postSet.post_set_id !== postSet.post_set_id)) {
       // FIXME: In case we need to show popup on any page
       // browserHistory.push(`/account/${this.props.location.pathname}#postset-${postSet.post_set_id}`);
-      browserHistory.push(`/account/${userAccount.account_id}/calendar#postset-${postSet.post_set_id}`); // <-- defaulting to calendar
+      browserHistory.push(`/account/${userAccount.account_id}/publishing/calendar#postset-${postSet.post_set_id}`); // <-- defaulting to calendar
     }
   }
 
