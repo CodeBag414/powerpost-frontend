@@ -187,8 +187,10 @@ class Dropdown extends React.Component {
     const value = option.value || option.label || option;
     const label = option.label || option.value || option;
 
+    const isSelected = (option.value === this.state.selected.value) && (option.label === this.state.selected.label);
+
     return (
-      <DropdownOption key={value} isSelected={option === this.state.selected} onMouseDown={this.setValue.bind(this, value, label)} onClick={this.setValue.bind(this, value, label)}>
+      <DropdownOption key={value} isSelected={isSelected} onMouseDown={this.setValue.bind(this, value, label)} onClick={this.setValue.bind(this, value, label)}>
         {label}
       </DropdownOption>
     );
