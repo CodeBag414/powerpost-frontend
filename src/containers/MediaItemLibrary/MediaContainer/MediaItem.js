@@ -107,10 +107,17 @@ const MediaItem = (props) => {
         <Icon><FontIcon value={icon} /></Icon>
       </Footer>
       <ActionBar>
-        <IconButtonTooltip icon='add' tooltip="Add to Post" onClick={() => props.createPostSet(props.mediaItem)} />
-        {EditorLink}
-        <IconButtonTooltip icon='remove_red_eye' tooltip="View" onClick={() => props.openPreview(props.mediaItem)} />
-        <IconButtonTooltip icon='delete_forever' tooltip="Delete" onClick={() => props.onDelete(props.mediaItem.media_item_id)} />
+        {!props.inPostEditor ? (
+        <IconButtonTooltip icon='add' tooltip="Create Post" onClick={() => props.createPostSet(props.mediaItem)} />
+        ) : ( <IconButtonTooltip icon='add' tooltip="Add to Post" onClick={() => props.addToPost(props.mediaItem)} />)
+        }
+        {!props.inPostEditor &&
+        <div style={{display: 'inline-block'}}>
+          {EditorLink}
+          <IconButtonTooltip icon='remove_red_eye' tooltip="View" onClick={() => props.openPreview(props.mediaItem)} />
+          <IconButtonTooltip icon='delete_forever' tooltip="Delete" onClick={() => props.onDelete(props.mediaItem.media_item_id)} />
+        </div>
+        }
       </ActionBar>
     </Wrapper>
   );

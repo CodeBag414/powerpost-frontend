@@ -18,9 +18,9 @@ const Avatar = styled.div`
     height: 180px;
 
     img {
-      left: 0px;
       width: 100%;
-      height: 100%;
+      height: auto;
+      left: 0px;
       border-radius: 4px;
 
       &[alt] {
