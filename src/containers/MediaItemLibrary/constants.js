@@ -30,6 +30,7 @@ export const SET_VISIBILITY_FILTER = 'MediaItemLibrary/SET_VISIBILITY_FILTER';
 export const SHOW_ALL = 'MediaItemLibrary/SHOW_ALL';
 export const SHOW_IMAGES = 'MediaItemLibrary/SHOW_IMAGES';
 export const SHOW_VIDEOS = 'MediaItemLibrary/SHOW_VIDEOS';
+export const SHOW_FILES = 'MediaItemLibrary/SHOW_FILES';
 export const SHOW_BLOGS = 'MediaItemLibrary/SHOW_BLOGS';
 export const SHOW_LINKS = 'MediaItemLibrary/SHOW_LINKS';
 export const SET_SEARCH_FILTER = 'MediaItemLibrary/SET_SEARCH_FILTER';
