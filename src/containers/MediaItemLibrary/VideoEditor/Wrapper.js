@@ -1,9 +1,10 @@
-import React from 'react';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  margin-top: 84px;
-  padding: 20px;
+  width: 624px;
+  background-color: #FFFFFF;
+  padding: 40px;
+  font-family: Lato;
 `;
 
 export default Wrapper;
