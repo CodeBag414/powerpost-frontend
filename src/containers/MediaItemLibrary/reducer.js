@@ -29,6 +29,9 @@ import {
    UPDATE_MEDIA_ITEM_SUCCESS,
    CREATE_RSS_FEED_SUCCESS,
    SET_ACTIVE_MEDIA_ITEM_ID,
+  FETCH_STREAM_POST_SETS_REQUEST,
+  FETCH_STREAM_POST_SETS_SUCCESS,
+  FETCH_STREAM_POST_SETS_FAILURE,
 } from './constants';
 
 // The initial application state
@@ -59,6 +62,11 @@ const initialState = fromJS({
     parent_collection_id: false,
   },
   mediaItems: [],
+  postSets: {
+    isFetching: false,
+    data: [],
+    error: '',
+  },
 });
 
 // Takes care of changing the application state
@@ -122,6 +130,18 @@ function mediaLibraryReducer(state = initialState, action) {
     case SET_ACTIVE_MEDIA_ITEM_ID:
       return state
         .set('activeMediaItemId', action.id);
+    case FETCH_STREAM_POST_SETS_REQUEST:
+      return state
+        .setIn(['postSets', 'isFetching'], true)
+        .setIn(['postSets', 'error'], '');
+    case FETCH_STREAM_POST_SETS_SUCCESS:
+      return state
+        .setIn(['postSets', 'isFetching'], false)
+        .setIn(['postSets', 'data'], fromJS(action.payload));
+    case FETCH_STREAM_POST_SETS_FAILURE:
+      return state
+        .setIn(['postSets', 'isFetching'], false)
+        .setIn(['postSets', 'error'], 'Fetching Stream Failure');
     default:
       return state;
   }

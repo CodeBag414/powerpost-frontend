@@ -115,7 +115,12 @@ const makeSelectVisibleMediaItemsWithSearch = () => createSelector(
       return mediaItems;
     }
 });
-  
+
+const makeSelectPostSets = () => createSelector(
+   selectLibrary,
+    (library) => library.get('postSets')
+);
+
 export {
     makeSelectActiveCollection,
     makeSelectUrlContent,
@@ -128,4 +133,5 @@ export {
     makeSelectMediaItemsSorted,
     makeSelectProcessingItem,
     makeSelectActiveMediaItem,
+    makeSelectPostSets,
 };

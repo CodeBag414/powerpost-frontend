@@ -57,7 +57,7 @@ const initialState = fromJS({
   currentlySending: false,
   user: {},
   sharedAccounts: [],
-  userAccount: {},
+  userAccount: null,
   subAccounts: [],
   loggedIn: auth.loggedIn(),
   filePickerKey: 'A6Upb4pDFTFu9uXIjmV8Oz',

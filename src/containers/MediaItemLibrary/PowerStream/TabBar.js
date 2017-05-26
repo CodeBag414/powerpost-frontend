@@ -13,7 +13,7 @@ const TabBar = ({ tabs }) => (
   <Wrapper>
     {
       tabs.map((t, index) => (
-        <TabLink key={index} to={`/account/243/library/shared_streams/subscriptions/${t.id}`}>
+        <TabLink key={index} to={t.link}>
           { t.label }
         </TabLink>
       ))
@@ -25,7 +25,7 @@ TabBar.propTypes = {
   tabs: PropTypes.arrayOf(
     PropTypes.objectOf({
       label: PropTypes.string.isRequired,
-      id: PropTypes.string,
+      link: PropTypes.string.isRequired,
     })
   ).isRequired,
 };

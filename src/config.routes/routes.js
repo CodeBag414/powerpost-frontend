@@ -210,27 +210,11 @@ export function createRoutes(store, auth) {
               },
             },
             {
-              path: 'shared_streams/subscriptions/:id',
+              path: 'shared_streams/:stream_category(/:stream_id)',
               name: 'Shared Streams',
               getComponent(nextState, cb) {
                 const importModules = Promise.all([
-                  System.import('containers/MediaItemLibrary/PowerStream/Subscriptions.js'),
-                ]);
-                const renderRoute = loadModule(cb);
-
-                importModules.then(([component]) => {
-                  renderRoute(component);
-                });
-
-                importModules.catch(errorLoading);
-              },
-            },
-            {
-              path: 'shared_streams/owned',
-              name: 'Shared Streams',
-              getComponent(nextState, cb) {
-                const importModules = Promise.all([
-                  System.import('containers/MediaItemLibrary/PowerStream/Owned.js'),
+                  System.import('containers/MediaItemLibrary/PowerStream'),
                 ]);
                 const renderRoute = loadModule(cb);
 
