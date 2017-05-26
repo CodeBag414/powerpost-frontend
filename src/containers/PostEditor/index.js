@@ -126,9 +126,11 @@ class PostEditor extends Component {
     let totalTimeslots = 0;
     if (postsArray) {
       postsArray.map((post) => {
-        if (!posts[post.get('connection_id')]) posts[post.get('connection_id')] = [];
-        posts[post.get('connection_id')].push(post);
-        totalTimeslots += 1;
+        if (post.get('status') !== '0') {
+          if (!posts[post.get('connection_id')]) posts[post.get('connection_id')] = [];
+          posts[post.get('connection_id')].push(post);
+          totalTimeslots += 1;
+        }
         return true;
       });
     }

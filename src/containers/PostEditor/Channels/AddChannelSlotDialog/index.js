@@ -62,7 +62,7 @@ class AddChannelSlotDialog extends Component {
       if (isPostUponReady) {
         posts.push({
           connection_id: channel.connection.get('connection_id'),
-          status: '0',
+          status: '5',
           post_set_id: postSet.getIn(['details', 'post_set_id']),
           message: postSet.getIn(['details', 'message']),
         });
