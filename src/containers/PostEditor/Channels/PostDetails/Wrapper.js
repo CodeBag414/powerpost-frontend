@@ -22,6 +22,10 @@ const Wrapper = styled.div`
     }
   }
 
+  .post-upon-ready-placeholder {
+    color: #616669;
+  }
+
   .modify-content {
     margin-top: 28px;
   }
