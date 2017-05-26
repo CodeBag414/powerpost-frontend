@@ -45,11 +45,11 @@ import SharedStreams from './SharedStreams';
 class PostEditor extends Component {
 
   static propTypes = {
-    getComments: PropTypes.func,
-    getAccountTags: PropTypes.func,
-    fetchPostSet: PropTypes.func,
-    fetchGroupUsers: PropTypes.func,
-    fetchConnections: PropTypes.func,
+    // getComments: PropTypes.func,
+    // getAccountTags: PropTypes.func,
+    // fetchPostSet: PropTypes.func,
+    // fetchGroupUsers: PropTypes.func,
+    // fetchConnections: PropTypes.func,
     user: PropTypes.shape(),
     postSet: PropTypes.object,
     groupUsers: PropTypes.object,
@@ -65,15 +65,7 @@ class PostEditor extends Component {
   };
 
   componentWillMount() {
-    const { accountId, id } = this.props;
-    this.props.getComments(id);
-    this.props.getAccountTags(accountId);
-    this.props.fetchPostSet({
-      id,
-    });
-    const payload = { accountId };
-    this.props.fetchGroupUsers(payload);
-    this.props.fetchConnections(accountId);
+    this.initialize();
   }
 
   componentWillReceiveProps({ postSet }) {
@@ -81,8 +73,26 @@ class PostEditor extends Component {
     this.setState({ postTitle: titleText || 'Untitled Post' });
   }
 
+  componentWillUpdate(nextProps) {
+    if (nextProps.id !== this.props.id) {
+      this.initialize(nextProps);
+    }
+  }
+
   onBack = () => {
     browserHistory.goBack();
+  }
+
+  initialize = (props = this.props) => {
+    const { accountId, id } = props;
+    props.getComments(id);
+    props.getAccountTags(accountId);
+    props.fetchPostSet({
+      id,
+    });
+    const payload = { accountId };
+    props.fetchGroupUsers(payload);
+    props.fetchConnections(accountId);
   }
 
   handleTitleChange = () => {
