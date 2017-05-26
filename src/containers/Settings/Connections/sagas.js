@@ -181,7 +181,7 @@ export function* validateConnections(action) {
   const data = {
     payload: {
       account_id: accountId,
-      status: [1, 3, 4],
+      status: [1, 3, 5],
       postable: 1,
     },
   };
