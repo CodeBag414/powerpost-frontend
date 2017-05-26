@@ -235,7 +235,7 @@ class LinkEditor extends Component {
                 <p>Select Cover Image</p>
                 <div>
                   { urlContent.images.map((image, i) =>
-                    <div key={i} style={{ height: '75px', width: '100px', float: 'left', margin: '10px' }}>
+                    <div key={i} style={{marginRight: '10px' }}>
                       <SmallImageWrapper src={image.url} isSelected={selectedImageIndex === i} onClick={() => { this.setState({ selectedImage: image, selectedImageIndex: i }); }} />
                     </div>
                       )}

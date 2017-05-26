@@ -30,7 +30,6 @@ const BodyWrapper = styled.div`
       height: 120px;
       margin-bottom: 20px;
       display: flex;
-      justify-content: center;
     }
   }
 `;
