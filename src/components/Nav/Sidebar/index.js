@@ -138,7 +138,7 @@ class Sidebar extends React.Component {
                 <ReactRouterMenuItem caption="Brands" activeClassName={styles.active} isSidebar icon={<FontIcon>library_add</FontIcon>} to={`/account/${this.props.accountId}/brands`} />
                 }
                 {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('content_library') > -1 &&
-                  <ReactRouterMenuItem caption="Library" activeClassName={styles.active} isSidebar icon={<i className="fa fa-database" />} to={`/account/${this.props.accountId}/library`} />
+                  <ReactRouterMenuItem caption="Planet Content" activeClassName={styles.active} isSidebar icon={<i className="fa fa-database" />} to={`/account/${this.props.accountId}/library`} />
                 }
                 {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
                   <ReactRouterMenuItem caption="Publishing" activeClassName={styles.active} isSidebar icon={<i className="fa fa-paper-plane" />} to={`/account/${this.props.accountId}/publishing/calendar`} />
@@ -175,7 +175,7 @@ class Sidebar extends React.Component {
               <ReactRouterMenuItemWithTooltip tooltip="Brands" tooltipPosition="right" isCollapsed style={{ width: '60px' }} isSidebar icon={<FontIcon>library_add</FontIcon>} to={`/account/${this.props.accountId}/brands`} />
             }
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('content_library') > -1 &&
-            <ReactRouterMenuItemWithTooltip tooltip="Media Library" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-database" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/library`} />
+            <ReactRouterMenuItemWithTooltip tooltip="Planet Content" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-database" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/library`} />
             }
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
             <div>
