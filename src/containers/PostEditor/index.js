@@ -73,6 +73,11 @@ class PostEditor extends Component {
     this.setState({ postTitle: titleText || 'Untitled Post' });
   }
 
+  shouldComponentUpdate(nextProps) {
+    const { postSet } = nextProps;
+    return !postSet.get('isFetching');
+  }
+
   componentWillUpdate(nextProps) {
     if (nextProps.id !== this.props.id) {
       this.initialize(nextProps);

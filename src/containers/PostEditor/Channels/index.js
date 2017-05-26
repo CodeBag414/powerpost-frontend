@@ -89,7 +89,7 @@ class Channels extends Component {
     const { updatePost } = this.props;
     const newPost = {
       ...postToDelete.toJS(),
-      status: 0,
+      status: '0',
     };
     updatePost(newPost);
   }
