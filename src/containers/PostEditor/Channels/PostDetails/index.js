@@ -21,14 +21,16 @@ function PostDetails({ post, postMessage, postTime, connection, handleRemoveSlot
           Remove Slot
         </PPButton>
       </div>
-      <div className="date-pickers">
-        <div className="date-picker">
-          <DatePicker minDate={minDate} value={moment.unix(postTime).toDate()} onChange={handleDateChange} />
+      {post.get('status') !== '5' &&
+        <div className="date-pickers">
+          <div className="date-picker">
+            <DatePicker minDate={minDate} value={moment.unix(postTime).toDate()} onChange={handleDateChange} />
+          </div>
+          <div className="time-picker">
+            <TimePicker format="ampm" value={moment.unix(postTime).toDate()} onChange={handleDateChange} />
+          </div>
         </div>
-        <div className="time-picker">
-          <TimePicker format="ampm" value={moment.unix(postTime).toDate()} onChange={handleDateChange} />
-        </div>
-      </div>
+      }
       <div className="section-title modify-content">
         Modify Content
       </div>
