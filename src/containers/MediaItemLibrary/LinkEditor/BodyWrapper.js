@@ -13,20 +13,24 @@ const BodyWrapper = styled.div`
     .header {
       display: flex;
       justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
       p {
         height: 15px;
         color: #8C9496;
         font-weight: bold;
         line-height: 15px;
         font-size: 12px;
+        padding: 0;
+        margin: 0;
       }
     }
     .cover-image {
-      border: 1px solid #8C9496;
       border-radius: 3px;
       height: 120px;
       margin-bottom: 20px;
-      text-align: center;
+      display: flex;
+      justify-content: center;
     }
   }
 `;

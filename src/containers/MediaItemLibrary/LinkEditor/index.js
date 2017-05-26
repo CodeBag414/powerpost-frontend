@@ -178,10 +178,12 @@ class LinkEditor extends Component {
       >
         <Wrapper>
           <HeadingWrapper>
-            <h3>Content Editor<span><i className="fa fa-link" />{url}</span></h3>
-            <button onClick={closeAllDialog}><FontIcon value="clear" /></button>
+            <div className="header-info">
+              <h3>Content Editor<span><i className="fa fa-link" />{url}</span></h3>
+              <button onClick={closeAllDialog}><FontIcon value="clear" /></button>
+            </div>
+            <p>Modify the link information below.</p>
           </HeadingWrapper>
-          <p>Modify the link information below.</p>
           <BodyWrapper>
             <div className="info-wrapper">
               <PPTextField
@@ -199,9 +201,9 @@ class LinkEditor extends Component {
               />
             </div>
             <div className="image-wrapper">
-              <div className="header">
-                <p>Cover Image</p>
-                {selectedImage && selectedImage.url &&
+              {selectedImage && selectedImage.url &&
+                <div className="header">
+                  <p>Cover Image</p>
                   <SimpleButton
                     style={{ fontSize: '13px' }}
                     color={theme.textColor}
@@ -210,13 +212,13 @@ class LinkEditor extends Component {
                   >
                     Remove
                   </SimpleButton>
-                }
-              </div>
-              <div className="cover-image">
-                {selectedImage && selectedImage.url &&
+                </div>
+              }
+              {selectedImage && selectedImage.url &&
+                <div className="cover-image">
                   <LargeImageWrapper src={selectedImage.url} />
-                }
-              </div>
+                </div>
+              }
               <SimpleButton
                 style={{ fontSize: '13px' }}
                 color={theme.textColor}
