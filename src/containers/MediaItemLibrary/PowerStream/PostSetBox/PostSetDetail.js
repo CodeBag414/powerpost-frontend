@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -8,14 +9,22 @@ const Wrapper = styled.div`
   float: left;
 `;
 
-const PostSetDetail = ({ postSets }) => (
+const PostSetDetail = ({
+  owned,
+  postSet,
+}) => (
   <Wrapper>
-    
+    { postSet.get('title') }
+    created by { postSet.get('user_id') }
   </Wrapper>
 );
 
 PostSetDetail.propTypes = {
-  
+  postSet: ImmutablePropTypes.map,
+};
+
+PostSetDetail.defaultProps = {
+  postSet: new Map(),
 };
 
 export default PostSetDetail;

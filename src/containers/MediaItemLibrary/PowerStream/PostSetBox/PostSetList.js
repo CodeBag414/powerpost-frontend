@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import styled from 'styled-components';
+import moment from 'moment';
+
+import PostSetItem from './PostSetItem';
 
 const Wrapper = styled.div`
   width: 40%;
@@ -10,14 +13,26 @@ const Wrapper = styled.div`
   overflow-y: auto;
 `;
 
-const PostSetList = ({ postSets }) => (
+const PostSetList = ({
+  postSets,
+  currentPostSetIndex,
+  streamName,
+  handleSelectPostSet,
+}) => (
   <Wrapper>
     {
-      postSets.map((p) => (
-        <div key={p.get('post_set_id')} className="postset-item">
-          { p.get('title') }
-          { p.get('message') }
-        </div>
+      postSets.map((p, index) => (
+        <PostSetItem
+          key={index}
+          active={currentPostSetIndex === index}
+          mediaItems={p.get('media_items')}
+          streamName={streamName}
+          title={p.get('title')}
+          message={p.get('message')}
+          date={moment(p.get('creation_time') * 1000).format('MMM DD')}
+          type={p.get('post_type')}
+          onClick={() => handleSelectPostSet(index)}
+        />
       ))
     }
   </Wrapper>
@@ -25,6 +40,9 @@ const PostSetList = ({ postSets }) => (
 
 PostSetList.propTypes = {
   postSets: ImmutablePropTypes.list,
+  currentPostSetIndex: PropTypes.number,
+  streamName: PropTypes.string,
+  handleSelectPostSet: PropTypes.func,
 };
 
 export default PostSetList;

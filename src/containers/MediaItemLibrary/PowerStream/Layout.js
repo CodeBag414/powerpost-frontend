@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { browserHistory } from 'react-router';
+import { find } from 'lodash';
 
 import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 
@@ -56,12 +57,13 @@ class PowerStreamLayout extends Component {
     });
   }
 
-  render() {   // streamId is ensured to be given
+  render() {
     const {
       postSets,
       userAccount,
       accountId,
       streamCategory,
+      streamId,
     } = this.props;
 
     if (postSets.get('isFetching')) {
@@ -79,11 +81,16 @@ class PowerStreamLayout extends Component {
       label: s.title,
       link: `/account/${accountId}/library/shared_streams/${streamCategory}/${s.stream_id}`,
     }));
+    const currentStream = find(streams, { stream_id: streamId });
+    const streamName = (currentStream || {}).title;
 
     return (
       <Wrapper>
         <TabBar tabs={tabs} />
-        <PostSetBox postSets={postSets.get('data')} />
+        <PostSetBox
+          postSets={postSets.get('data')}
+          streamName={streamName}
+        />
       </Wrapper>
     );
   }
