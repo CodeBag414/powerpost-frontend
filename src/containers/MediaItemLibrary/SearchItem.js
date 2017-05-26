@@ -31,7 +31,7 @@ const Image = styled.img`
 `;
 
 const SearchItem = (props) => {
-  
+  console.log(props)
   return(
     <Wrapper className="row" style={{marginLeft: '0px', marginRight: '0px'}}>
       <div className={ props.item.media_type === 'link' ? 'col-md-12' : 'col-md-8'}>
