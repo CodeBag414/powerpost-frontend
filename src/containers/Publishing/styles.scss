@@ -5,11 +5,11 @@
     margin-bottom: 20px;
     background-color: white;
     position: fixed;
+    z-index: 1000;
 }
 
 .settingsContent {
-    padding: 20px;
     padding-top: 60px;
-    max-width: 1250px;
+    height: calc(100vh - 60px);
     margin: 0 auto;
 }
