@@ -1,76 +1,95 @@
-import React from 'react';
-import Wrapper from './Wrapper';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import filepicker from 'filepicker-js';
+
 import PPDialog from 'elements/atm.Dialog';
-import Input from 'react-toolbox/lib/input';
+import TextArea from 'elements/atm.TextArea';
+import PPTextField from 'elements/atm.TextField';
+import FontIcon from 'elements/atm.FontIcon';
 import Button from 'elements/atm.Button';
+import SimpleButton from 'elements/atm.SimpleButton';
+
+import theme from 'theme';
+
+import Wrapper from './Wrapper';
 import LargeImageWrapper from './LargeImageWrapper';
+import HeadingWrapper from './HeadingWrapper';
+import BodyWrapper from './BodyWrapper';
+import FooterWrapper from './FooterWrapper';
 
 
-class VideoEditor extends React.Component {
+class VideoEditor extends Component {
+  static propTypes = {
+    videoItem: PropTypes.shape(),
+    isOpen: PropTypes.bool,
+    filePickerKey: PropTypes.string,
+    handleSave: PropTypes.func,
+    closeAllDialog: PropTypes.func,
+  }
+
   constructor(props) {
     super(props);
-    
+
     this.state = {
-      titleValue: this.props.videoItem.properties && this.props.videoItem.properties.title || '',
-      descriptionValue: this.props.videoItem.properties && this.props.videoItem.properties.description || '',
+      titleValue: (props.videoItem.properties && props.videoItem.properties.title) || '',
+      descriptionValue: (props.videoItem.properties && props.videoItem.properties.description) || '',
       source: false,
-      selectedImage: false,
+      selectedImage: {},
     };
-    
+
     this.prepareItem = this.prepareItem.bind(this);
     this.removeCoverImage = this.removeCoverImage.bind(this);
     this.openFilePicker = this.openFilePicker.bind(this);
     this.handleFilePickerSuccess = this.handleFilePickerSuccess.bind(this);
   }
-  
+
   componentWillReceiveProps(nextProps) {
     if (!this.state.titleValue && nextProps.videoItem.properties && nextProps.videoItem.properties.title) {
       this.setState({ titleValue: nextProps.videoItem.properties.title });
     }
     if (!this.state.descriptionValue && nextProps.videoItem.properties && nextProps.videoItem.properties.description) {
-      this.setState({ descriptionValue: nextProps.videoItem.properties.description});
+      this.setState({ descriptionValue: nextProps.videoItem.properties.description });
     }
     if (!this.state.source && nextProps.videoItem.properties) {
       this.setState({ source: nextProps.videoItem.source_url || nextProps.videoItem.properties.url });
     }
-    if (nextProps.videoItem.properties && nextProps.videoItem.properties.thumb_url && !this.state.selectedImage) {
-      this.setState({ selectedImage: {url:nextProps.videoItem.properties.thumb_url} });
+    if (nextProps.videoItem.properties && nextProps.videoItem.properties.thumb_url) {
+      this.setState({ selectedImage: { url: nextProps.videoItem.properties.thumb_url } });
     }
     if (!nextProps.isOpen) {
-     this.setState({
-        selectedImage: false,
+      this.setState({
+        selectedImage: '',
         titleValue: '',
         descriptionValue: '',
         source: false,
       });
     }
   }
-  
+
   handleInputChange = (name, value) => {
-    this.setState({...this.state, [name]: value});
+    this.setState({ ...this.state, [name]: value });
   };
-  
+
   removeCoverImage() {
-    this.setState({ selectedImage: {}, selectedImageIndex: false });
+    this.setState({ selectedImage: {}, selectedImageIndex: -1 });
   }
 
-  
   prepareItem() {
     let Item = {};
     if (this.props.videoItem.media_item_id) {
-      const {properties, ...rest} = this.props.videoItem;
-      const {title, description, ...other} = properties;
+      const { properties, ...rest } = this.props.videoItem;
+      const { title, description, ...other } = properties;
       Item = {
         action: 'update',
         properties: {
           ...other,
           title: this.state.titleValue || title || '',
           description: this.state.descriptionValue || description || '',
-          picture: this.state.selectedImage.url,
+          thumb_url: this.state.selectedImage.url || '',
+          picture: this.state.selectedImage.url || '',
         },
         ...rest,
       };
-      console.log(Item);
     } else {
       Item = {
         action: 'create',
@@ -78,92 +97,118 @@ class VideoEditor extends React.Component {
         properties: {
           title: this.state.titleValue,
           description: this.state.descriptionValue,
+          thumb_url: this.state.selectedImage.url || '',
           picture: this.state.selectedImage.url || '',
           ...this.props.videoItem.properties,
-        }
+        },
       };
     }
-    
+
     this.setState({
       titleValue: '',
       descriptionValue: '',
-      selectedImage: false,
+      selectedImage: {},
       source: false,
     });
-      
-    console.log(Item);
+
     this.props.handleSave(Item);
   }
 
-  removeCoverImage() {
-    this.setState({ selectedImage: {} });
-  }
-  
   openFilePicker() {
-    const filepicker = require('filepicker-js');
     filepicker.setKey(this.props.filePickerKey);
-    
-    const filePickerOptions = { 
-      buttonText: 'Choose', 
-      container:'modal', 
+
+    const filePickerOptions = {
+      buttonText: 'Choose',
+      container: 'modal',
       multiple: false,
-      maxFiles: 1, 
-      imageQuality: 80, 
-      imageMax: [1200, 1200], 
-      services: [ 'COMPUTER', 'WEBCAM', 'VIDEO', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
+      maxFiles: 1,
+      imageQuality: 80,
+      imageMax: [1200, 1200],
+      services: ['COMPUTER', 'WEBCAM', 'VIDEO', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
       conversions: ['crop', 'filter'],
     };
     function onFail(error) {
-      console.log('error: ' + error);
+      console.log(`error: ${error}`);
     }
     filepicker.pick(filePickerOptions, this.handleFilePickerSuccess, onFail);
   }
-  
+
   handleFilePickerSuccess(mediaItem) {
-    this.setState({ selectedImage: mediaItem, selectedImageIndex: false, });
+    this.setState({ selectedImage: mediaItem, selectedImageIndex: -1 });
   }
-  
+
   render() {
-    return(
+    const { isOpen, closeAllDialog, videoItem } = this.props;
+    const { titleValue, descriptionValue, selectedImage } = this.state;
+
+    const fileName = (videoItem.properties && videoItem.properties.filename) || '';
+
+    return (
       <PPDialog
-        active={this.props.isOpen}
-        title='Video Editor'
-        onEscKeyDown={this.props.closeAllDialog}
-        onOverlayClick={this.props.closeAllDialog}
-        actions={this.props.actions}
-        type="large"
+        active={isOpen}
+        onEscKeyDown={closeAllDialog}
+        onOverlayClick={closeAllDialog}
       >
         <Wrapper>
-          <div className='row'>
-            <div className="embed-responsive embed-responsive-16by9">
-              <iframe className="embed-responsive-item" src={this.state.source}></iframe>
+          <HeadingWrapper>
+            <div className="header-info">
+              <h3>Content Editor<span><i className="fa fa-video-camera" />{fileName}</span></h3>
+              <button onClick={closeAllDialog}><FontIcon value="clear" /></button>
             </div>
-          </div>
-          <div className="row">
-            <div className="col-sm-6">
-              <h2>Video Information</h2>
-              <Input type="text" value={this.state.titleValue} label="Video Title" onChange={this.handleInputChange.bind(this, 'titleValue')} />
-              <Input type="text" multiline value={this.state.descriptionValue} label="Video Description" onChange={this.handleInputChange.bind(this, 'descriptionValue')} />
+            <p>Modify the video information below.</p>
+          </HeadingWrapper>
+          <BodyWrapper>
+            <div className="info-wrapper">
+              <PPTextField
+                type="text"
+                name="title"
+                floatingLabelText="Title"
+                value={titleValue}
+                onChange={(e) => this.handleInputChange('titleValue', e.target.value)}
+              />
+              <TextArea
+                floatingLabelText="Description"
+                rows={3}
+                value={descriptionValue}
+                onChange={(e) => this.handleInputChange('descriptionValue', e.target.value)}
+              />
             </div>
-            <div className="col-md-6">
-              { this.state.selectedImage &&
-                <div style={{ textAlign: 'center' }}>
-                  <LargeImageWrapper src={ this.state.selectedImage.url } />
+            <div className="image-wrapper">
+              {selectedImage && selectedImage.url &&
+                <div className="header">
+                  <p>Cover Image</p>
+                  <SimpleButton
+                    style={{ fontSize: '13px' }}
+                    color={theme.textColor}
+                    onClick={this.removeCoverImage}
+                    noBorder
+                  >
+                    Remove
+                  </SimpleButton>
                 </div>
               }
-              <div style={{ marginTop: '10px', textAlign: 'center', marginBottom: '10px' }}>
-                <Button label="Upload Cover Image" onClick={this.openFilePicker} primary style={{ margin: '5px' }}/>
-                { this.state.selectedImage &&
-                  <Button label="Remove Cover Image" onClick={this.removeCoverImage} style={{ margin: '5px' }}/>
-                }
-              </div>
+              {selectedImage && selectedImage.url &&
+                <div className="cover-image">
+                  <LargeImageWrapper src={selectedImage.url} />
+                </div>
+              }
+              <SimpleButton
+                style={{ fontSize: '13px' }}
+                color={theme.textColor}
+                onClick={this.openFilePicker}
+                noBorder
+              >
+                Upload New Cover Image
+              </SimpleButton>
             </div>
-          </div>
-          <div style={{height: '60px', textAlign: 'right'}}>
-          <Button label="Save" primary onClick={this.prepareItem} style={{marginTop: '20px'}} />
-          </div>
+          </BodyWrapper>
+          <FooterWrapper>
+            <div className="button-wrapper">
+              <Button onClick={this.prepareItem} primary>Save Content</Button>
+            </div>
+          </FooterWrapper>
         </Wrapper>
-      </PPDialog>    
+      </PPDialog>
     );
   }
 }
