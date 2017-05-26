@@ -12,6 +12,10 @@ const HeadingWrapper = styled.div`
     line-height: 24px;
     margin: 0;
     padding: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    padding-right: 30px;
 
     span {
       padding-left: 20px;
