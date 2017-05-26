@@ -5,6 +5,7 @@ import {
   SHOW_IMAGES,
   SHOW_LINKS,
   SHOW_VIDEOS,
+  SHOW_FILES,
 } from './constants';
 
 const selectLibrary = (state) => state.get('library');
@@ -103,6 +104,8 @@ const makeSelectVisibleMediaItems = () => createSelector(
         return mediaItems.filter(t => t.type === 'link');
       case SHOW_VIDEOS:
         return mediaItems.filter(t => t.type === 'video');
+      case SHOW_FILES:
+        return mediaItems.filter(t => t.type === 'document');
     }
 });
 

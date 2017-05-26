@@ -1,57 +1,71 @@
-import React from 'react';
-import Wrapper from './Wrapper';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
 import PPDialog from 'elements/atm.Dialog';
-import Input from 'react-toolbox/lib/input';
+import TextArea from 'elements/atm.TextArea';
+import PPTextField from 'elements/atm.TextField';
+import FontIcon from 'elements/atm.FontIcon';
 import Button from 'elements/atm.Button';
+
+import Wrapper from './Wrapper';
+import HeadingWrapper from './HeadingWrapper';
+import BodyWrapper from './BodyWrapper';
+import FooterWrapper from './FooterWrapper';
 import LargeImageWrapper from './LargeImageWrapper';
 
+class ImageEditor extends Component {
+  static propTypes = {
+    imageItem: PropTypes.shape(),
+    isOpen: PropTypes.bool,
+    closeAllDialog: PropTypes,
+    handleSave: PropTypes.func,
+  }
 
-class ImageEditor extends React.Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
-      titleValue: this.props.imageItem.properties && this.props.imageItem.properties.title || '',
-      descriptionValue: this.props.imageItem.properties && this.props.imageItem.properties.description || '',
-      selectedImage: this.props.imageItem.url || false,
+      titleValue: (props.imageItem.properties && props.imageItem.properties.title) || '',
+      descriptionValue: (props.imageItem.properties && props.imageItem.properties.description) || '',
+      selectedImage: props.imageItem.url || '',
+      fileName: (props.imageItem.properties && props.imageItem.properties.filename) || '',
     };
-    
+
     this.prepareItem = this.prepareItem.bind(this);
   }
-  
+
   componentWillReceiveProps(nextProps) {
+    if (!this.state.fileName && nextProps.imageItem.properties && nextProps.imageItem.properties.filename) {
+      this.setState({ fileName: nextProps.imageItem.properties.filename });
+    }
     if (!this.state.titleValue && nextProps.imageItem.properties && nextProps.imageItem.properties.title) {
       this.setState({ titleValue: nextProps.imageItem.properties.title });
     }
     if (!this.state.descriptionValue && nextProps.imageItem.properties && nextProps.imageItem.properties.description) {
-      this.setState({ descriptionValue: nextProps.imageItem.properties.description});
+      this.setState({ descriptionValue: nextProps.imageItem.properties.description });
     }
     if (nextProps.imageItem.properties && nextProps.imageItem.properties.url && !this.state.selectedImage) {
       this.setState({ selectedImage: nextProps.imageItem.properties.url });
     }
     if (!nextProps.isOpen) {
-     this.setState({
-        selectedImage: false,
+      this.setState({
+        selectedImage: '',
         titleValue: '',
         descriptionValue: '',
+        fileName: '',
       });
     }
   }
-  
-  handleInputChange = (name, value) => {
-    this.setState({...this.state, [name]: value});
-  };
-  
-  removeCoverImage() {
-    this.setState({ selectedImage: {}, selectedImageIndex: false });
-  }
 
-  
+  handleInputChange = (name, value) => {
+    this.setState({ ...this.state, [name]: value });
+  };
+
   prepareItem() {
     let Item = {};
     if (this.props.imageItem.media_item_id) {
-      const {properties, ...rest} = this.props.imageItem;
-      const {title, description, ...other} = properties;
+      const { properties, ...rest } = this.props.imageItem;
+      const { title, description, ...other } = properties;
       Item = {
         action: 'update',
         properties: {
@@ -61,7 +75,6 @@ class ImageEditor extends React.Component {
         },
         ...rest,
       };
-      console.log(Item);
     } else {
       Item = {
         action: 'create',
@@ -70,48 +83,66 @@ class ImageEditor extends React.Component {
           title: this.state.titleValue,
           description: this.state.descriptionValue,
           ...this.props.imageItem.properties,
-        }
+        },
       };
     }
-    
+
     this.setState({
       titleValue: '',
       descriptionValue: '',
-      selectedImage: false,
+      selectedImage: '',
     });
-      
-    console.log(Item);
+
     this.props.handleSave(Item);
   }
-  
+
   render() {
-    return(
+    const { isOpen, closeAllDialog } = this.props;
+    const { titleValue, descriptionValue, selectedImage, fileName } = this.state;
+
+    return (
       <PPDialog
-        active={this.props.isOpen}
-        title='Image Editor'
-        onEscKeyDown={this.props.closeAllDialog}
-        onOverlayClick={this.props.closeAllDialog}
-        actions={this.props.actions}
-        type="large"
+        active={isOpen}
+        onEscKeyDown={closeAllDialog}
+        onOverlayClick={closeAllDialog}
       >
         <Wrapper>
-          <div className="row">
-            <div className="col-sm-6">
-              <h2>Image Information</h2>
-              <Input type="text" value={this.state.titleValue} label="Image Title" onChange={this.handleInputChange.bind(this, 'titleValue')} />
-              <Input type="text" multiline value={this.state.descriptionValue} label="Image Description" onChange={this.handleInputChange.bind(this, 'descriptionValue')} />
+          <HeadingWrapper>
+            <div className="header-info">
+              <h3>Content Editor<span><i className="fa fa-picture-o" />{fileName}</span></h3>
+              <button onClick={closeAllDialog}><FontIcon value="clear" /></button>
             </div>
-            <div className="col-md-6">
-                <div style={{ textAlign: 'center' }}>
-                  <LargeImageWrapper src={ this.state.selectedImage } />
-                </div>
+            <p>Modify the image information below.</p>
+          </HeadingWrapper>
+          <BodyWrapper>
+            <div className="info-wrapper">
+              <PPTextField
+                type="text"
+                name="title"
+                floatingLabelText="Title"
+                value={titleValue}
+                onChange={(e) => this.handleInputChange('titleValue', e.target.value)}
+              />
+              <TextArea
+                floatingLabelText="Description"
+                rows={2}
+                value={descriptionValue}
+                onChange={(e) => this.handleInputChange('descriptionValue', e.target.value)}
+              />
             </div>
-          </div>
-          <div style={{height: '60px', textAlign: 'right'}}>
-          <Button label="Save" primary onClick={this.prepareItem} style={{marginTop: '20px'}} />
-          </div>
+            <div className="image-wrapper">
+              <div className="cover-image">
+                {selectedImage && <LargeImageWrapper src={selectedImage} />}
+              </div>
+            </div>
+          </BodyWrapper>
+          <FooterWrapper>
+            <div className="button-wrapper">
+              <Button label="Save Content" onClick={this.prepareItem} primary />
+            </div>
+          </FooterWrapper>
         </Wrapper>
-      </PPDialog>    
+      </PPDialog>
     );
   }
 }

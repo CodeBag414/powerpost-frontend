@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 
 const SmallImageWrapper = styled.img`
@@ -6,8 +5,8 @@ const SmallImageWrapper = styled.img`
   border-radius: 4px;
   border: ${(props) => props.isSelected ? 'solid 1px' : 'none'};
   border-color: ${(props) => props.theme.primaryColor};
-  max-height: 75px;
-  max-width: 100%;
+  width: 57px;
+  height: 57px;
 `;
 
 export default SmallImageWrapper;
