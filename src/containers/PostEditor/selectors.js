@@ -1,5 +1,12 @@
 import { createSelector } from 'reselect';
-
+import {
+  SHOW_ALL,
+  SHOW_BLOGS,
+  SHOW_IMAGES,
+  SHOW_LINKS,
+  SHOW_VIDEOS,
+  SHOW_FILES,
+} from './constants';
 const selectPostSetEditor = (state) => state.get('postEditor');
 
 const makeSelectComments = () => createSelector(
@@ -7,9 +14,19 @@ const makeSelectComments = () => createSelector(
   (postSetEditor) => postSetEditor.get('comments'),
 );
 
+const makeSelectFilter = () => createSelector(
+  [selectPostSetEditor],
+  (postSetEditor) => postSetEditor.get('filter')
+);
+
 const makeSelectInProgress = () => createSelector(
   selectPostSetEditor,
   (postSetEditor) => postSetEditor.get('pending'),
+);
+
+const makeSelectIsProcessing = () => createSelector(
+  selectPostSetEditor,
+  (postSetEditor) => postSetEditor.get('isProcessing')
 );
 
 const makeSelectUrlContent = () => createSelector(
@@ -42,6 +59,25 @@ const makeSelectMediaItems = () => createSelector(
   (postSetEditor) => postSetEditor.get('mediaItems')
 );
 
+const makeSelectVisibleMediaItems = () => createSelector(
+  [makeSelectMediaItems(), makeSelectFilter()],
+  (mediaItems, filter) => {
+    switch (filter) {
+      case SHOW_ALL:
+        return mediaItems;
+      case SHOW_BLOGS:
+        return mediaItems.filter(t => t.type === 'blog');
+      case SHOW_IMAGES:
+        return mediaItems.filter(t => t.type === 'image');
+      case SHOW_LINKS:
+        return mediaItems.filter(t => t.type === 'link');
+      case SHOW_VIDEOS:
+        return mediaItems.filter(t => t.type === 'video');
+      case SHOW_FILES:
+        return mediaItems.filter(t => t.type === 'document');
+    }
+});
+
 export {
   makeSelectComments,
   makeSelectAccountTags,
@@ -51,4 +87,7 @@ export {
   makeSelectUrlContent,
   makeSelectMediaItem,
   makeSelectMediaItems,
+  makeSelectIsProcessing,
+  makeSelectFilter,
+  makeSelectVisibleMediaItems,
 };

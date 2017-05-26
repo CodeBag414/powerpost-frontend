@@ -36,6 +36,7 @@ import GeneralInfo from './GeneralInfo';
 import TabLink from './TabLink';
 import Sidebar from './Sidebar';
 import UserAssignment from './Sidebar/UserAssignment';
+import StatusChooser from './Sidebar/StatusChooser';
 import Tags from './Sidebar/Tags';
 import Content from './Content';
 import Channels from './Channels';
@@ -44,11 +45,11 @@ import SharedStreams from './SharedStreams';
 class PostEditor extends Component {
 
   static propTypes = {
-    getComments: PropTypes.func,
-    getAccountTags: PropTypes.func,
-    fetchPostSet: PropTypes.func,
-    fetchGroupUsers: PropTypes.func,
-    fetchConnections: PropTypes.func,
+    // getComments: PropTypes.func,
+    // getAccountTags: PropTypes.func,
+    // fetchPostSet: PropTypes.func,
+    // fetchGroupUsers: PropTypes.func,
+    // fetchConnections: PropTypes.func,
     user: PropTypes.shape(),
     postSet: PropTypes.object,
     groupUsers: PropTypes.object,
@@ -64,15 +65,7 @@ class PostEditor extends Component {
   };
 
   componentWillMount() {
-    const { accountId, id } = this.props;
-    this.props.getComments(id);
-    this.props.getAccountTags(accountId);
-    this.props.fetchPostSet({
-      id,
-    });
-    const payload = { accountId };
-    this.props.fetchGroupUsers(payload);
-    this.props.fetchConnections(accountId);
+    this.initialize();
   }
 
   componentWillReceiveProps({ postSet }) {
@@ -80,8 +73,31 @@ class PostEditor extends Component {
     this.setState({ postTitle: titleText || 'Untitled Post' });
   }
 
+  shouldComponentUpdate(nextProps) {
+    const { postSet } = nextProps;
+    return !postSet.get('isFetching');
+  }
+
+  componentWillUpdate(nextProps) {
+    if (nextProps.id !== this.props.id) {
+      this.initialize(nextProps);
+    }
+  }
+
   onBack = () => {
     browserHistory.goBack();
+  }
+
+  initialize = (props = this.props) => {
+    const { accountId, id } = props;
+    props.getComments(id);
+    props.getAccountTags(accountId);
+    props.fetchPostSet({
+      id,
+    });
+    const payload = { accountId };
+    props.fetchGroupUsers(payload);
+    props.fetchConnections(accountId);
   }
 
   handleTitleChange = () => {
@@ -110,9 +126,11 @@ class PostEditor extends Component {
     let totalTimeslots = 0;
     if (postsArray) {
       postsArray.map((post) => {
-        if (!posts[post.get('connection_id')]) posts[post.get('connection_id')] = [];
-        posts[post.get('connection_id')].push(post);
-        totalTimeslots += 1;
+        if (post.get('status') !== '0') {
+          if (!posts[post.get('connection_id')]) posts[post.get('connection_id')] = [];
+          posts[post.get('connection_id')].push(post);
+          totalTimeslots += 1;
+        }
         return true;
       });
     }
@@ -161,6 +179,10 @@ class PostEditor extends Component {
             postSet={postSet.get('details').toJS()}
             assignee={postSet.getIn(['details', 'user_assignments', 0])}
             users={groupUsers.details ? groupUsers.details.groups_users : []}
+            updatePostSet={updatePostSet}
+          />
+          <StatusChooser
+            postSet={postSet}
             updatePostSet={updatePostSet}
           />
           <Tags

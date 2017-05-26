@@ -29,6 +29,15 @@ import {
   REMOVE_MEDIA_ITEM,
   SET_MEDIA_ITEM,
   FETCH_URL_CONTENT_SUCCESS,
+  PROCESS_ITEM,
+  PROCESS_ITEM_SUCCESS,
+  SET_VISIBILITY_FILTER,
+  SHOW_ALL,
+  SHOW_BLOGS,
+  SHOW_LINKS,
+  SHOW_IMAGES,
+  SHOW_VIDEOS,
+  SHOW_FILES,
 } from './constants';
 
 const initialState = fromJS({
@@ -48,6 +57,7 @@ const initialState = fromJS({
   },
   mediaItems: [],
   urlContent: {},
+  isProcessing: false,
   postSet: {
     isFetching: false,
     error: null,
@@ -59,6 +69,7 @@ const initialState = fromJS({
     data: [],
   },
   pending: false,
+  filter: SHOW_ALL,
 });
 
 function boardReducer(state = initialState, action) {
@@ -74,6 +85,9 @@ function boardReducer(state = initialState, action) {
       return state
         .set('pending', true)
         .set('comments', fromJS([]));
+    case SET_VISIBILITY_FILTER:
+      return state
+        .set('filter', action.filter);
     case SET_COMMENTS:
       return state
         .set('pending', false)
@@ -173,6 +187,12 @@ function boardReducer(state = initialState, action) {
     case FETCH_MEDIA_ITEMS_ERROR:
       return state
         .set('error', action.mediaItems.data.message);
+    case PROCESS_ITEM: 
+      return state
+        .set('isProcessing', true);
+    case PROCESS_ITEM_SUCCESS:
+      return state
+        .set('isProcessing', false);
     default: return state;
   }
 }

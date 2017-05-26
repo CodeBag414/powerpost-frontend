@@ -16,6 +16,8 @@ import {
   GET_MEDIA_ITEM,
   SET_MEDIA_ITEM,
   FETCH_COLLECTIONS,
+  PROCESS_ITEM,
+  SET_VISIBILITY_FILTER,
 } from './constants';
 
 export function fetchCollections(accountId) {
@@ -103,5 +105,12 @@ export function createMediaItem(mediaItem) {
   return {
     type: CREATE_MEDIA_ITEM,
     mediaItem,
+  };
+}
+
+export function setVisibilityFilter(filter) {
+  return {
+    type: SET_VISIBILITY_FILTER,
+    filter,
   };
 }

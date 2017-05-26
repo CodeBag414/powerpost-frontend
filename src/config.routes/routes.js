@@ -210,11 +210,11 @@ export function createRoutes(store, auth) {
               },
             },
             {
-              path: 'shared_streams/subscriptions',
+              path: 'shared_streams/subscriptions/:id',
               name: 'Shared Streams',
               getComponent(nextState, cb) {
                 const importModules = Promise.all([
-                  System.import('containers/MediaItemLibrary/Subscriptions'),
+                  System.import('containers/MediaItemLibrary/PowerStream/Subscriptions.js'),
                 ]);
                 const renderRoute = loadModule(cb);
 
@@ -230,7 +230,7 @@ export function createRoutes(store, auth) {
               name: 'Shared Streams',
               getComponent(nextState, cb) {
                 const importModules = Promise.all([
-                  System.import('containers/MediaItemLibrary/Owned'),
+                  System.import('containers/MediaItemLibrary/PowerStream/Owned.js'),
                 ]);
                 const renderRoute = loadModule(cb);
 
@@ -243,71 +243,111 @@ export function createRoutes(store, auth) {
             },
           ],
         },
+        
         {
-          path: '/account(/:account_id)/calendar',
-          name: 'calendar',
+          path: '/account(/:account_id)/publishing',
+          name: 'publishing',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
-              System.import('containers/PostEditor/reducer'),
-              System.import('containers/PostEditor/sagas'),
-              System.import('containers/Calendar'),
+              System.import('containers/Publishing'),
             ]);
-
+            
             const renderRoute = loadModule(cb);
-
-            importModules.then(([postEditorReducer, postEditorSagas, component]) => {
-              injectReducer('postEditor', postEditorReducer.default);
-              injectSagas(postEditorSagas.default);
+            
+            importModules.then(([component]) => {
               renderRoute(component);
             });
-
+            
             importModules.catch(errorLoading);
           },
+          indexRoute: { onEnter: (nextState, replace) => replace(`/account/${nextState.params.account_id}/publishing/calendar`) },          
+        
+          childRoutes: [
+            {
+              path: '/account(/:account_id)/publishing/calendar',
+              name: 'calendar',
+              getComponent(nextState, cb) {
+                const importModules = Promise.all([
+                  System.import('containers/PostEditor/reducer'),
+                  System.import('containers/PostEditor/sagas'),
+                  System.import('containers/Calendar'),
+                ]);
+    
+                const renderRoute = loadModule(cb);
+    
+                importModules.then(([postEditorReducer, postEditorSagas, component]) => {
+                  injectReducer('postEditor', postEditorReducer.default);
+                  injectSagas(postEditorSagas.default);
+                  renderRoute(component);
+                });
+    
+                importModules.catch(errorLoading);
+              },
+            },
+            {
+              path: '/account(/:account_id)/publishing/boards',
+              name: 'board',
+              getComponent(nextState, cb) {
+                const importModules = Promise.all([
+                  System.import('containers/Board/reducer'),
+                  System.import('containers/Board/sagas'),
+                  System.import('containers/PostEditor/reducer'),
+                  System.import('containers/PostEditor/sagas'),
+                  System.import('containers/Board'),
+                ]);
+    
+                const renderRoute = loadModule(cb);
+    
+                importModules.then(([boardReducer, boardSagas, postEditorReducer, postEditorSagas, component]) => {
+                  injectReducer('board', boardReducer.default);
+                  injectReducer('postEditor', postEditorReducer.default);
+                  injectSagas(boardSagas.default.concat(postEditorSagas.default));
+                  renderRoute(component);
+                });
+    
+                importModules.catch(errorLoading);
+              },
+            },
+            {
+              path: '/account(/:account_id)/publishing/social_feeds',
+              name: 'Social Feeds',
+              getComponent(nextState, cb) {
+                const importModules = Promise.all([
+                  System.import('containers/SocialFeeds'),
+                ]);
+                const renderRoute = loadModule(cb);
+                
+                importModules.then(([component]) => {
+                  renderRoute(component);
+                });
+                
+                importModules.catch(errorLoading);
+              },
+              childRoutes: [
+              {
+                path: '/account(/:account_id)/publishing/social_feeds/feed/:connection_id',
+                name: 'Social Feed',
+                getComponent(nextState, cb) {
+                  const importModules = Promise.all([
+                    System.import('containers/Feed/reducer'),
+                    System.import('containers/Feed/sagas'),
+                    System.import('containers/Feed'),
+                  ]);
+      
+                  const renderRoute = loadModule(cb);
+      
+                  importModules.then(([reducer, sagas, component]) => {
+                    injectReducer('feed', reducer.default);
+                    injectSagas(sagas.default);
+                    renderRoute(component);
+                  });
+      
+                  importModules.catch(errorLoading);
+                },
+              },  
+          ]
         },
-        {
-          path: '/account(/:account_id)/feed/:connection_id',
-          name: 'Social Feed',
-          getComponent(nextState, cb) {
-            const importModules = Promise.all([
-              System.import('containers/Feed/reducer'),
-              System.import('containers/Feed/sagas'),
-              System.import('containers/Feed'),
-            ]);
-
-            const renderRoute = loadModule(cb);
-
-            importModules.then(([reducer, sagas, component]) => {
-              injectReducer('feed', reducer.default);
-              injectSagas(sagas.default);
-              renderRoute(component);
-            });
-
-            importModules.catch(errorLoading);
-          },
-        },
-        {
-          path: '/account(/:account_id)/boards',
-          name: 'board',
-          getComponent(nextState, cb) {
-            const importModules = Promise.all([
-              System.import('containers/Board/reducer'),
-              System.import('containers/Board/sagas'),
-              System.import('containers/PostEditor/reducer'),
-              System.import('containers/PostEditor/sagas'),
-              System.import('containers/Board'),
-            ]);
-
-            const renderRoute = loadModule(cb);
-
-            importModules.then(([boardReducer, boardSagas, postEditorReducer, postEditorSagas, component]) => {
-              injectReducer('board', boardReducer.default);
-              injectReducer('postEditor', postEditorReducer.default);
-              injectSagas(boardSagas.default.concat(postEditorSagas.default));
-              renderRoute(component);
-            });
-
-            importModules.catch(errorLoading);
-          },
+          ],
         },
         {
           path: '/account(/:account_id)/statistics',

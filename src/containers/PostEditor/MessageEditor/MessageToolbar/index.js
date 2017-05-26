@@ -9,6 +9,8 @@ import LimitIndicator from './LimitIndicator';
 function MessageToolbar({ characterLimit, openFilePicker, accountId, pushToLibrary, postSetId, openLinkDialog, openMediaLibrary }) {
   return (
     <Wrapper>
+      <ToolbarButton width={30} marginLeft={12} marginRight={12} onClick={openMediaLibrary}><i className="fa fa-database" /></ToolbarButton>
+      <Divider />
       <ToolbarButton width={30} marginLeft={12} onClick={openFilePicker}><i className="fa fa-upload" /></ToolbarButton>
       <ToolbarButton width={30} marginRight={12} onClick={openLinkDialog}><i className="fa fa-link" /></ToolbarButton>
       <Divider />

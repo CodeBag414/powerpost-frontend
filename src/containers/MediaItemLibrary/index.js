@@ -61,6 +61,8 @@ import {
   makeSelectFilePickerKey,
 } from 'containers/App/selectors';
 
+import Wrapper from './Wrapper';
+
 const DropDownMenu = styled(DropdownMenu)`
  .dd-menu-items {
     z-index: 3333;
@@ -91,7 +93,7 @@ const NormalHR = styled.hr`
 const ContentWrapper = styled.div`
   float: right;
   width: calc(100% - 177px);
-  padding: 10px
+  height: 100%;
 `;
 
 const SidebarWrapper = styled.div`
@@ -187,7 +189,7 @@ class Library extends React.Component {
         maxFiles: 1, 
         imageQuality: 80, 
         imageMax: [1200, 1200], 
-        services: [ 'COMPUTER', 'WEBCAM', 'VIDEO', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
+        services: [ 'CONVERT','COMPUTER', 'WEBCAM', 'VIDEO', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
         conversions: ['crop', 'filter'],
     }; 
     const filePickerStoreOptions = {
@@ -424,7 +426,7 @@ class Library extends React.Component {
     };
     
     return (
-      <div>
+      <Wrapper>
         <SidebarWrapper>
           <div style={{display: 'block', textAlign: 'center'}}>
           <DropDownMenu {...menuOptions} >
@@ -457,7 +459,7 @@ class Library extends React.Component {
          <div className="post-editor">
           { postsetId ? <PostEditor id={postsetId} accountId={this.props.params.account_id} location={this.props.location} /> : null}
         </div>
-      </div>
+      </Wrapper>
     );
   }
 }

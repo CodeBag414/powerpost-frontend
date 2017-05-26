@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  padding: 40px;
+  padding: 80px 40px 40px;
   .active-link {
     a {
       color: #424647 !important;

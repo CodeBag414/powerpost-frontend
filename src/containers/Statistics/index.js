@@ -74,6 +74,10 @@ class Statistics extends React.Component {
     const { channelFilter, channelType } = this.props;
     return connections.filter((connection) => {
       let matched = true;
+      if (connection.status !== '1') {
+        return false;
+      }
+
       if (channelFilter) {
         matched = matched && (connection.display_name.toLowerCase().indexOf(channelFilter.toLowerCase()) > -1);
       }
