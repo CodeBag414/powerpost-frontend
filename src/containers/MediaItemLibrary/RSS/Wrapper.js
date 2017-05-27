@@ -4,7 +4,7 @@ const Wrapper = styled.div`
   padding: 13px 23px;
   .container {
     margin: 0 auto;
-    width: 60%;
+    max-width: 800px;
 
     .header {
       display: flex;
