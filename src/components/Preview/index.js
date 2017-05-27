@@ -1,29 +1,16 @@
-import React, { PropTypes } from 'react';
-import Wrapper from './Wrapper';
+import React from 'react';
+import PropTypes from 'prop-types';
+import VideoPlayer from 'react-player';
 import styled from 'styled-components';
-import FontIcon from 'react-toolbox/lib/font_icon';
+import renderHTML from 'react-render-html';
+
+import Wrapper from './Wrapper';
 
 const Image = styled.img`
   max-width: 100%;
   height: auto;
   width: auto;
   max-height: 100%;
-`;
-
-const ImageWrapper = styled.div`
-  text-align: center;
-`;
-
-const Title = styled.span`
-  display: inline-block;
-  vertical-align: top;
-  font-size: 18px;
-  margin-left: 5px;
-  white-space: nowrap;
-  overflow: hidden;
-  -o-text-overflow: ellipsis;
-  text-overflow:    ellipsis;
-  width: 90%;
 `;
 
 const LinkTitle = styled.div`
@@ -35,6 +22,7 @@ const LinkTitle = styled.div`
   font-weight: 700;
   font-size: 15px;
   text-align: left;
+  margin-top: 15px;
 `;
 
 const LinkDescription = styled.div`
@@ -60,52 +48,55 @@ const LinkUrl = styled.div`
   color: #8C9496;
 `;
 
-const Preview = (props) => {
-  console.log(props.item);
-  const title = props.item.properties.title || props.item.properties.filename || props.item.properties.description;
-  const titleWithType = `${title} (${props.item.type})`;
-  let icon = 'photo';
-  if (props.item.type === 'link') {
-    icon = 'link';
-  } else if (props.item.type === 'video') {
-    icon = 'videocam';
-  } else if (props.item.type === 'blog') {
-    icon = 'description';
-  }
-  
+const Preview = ({ item }) => {
+  const type = item.type;
+
   let image = '';
-  if (props.item.type === 'image' || props.item.type === 'link') {
-    image = props.item.properties.thumb_url;
+  switch (type) {
+    case 'link':
+      image = item.properties.picture;
+      break;
+    case 'image':
+      image = item.properties.thumb_url || item.properties.source_url;
+      break;
+    case 'video':
+    case 'blog':
+    default:
+      image = '';
+      break;
   }
-  
-  return(
+
+  return (
     <Wrapper>
-      <div style={{height: '24px', marginBottom: '10px'}}>
-      <FontIcon value={icon} /><Title>{titleWithType}</Title>
-      </div>
-      <ImageWrapper>
-        {props.item.type === 'video' && 
-          <video width='100%' height='auto' controls>
-          <source src={props.item.properties.source_url} type="video/mp4" />
-          </video>
-        }
-        {props.item.type !== 'video' && 
-          <Image src={image} /> 
-        }
-        {props.item.type == 'link' &&
-          <div>
-            <LinkTitle>{props.item.properties.description}</LinkTitle>
-            <LinkDescription>{props.item.properties.caption}</LinkDescription>
-            <LinkUrl>{props.item.properties.link}</LinkUrl>
-          </div>
-        }
-      </ImageWrapper>
+      {type === 'video' &&
+        <div>
+          <LinkTitle style={{ marginBottom: '10px' }}>{item.properties.filename}</LinkTitle>
+          <VideoPlayer
+            style={{ margin: '0 auto' }}
+            width={'initial'}
+            height={'initial'}
+            url={item.properties.source_url}
+            controls
+            playing
+          />
+        </div>
+      }
+      {type === 'link' &&
+        <div>
+          <Image src={image} />
+          <LinkTitle>{item.properties.title}</LinkTitle>
+          <LinkDescription>{item.properties.description}</LinkDescription>
+          <LinkUrl>{item.properties.link}</LinkUrl>
+        </div>
+      }
+      {type === 'image' && <Image src={image} />}
+      {type === 'blog' && renderHTML(item.properties.html)}
     </Wrapper>
   );
 };
 
 Preview.propTypes = {
-  item: PropTypes.object,
+  item: PropTypes.shape(),
 };
 
 export default Preview;
