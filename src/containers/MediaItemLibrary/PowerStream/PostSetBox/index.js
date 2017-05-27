@@ -8,6 +8,7 @@ import PostSetList from './PostSetList';
 
 class PostSetBox extends Component {
   static propTypes = {
+    owned: PropTypes.bool,
     postSets: ImmutablePropTypes.list,
     streamName: PropTypes.string,
   }
@@ -23,7 +24,7 @@ class PostSetBox extends Component {
   }
 
   render() {
-    const { postSets, streamName } = this.props;
+    const { owned, postSets, streamName } = this.props;
     const { currentPostSetIndex } = this.state;
 
     return (
@@ -35,6 +36,7 @@ class PostSetBox extends Component {
           handleSelectPostSet={this.handleSelectPostSet}
         />
         <PostSetDetail
+          owned={owned}
           postSet={postSets.get(currentPostSetIndex)}
         />
       </Wrapper>

@@ -35,7 +35,7 @@ function MediaItemThumb({ size, type, mediaItems }) {
     empty = true;
     faIcon = mediaItemIcon[type];
   } else {
-    imgUrl = mediaItems.getIn([0, 'properties', 'thumb_url']) || mediaItems.getIn([0, 'properties', 'source_url']);
+    imgUrl = mediaItems.getIn([0, 'properties', 'thumb_url']) || mediaItems.getIn([0, 'properties', 'picture']);
   }
   return (
     <Wrapper

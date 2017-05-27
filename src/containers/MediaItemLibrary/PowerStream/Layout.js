@@ -28,7 +28,7 @@ class PowerStreamLayout extends Component {
     streamId: PropTypes.string,
     userAccount: PropTypes.object,
     postSets: ImmutablePropTypes.list,
-    fetchStreamPostSets: PropTypes.func,
+    fetchStreamPostSets: PropTypes.func,  // eslint-disable-line
   }
 
   componentWillMount() {
@@ -74,7 +74,8 @@ class PowerStreamLayout extends Component {
       );
     }
 
-    const streams = streamCategory === 'owned' ?
+    const owned = streamCategory === 'owned';
+    const streams = owned ?
       userAccount.account_streams : userAccount.shared_streams;
 
     const tabs = streams.map((s) => ({
@@ -86,8 +87,12 @@ class PowerStreamLayout extends Component {
 
     return (
       <Wrapper>
-        <TabBar tabs={tabs} />
+        <TabBar
+          owned={owned}
+          tabs={tabs}
+        />
         <PostSetBox
+          owned={owned}
           postSets={postSets.get('data')}
           streamName={streamName}
         />
