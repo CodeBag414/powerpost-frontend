@@ -1,9 +1,11 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  margin: 10px 0;
-  font-family: Lato;
-  text-align: center;
+  position: absolute;
+  top: 60px;
+  bottom: 0;
+  left: 0;
+  right: 0;
 `;
 
 export default Wrapper;
