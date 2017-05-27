@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 import styled from 'styled-components';
 import VideoPlayer from 'react-player';
 import renderHTML from 'react-render-html';
@@ -97,7 +97,7 @@ function MediaItemPreview({ mediaItems }) {
 }
 
 MediaItemPreview.propTypes = {
-  mediaItems: PropTypes.arrayOf(PropTypes.shape()),
+  mediaItems: ImmutablePropTypes.list,
 };
 
 export default MediaItemPreview;

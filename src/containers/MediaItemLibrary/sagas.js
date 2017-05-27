@@ -39,7 +39,13 @@ import {
   DELETE_MEDIA_ITEM_SUCCESS,
   UPDATE_MEDIA_ITEM,
   UPDATE_MEDIA_ITEM_SUCCESS,
+  FETCH_STREAM_POST_SETS_REQUEST,
 } from './constants';
+
+import {
+  fetchStreamPostSetsSuccess,
+  fetchStreamPostSetsFailure,
+} from './actions';
 
 export function* getCollections(action) {
   const accountId = action.accountId;
@@ -300,6 +306,28 @@ export function* errorWatcher() {
   const watcher = yield takeLatest(MEDIA_ERROR, showError);
   
 }
+
+export function* fetchStreamPostSetsWorker({ id, payload }) {
+  try {
+    const params = serialize({ payload });
+    const requestUrl = `/post_api/post_sets/${id}?${params}`;
+    const { data } = yield call(getData, requestUrl);
+
+    if (data.status === 'success') {
+      const postSets = data.post_sets;
+      yield put(fetchStreamPostSetsSuccess(postSets));
+    } else {
+      throw data.message;
+    }
+  } catch (error) {
+    yield put(fetchStreamPostSetsFailure(error));
+  }
+}
+
+export function* fetchStreamPostSetsWatcher() {
+  yield takeLatest(FETCH_STREAM_POST_SETS_REQUEST, fetchStreamPostSetsWorker);
+}
+
 export default [
   collectionData,
   linkData,
@@ -312,6 +340,7 @@ export default [
   watchPollData,
   updateMedia,
   errorWatcher,
+  fetchStreamPostSetsWatcher,
 ];
 
 const delay = (millis) => {  
