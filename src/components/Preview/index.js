@@ -4,6 +4,8 @@ import VideoPlayer from 'react-player';
 import styled from 'styled-components';
 import renderHTML from 'react-render-html';
 
+import Button from 'elements/atm.Button';
+
 import Wrapper from './Wrapper';
 
 const Image = styled.img`
@@ -48,13 +50,29 @@ const LinkUrl = styled.div`
   color: #8C9496;
 `;
 
+const DocumentWrapper = styled.div`
+  display: flex;
+`;
+
+const download = (url) => {
+  setTimeout(() => {
+    const response = {
+      file: url,
+    };
+    window.open(response.file);
+  }, 100);
+};
+
 const Preview = ({ item }) => {
   const type = item.type;
 
   let image = '';
+  let size = '';
   switch (type) {
     case 'link':
+    case 'document':
       image = item.properties.picture;
+      size = `${(item.properties.size / 1024 / 1024).toFixed(2)} MB`;
       break;
     case 'image':
       image = item.properties.thumb_url || item.properties.source_url;
@@ -91,6 +109,16 @@ const Preview = ({ item }) => {
       }
       {type === 'image' && <Image src={image} />}
       {type === 'blog' && renderHTML(item.properties.html)}
+      {type === 'document' &&
+        <DocumentWrapper>
+          <img src={image} role="presentation" style={{ width: '200px', height: '200px' }} />
+          <div style={{ padding: '30px' }}>
+            <LinkTitle>{item.properties.title}</LinkTitle>
+            <LinkDescription>{item.properties.description}</LinkDescription>
+            <Button label={`${size} Download`} style={{ marginTop: '20px' }} onClick={() => download(item.properties.source_url)} />
+          </div>
+        </DocumentWrapper>
+      }
     </Wrapper>
   );
 };

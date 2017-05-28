@@ -30,6 +30,9 @@ function PreviewDialog({ previewDialog, closeAllDialog, mediaItem }) {
     case 'file':
       iconName = 'fa-text-o';
       break;
+    case 'document':
+      iconName = 'fa-file-text-o';
+      break;
     default:
       iconName = '';
       break;
