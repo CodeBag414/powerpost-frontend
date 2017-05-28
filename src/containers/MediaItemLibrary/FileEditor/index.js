@@ -1,74 +1,95 @@
-import React from 'react';
-import Wrapper from './Wrapper';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import filepicker from 'filepicker-js';
+import { isEmpty } from 'lodash';
+
 import PPDialog from 'elements/atm.Dialog';
-import Input from 'react-toolbox/lib/input';
+import TextArea from 'elements/atm.TextArea';
+import PPTextField from 'elements/atm.TextField';
+import FontIcon from 'elements/atm.FontIcon';
 import Button from 'elements/atm.Button';
+import SimpleButton from 'elements/atm.SimpleButton';
+
+import theme from 'theme';
+
+import Wrapper from './Wrapper';
 import LargeImageWrapper from './LargeImageWrapper';
+import HeadingWrapper from './HeadingWrapper';
+import BodyWrapper from './BodyWrapper';
+import FooterWrapper from './FooterWrapper';
 
 
-class FileEditor extends React.Component {
+class FileEditor extends Component {
+  static propTypes = {
+    fileItem: PropTypes.shape(),
+    isOpen: PropTypes.bool,
+    filePickerKey: PropTypes.string,
+    handleSave: PropTypes.func,
+    closeAllDialog: PropTypes.func,
+  }
+
   constructor(props) {
     super(props);
-    
+
     this.state = {
-      titleValue: this.props.fileItem.properties && this.props.fileItem.properties.title || '',
-      descriptionValue: this.props.fileItem.properties && this.props.fileItem.properties.description || '',
-      selectedImage: false,
+      titleValue: (props.fileItem.properties && props.fileItem.properties.title) || '',
+      descriptionValue: (props.fileItem.properties && props.fileItem.properties.description) || '',
+      source: false,
+      selectedImage: {},
     };
-    
+
     this.prepareItem = this.prepareItem.bind(this);
     this.removeCoverImage = this.removeCoverImage.bind(this);
     this.openFilePicker = this.openFilePicker.bind(this);
     this.handleFilePickerSuccess = this.handleFilePickerSuccess.bind(this);
   }
-  
+
   componentWillReceiveProps(nextProps) {
     if (!this.state.titleValue && nextProps.fileItem.properties && nextProps.fileItem.properties.title) {
       this.setState({ titleValue: nextProps.fileItem.properties.title });
     }
     if (!this.state.descriptionValue && nextProps.fileItem.properties && nextProps.fileItem.properties.description) {
-      this.setState({ descriptionValue: nextProps.fileItem.properties.description});
+      this.setState({ descriptionValue: nextProps.fileItem.properties.description });
     }
     if (!this.state.source && nextProps.fileItem.properties) {
       this.setState({ source: nextProps.fileItem.source_url || nextProps.fileItem.properties.url });
     }
-    if (nextProps.fileItem.properties && nextProps.fileItem.properties.picture && !this.state.selectedImage) {
-      this.setState({ selectedImage: {url:nextProps.fileItem.properties.picture} });
+    if (nextProps.fileItem.properties && nextProps.fileItem.properties.picture) {
+      this.setState({ selectedImage: { url: nextProps.fileItem.properties.picture } });
     }
     if (!nextProps.isOpen) {
-     this.setState({
-        selectedImage: false,
+      this.setState({
+        selectedImage: '',
         titleValue: '',
         descriptionValue: '',
+        source: false,
       });
     }
   }
-  
+
   handleInputChange = (name, value) => {
-    this.setState({...this.state, [name]: value});
+    this.setState({ ...this.state, [name]: value });
   };
-  
+
   removeCoverImage() {
-    this.setState({ selectedImage: {} });
+    this.setState({ selectedImage: {}, selectedImageIndex: -1 });
   }
 
-  
   prepareItem() {
     let Item = {};
     if (this.props.fileItem.media_item_id) {
-      const {properties, ...rest} = this.props.fileItem;
-      const {title, description, ...other} = properties;
+      const { properties, ...rest } = this.props.fileItem;
+      const { title, description, ...other } = properties;
       Item = {
         action: 'update',
         properties: {
           ...other,
           title: this.state.titleValue || title || '',
           description: this.state.descriptionValue || description || '',
-          picture: this.state.selectedImage.url,
+          picture: this.state.selectedImage.url || '',
         },
         ...rest,
       };
-      console.log(Item);
     } else {
       Item = {
         action: 'create',
@@ -76,86 +97,119 @@ class FileEditor extends React.Component {
         properties: {
           title: this.state.titleValue,
           description: this.state.descriptionValue,
-          picture: this.state.selectedImage.url,
+          picture: this.state.selectedImage.url || '',
           ...this.props.fileItem.properties,
-        }
+        },
       };
     }
-    
+
     this.setState({
       titleValue: '',
       descriptionValue: '',
-      selectedImage: false,
+      selectedImage: {},
+      source: false,
     });
-      
-    console.log(Item);
+
     this.props.handleSave(Item);
   }
 
-  removeCoverImage() {
-    this.setState({ selectedImage: {} });
-  }
-  
   openFilePicker() {
-    const filepicker = require('filepicker-js');
     filepicker.setKey(this.props.filePickerKey);
-    
-    const filePickerOptions = { 
-      buttonText: 'Choose', 
-      container:'modal', 
+
+    const filePickerOptions = {
+      buttonText: 'Choose',
+      container: 'modal',
       multiple: false,
-      maxFiles: 1, 
-      imageQuality: 80, 
-      imageMax: [1200, 1200], 
-      services: [ 'COMPUTER', 'WEBCAM', 'VIDEO', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
+      maxFiles: 1,
+      imageQuality: 80,
+      imageMax: [1200, 1200],
+      services: ['COMPUTER', 'WEBCAM', 'VIDEO', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
       conversions: ['crop', 'filter'],
     };
     function onFail(error) {
-      console.log('error: ' + error);
+      console.log(`error: ${error}`);
     }
     filepicker.pick(filePickerOptions, this.handleFilePickerSuccess, onFail);
   }
-  
+
   handleFilePickerSuccess(mediaItem) {
-    this.setState({ selectedImage: mediaItem });
+    this.setState({ selectedImage: mediaItem, selectedImageIndex: -1 });
   }
-  
+
   render() {
-    return(
+    const { isOpen, closeAllDialog, fileItem } = this.props;
+    const { titleValue, descriptionValue, selectedImage } = this.state;
+
+    const fileName = (fileItem.properties && fileItem.properties.filename) || '';
+
+    return (
       <PPDialog
-        active={this.props.isOpen}
-        title='File Editor'
-        onEscKeyDown={this.props.closeAllDialog}
-        onOverlayClick={this.props.closeAllDialog}
-        actions={this.props.actions}
-        type="large"
+        active={isOpen}
+        onEscKeyDown={closeAllDialog}
+        onOverlayClick={closeAllDialog}
       >
-        <Wrapper>
-          <div className="row">
-            <div className="col-sm-6">
-              <h2>File Information</h2>
-              <Input type="text" value={this.state.titleValue} label="File Title" onChange={this.handleInputChange.bind(this, 'titleValue')} />
-              <Input type="text" multiline value={this.state.descriptionValue} label="File Description" onChange={this.handleInputChange.bind(this, 'descriptionValue')} />
-            </div>
-            <div className="col-md-6">
-              { this.state.selectedImage &&
-                <div style={{ textAlign: 'center' }}>
-                  <LargeImageWrapper src={ this.state.selectedImage.url } />
-                </div>
-              }
-              <div style={{ marginTop: '10px', textAlign: 'center', marginBottom: '10px' }}>
-                <Button label="Upload Cover Image" onClick={this.openFilePicker} primary style={{ margin: '5px' }}/>
-                { this.state.selectedImage &&
-                  <Button label="Remove Cover Image" onClick={this.removeCoverImage} style={{ margin: '5px' }}/>
-                }
+        {!isEmpty(fileItem) &&
+          <Wrapper>
+            <HeadingWrapper>
+              <div className="header-info">
+                <h3>Content Editor<span><i className="fa fa-file-text-o" />{fileName}</span></h3>
+                <button onClick={closeAllDialog}><FontIcon value="clear" /></button>
               </div>
-            </div>
-          </div>
-          <div style={{height: '60px', textAlign: 'right'}}>
-          <Button label="Save" primary onClick={this.prepareItem} style={{marginTop: '20px'}} />
-          </div>
-        </Wrapper>
-      </PPDialog>    
+              <p>Modify the file information below.</p>
+            </HeadingWrapper>
+            <BodyWrapper>
+              <div className="info-wrapper">
+                <PPTextField
+                  type="text"
+                  name="title"
+                  floatingLabelText="Title"
+                  value={titleValue}
+                  onChange={(e) => this.handleInputChange('titleValue', e.target.value)}
+                />
+                <TextArea
+                  floatingLabelText="Description"
+                  rows={3}
+                  value={descriptionValue}
+                  onChange={(e) => this.handleInputChange('descriptionValue', e.target.value)}
+                />
+              </div>
+              <div className="image-wrapper">
+                {selectedImage && selectedImage.url &&
+                  <div className="header">
+                    <p>Cover Image</p>
+                    <SimpleButton
+                      style={{ fontSize: '13px' }}
+                      color={theme.textColor}
+                      onClick={this.removeCoverImage}
+                      noBorder
+                    >
+                      Remove
+                    </SimpleButton>
+                  </div>
+                }
+                {selectedImage && selectedImage.url &&
+                  <div className="cover-image">
+                    <LargeImageWrapper src={selectedImage.url} />
+                  </div>
+                }
+                <SimpleButton
+                  style={{ fontSize: '13px' }}
+                  color={theme.textColor}
+                  onClick={this.openFilePicker}
+                  noBorder
+                >
+                  Upload New Cover Image
+                </SimpleButton>
+              </div>
+            </BodyWrapper>
+            <FooterWrapper>
+              <div className="button-wrapper">
+                <Button onClick={this.prepareItem} primary>Save Content</Button>
+              </div>
+            </FooterWrapper>
+          </Wrapper>
+        }
+      </PPDialog>
     );
   }
 }
