@@ -114,6 +114,7 @@ const Preview = ({ item }) => {
           <img src={image} role="presentation" style={{ width: '200px', height: '200px' }} />
           <div style={{ padding: '30px' }}>
             <LinkTitle>{item.properties.title}</LinkTitle>
+            <LinkDescription>{item.properties.description}</LinkDescription>
             <Button label={`${size} Download`} style={{ marginTop: '20px' }} onClick={() => download(item.properties.source_url)} />
           </div>
         </DocumentWrapper>
