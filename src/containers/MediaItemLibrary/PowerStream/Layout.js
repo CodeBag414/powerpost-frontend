@@ -9,6 +9,7 @@ import { find } from 'lodash';
 import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 
 import Loading from 'components/Loading';
+import CloseableDialog from 'elements/atm.CloseableDialog';
 
 import {
   fetchStreamPostSetsRequest,
@@ -20,6 +21,7 @@ import {
 import Wrapper from './Wrapper';
 import TabBar from './TabBar';
 import PostSetBox from './PostSetBox';
+import InviteForm from './InviteForm';
 
 class PowerStreamLayout extends Component {
   static propTypes = {
@@ -29,6 +31,10 @@ class PowerStreamLayout extends Component {
     userAccount: PropTypes.object,
     postSets: ImmutablePropTypes.list,
     fetchStreamPostSets: PropTypes.func,  // eslint-disable-line
+  }
+
+  state = {
+    shareDialogVisible: false,
   }
 
   componentWillMount() {
@@ -57,6 +63,16 @@ class PowerStreamLayout extends Component {
     });
   }
 
+  sendInvite = (email) => {
+
+  }
+
+  toggleShareDialog = () => {
+    this.setState({
+      shareDialogVisible: !this.state.shareDialogVisible,
+    });
+  }
+
   render() {
     const {
       postSets,
@@ -65,6 +81,9 @@ class PowerStreamLayout extends Component {
       streamCategory,
       streamId,
     } = this.props;
+    const {
+      shareDialogVisible,
+    } = this.state;
 
     if (postSets.get('isFetching')) {
       return (
@@ -90,12 +109,24 @@ class PowerStreamLayout extends Component {
         <TabBar
           owned={owned}
           tabs={tabs}
+          toggleShareDialog={this.toggleShareDialog}
         />
         <PostSetBox
           owned={owned}
           postSets={postSets.get('data')}
           streamName={streamName}
         />
+        <CloseableDialog
+          active={shareDialogVisible}
+          onEscKeyDown={this.toggleShareDialog}
+          onOverlayClick={this.toggleShareDialog}
+          onClose={this.toggleShareDialog}
+          title="Invite a new subscriber to Stream Name"
+        >
+          <InviteForm
+            handleSubmit={this.sendInvite}
+          />
+        </CloseableDialog>
       </Wrapper>
     );
   }

@@ -52,7 +52,7 @@ const PostSetDetail = ({
           { postSet.get('title') }
         </Title>
         <Button primary>
-          { owned ? 'Delete Post' : 'Add Post' }
+          { owned ? 'Remove from Stream' : 'Add to Posts' }
         </Button>
       </TitleRow>
       <UserAndTime>

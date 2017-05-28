@@ -24,7 +24,7 @@ const ShareButton = styled.div`
   }
 `;
 
-const TabBar = ({ owned, tabs }) => (
+const TabBar = ({ owned, tabs, toggleShareDialog }) => (
   <Wrapper>
     <div>
       {
@@ -36,7 +36,7 @@ const TabBar = ({ owned, tabs }) => (
       }
     </div>
     { owned &&
-      <ShareButton>
+      <ShareButton onClick={toggleShareDialog}>
         <i className="fa fa-share-alt" />
         Share Owned Stream
       </ShareButton>
@@ -52,6 +52,7 @@ TabBar.propTypes = {
       link: PropTypes.string.isRequired,
     })
   ).isRequired,
+  toggleShareDialog: PropTypes.func.isRequired,
 };
 
 export default TabBar;
