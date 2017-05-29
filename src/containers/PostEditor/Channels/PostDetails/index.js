@@ -51,7 +51,7 @@ function buildPostPreview(post, connection, mediaItems) {
       postToPreview = {
         ...post.toJS(),
         user: {
-          name: connection.display_name,
+          ...connection.properties.profile,
         },
         created_at: new Date(moment.unix(post.get('schedule_time'))),
         entities: {
