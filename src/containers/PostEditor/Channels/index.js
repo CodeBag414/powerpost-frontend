@@ -130,6 +130,7 @@ class Channels extends Component {
           <div className="right">
             <PostDetails
               post={currentPost}
+              postSet={postSet}
               postMessage={postMessage}
               postTime={postTime}
               connection={connection}

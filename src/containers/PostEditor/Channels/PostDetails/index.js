@@ -7,10 +7,43 @@ import moment from 'moment';
 
 import PPButton from 'elements/atm.Button';
 
+import FacebookBlock from 'containers/Feed/FacebookBlock';
+
 import MultiLineInput from 'components/MultiLineInput';
 import Wrapper from './Wrapper';
 
-function PostDetails({ post, postMessage, postTime, connection, handleRemoveSlot, handleDateChange, handleMessageChange, handleMessageBlur }) {
+function buildPostPreview(post, connection, mediaItems) {
+  // console.log('mediaItems', mediaItems);
+  let postToPreview = {};
+  let type = '';
+  let image = '';
+  let video = '';
+
+  switch (connection.channel) {
+    case 'facebook':
+      if (mediaItems && mediaItems.length) {
+        type = mediaItems[0].type;
+        if (type === 'image') {
+          image = mediaItems[0].properties.url;
+        }
+      } else {
+        type = 'status';
+      }
+      postToPreview = {
+        ...post.toJS(),
+        created_time: {
+          date: new Date(moment.unix(post.get('schedule_time'))),
+        },
+        type,
+        full_picture: image,
+      };
+      return <FacebookBlock post={postToPreview} connection={connection} isPreview />;
+    default:
+      return null;
+  }
+}
+
+function PostDetails({ post, postSet, postMessage, postTime, connection, handleRemoveSlot, handleDateChange, handleMessageChange, handleMessageBlur }) {
   const minDate = new Date();
   minDate.setDate(minDate.getDate() - 1);
   return (
@@ -36,7 +69,7 @@ function PostDetails({ post, postMessage, postTime, connection, handleRemoveSlot
       <div className="section-title modify-content">
         Modify Content
       </div>
-      <div className="channel-summary">
+      {/* <div className="channel-summary">
         <i className={connection.channel_icon} />
         <div className="summary-right">
           <span className="channel-name">{connection.display_name}</span>
@@ -48,19 +81,26 @@ function PostDetails({ post, postMessage, postTime, connection, handleRemoveSlot
             }
           </span>
         </div>
-      </div>
+      </div> */}
       <MultiLineInput
         hasBorder
         message={postMessage}
         handleMessageChange={handleMessageChange}
         onBlur={handleMessageBlur}
       />
+      <div className="section-title post-preview-title">
+        Preview Post
+      </div>
+      <div className="post-preview">
+        {buildPostPreview(post, connection, postSet.getIn(['details', 'media_items']).toJS())}
+      </div>
     </Wrapper>
   );
 }
 
 PostDetails.propTypes = {
   post: ImmutablePropTypes.map,
+  postSet: ImmutablePropTypes.map,
   connection: PropTypes.object,
   handleDateChange: PropTypes.func,
   handleMessageChange: PropTypes.func,
