@@ -8,27 +8,31 @@ import moment from 'moment';
 import PPButton from 'elements/atm.Button';
 
 import FacebookBlock from 'containers/Feed/FacebookBlock';
+import TwitterBlock from 'containers/Feed/TwitterBlock';
 
 import MultiLineInput from 'components/MultiLineInput';
 import Wrapper from './Wrapper';
 
 function buildPostPreview(post, connection, mediaItems) {
-  // console.log('mediaItems', mediaItems);
+  // console.log('PostPreview post', post.toJS());
   let postToPreview = {};
   let type = '';
   let image = '';
   let video = '';
 
+  if (mediaItems && mediaItems.length) {
+    type = mediaItems[0].type;
+    if (type === 'image') {
+      image = mediaItems[0].properties.url;
+    }
+  } else {
+    type = 'status';
+  }
+
+  // console.log('mediaItems', image);
+
   switch (connection.channel) {
     case 'facebook':
-      if (mediaItems && mediaItems.length) {
-        type = mediaItems[0].type;
-        if (type === 'image') {
-          image = mediaItems[0].properties.url;
-        }
-      } else {
-        type = 'status';
-      }
       postToPreview = {
         ...post.toJS(),
         created_time: {
@@ -38,6 +42,25 @@ function buildPostPreview(post, connection, mediaItems) {
         full_picture: image,
       };
       return <FacebookBlock post={postToPreview} connection={connection} isPreview />;
+    case 'twitter': {
+      const mediaUrl = type === 'image' && image;
+      const media = [{
+        url: mediaUrl,
+        media_url: mediaUrl,
+      }];
+      postToPreview = {
+        ...post.toJS(),
+        user: {
+          name: connection.display_name,
+        },
+        created_at: new Date(moment.unix(post.get('schedule_time'))),
+        entities: {
+          media,
+        },
+        text: `${post.get('message')}${mediaUrl || ''}`,
+      };
+      return <TwitterBlock post={postToPreview} connection={connection} index="0" isPreview />;
+    }
     default:
       return null;
   }
