@@ -5,6 +5,12 @@ import { fromJS } from 'immutable';
 import { combineReducers } from 'redux';
 
 import {
+  UPDATE_POST_SET_REQUEST,
+  UPDATE_POST_SET_SUCCESS,
+  UPDATE_POST_SET_ERROR,
+} from 'containers/App/constants';
+
+import {
    FETCH_COLLECTIONS_SUCCESS,
    FETCH_MEDIA_ITEMS_SUCCESS,
    FETCH_MEDIA_ITEMS_ERROR,
@@ -32,6 +38,9 @@ import {
   FETCH_STREAM_POST_SETS_REQUEST,
   FETCH_STREAM_POST_SETS_SUCCESS,
   FETCH_STREAM_POST_SETS_FAILURE,
+  INVITE_EMAIL_TO_STREAM_REQUEST,
+  INVITE_EMAIL_TO_STREAM_SUCCESS,
+  INVITE_EMAIL_TO_STREAM_FAILURE,
 } from './constants';
 
 // The initial application state
@@ -66,6 +75,16 @@ const initialState = fromJS({
     isFetching: false,
     data: [],
     error: '',
+  },
+  postSet: {
+    processing: false,
+    data: {},
+    error: null,
+  },
+  emailInvited: {
+    processing: false,
+    data: {},
+    error: null,
   },
 });
 
@@ -142,6 +161,31 @@ function mediaLibraryReducer(state = initialState, action) {
       return state
         .setIn(['postSets', 'isFetching'], false)
         .setIn(['postSets', 'error'], 'Fetching Stream Failure');
+    case UPDATE_POST_SET_REQUEST:
+      return state
+        .setIn(['postSet', 'processing'], true);
+    case UPDATE_POST_SET_SUCCESS:
+      return state
+        .setIn(['postSet', 'processing'], false)
+        .setIn(['postSet', 'data'], fromJS(action.payload))
+        .updateIn(['postSets', 'data'], (postSets) =>
+          postSets.filter((p) => p.get('post_set_id') !== action.payload.post_set_id)
+        );
+    case UPDATE_POST_SET_ERROR:
+      return state
+        .setIn(['postSet', 'processing'], false)
+        .setIn(['postSet', 'error'], action.payload);
+    case INVITE_EMAIL_TO_STREAM_REQUEST:
+      return state
+        .setIn(['emailInvited', 'processing'], true);
+    case INVITE_EMAIL_TO_STREAM_SUCCESS:
+      return state
+        .setIn(['emailInvited', 'processing'], false)
+        .setIn(['emailInvited', 'data'], fromJS(action.payload));
+    case INVITE_EMAIL_TO_STREAM_FAILURE:
+      return state
+        .setIn(['emailInvited', 'processing'], false)
+        .setIn(['emailInvited', 'error'], action.payload);
     default:
       return state;
   }

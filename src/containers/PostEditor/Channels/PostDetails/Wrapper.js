@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  width: 372px;
+  width: 450px;
   .section-title {
     color: #616669;
     font-family: Lato;
@@ -28,6 +28,10 @@ const Wrapper = styled.div`
 
   .modify-content {
     margin-top: 28px;
+  }
+
+  .post-preview-title {
+    margin-top: 40px;
   }
 
   div[data-react-toolbox=input] {
