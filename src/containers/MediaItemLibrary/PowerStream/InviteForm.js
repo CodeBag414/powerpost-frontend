@@ -36,6 +36,11 @@ class InviteForm extends Component {
     });
   }
 
+  onSubmit = () => {
+    const { handleSubmit } = this.props;
+    handleSubmit(this.state.email);
+  }
+
   render() {
     const { email } = this.state;
 
@@ -51,7 +56,12 @@ class InviteForm extends Component {
             onChange={this.onFieldChange}
           />
         </div>
-        <PPButton label="Send Invite" primary disabled={!email} />
+        <PPButton
+          label="Send Invite"
+          primary
+          disabled={!email}
+          onClick={this.onSubmit}
+        />
       </Wrapper>
     );
   }

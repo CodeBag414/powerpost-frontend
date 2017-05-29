@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { browserHistory } from 'react-router';
-import { find } from 'lodash';
+import { find, filter } from 'lodash';
+
+import { toastr } from 'lib/react-redux-toastr';
 
 import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 
@@ -12,10 +14,17 @@ import Loading from 'components/Loading';
 import CloseableDialog from 'elements/atm.CloseableDialog';
 
 import {
+  updatePostSetRequest,
+} from 'containers/App/actions';
+
+import {
   fetchStreamPostSetsRequest,
+  inviteEmailToStreamRequest,
 } from '../actions';
 import {
   makeSelectPostSets,
+  makeSelectPostSet,
+  makeSelectEmailInvited,
 } from '../selectors';
 
 import Wrapper from './Wrapper';
@@ -29,8 +38,12 @@ class PowerStreamLayout extends Component {
     streamCategory: PropTypes.string,
     streamId: PropTypes.string,
     userAccount: PropTypes.object,
-    postSets: ImmutablePropTypes.list,
+    postSets: ImmutablePropTypes.map,
+    postSet: ImmutablePropTypes.map,
+    emailInvited: ImmutablePropTypes.map,
     fetchStreamPostSets: PropTypes.func,  // eslint-disable-line
+    updatePostSet: PropTypes.func,
+    inviteEmailToStream: PropTypes.func,
   }
 
   state = {
@@ -44,6 +57,20 @@ class PowerStreamLayout extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.streamId !== nextProps.streamId) {
       this.changeStreamLink(nextProps);
+    }
+
+    if (this.props.postSet.get('error') !== nextProps.postSet.get('error')) {
+      if (nextProps.postSet.get('error')) {
+        toastr.error('The post has not been deleted from the stream.');
+      } else {
+        toastr.success('Success', 'The post has been deleted from the stream');
+      }
+    }
+
+    if (this.props.emailInvited.get('error') !== nextProps.emailInvited.get('error')) {
+      if (!nextProps.emailInvited.get('error')) {
+        this.toggleShareDialog();
+      }
     }
   }
 
@@ -63,8 +90,29 @@ class PowerStreamLayout extends Component {
     });
   }
 
-  sendInvite = (email) => {
+  handlePostSet = (removing, postSet) => {
+    const { updatePostSet, streamId } = this.props;
+    const postSetObj = postSet.toJS();
+    if (removing) {
+      console.log('---//', filter(postSetObj.stream_ids || [], (id) => id !== streamId));
+      updatePostSet({
+        ...postSetObj,
+        id: postSetObj.post_set_id,
+        stream_ids: filter(postSetObj.stream_ids || [], (id) => id !== streamId),
+      }, 'powerstream');
+    } else {
 
+    }
+  }
+
+  sendInvite = (email) => {
+    const { inviteEmailToStream, streamId } = this.props;
+
+    inviteEmailToStream({
+      stream_id: streamId,
+      email,
+      message: 'Invite to my stream',
+    });
   }
 
   toggleShareDialog = () => {
@@ -115,6 +163,7 @@ class PowerStreamLayout extends Component {
           owned={owned}
           postSets={postSets.get('data')}
           streamName={streamName}
+          handlePostSet={this.handlePostSet}
         />
         <CloseableDialog
           active={shareDialogVisible}
@@ -134,10 +183,14 @@ class PowerStreamLayout extends Component {
 
 const mapStateToProps = createStructuredSelector({
   postSets: makeSelectPostSets(),
+  postSet: makeSelectPostSet(),
+  emailInvited: makeSelectEmailInvited(),
 });
 
 const mapDispatchToProps = {
   fetchStreamPostSets: fetchStreamPostSetsRequest,
+  updatePostSet: updatePostSetRequest,
+  inviteEmailToStream: inviteEmailToStreamRequest,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserCanAccount(PowerStreamLayout));

@@ -44,6 +44,7 @@ const Message = styled.div`
 const PostSetDetail = ({
   owned,
   postSet,
+  handlePostSet,
 }) => (
   <Wrapper>
     <Content>
@@ -51,7 +52,10 @@ const PostSetDetail = ({
         <Title>
           { postSet.get('title') }
         </Title>
-        <Button primary>
+        <Button
+          primary
+          onClick={() => handlePostSet(owned, postSet)}
+        >
           { owned ? 'Remove from Stream' : 'Add to Posts' }
         </Button>
       </TitleRow>
@@ -71,6 +75,7 @@ const PostSetDetail = ({
 PostSetDetail.propTypes = {
   owned: PropTypes.bool,
   postSet: ImmutablePropTypes.map,
+  handlePostSet: PropTypes.func,
 };
 
 PostSetDetail.defaultProps = {

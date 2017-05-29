@@ -13,6 +13,7 @@ class PostSetBox extends Component {
     owned: PropTypes.bool,
     postSets: ImmutablePropTypes.list,
     streamName: PropTypes.string,
+    handlePostSet: PropTypes.func,
   }
 
   state = {
@@ -26,7 +27,7 @@ class PostSetBox extends Component {
   }
 
   render() {
-    const { owned, postSets, streamName } = this.props;
+    const { owned, postSets, streamName, handlePostSet } = this.props;
     const { currentPostSetIndex } = this.state;
 
     if (postSets.isEmpty()) {
@@ -50,6 +51,7 @@ class PostSetBox extends Component {
         <PostSetDetail
           owned={owned}
           postSet={postSets.get(currentPostSetIndex)}
+          handlePostSet={handlePostSet}
         />
       </Wrapper>
     );

@@ -40,11 +40,14 @@ import {
   UPDATE_MEDIA_ITEM,
   UPDATE_MEDIA_ITEM_SUCCESS,
   FETCH_STREAM_POST_SETS_REQUEST,
+  INVITE_EMAIL_TO_STREAM_REQUEST,
 } from './constants';
 
 import {
   fetchStreamPostSetsSuccess,
   fetchStreamPostSetsFailure,
+  inviteEmailToStreamSuccess,
+  inviteEmailToStreamFailure,
 } from './actions';
 
 export function* getCollections(action) {
@@ -328,6 +331,28 @@ export function* fetchStreamPostSetsWatcher() {
   yield takeLatest(FETCH_STREAM_POST_SETS_REQUEST, fetchStreamPostSetsWorker);
 }
 
+export function* inviteEmailToStreamSaga() {
+  for (;;) {
+    const { payload } = yield take(INVITE_EMAIL_TO_STREAM_REQUEST);
+    let data;
+    try {
+      const response = yield call(postData, '/account_api/invite_email_to_stream', { payload });
+      if (response.data.status !== 'success') {
+        throw Error('Status Wrong!');
+      }
+      data = response.data;
+    } catch (error) {
+      yield put(inviteEmailToStreamFailure(error));
+      toastr.error(error.message || 'The email does not match a premium account owner');
+    }
+
+    if (data) {
+      yield put(inviteEmailToStreamSuccess(data.payload));
+      toastr.success('Success', 'An email invitation to subscribe to this shared stream has been sent.');
+    }
+  }
+}
+
 export default [
   collectionData,
   linkData,
@@ -341,6 +366,7 @@ export default [
   updateMedia,
   errorWatcher,
   fetchStreamPostSetsWatcher,
+  inviteEmailToStreamSaga,
 ];
 
 const delay = (millis) => {  
