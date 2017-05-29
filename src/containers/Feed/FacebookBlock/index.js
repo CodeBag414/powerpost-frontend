@@ -4,6 +4,8 @@ import moment from 'moment';
 import Link from 'react-toolbox/lib/link';
 import Linkify from 'react-linkify';
 
+import SocialIcon from 'elements/atm.SocialIcon';
+
 import Wrapper from './Wrapper';
 import Header from './Header';
 import Content from './Content';
@@ -35,7 +37,7 @@ class FacebookBlock extends Component {
             {post.avatar ?
               <img src={post.avatar} alt="Avatar" />
             :
-              <i className={connection.channel_icon} />
+              <SocialIcon icon={connection.channel_icon} />
             }
           </a>
           <div>
@@ -70,11 +72,11 @@ class FacebookBlock extends Component {
           }
         </Content>
         { !isPreview &&
-        <Footer>
-          <span className="fb-likes">{post.number_likes} {post.number_likes === 1 ? 'Like' : 'Likes'}</span>
-          <span>{post.number_comments} {post.number_comments === 1 ? 'Comment' : 'Comments'}</span>
-          <Link className="post-view-button" href={`//www.facebook.com/${post.id}`} target="_blank" label="View" icon="open_in_new" />
-        </Footer>
+          <Footer>
+            <span className="fb-likes">{post.number_likes} {post.number_likes === 1 ? 'Like' : 'Likes'}</span>
+            <span>{post.number_comments} {post.number_comments === 1 ? 'Comment' : 'Comments'}</span>
+            <Link className="post-view-button" href={`//www.facebook.com/${post.id}`} target="_blank" label="View" icon="open_in_new" />
+          </Footer>
         }
       </Wrapper>
     );
