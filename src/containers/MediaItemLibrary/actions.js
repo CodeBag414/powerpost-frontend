@@ -17,6 +17,9 @@ import {
   FETCH_STREAM_POST_SETS_REQUEST,
   FETCH_STREAM_POST_SETS_SUCCESS,
   FETCH_STREAM_POST_SETS_FAILURE,
+  INVITE_EMAIL_TO_STREAM_REQUEST,
+  INVITE_EMAIL_TO_STREAM_SUCCESS,
+  INVITE_EMAIL_TO_STREAM_FAILURE,
 } from './constants';
 
 export function fetchCollections(accountId) {
@@ -140,6 +143,27 @@ export function fetchStreamPostSetsSuccess(payload) {
 export function fetchStreamPostSetsFailure(payload) {
   return {
     type: FETCH_STREAM_POST_SETS_FAILURE,
+    payload,
+  };
+}
+
+export function inviteEmailToStreamRequest(payload) {
+  return {
+    type: INVITE_EMAIL_TO_STREAM_REQUEST,
+    payload,
+  };
+}
+
+export function inviteEmailToStreamSuccess(payload) {
+  return {
+    type: INVITE_EMAIL_TO_STREAM_SUCCESS,
+    payload,
+  };
+}
+
+export function inviteEmailToStreamFailure(payload) {
+  return {
+    type: INVITE_EMAIL_TO_STREAM_FAILURE,
     payload,
   };
 }

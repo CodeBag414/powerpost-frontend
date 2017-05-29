@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import Dialog from 'react-toolbox/lib/dialog';
 import { find } from 'lodash';
 
 import Loading from 'components/Loading';
@@ -9,6 +8,7 @@ import Dropdown from 'elements/atm.Dropdown';
 import Button from 'elements/atm.Button';
 import PPAvatar from 'elements/atm.Avatar';
 import IconMenu, { MenuItem } from 'elements/atm.IconMenu';
+import CloseableDialog from 'elements/atm.CloseableDialog';
 
 import {
   addUserToGroup,
@@ -95,25 +95,25 @@ export class UserCard extends Component {
             </IconMenu>
           </div>
         </div>
-        <Dialog
+        <CloseableDialog
           active={removeModalVisible}
           actions={this.removeUserActions}
           onEscKeyDown={this.toggleRemoveModal}
           onOverlayClick={this.toggleRemoveModal}
+          onClose={this.toggleRemoveModal}
           type="small"
           title={`Removing ${name}`}
         >
           <p>
             Are you sure that you want to delete this user?
           </p>
-          <div style={{ position: 'absolute', top: '30px', right: '25px', cursor: 'pointer' }} onClick={this.toggleModal}>&#10005;</div>
           <div style={{ float: 'right' }}>
             <span style={{ cursor: 'pointer', marginRight: '35px' }} onClick={this.toggleRemoveModal}>
               No, Cancel
             </span>
             <Button label="Yes, Delete" primary onClick={this.handleRemove} />
           </div>
-        </Dialog>
+        </CloseableDialog>
         { processing && <Loading /> }
       </Wrapper>
     );

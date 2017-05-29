@@ -124,6 +124,16 @@ const makeSelectPostSets = () => createSelector(
     (library) => library.get('postSets')
 );
 
+const makeSelectPostSet = () => createSelector(
+   selectLibrary,
+    (library) => library.get('postSet')
+);
+
+const makeSelectEmailInvited = () => createSelector(
+   selectLibrary,
+    (library) => library.get('emailInvited')
+);
+
 export {
     makeSelectActiveCollection,
     makeSelectUrlContent,
@@ -137,4 +147,6 @@ export {
     makeSelectProcessingItem,
     makeSelectActiveMediaItem,
     makeSelectPostSets,
+    makeSelectPostSet,
+    makeSelectEmailInvited,
 };
