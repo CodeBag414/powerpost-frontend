@@ -18,12 +18,22 @@ const Content = styled.div`
 `;
 
 const InfoWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
   flex: 1;
   width: 0;
   margin-right: 20px;
+  a {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+  }
+  a:hover{
+    text-decoration: none;
+  }
+  a:focus{
+    text-decoration: none;
+  }
 `;
 
 const Title = styled.p`
@@ -63,7 +73,11 @@ const ImageWrapper = styled.div`
   width: 160px;
   min-width: 160px;
   height: 120px;
-  display: flex;
+  a {
+    display: flex;
+    width: 100%;
+    height: 100%;
+  }
   img {
     max-width: 100%;
     height: auto;
@@ -74,16 +88,19 @@ const ImageWrapper = styled.div`
 `;
 
 function SearchItem({ item, handleClick }) {
+  console.log(item)
   return (
     <Wrapper type={item.media_type}>
       {item.media_type === 'link' &&
         <Content>
           <InfoWrapper>
-            <Title>{item.title}</Title>
-            <Intro>{renderHTML(item.description)}</Intro>
-            <SourceWrapper>
-              <p>{item.media_base_url}</p>
-            </SourceWrapper>
+            <a href={item.source_url} target="_blank">
+              <Title>{item.title}</Title>
+              <Intro>{renderHTML(item.description)}</Intro>
+              <SourceWrapper>
+                <p>{item.media_base_url}</p>
+              </SourceWrapper>
+            </a>
           </InfoWrapper>
           <Button
             label="Add to Library"
@@ -96,13 +113,17 @@ function SearchItem({ item, handleClick }) {
         item.media_type === 'video' &&
         <Content>
           <ImageWrapper>
-            <img role="presentation" src={item.thumbnail_url} />
+            <a href={item.source_url} target="_blank">
+              <img role="presentation" src={item.thumbnail_url} />
+            </a>
           </ImageWrapper>
           <InfoWrapper style={{ padding: '10px 20px' }}>
-            <Title style={{ height: 51 }}>{item.title}</Title>
-            <SourceWrapper>
-              <p>{item.source_provider}</p>
-            </SourceWrapper>
+            <a href={item.source_url} target="_blank">
+              <Title style={{ height: 51 }}>{item.title}</Title>
+              <SourceWrapper>
+                <p>{item.source_provider}</p>
+              </SourceWrapper>
+            </a>
           </InfoWrapper>
           <Button
             label="Add to Library"
