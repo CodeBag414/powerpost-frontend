@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
+import { toastr } from 'lib/react-redux-toastr';
 import Dropdown from 'elements/atm.Dropdown';
 
 import Wrapper from './Wrapper';
@@ -34,8 +35,30 @@ class StatusChooser extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.postSet !== this.props.postSet) {
+    const { postSet } = this.props;
+    if (!postSet.isEmpty() && nextProps.postSet.getIn(['details', 'status']) !== postSet.getIn(['details', 'status'])) {
       this.updateStatus(nextProps);
+      this.showSuccessGrowl(nextProps);
+    }
+  }
+
+  showSuccessGrowl = ({ postSet }) => {
+    if (!postSet || postSet.isEmpty() || postSet.getIn(['details', 'status']) !== '3') return;
+    const posts = postSet.getIn(['details', 'posts']);
+    let hasScheduledPost = false;
+    posts.map((post) => {
+      const status = post.get('status');
+      if (status === '0') return false;
+      if (status !== '5' && post.get('schedule_time')) {
+        hasScheduledPost = true;
+      }
+      return true;
+    });
+
+    if (hasScheduledPost) {
+      toastr.success('Success', 'Your post will be published on the channels and times scheduled.');
+    } else {
+      toastr.success('Success', 'Your post has been published on the channels and times scheduled.');
     }
   }
 
