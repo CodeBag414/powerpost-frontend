@@ -65,7 +65,7 @@ class UnscheduledPost extends React.Component {
         <i className="fa fa-ellipsis-h" onClick={this.handleShowPopup} />
         {menuVisible &&
           <Popup onOutsideClick={this.handleHidePopup}>
-            <CustomMenuItem onClick={() => onDelete(post)} >
+            <CustomMenuItem onClick={() => onDelete(post)}>
               <i className="fa fa-trash" />
               <MenuItemCaption>Delete</MenuItemCaption>
             </CustomMenuItem>

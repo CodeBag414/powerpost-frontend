@@ -44,6 +44,7 @@ const Wrapper = styled.div`
   }
 
   .slot-timestamp {
+    position: relative;
     text-align: right;
     button {
       width: 238px;
@@ -60,6 +61,19 @@ const Wrapper = styled.div`
         background-color: #F0F3F4;
         border-radius: 4px;
       }
+    }
+    i {
+      visibility: hidden;
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      font-size: 16px;
+      color: #333;
+      text-align: right;
+      cursor: pointer;
+    }
+    &:hover i {
+      visibility: visible;
     }
   }
 `;

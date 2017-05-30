@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
@@ -5,7 +7,7 @@ import moment from 'moment';
 
 import PPButton from 'elements/atm.Button';
 
-function ChannelSlotTimestamp({ post, handleClickTimestamp, currentPost }) {
+function ChannelSlotTimestamp({ post, currentPost, handleClickTimestamp, handleRemoveSlot }) {
   return (
     <div className="slot-timestamp">
       <PPButton className={currentPost === post && 'active'} onClick={() => handleClickTimestamp(post)}>
@@ -15,6 +17,7 @@ function ChannelSlotTimestamp({ post, handleClickTimestamp, currentPost }) {
           : 'Post when ready'
         }
       </PPButton>
+      <i className="fa fa-trash" onClick={() => handleRemoveSlot(post)} />
     </div>
   );
 }
@@ -23,6 +26,7 @@ ChannelSlotTimestamp.propTypes = {
   post: ImmutablePropTypes.map,
   currentPost: ImmutablePropTypes.map,
   handleClickTimestamp: PropTypes.func,
+  handleRemoveSlot: PropTypes.func,
 };
 
 export default ChannelSlotTimestamp;
