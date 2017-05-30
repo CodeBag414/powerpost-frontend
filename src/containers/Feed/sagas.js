@@ -24,6 +24,7 @@ function* getSocialFeed({ connectionId }) {
     yield put(setSocialFeed(feed));
   } else {
     console.log(response);
+    yield put(setSocialFeed([]));
   }
 }
 

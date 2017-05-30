@@ -5,7 +5,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import Wrapper from './Wrapper';
 import ChannelSlot from './ChannelSlot';
 
-function ChannelSlots({ posts, connections, handleClickTimestamp, currentPost }) {
+function ChannelSlots({ posts, connections, handleClickTimestamp, handleRemoveSlot, currentPost }) {
   return (
     <Wrapper>
       {
@@ -23,6 +23,7 @@ function ChannelSlots({ posts, connections, handleClickTimestamp, currentPost })
               postItems={postItems}
               connection={connection}
               handleClickTimestamp={handleClickTimestamp}
+              handleRemoveSlot={handleRemoveSlot}
               currentPost={currentPost}
             />
           );
@@ -37,6 +38,7 @@ ChannelSlots.propTypes = {
   posts: PropTypes.array,
   connections: PropTypes.array,
   handleClickTimestamp: PropTypes.func,
+  handleRemoveSlot: PropTypes.func,
 };
 
 export default ChannelSlots;
