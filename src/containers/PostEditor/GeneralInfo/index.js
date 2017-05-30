@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { browserHistory } from 'react-router';
 
 import Wrapper from './Wrapper';
 import Title from './Title';
@@ -14,6 +15,9 @@ function handleTitleKeyDown(e) {
 }
 
 function GeneralInfo({ user, postSet, postTitle, handleTitleChange, handleTitleBlur }) {
+  const onBack = () => {
+    browserHistory.goBack();
+  };
   // console.log('user', user);
   // console.log('postSet', postSet);
   if (!postSet.post_set_id) return null;
@@ -21,16 +25,21 @@ function GeneralInfo({ user, postSet, postTitle, handleTitleChange, handleTitleB
   const creationTime = moment.unix(postSet.creation_time).format('M/DD/YYYY hh:mma');
   return (
     <Wrapper>
-      <Title
-        contentEditable
-        onInput={handleTitleChange}
-        onBlur={handleTitleBlur}
-        onKeyDown={handleTitleKeyDown}
-      >
-        {postTitle}
-      </Title>
-      <br />
-      <Subtitle>{`Created by ${userName} \u00a0\u00a0 | \u00a0\u00a0 ${creationTime}`}</Subtitle>
+      <div>
+        <Title
+          contentEditable
+          onInput={handleTitleChange}
+          onBlur={handleTitleBlur}
+          onKeyDown={handleTitleKeyDown}
+        >
+          {postTitle}
+        </Title>
+        <br />
+        <Subtitle>{`Created by ${userName} \u00a0\u00a0 | \u00a0\u00a0 ${creationTime}`}</Subtitle>
+      </div>
+      <div className="back-button" onClick={onBack}>
+        ×
+      </div>
     </Wrapper>
   );
 }
