@@ -300,7 +300,7 @@ export function* linkData() {
 
 export function* getItem() {
   const watcher = yield takeLatest(GET_MEDIA_ITEM, getMediaItem);
-  
+
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
 }
