@@ -97,13 +97,13 @@ class AddChannelSlotDialog extends Component {
             <div className="title">Schedule Post</div>
             <div className="close-button" onClick={handleDialogToggle}>×</div>
           </div>
-          <div className="instruction">
-            Set the date, time and channels.
-          </div>
-          <div className="post-style" onClick={() => this.setState({ isPostUponReady: !isPostUponReady })}>
-            { isPostUponReady ? 'Schedule Post' : 'Post Upon Ready' }
-          </div>
           <div className="main-content">
+            <div className="instruction">
+              Set the date, time and channels.
+            </div>
+            <div className="post-style" onClick={() => this.setState({ isPostUponReady: !isPostUponReady })}>
+              { isPostUponReady ? 'Schedule Post' : 'Post Upon Ready' }
+            </div>
             {
               isPostUponReady ||
               <div className="schedules-block">

@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  padding: 40px 40px 24px 40px;
-  width: 100%;
+  padding: 25px 40px 24px 40px;
+  width: 500px;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   height: 80vh;
