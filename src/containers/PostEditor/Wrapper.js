@@ -1,7 +1,11 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  padding: 80px 40px 40px;
+  position: fixed;
+  left: 0; top: 0; bottom: 0; right: 0;
+  display: flex;
+  flex-direction: column;
+  background: white;
   .active-link {
     a {
       color: #424647 !important;
@@ -17,13 +21,20 @@ const Wrapper = styled.div`
   a {
     transition: border-bottom 0.3s, color 0.3s;
     cursor: pointer;
-    
   }
-  .back-button {
-    font-size: 20px;
-    position: absolute;
-    top: 10px;
-    cursor: pointer;
+  .content-wrapper {
+    height: 100%;
+    overflow-y: auto;
+    .content {
+      display: flex;
+      min-height: 100%;
+    }
+  }
+  .main {
+    padding: 40px;
+    flex: 1;
+    overflow-x: auto;
+    overflow-y: hidden;
   }
 `;
 

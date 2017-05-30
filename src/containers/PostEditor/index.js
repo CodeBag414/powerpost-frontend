@@ -5,7 +5,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { browserHistory } from 'react-router';
 
 import { UserCanPostEdit } from 'config.routes/UserRoutePermissions';
 
@@ -84,10 +83,6 @@ class PostEditor extends Component {
     }
   }
 
-  onBack = () => {
-    browserHistory.goBack();
-  }
-
   initialize = (props = this.props) => {
     const { accountId, id } = props;
     props.getComments(id);
@@ -142,9 +137,6 @@ class PostEditor extends Component {
     ];
     return (
       <Wrapper>
-        <div className="back-button" onClick={this.onBack}>
-          <i className="fa fa-hand-o-left icon" aria-hidden="true" />
-        </div>
         <GeneralInfo
           user={user}
           postSet={postSet.get('details').toJS()}
@@ -154,42 +146,48 @@ class PostEditor extends Component {
           handleTitleFocus={this.handleTitleFocus}
           handleTitleKeyDown={this.handleTitleKeyDown}
         />
-        <div>
-          {
-            tabs.map((tab) =>
-              <span
-                key={tab.name}
-                className={tab.name === selectedTab ? 'active-link' : ''}
-                onClick={() => this.setState({ selectedTab: tab.name })}
-              >
-                <TabLink
-                  label={tab.name}
-                  count={tab.count}
-                />
-              </span>
-            )
-          }
+        <div className="content-wrapper">
+          <div className="content">
+            <div className="main">
+              <div>
+                {
+                  tabs.map((tab) =>
+                    <span
+                      key={tab.name}
+                      className={tab.name === selectedTab ? 'active-link' : ''}
+                      onClick={() => this.setState({ selectedTab: tab.name })}
+                    >
+                      <TabLink
+                        label={tab.name}
+                        count={tab.count}
+                      />
+                    </span>
+                  )
+                }
+              </div>
+              {
+                tabs.map((tab) => (tab.name === selectedTab ? tab.component : null))
+              }
+            </div>
+            <Sidebar>
+              <UserAssignment
+                isFetching={groupUsers.isFetching || postSet.get('isFetching')}
+                postSet={postSet.get('details').toJS()}
+                assignee={postSet.getIn(['details', 'user_assignments', 0])}
+                users={groupUsers.details ? groupUsers.details.groups_users : []}
+                updatePostSet={updatePostSet}
+              />
+              <StatusChooser
+                postSet={postSet}
+                updatePostSet={updatePostSet}
+              />
+              <Tags
+                updatePostSet={updatePostSet}
+                postSet={postSet.get('details')}
+              />
+            </Sidebar>
+          </div>
         </div>
-        {
-          tabs.map((tab) => (tab.name === selectedTab ? tab.component : null))
-        }
-        <Sidebar>
-          <UserAssignment
-            isFetching={groupUsers.isFetching || postSet.get('isFetching')}
-            postSet={postSet.get('details').toJS()}
-            assignee={postSet.getIn(['details', 'user_assignments', 0])}
-            users={groupUsers.details ? groupUsers.details.groups_users : []}
-            updatePostSet={updatePostSet}
-          />
-          <StatusChooser
-            postSet={postSet}
-            updatePostSet={updatePostSet}
-          />
-          <Tags
-            updatePostSet={updatePostSet}
-            postSet={postSet.get('details')}
-          />
-        </Sidebar>
       </Wrapper>
     );
   }
