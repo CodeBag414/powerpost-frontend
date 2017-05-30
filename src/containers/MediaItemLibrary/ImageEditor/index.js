@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { isEmpty } from 'lodash';
 
 import PPDialog from 'elements/atm.Dialog';
 import TextArea from 'elements/atm.TextArea';
@@ -98,7 +97,7 @@ class ImageEditor extends Component {
   }
 
   render() {
-    const { isOpen, closeAllDialog, imageItem } = this.props;
+    const { isOpen, closeAllDialog } = this.props;
     const { titleValue, descriptionValue, selectedImage, fileName } = this.state;
 
     return (
@@ -107,44 +106,42 @@ class ImageEditor extends Component {
         onEscKeyDown={closeAllDialog}
         onOverlayClick={closeAllDialog}
       >
-        {!isEmpty(imageItem) &&
-          <Wrapper>
-            <HeadingWrapper>
-              <div className="header-info">
-                <h3>Content Editor<span><i className="fa fa-picture-o" />{fileName}</span></h3>
-                <button onClick={closeAllDialog}><FontIcon value="clear" /></button>
+        <Wrapper>
+          <HeadingWrapper>
+            <div className="header-info">
+              <h3>Content Editor<span><i className="fa fa-picture-o" />{fileName}</span></h3>
+              <button onClick={closeAllDialog}><FontIcon value="clear" /></button>
+            </div>
+            <p>Modify the image information below.</p>
+          </HeadingWrapper>
+          <BodyWrapper>
+            <div className="info-wrapper">
+              <PPTextField
+                type="text"
+                name="title"
+                floatingLabelText="Title"
+                value={titleValue}
+                onChange={(e) => this.handleInputChange('titleValue', e.target.value)}
+              />
+              <TextArea
+                floatingLabelText="Description"
+                rows={2}
+                value={descriptionValue}
+                onChange={(e) => this.handleInputChange('descriptionValue', e.target.value)}
+              />
+            </div>
+            <div className="image-wrapper">
+              <div className="cover-image">
+                {selectedImage && <LargeImageWrapper src={selectedImage} />}
               </div>
-              <p>Modify the image information below.</p>
-            </HeadingWrapper>
-            <BodyWrapper>
-              <div className="info-wrapper">
-                <PPTextField
-                  type="text"
-                  name="title"
-                  floatingLabelText="Title"
-                  value={titleValue}
-                  onChange={(e) => this.handleInputChange('titleValue', e.target.value)}
-                />
-                <TextArea
-                  floatingLabelText="Description"
-                  rows={2}
-                  value={descriptionValue}
-                  onChange={(e) => this.handleInputChange('descriptionValue', e.target.value)}
-                />
-              </div>
-              <div className="image-wrapper">
-                <div className="cover-image">
-                  {selectedImage && <LargeImageWrapper src={selectedImage} />}
-                </div>
-              </div>
-            </BodyWrapper>
-            <FooterWrapper>
-              <div className="button-wrapper">
-                <Button label="Save Content" onClick={this.prepareItem} primary />
-              </div>
-            </FooterWrapper>
-          </Wrapper>
-        }
+            </div>
+          </BodyWrapper>
+          <FooterWrapper>
+            <div className="button-wrapper">
+              <Button label="Save Content" onClick={this.prepareItem} primary />
+            </div>
+          </FooterWrapper>
+        </Wrapper>
       </PPDialog>
     );
   }

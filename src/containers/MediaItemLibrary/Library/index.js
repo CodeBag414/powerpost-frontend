@@ -135,14 +135,16 @@ class MediaItemLibrary extends React.Component {
   }
   
   render() {
-    const actions = [
-      { label: "close", onClick: this.closeAllDialog },
-    ];
     return (
       <Wrapper>
         <MediaNav filter={this.props.filter} setSortOrder={this.setSortOrder} setSearchFilter={this.setSearchFilter} openAddFile={this.openAddFile} openAddRSS={this.openAddRSS} openAddLink={this.openAddLink} openAddBlog={this.openAddBlog} openSearch={this.openSearch} />
         <MediaContainer createPostSet={this.props.createPostSet} pushToEditor={this.props.pushToEditor} query={this.props.location.query} processingItem={this.props.processingItem} mediaItems={this.props.mediaItems} onConfirmDelete={this.onConfirmDelete.bind(this)} openPreview={this.openPreview} openEditor={this.openEditor} />
-        <PreviewDialog actions={actions} closeAllDialog={this.closeAllDialog} previewDialog={this.state.previewDialog} mediaItem={this.state.previewItem} />
+        <PreviewDialog 
+          createPostSet={this.props.createPostSet}
+          closeAllDialog={this.closeAllDialog}
+          previewDialog={this.state.previewDialog}
+          mediaItem={this.state.previewItem}
+        />
       </Wrapper>
     );
   }

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import filepicker from 'filepicker-js';
-import { isEmpty } from 'lodash';
 
 import PPDialog from 'elements/atm.Dialog';
 import TextArea from 'elements/atm.TextArea';
@@ -169,7 +168,7 @@ class LinkEditor extends Component {
   }
 
   render() {
-    const { urlContent, linkEditorDialog, closeAllDialog, linkItem } = this.props;
+    const { urlContent, linkEditorDialog, closeAllDialog } = this.props;
     const { url, titleValue, descriptionValue, selectedImage, selectedImageIndex } = this.state;
 
     return (
@@ -178,79 +177,77 @@ class LinkEditor extends Component {
         onEscKeyDown={closeAllDialog}
         onOverlayClick={closeAllDialog}
       >
-        {!isEmpty(linkItem) &&
-          <Wrapper>
-            <HeadingWrapper>
-              <div className="header-info">
-                <h3>Content Editor<span><i className="fa fa-link" />{url}</span></h3>
-                <button onClick={closeAllDialog}><FontIcon value="clear" /></button>
-              </div>
-              <p>Modify the link information below.</p>
-            </HeadingWrapper>
-            <BodyWrapper>
-              <div className="info-wrapper">
-                <PPTextField
-                  type="text"
-                  name="title"
-                  floatingLabelText="Title"
-                  value={titleValue}
-                  onChange={(e) => this.handleInputChange('titleValue', e.target.value)}
-                />
-                <TextArea
-                  floatingLabelText="Description"
-                  rows={3}
-                  value={descriptionValue}
-                  onChange={(e) => this.handleInputChange('descriptionValue', e.target.value)}
-                />
-              </div>
-              <div className="image-wrapper">
-                {selectedImage && selectedImage.url &&
-                  <div className="header">
-                    <p>Cover Image</p>
-                    <SimpleButton
-                      style={{ fontSize: '13px' }}
-                      color={theme.textColor}
-                      onClick={this.removeCoverImage}
-                      noBorder
-                    >
-                      Remove
-                    </SimpleButton>
-                  </div>
-                }
-                {selectedImage && selectedImage.url &&
-                  <div className="cover-image">
-                    <LargeImageWrapper src={selectedImage.url} />
-                  </div>
-                }
-                <SimpleButton
-                  style={{ fontSize: '13px' }}
-                  color={theme.textColor}
-                  onClick={this.openFilePicker}
-                  noBorder
-                >
-                  Upload New Cover Image
-                </SimpleButton>
-              </div>
-            </BodyWrapper>
-            <FooterWrapper>
-              {(urlContent.images && urlContent.images.length > 0) &&
-                <div className="gallery">
-                  <p>Select Cover Image</p>
-                  <div>
-                    { urlContent.images.map((image, i) =>
-                      <div key={i} style={{ marginRight: '10px' }}>
-                        <SmallImageWrapper src={image.url} isSelected={selectedImageIndex === i} onClick={() => { this.setState({ selectedImage: image, selectedImageIndex: i }); }} />
-                      </div>
-                        )}
-                  </div>
+        <Wrapper>
+          <HeadingWrapper>
+            <div className="header-info">
+              <h3>Content Editor<span><i className="fa fa-link" />{url}</span></h3>
+              <button onClick={closeAllDialog}><FontIcon value="clear" /></button>
+            </div>
+            <p>Modify the link information below.</p>
+          </HeadingWrapper>
+          <BodyWrapper>
+            <div className="info-wrapper">
+              <PPTextField
+                type="text"
+                name="title"
+                floatingLabelText="Title"
+                value={titleValue}
+                onChange={(e) => this.handleInputChange('titleValue', e.target.value)}
+              />
+              <TextArea
+                floatingLabelText="Description"
+                rows={3}
+                value={descriptionValue}
+                onChange={(e) => this.handleInputChange('descriptionValue', e.target.value)}
+              />
+            </div>
+            <div className="image-wrapper">
+              {selectedImage && selectedImage.url &&
+                <div className="header">
+                  <p>Cover Image</p>
+                  <SimpleButton
+                    style={{ fontSize: '13px' }}
+                    color={theme.textColor}
+                    onClick={this.removeCoverImage}
+                    noBorder
+                  >
+                    Remove
+                  </SimpleButton>
                 </div>
               }
-              <div className="button-wrapper">
-                <Button onClick={this.prepareLinkItem} primary>Save Content</Button>
+              {selectedImage && selectedImage.url &&
+                <div className="cover-image">
+                  <LargeImageWrapper src={selectedImage.url} />
+                </div>
+              }
+              <SimpleButton
+                style={{ fontSize: '13px' }}
+                color={theme.textColor}
+                onClick={this.openFilePicker}
+                noBorder
+              >
+                Upload New Cover Image
+              </SimpleButton>
+            </div>
+          </BodyWrapper>
+          <FooterWrapper>
+            {(urlContent.images && urlContent.images.length > 0) &&
+              <div className="gallery">
+                <p>Select Cover Image</p>
+                <div>
+                  { urlContent.images.map((image, i) =>
+                    <div key={i} style={{ marginRight: '10px' }}>
+                      <SmallImageWrapper src={image.url} isSelected={selectedImageIndex === i} onClick={() => { this.setState({ selectedImage: image, selectedImageIndex: i }); }} />
+                    </div>
+                      )}
+                </div>
               </div>
-            </FooterWrapper>
-          </Wrapper>
-        }
+            }
+            <div className="button-wrapper">
+              <Button onClick={this.prepareLinkItem} primary>Save Content</Button>
+            </div>
+          </FooterWrapper>
+        </Wrapper>
       </PPDialog>
     );
   }

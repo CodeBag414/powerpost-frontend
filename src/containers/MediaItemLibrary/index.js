@@ -8,6 +8,8 @@ import React, { PropTypes } from 'react';
 import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+import filepicker from 'filepicker-js';
+
 import Button from 'elements/atm.Button';
 import MenuItem from 'elements/atm.MenuItem';
 import Menu from 'elements/atm.Menu';
@@ -351,7 +353,6 @@ class Library extends React.Component {
   }
   
   handleOpenAddFile(mediaItem) {
-    const filepicker = require('filepicker-js');
     filepicker.setKey(this.props.filePickerKey);
     
     if(mediaItem[0].mimetype.match('image')) {
@@ -390,7 +391,7 @@ class Library extends React.Component {
         }
       };
       this.openFileEditor(fileItem);
-      //this.props.createMediaItem(fileItem);
+      // this.props.createMediaItem(fileItem);
     }
   }
   

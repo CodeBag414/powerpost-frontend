@@ -13,7 +13,7 @@ import SimpleButton from 'elements/atm.SimpleButton';
 
 import Wrapper from './Wrapper';
 
-function PreviewDialog({ previewDialog, closeAllDialog, mediaItem }) {
+function PreviewDialog({ createPostSet, previewDialog, closeAllDialog, mediaItem }) {
   const mediaType = mediaItem.type;
   let iconName = '';
 
@@ -59,7 +59,13 @@ function PreviewDialog({ previewDialog, closeAllDialog, mediaItem }) {
           >
             Close Preview
           </SimpleButton>
-          <Button label="Add to Post" icon="add" primary style={{ margin: '5px' }} />
+          <Button
+            label="Add to Post"
+            icon="add"
+            primary
+            style={{ margin: '5px' }}
+            onClick={() => createPostSet(mediaItem)}
+          />
         </div>
       </Wrapper>
       }
@@ -70,6 +76,7 @@ function PreviewDialog({ previewDialog, closeAllDialog, mediaItem }) {
 PreviewDialog.propTypes = {
   previewDialog: PropTypes.bool,
   mediaItem: PropTypes.shape(),
+  createPostSet: PropTypes.func,
   closeAllDialog: PropTypes.func,
 };
 
