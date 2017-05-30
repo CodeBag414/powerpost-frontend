@@ -118,10 +118,15 @@ class Channels extends Component {
             primary
           />
           <div className="content">
-            {
-              hasContent
-                ? <ChannelSlots posts={posts} connections={connections} handleClickTimestamp={this.handleClickTimestamp} currentPost={this.state.currentPost} />
-                : <NoContent />
+            {hasContent ?
+              <ChannelSlots
+                posts={posts}
+                connections={connections}
+                handleClickTimestamp={this.handleClickTimestamp}
+                handleRemoveSlot={this.handleRemoveSlot}
+                currentPost={this.state.currentPost}
+              />
+            : <NoContent />
             }
           </div>
         </div>
