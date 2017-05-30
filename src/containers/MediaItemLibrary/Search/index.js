@@ -16,7 +16,7 @@ import BING_LOGO from 'assets/images/bing_logo.png';
 import loadingImage from 'assets/images/loading_circle.gif';
 
 import SearchResultsContainer from './SearchResultsContainer';
-import SearchItem from '../SearchItem';
+import SearchItem from './SearchItem';
 
 const Wrapper = styled.div`
   height:100%;
