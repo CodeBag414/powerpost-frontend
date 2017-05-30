@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import filepicker from 'filepicker-js';
-import { isEmpty } from 'lodash';
 
 import PPDialog from 'elements/atm.Dialog';
 import TextArea from 'elements/atm.TextArea';
@@ -150,67 +149,65 @@ class VideoEditor extends Component {
         onEscKeyDown={closeAllDialog}
         onOverlayClick={closeAllDialog}
       >
-        {!isEmpty(videoItem) &&
-          <Wrapper>
-            <HeadingWrapper>
-              <div className="header-info">
-                <h3>Content Editor<span><i className="fa fa-video-camera" />{fileName}</span></h3>
-                <button onClick={closeAllDialog}><FontIcon value="clear" /></button>
-              </div>
-              <p>Modify the video information below.</p>
-            </HeadingWrapper>
-            <BodyWrapper>
-              <div className="info-wrapper">
-                <PPTextField
-                  type="text"
-                  name="title"
-                  floatingLabelText="Title"
-                  value={titleValue}
-                  onChange={(e) => this.handleInputChange('titleValue', e.target.value)}
-                />
-                <TextArea
-                  floatingLabelText="Description"
-                  rows={3}
-                  value={descriptionValue}
-                  onChange={(e) => this.handleInputChange('descriptionValue', e.target.value)}
-                />
-              </div>
-              <div className="image-wrapper">
-                {selectedImage && selectedImage.url &&
-                  <div className="header">
-                    <p>Cover Image</p>
-                    <SimpleButton
-                      style={{ fontSize: '13px' }}
-                      color={theme.textColor}
-                      onClick={this.removeCoverImage}
-                      noBorder
-                    >
-                      Remove
-                    </SimpleButton>
-                  </div>
-                }
-                {selectedImage && selectedImage.url &&
-                  <div className="cover-image">
-                    <LargeImageWrapper src={selectedImage.url} />
-                  </div>
-                }
-                <SimpleButton
-                  style={{ fontSize: '13px' }}
-                  color={theme.textColor}
-                  onClick={this.openFilePicker}
-                  noBorder
-                >
-                  Upload New Cover Image
-                </SimpleButton>
-              </div>
-            </BodyWrapper>
-            <FooterWrapper>
-              <div className="button-wrapper">
-                <Button onClick={this.prepareItem} primary>Save Content</Button>
-              </div>
-            </FooterWrapper>
-          </Wrapper>
-        }
+        <Wrapper>
+          <HeadingWrapper>
+            <div className="header-info">
+              <h3>Content Editor<span><i className="fa fa-video-camera" />{fileName}</span></h3>
+              <button onClick={closeAllDialog}><FontIcon value="clear" /></button>
+            </div>
+            <p>Modify the video information below.</p>
+          </HeadingWrapper>
+          <BodyWrapper>
+            <div className="info-wrapper">
+              <PPTextField
+                type="text"
+                name="title"
+                floatingLabelText="Title"
+                value={titleValue}
+                onChange={(e) => this.handleInputChange('titleValue', e.target.value)}
+              />
+              <TextArea
+                floatingLabelText="Description"
+                rows={3}
+                value={descriptionValue}
+                onChange={(e) => this.handleInputChange('descriptionValue', e.target.value)}
+              />
+            </div>
+            <div className="image-wrapper">
+              {selectedImage && selectedImage.url &&
+                <div className="header">
+                  <p>Cover Image</p>
+                  <SimpleButton
+                    style={{ fontSize: '13px' }}
+                    color={theme.textColor}
+                    onClick={this.removeCoverImage}
+                    noBorder
+                  >
+                    Remove
+                  </SimpleButton>
+                </div>
+              }
+              {selectedImage && selectedImage.url &&
+                <div className="cover-image">
+                  <LargeImageWrapper src={selectedImage.url} />
+                </div>
+              }
+              <SimpleButton
+                style={{ fontSize: '13px' }}
+                color={theme.textColor}
+                onClick={this.openFilePicker}
+                noBorder
+              >
+                Upload New Cover Image
+              </SimpleButton>
+            </div>
+          </BodyWrapper>
+          <FooterWrapper>
+            <div className="button-wrapper">
+              <Button onClick={this.prepareItem} primary>Save Content</Button>
+            </div>
+          </FooterWrapper>
+        </Wrapper>
       </PPDialog>
     );
   }

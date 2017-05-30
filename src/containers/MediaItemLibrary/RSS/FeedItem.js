@@ -18,6 +18,14 @@ const InfoWrapper = styled.div`
   flex: 1;
   padding-right: 50px;
   margin-bottom: 15px;
+  cursor: pointer;
+
+  a:hover {
+    text-decoration: none;
+  }
+  a:focus{
+    text-decoration: none;
+  }
 `;
 
 const Title = styled.p`
@@ -57,15 +65,17 @@ function FeedItem({ item, feedName, onAddFeed }) {
   return (
     <Wrapper>
       <InfoWrapper>
-        <Title>{item.title}</Title>
-        <Intro>{renderHTML(item.intro)}</Intro>
-        <SourceWrapper>
-          {item.image ?
-            <img role="presentation" src={item.image} />
-            : <p>{feedName}</p>
-          }
-          <p>{item.date_friendly}</p>
-        </SourceWrapper>
+        <a href={item.source} target="_blank">
+          <Title>{item.title}</Title>
+          <Intro>{renderHTML(item.intro)}</Intro>
+          <SourceWrapper>
+            {item.image ?
+              <img role="presentation" src={item.image} />
+              : <p>{feedName}</p>
+            }
+            <p>{item.date_friendly}</p>
+          </SourceWrapper>
+        </a>
       </InfoWrapper>
       <Button
         label="Add to Library"
