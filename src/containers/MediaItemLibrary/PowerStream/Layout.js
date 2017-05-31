@@ -120,9 +120,10 @@ class PowerStreamLayout extends Component {
   }
 
   sendInvite = (email) => {
-    const { inviteEmailToStream, streamId } = this.props;
+    const { inviteEmailToStream, accountId, streamId } = this.props;
 
     inviteEmailToStream({
+      accountId,
       stream_id: streamId,
       email,
       message: 'Invite to my stream',

@@ -78,7 +78,7 @@ class Redeem extends Component {
             browserHistory.push(`/login/reset-password?api_key=${encodeURIComponent(detail.api_key)}`);
             break;
           case 'stream_invite': {
-            const accountId = get(detail, 'stream.account_id');
+            const accountId = get(detail, 'account_id');
             const streamId = get(detail, 'stream.stream_id');
             browserHistory.push(`/account/${accountId}/library/shared_streams/subscriptions/${streamId}`);
             break;

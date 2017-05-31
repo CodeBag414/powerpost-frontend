@@ -11,7 +11,9 @@ const Wrapper = styled.div`
   width: 100%;
   padding: 15px 40px;
   background-color: ${(props) => props.active ? '#F0F3F4' : 'white'};
-  border-bottom: 1px solid #E7ECEE;
+  border: 1px solid #E7ECEE;
+  border-top: none;
+  border-left: none;
 
   .right-box {
     flex: 1;
