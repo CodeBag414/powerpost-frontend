@@ -13,8 +13,9 @@ import TwitterBlock from 'containers/Feed/TwitterBlock';
 import MultiLineInput from 'components/MultiLineInput';
 import Wrapper from './Wrapper';
 
-function buildPostPreview(post, connection, mediaItems) {
+function buildPostPreview(postData, postMessage, connection, mediaItems) {
   // console.log('PostPreview post', post.toJS());
+  const post = postData.update('message', () => postMessage);
   let postToPreview = {};
   let type = '';
   let image = '';
@@ -116,7 +117,7 @@ function PostDetails({ post, postSet, postMessage, postTime, connection, handleR
         Preview Post
       </div>
       <div className="post-preview">
-        {buildPostPreview(post, connection, postSet.getIn(['details', 'media_items']).toJS())}
+        {buildPostPreview(post, postMessage, connection, postSet.getIn(['details', 'media_items']).toJS())}
       </div>
     </Wrapper>
   );
