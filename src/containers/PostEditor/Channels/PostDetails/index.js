@@ -69,6 +69,7 @@ function buildPostPreview(post, connection, mediaItems) {
 function PostDetails({ post, postSet, postMessage, postTime, connection, handleRemoveSlot, handleDateChange, handleMessageChange, handleMessageBlur }) {
   const minDate = new Date();
   minDate.setDate(minDate.getDate() - 1);
+  // console.log('PostDetails postSet', postSet.toJS());
   return (
     <Wrapper>
       <div className="section-title">

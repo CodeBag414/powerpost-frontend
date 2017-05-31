@@ -161,17 +161,21 @@ function boardReducer(state = initialState, action) {
         .updateIn(['postSet', 'details', 'posts'], (posts) => posts.push(fromJS(action.post)));
     case UPDATE_MEDIA_ITEM_SUCCESS:
       return state
+        .updateIn(['postSet', 'details'], (postSetDetails) => postSetDetails.set('post_type', action.mediaItems[0].type))
         .updateIn(['postSet', 'details', 'media_items'], (mediaItems) => mediaItems.set(0, fromJS(action.mediaItems[0])));
     case CREATE_MEDIA_ITEM_SUCCESS:
       return state
+        .updateIn(['postSet', 'details'], (postSetDetails) => postSetDetails.set('post_type', action.mediaItems[0].type))
         .updateIn(['postSet', 'details', 'media_items'], (mediaItems) => mediaItems.set(0, fromJS(action.mediaItems[0])))
         .updateIn(['postSet', 'details', 'media_item_ids'], (mediaItemIds) => mediaItemIds.set(0, action.mediaItems[0].media_item_id));
     case REMOVE_MEDIA_ITEM:
       return state
+        .updateIn(['postSet', 'details'], (postSetDetails) => postSetDetails.set('post_type', 'text'))
         .updateIn(['postSet', 'details', 'media_items'], () => fromJS([]))
         .updateIn(['postSet', 'details', 'media_item_ids'], () => fromJS([]));
     case SET_MEDIA_ITEM:
       return state
+        .updateIn(['postSet', 'details'], (postSetDetails) => postSetDetails.set('post_type', action.mediaItem.type))
         .updateIn(['postSet', 'details', 'media_items'], (mediaItems) => mediaItems.set(0, fromJS(action.mediaItem)))
         .updateIn(['postSet', 'details', 'media_item_ids'], (mediaItemIds) => mediaItemIds.set(0, action.mediaItem.media_item_id));
     case FETCH_URL_CONTENT_SUCCESS:
@@ -187,7 +191,7 @@ function boardReducer(state = initialState, action) {
     case FETCH_MEDIA_ITEMS_ERROR:
       return state
         .set('error', action.mediaItems.data.message);
-    case PROCESS_ITEM: 
+    case PROCESS_ITEM:
       return state
         .set('isProcessing', true);
     case PROCESS_ITEM_SUCCESS:
