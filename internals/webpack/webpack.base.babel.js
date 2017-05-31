@@ -86,9 +86,16 @@ module.exports = (options) => ({
     new webpack.NamedModulesPlugin(),
     new webpack.ContextReplacementPlugin(/\.\/locale$/, 'empty-module', false, /js$/),
     new webpack.ProvidePlugin({
-    	$: "jquery",
-    	jQuery: "jquery"
+    	$: 'jquery',
+    	jQuery: 'jquery',
     }),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: { warnings: false },
+      comments: false,
+      sourceMap: true,
+      minimize: false,
+    }),
+    new webpack.optimize.AggressiveMergingPlugin(),
   ]),
   resolve: {
     modules: ['src', 'node_modules'],
