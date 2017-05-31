@@ -70,14 +70,14 @@ const makeSelectActiveMediaItem = () => createSelector(
   (id, mediaItems) => mediaItems.find(x => x.media_item_id === id)
 );
 
-const makeSelectMediaItemsSorted = () => createSelector(
-  [makeSelectMediaItems(), makeSelectSortOrder()],
-  (mediaItems, sortOrder) => {
-    console.log(sortOrder);
+const makeSelectVisibleMediaItems = () => createSelector(
+  [makeSelectMediaItems(), makeSelectSortOrder(), makeSelectFilter()],
+  (mediaItems, sortOrder, filter) => {
+    let sortedItems = mediaItems;
     if (sortOrder === 'date') {
-      return mediaItems.sort((a, b) => b.creation_time - a.creation_time);
+      sortedItems = mediaItems.sort((a, b) => b.creation_time - a.creation_time);
     } else if (sortOrder === 'title') {
-      return mediaItems.sort((a, b) => {
+      sortedItems = mediaItems.sort((a, b) => {
         if(a.properties.title && (b.properties.title || b.properties.filename)) {
           return a.properties.title.localeCompare(b.properties.title || b.properties.filename);
         } else if (a.properties.filename && (b.properties.title || b.properties.filename)) {
@@ -85,27 +85,24 @@ const makeSelectMediaItemsSorted = () => createSelector(
         }
       });
     } else {
-      return mediaItems;
+      sortedItems = mediaItems;
     }
-  }
-);
 
-const makeSelectVisibleMediaItems = () => createSelector(
-  [makeSelectMediaItemsSorted(), makeSelectFilter()],
-  (mediaItems, filter) => {
     switch (filter) {
-      case SHOW_ALL:
-        return mediaItems;
       case SHOW_BLOGS:
-        return mediaItems.filter(t => t.type === 'blog');
+        return sortedItems.filter(t => t.type === 'blog');
       case SHOW_IMAGES:
-        return mediaItems.filter(t => t.type === 'image');
+        return sortedItems.filter(t => t.type === 'image');
       case SHOW_LINKS:
-        return mediaItems.filter(t => t.type === 'link');
+        return sortedItems.filter(t => t.type === 'link');
       case SHOW_VIDEOS:
-        return mediaItems.filter(t => t.type === 'video');
+        return sortedItems.filter(t => t.type === 'video');
       case SHOW_FILES:
-        return mediaItems.filter(t => t.type === 'document');
+        return sortedItems.filter(t => t.type === 'document');
+      case SHOW_ALL:
+        return sortedItems;
+      default:
+        return sortedItems;
     }
 });
 
@@ -142,8 +139,8 @@ export {
     makeSelectFeeds,
     makeSelectRSSItems,
     makeSelectFilter,
+    makeSelectSortOrder,
     makeSelectVisibleMediaItemsWithSearch,
-    makeSelectMediaItemsSorted,
     makeSelectProcessingItem,
     makeSelectActiveMediaItem,
     makeSelectPostSets,

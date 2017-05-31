@@ -19,6 +19,7 @@ import {
 import {
   makeSelectUser,
   selectGroupUsers,
+  makeSelectUserAccount,
 } from 'containers/App/selectors';
 
 import {
@@ -52,6 +53,7 @@ class PostEditor extends Component {
     user: PropTypes.shape(),
     postSet: PropTypes.object,
     groupUsers: PropTypes.object,
+    userAccount: PropTypes.object,
     updatePostSet: PropTypes.func,
     updatePost: PropTypes.func,
     id: PropTypes.string,
@@ -114,7 +116,7 @@ class PostEditor extends Component {
   }
 
   render() {
-    const { user, postSet, groupUsers, updatePostSet, updatePost } = this.props;
+    const { user, postSet, groupUsers, userAccount, updatePostSet, updatePost } = this.props;
     const { postTitle, selectedTab } = this.state;
     const postsArray = postSet.getIn(['details', 'posts']);
     const posts = {};
@@ -180,6 +182,7 @@ class PostEditor extends Component {
               <StatusChooser
                 postSet={postSet}
                 updatePostSet={updatePostSet}
+                userAccount={userAccount}
               />
               <Tags
                 updatePostSet={updatePostSet}
@@ -209,6 +212,7 @@ const mapStateToProps = createStructuredSelector({
   user: makeSelectUser(),
   postSet: selectPostSet(),
   groupUsers: selectGroupUsers(),
+  userAccount: makeSelectUserAccount(),
 });
 
 export default UserCanPostEdit(connect(mapStateToProps, mapDispatchToProps)(PostEditor));

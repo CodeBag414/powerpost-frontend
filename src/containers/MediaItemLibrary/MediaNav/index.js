@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { find } from 'lodash';
 
 import MediaNavContainer from './MediaNavContainer';
 
@@ -18,6 +19,11 @@ import {
 
 import styles from './styles.scss';
 
+const sortOptions = [
+  { value: 'date', label: 'Date added' },
+  { value: 'title', label: 'Title' },
+];
+
 const MediaNav = (props) => (
   <MediaNavContainer className="row">
     <div className="col-md-6">
@@ -31,7 +37,7 @@ const MediaNav = (props) => (
       <TextField iconClass="fa fa-search" hintText="Search Title" style={{float: 'left'}} onChange={props.setSearchFilter} />
     </div>
     <div className="col-md-3">
-      <Dropdown label="Sort By" style={{float: 'right'}} options={[{value: 'date', label: 'Date added'}, {value: 'title', label: 'Title'}]} onChange={props.setSortOrder} />
+      <Dropdown label="Sort By" style={{float: 'right'}} options={sortOptions} onChange={props.setSortOrder} value={find(sortOptions, ['value', props.sortOrder])} />
     </div>
   </MediaNavContainer>
 );

@@ -68,7 +68,7 @@ class Content extends Component {
   constructor(props) {
     super(props);
     const globalMessage = !props.postSet.get('details').isEmpty() ? props.postSet.getIn(['details', 'message']) : '';
-    const characterLimit = 140 - globalMessage.length;
+    const characterLimit = 140 - (globalMessage ? globalMessage.length : 0);
     this.state = {
       globalMessage,
       characterLimit,
@@ -113,7 +113,7 @@ class Content extends Component {
 
   handleMessageChange = (value) => {
     const globalMessage = value;
-    const characterLimit = 140 - globalMessage.length;
+    const characterLimit = 140 - (globalMessage ? globalMessage.length : 0);
     this.setState({ globalMessage, characterLimit });
   }
   

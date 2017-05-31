@@ -64,6 +64,7 @@ class MediaItemLibrary extends React.Component {
   }
 
   componentDidMount() {
+    this.props.setSearchFilter("");
     this.props.getMediaItems(this.props.params.account_id);
   }
 
@@ -119,7 +120,8 @@ class MediaItemLibrary extends React.Component {
   }
   
   setSortOrder(event) {
-    this.props.setSortOrder(event.value);
+    this.setState({ sortOrder: event.value });
+    this.props.setSortOrder(event.value)
   }
   
   openEditor(mediaItem) {
@@ -137,7 +139,8 @@ class MediaItemLibrary extends React.Component {
   render() {
     return (
       <Wrapper>
-        <MediaNav filter={this.props.filter} setSortOrder={this.setSortOrder} setSearchFilter={this.setSearchFilter} openAddFile={this.openAddFile} openAddRSS={this.openAddRSS} openAddLink={this.openAddLink} openAddBlog={this.openAddBlog} openSearch={this.openSearch} />
+        <MediaNav filter={this.props.filter} setSortOrder={this.setSortOrder} setSearchFilter={this.setSearchFilter} openAddFile={this.openAddFile} openAddRSS={this.openAddRSS} openAddLink={this.openAddLink} openAddBlog={this.openAddBlog} openSearch={this.openSearch} 
+        sortOrder={this.state.sortOrder} />
         <MediaContainer createPostSet={this.props.createPostSet} pushToEditor={this.props.pushToEditor} query={this.props.location.query} processingItem={this.props.processingItem} mediaItems={this.props.mediaItems} onConfirmDelete={this.onConfirmDelete.bind(this)} openPreview={this.openPreview} openEditor={this.openEditor} />
         <PreviewDialog 
           createPostSet={this.props.createPostSet}

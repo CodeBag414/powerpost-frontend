@@ -73,6 +73,8 @@ import {
   addUserToGroupError,
   removeUserFromGroupSuccess,
   removeUserFromGroupError,
+  getPostSets,
+  fetchPosts,
   fetchPostSetRequest,
   fetchPostSetSuccess,
   fetchPostSetError,
@@ -532,7 +534,7 @@ const serialize = function serialize(obj, prefix) {
   return str.join('&');
 };
 
-export function* getPostSets() {
+export function* fetchPostSetsWorker() {
   const currentAccount = yield select(makeSelectCurrentAccount());
   const data = {
     payload: {
@@ -611,6 +613,8 @@ export function* updatePostSetWorker(action) {
     const { data } = response;
     if (data.status === 'success') {
       yield put(updatePostSetSuccess(data.post_set, section));
+      yield put(getPostSets());
+      yield put(fetchPosts(data.post_set.account_id));
     } else {
       throw data.message;
     }
@@ -620,7 +624,7 @@ export function* updatePostSetWorker(action) {
 }
 
 export function* fetchPostSets() {
-  yield takeLatest(FETCH_POST_SETS, getPostSets);
+  yield takeLatest(FETCH_POST_SETS, fetchPostSetsWorker);
 }
 
 export function* deletePostSet() {

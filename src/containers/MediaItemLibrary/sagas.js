@@ -1,6 +1,7 @@
 import { takeLatest, takeEvery } from 'redux-saga';
-import { take, call, put, cancel, select, race } from 'redux-saga/effects';
+import { take, call, put, cancel, select, fork } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
+import { find } from 'lodash';
 import { toastr } from 'lib/react-redux-toastr';
 
 import { 
@@ -334,7 +335,20 @@ export function* fetchStreamPostSetsWatcher() {
 export function* inviteEmailToStreamSaga() {
   for (;;) {
     const { payload } = yield take(INVITE_EMAIL_TO_STREAM_REQUEST);
+
+    const streamAccounts = yield* fetchStreamAccountsWorker(payload.accountId);
+
+    console.log('---- streamAccounts --', streamAccounts);
+
+    if (streamAccounts) {
+      if (find(streamAccounts, { email: payload.email })) {
+        toastr.error('The email has already been subscribed to this stream');
+        break;
+      }
+    }
+
     let data;
+
     try {
       const response = yield call(postData, '/account_api/invite_email_to_stream', { payload });
       if (response.data.status !== 'success') {
@@ -347,26 +361,64 @@ export function* inviteEmailToStreamSaga() {
     }
 
     if (data) {
-      yield put(inviteEmailToStreamSuccess(data.payload));
       toastr.success('Success', 'An email invitation to subscribe to this shared stream has been sent.');
+      yield put(inviteEmailToStreamSuccess(data.payload));
     }
   }
 }
 
+function* fetchStreamAccountsWorker(accountId) {
+  let streamsAccounts;
+
+  try {
+    const { data } = yield call(getData, `/account_api/account_stream_accounts/${accountId}`);
+
+    if (data.status !== 'success') {
+      throw Error('Status Wrong!');
+    }
+    streamsAccounts = data.streams_accounts;
+  } catch (error) {
+    toastr.error(error.message || 'Fetching stream accounts failed');
+    return null;
+  }
+
+  return streamsAccounts;
+}
+
+export function* mediaItemSaga() {
+  const watcherA = yield fork(collectionData);
+  const watcherB = yield fork(linkData);
+  const watcherC = yield fork(mediaItem);
+  const watcherD = yield fork(searchBing);
+  const watcherE = yield fork(getFeeds);
+  const watcherF = yield fork(getFeedItems);
+  const watcherG = yield fork(createFeed);
+  const watcherH = yield fork(deleteMediaItem);
+  const watcherI = yield fork(watchPollData);
+  const watcherJ = yield fork(updateMedia);
+  const watcherK = yield fork(errorWatcher);
+  const watcherL = yield fork(fetchStreamPostSetsWatcher);
+  const watcherM = yield fork(inviteEmailToStreamSaga);
+
+  yield take(LOCATION_CHANGE);
+
+  yield cancel(watcherA);
+  yield cancel(watcherB);
+  yield cancel(watcherC);
+  yield cancel(watcherD);
+  yield cancel(watcherE);
+  yield cancel(watcherF);
+  yield cancel(watcherG);
+  yield cancel(watcherH);
+  yield cancel(watcherI);
+  yield cancel(watcherJ);
+  yield cancel(watcherK);
+  yield cancel(watcherL);
+  yield cancel(watcherM);
+}
+
 export default [
-  collectionData,
-  linkData,
-  mediaItem,
-  searchBing,
-  getFeeds,
-  getFeedItems,
-  createFeed,
-  deleteMediaItem,
-  watchPollData,
-  updateMedia,
-  errorWatcher,
-  fetchStreamPostSetsWatcher,
-  inviteEmailToStreamSaga,
+  mediaItemSaga,
 ];
 
 const delay = (millis) => {  
