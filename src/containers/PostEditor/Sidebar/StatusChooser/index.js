@@ -38,7 +38,7 @@ class StatusChooser extends React.Component {
     const { postSet } = this.props;
     if (!postSet.isEmpty() && nextProps.postSet.getIn(['details', 'status']) !== postSet.getIn(['details', 'status'])) {
       this.updateStatus(nextProps);
-      if (postSet.getIn(['details', 'status'])) {
+      if (postSet.getIn(['details', 'status']) && postSet.getIn(['details', 'post_set_id']) === nextProps.postSet.getIn(['details', 'post_set_id'])) {
         this.showSuccessGrowl(nextProps);
       }
     }
