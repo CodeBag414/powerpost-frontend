@@ -64,6 +64,7 @@ class MediaItemLibrary extends React.Component {
   }
 
   componentDidMount() {
+    this.props.setSearchFilter("");
     this.props.getMediaItems(this.props.params.account_id);
   }
 
