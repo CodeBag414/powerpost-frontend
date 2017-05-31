@@ -27,6 +27,7 @@ import {
   makeSelectEmailInvited,
 } from '../selectors';
 
+import ErrorWrapper from './ErrorWrapper';
 import Wrapper from './Wrapper';
 import TabBar from './TabBar';
 import PostSetBox from './PostSetBox';
@@ -47,6 +48,7 @@ class PowerStreamLayout extends Component {
   }
 
   state = {
+    error: '',
     shareDialogVisible: false,
   }
 
@@ -55,11 +57,13 @@ class PowerStreamLayout extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.streamId !== nextProps.streamId) {
+    if (this.props.streamCategory !== nextProps.streamCategory ||
+      this.props.streamId !== nextProps.streamId) {
       this.changeStreamLink(nextProps);
     }
 
-    if (this.props.postSet.get('error') !== nextProps.postSet.get('error')) {
+    if (this.props.postSet !== nextProps.postSet &&
+      !nextProps.postSet.get('processing')) {
       if (nextProps.postSet.get('error')) {
         toastr.error('The post has not been deleted from the stream.');
       } else {
@@ -67,7 +71,8 @@ class PowerStreamLayout extends Component {
       }
     }
 
-    if (this.props.emailInvited.get('error') !== nextProps.emailInvited.get('error')) {
+    if (this.props.emailInvited !== nextProps.emailInvited &&
+      !nextProps.emailInvited.get('processing')) {
       if (!nextProps.emailInvited.get('error')) {
         this.toggleShareDialog();
       }
@@ -81,8 +86,18 @@ class PowerStreamLayout extends Component {
       if (streamCategory === 'owned') {
         newStreamId = userAccount.account_streams[0].stream_id;
       } else {
+        if (!userAccount.shared_streams || userAccount.shared_streams.length === 0) {
+          this.setState({
+            error: 'This brand does not have any current subscriptions to power streams.',
+          });
+          return;
+        }
+
         newStreamId = userAccount.shared_streams[0].stream_id;
       }
+      this.setState({
+        error: '',
+      });
       browserHistory.push(`/account/${accountId}/library/shared_streams/${streamCategory}/${newStreamId}`);
     }
     fetchStreamPostSets(newStreamId, {
@@ -94,7 +109,6 @@ class PowerStreamLayout extends Component {
     const { updatePostSet, streamId } = this.props;
     const postSetObj = postSet.toJS();
     if (removing) {
-      console.log('---//', filter(postSetObj.stream_ids || [], (id) => id !== streamId));
       updatePostSet({
         ...postSetObj,
         id: postSetObj.post_set_id,
@@ -106,9 +120,10 @@ class PowerStreamLayout extends Component {
   }
 
   sendInvite = (email) => {
-    const { inviteEmailToStream, streamId } = this.props;
+    const { inviteEmailToStream, accountId, streamId } = this.props;
 
     inviteEmailToStream({
+      accountId,
       stream_id: streamId,
       email,
       message: 'Invite to my stream',
@@ -130,8 +145,19 @@ class PowerStreamLayout extends Component {
       streamId,
     } = this.props;
     const {
+      error,
       shareDialogVisible,
     } = this.state;
+
+    if (error) {
+      return (
+        <Wrapper>
+          <ErrorWrapper>
+            { error }
+          </ErrorWrapper>
+        </Wrapper>
+      );
+    }
 
     if (postSets.get('isFetching')) {
       return (
