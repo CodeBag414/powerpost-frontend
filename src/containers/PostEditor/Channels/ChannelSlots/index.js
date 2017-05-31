@@ -1,36 +1,70 @@
+/* eslint-disable no-restricted-syntax */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
+import { differenceWith, isEqual } from 'lodash';
 
 import Wrapper from './Wrapper';
 import ChannelSlot from './ChannelSlot';
 
-function ChannelSlots({ posts, connections, handleClickTimestamp, handleRemoveSlot, currentPost }) {
-  return (
-    <Wrapper>
-      {
-        Object.keys(posts).map((connectionId) => {
-          const postItems = posts[connectionId];
-          const connection = connections.filter((item) =>
-            item.connection_id === connectionId,
-          )[0];
+class ChannelSlots extends React.Component {
 
-          // TODO: Remove below after connections are correctly fetched
-          if (!connection || postItems.length === 0) return null;
-
-          return (
-            <ChannelSlot
-              postItems={postItems}
-              connection={connection}
-              handleClickTimestamp={handleClickTimestamp}
-              handleRemoveSlot={handleRemoveSlot}
-              currentPost={currentPost}
-            />
-          );
-        })
+  componentWillReceiveProps(nextProps) {
+    const { posts } = this.props;
+    if (nextProps.posts !== posts) {
+      let newPostItem;
+      if (Object.keys(nextProps.posts).length > Object.keys(posts).length) {
+        Object.keys(nextProps.posts).map((connectionId) => {
+          if (!posts[connectionId]) newPostItem = nextProps.posts[connectionId];
+          return true;
+        });
+      } else if (Object.keys(nextProps.posts).length < Object.keys(posts).length) {
+        for (const connectionId in nextProps.posts) {
+          if (posts[connectionId]) {
+            newPostItem = nextProps.posts[connectionId];
+            break;
+          }
+        }
+      } else {
+        for (const connectionId in nextProps.posts) {
+          if (nextProps.posts[connectionId].length > posts[connectionId].length) {
+            newPostItem = differenceWith(nextProps.posts[connectionId], posts[connectionId], isEqual);
+            break;
+          }
+        }
       }
-    </Wrapper>
-  );
+      if (newPostItem) this.props.handleClickTimestamp(newPostItem[0]);
+    }
+  }
+
+  render() {
+    const { posts, connections, handleClickTimestamp, handleRemoveSlot, currentPost } = this.props;
+    return (
+      <Wrapper>
+        {
+          Object.keys(posts).map((connectionId) => {
+            const postItems = posts[connectionId];
+            const connection = connections.filter((item) =>
+              item.connection_id === connectionId,
+            )[0];
+
+            if (!connection || postItems.length === 0) return null;
+
+            return (
+              <ChannelSlot
+                postItems={postItems}
+                connection={connection}
+                handleClickTimestamp={handleClickTimestamp}
+                handleRemoveSlot={handleRemoveSlot}
+                currentPost={currentPost}
+              />
+            );
+          })
+        }
+      </Wrapper>
+    );
+  }
 }
 
 ChannelSlots.propTypes = {

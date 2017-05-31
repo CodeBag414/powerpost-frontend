@@ -286,11 +286,14 @@ function globalReducer(state = initialState, action) {
       return state.set('posts', action.posts);
     case UPDATE_POST_SUCCESS: {
       const index = state.get('posts').findIndex((post) => post.post.post_id === action.post.post_id);
-      return state.update('posts', (posts) => {
-        const reducedPosts = [...posts];
-        reducedPosts[index].post = action.post;
-        return reducedPosts;
-      });
+      return (index > -1) ?
+        state.update('posts', (posts) => {
+          const reducedPosts = [...posts];
+          reducedPosts[index].post = action.post;
+          return reducedPosts;
+        })
+      :
+        state;
     }
     case SET_CONNECTIONS:
       return state.set('connections', action.connections);
