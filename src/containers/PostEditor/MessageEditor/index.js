@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import { MenuItem } from 'react-toolbox/lib/menu';
+
+import Popup from 'containers/Calendar/CalendarSidebar/Popup';
 
 import MultiLineInput from 'components/MultiLineInput';
-import MediaItemPreview from 'components/MediaItemPreview';
-import { fromJS } from 'immutable';
+import Preview from 'components/Preview';
+
+import Spinner from 'elements/atm.Spinner';
+
 import Wrapper from './Wrapper';
 import MessageToolbar from './MessageToolbar';
-import Popup from 'containers/Calendar/CalendarSidebar/Popup';
-import { MenuItem } from 'react-toolbox/lib/menu';
-import styled from 'styled-components';
-import Spinner from 'elements/atm.Spinner';
 
 const CustomMenuItem = styled(MenuItem)`
   width: 170px;
@@ -56,7 +58,7 @@ const IMenu = styled.i`
   cursor: pointer;
 `;
 
-class MessageEditor extends React.Component {
+class MessageEditor extends Component {
   state = {
     menuVisible: false,
   };
@@ -70,41 +72,41 @@ class MessageEditor extends React.Component {
       menuVisible: true,
     });
   }
-  
+
   render() {
-    const { message, isProcessing, handleMessageChange,handleMessageBlur, characterLimit, openFilePicker, mediaItem, removeMediaItem, openEditor, pushToLibrary, accountId, postSetId, openLinkDialog, openMediaLibrary } = this.props;
+    const { message, isProcessing, handleMessageChange, handleMessageBlur, characterLimit, openFilePicker, mediaItem, removeMediaItem, openEditor, pushToLibrary, accountId, postSetId, openLinkDialog, openMediaLibrary } = this.props;
     const { menuVisible } = this.state;
     return (
-    <Wrapper>
-      <MessageToolbar characterLimit={characterLimit} openFilePicker={openFilePicker} pushToLibrary={pushToLibrary} accountId={accountId} postSetId={postSetId} openLinkDialog={openLinkDialog} openMediaLibrary={openMediaLibrary} />
-      <MultiLineInput
-        message={message}
-        handleMessageChange={handleMessageChange}
-        onBlur={handleMessageBlur}
-      />
-      {isProcessing && 
-        <Spinner />
-      }
-      {mediaItem.media_item_id && !isProcessing &&
-      <ItemWrapper>
-      <IMenu className="fa fa-ellipsis-h" onClick={this.handleShowPopup} />
-        {menuVisible &&
-          <Popup onOutsideClick={this.handleHidePopup}>
-            <CustomMenuItem onClick={removeMediaItem} >
-              <i className="fa fa-trash" />
-              <MenuItemCaption>Remove</MenuItemCaption>
-            </CustomMenuItem>
-            <CustomMenuItem onClick={() => openEditor(mediaItem)}>
-              <i className="fa fa-edit" />
-              <MenuItemCaption>Edit</MenuItemCaption>
-            </CustomMenuItem>
-          </Popup>
+      <Wrapper>
+        <MessageToolbar characterLimit={characterLimit} openFilePicker={openFilePicker} pushToLibrary={pushToLibrary} accountId={accountId} postSetId={postSetId} openLinkDialog={openLinkDialog} openMediaLibrary={openMediaLibrary} />
+        <MultiLineInput
+          message={message}
+          handleMessageChange={handleMessageChange}
+          onBlur={handleMessageBlur}
+        />
+        {isProcessing &&
+          <Spinner />
         }
-        <MediaItemPreview mediaItems={fromJS([mediaItem])} />
-      </ItemWrapper>
-      }
-    </Wrapper>
-  );
+        {mediaItem.media_item_id && !isProcessing &&
+        <ItemWrapper>
+          <IMenu className="fa fa-ellipsis-h" onClick={this.handleShowPopup} />
+            {menuVisible &&
+              <Popup onOutsideClick={this.handleHidePopup}>
+                <CustomMenuItem onClick={removeMediaItem} >
+                  <i className="fa fa-trash" />
+                  <MenuItemCaption>Remove</MenuItemCaption>
+                </CustomMenuItem>
+                <CustomMenuItem onClick={() => openEditor(mediaItem)}>
+                  <i className="fa fa-edit" />
+                  <MenuItemCaption>Edit</MenuItemCaption>
+                </CustomMenuItem>
+              </Popup>
+            }
+          <Preview item={mediaItem} />
+        </ItemWrapper>
+        }
+      </Wrapper>
+    );
   }
 }
 
@@ -113,6 +115,16 @@ MessageEditor.propTypes = {
   handleMessageChange: PropTypes.func,
   handleMessageBlur: PropTypes.func,
   characterLimit: PropTypes.number,
+  isProcessing: PropTypes.bool,
+  openFilePicker: PropTypes.func,
+  removeMediaItem: PropTypes.func,
+  mediaItem: PropTypes.shape(),
+  openEditor: PropTypes.func,
+  pushToLibrary: PropTypes.func,
+  postSetId: PropTypes.string,
+  accountId: PropTypes.string,
+  openMediaLibrary: PropTypes.func,
+  openLinkDialog: PropTypes.func,
 };
 
 export default MessageEditor;
