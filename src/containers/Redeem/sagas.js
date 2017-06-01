@@ -1,5 +1,6 @@
-import { takeLatest, call, put } from 'redux-saga/effects';
+import { takeLatest, call, put, take, cancel } from 'redux-saga/effects';
 import cookie from 'react-cookie';
+import { LOCATION_CHANGE } from 'react-router-redux';
 
 import { postData } from 'utils/request';
 
@@ -25,7 +26,11 @@ export function* redeemTokenWorker(action) {
 }
 
 export function* redeemSaga() {
-  yield takeLatest(REDEEM_TOKEN, redeemTokenWorker);
+  const watcherA = yield takeLatest(REDEEM_TOKEN, redeemTokenWorker);
+
+  yield take(LOCATION_CHANGE);
+
+  yield cancel(watcherA);
 }
 
 export default [
