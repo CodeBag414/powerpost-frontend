@@ -108,8 +108,8 @@ class Content extends Component {
     let newMediaItem = postSet.getIn(['details', 'media_items']) || fromJS([]);
 
     newMediaItem = newMediaItem.toJS();
-    if (newMessage === this.state.globalMessage || this.props.postSet.get('details').isEmpty()) {
-      this.setState({ globalMessage: newMessage });
+    if (this.props.postSet.get('details').isEmpty() || this.props.postSet.getIn(['details', 'post_set_id']) !== postSet.getIn(['details', 'post_set_id'])) {
+      this.setState({ globalMessage: newMessage || '' });
     }
     if (newMediaItem[0]) {
       this.setState({ item: newMediaItem[0] });
