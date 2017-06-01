@@ -135,7 +135,7 @@ class PostEditor extends Component {
     const tabs = [
       { name: 'Power Post', component: <Content postSet={postSet} accountId={this.props.accountId} id={this.props.id} /> },
       { name: 'Channels & Times', component: <Channels postSet={postSet} posts={posts} updatePost={updatePost} />, count: totalTimeslots },
-      { name: 'Shared Streams', component: <SharedStreams postSet={postSet} /> },
+      { name: 'Shared Stream', component: <SharedStreams postSet={postSet} /> },
     ];
     return (
       <Wrapper>
