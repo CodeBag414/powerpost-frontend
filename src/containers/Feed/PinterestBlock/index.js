@@ -12,10 +12,12 @@ function getFormattedTime(time) {
   return moment(time).format('MMMM D [at] h:mm:ss a');
 }
 
-function PinterestBlock({ post }) {
+function PinterestBlock({ post, isPreview }) {
   return (
     <Wrapper>
-      <img src={post.image.original.url} alt="Pin" />
+      {post.image.original.url &&
+        <img src={post.image.original.url} alt="Pin" />
+      }
       <Content>
         <Linkify properties={{ target: '_blank' }}>
           <div className="pin-note">{post.note}</div>
@@ -28,27 +30,30 @@ function PinterestBlock({ post }) {
         </div>
         <div className="pin-timestamp">{getFormattedTime(post.created_at)}</div>
       </Content>
-      <Footer>
-        <span className="pin-footer-detail">
-          <i className="fa fa-heart" aria-hidden="true"></i>
-          <span>{post.counts.likes}</span>
-        </span>
-        <span className="pin-footer-detail">
-          <i className="fa fa-share-alt" aria-hidden="true"></i>
-          <span>{post.counts.comments}</span>
-        </span>
-        <span className="pin-footer-detail">
-          <i className="fa fa-thumb-tack" aria-hidden="true"></i>
-          <span>{post.counts.repins}</span>
-        </span>
-        <Link className="post-view-button" href={`//pinterest.com/pin/${post.id}`} target="_blank" label="View" icon="open_in_new" />
-      </Footer>
+      {!isPreview &&
+        <Footer>
+          <span className="pin-footer-detail">
+            <i className="fa fa-heart" aria-hidden="true"></i>
+            <span>{post.counts.likes}</span>
+          </span>
+          <span className="pin-footer-detail">
+            <i className="fa fa-share-alt" aria-hidden="true"></i>
+            <span>{post.counts.comments}</span>
+          </span>
+          <span className="pin-footer-detail">
+            <i className="fa fa-thumb-tack" aria-hidden="true"></i>
+            <span>{post.counts.repins}</span>
+          </span>
+          <Link className="post-view-button" href={`//pinterest.com/pin/${post.id}`} target="_blank" label="View" icon="open_in_new" />
+        </Footer>
+      }
     </Wrapper>
   );
 }
 
 PinterestBlock.propTypes = {
   post: PropTypes.object,
+  isPreview: PropTypes.bool,
 };
 
 export default PinterestBlock;

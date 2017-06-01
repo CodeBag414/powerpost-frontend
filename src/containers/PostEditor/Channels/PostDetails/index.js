@@ -9,13 +9,23 @@ import PPButton from 'elements/atm.Button';
 
 import FacebookBlock from 'containers/Feed/FacebookBlock';
 import TwitterBlock from 'containers/Feed/TwitterBlock';
+import LinkedInBlock from 'containers/Feed/LinkedInBlock';
+import PinterestBlock from 'containers/Feed/PinterestBlock';
 
 import MultiLineInput from 'components/MultiLineInput';
 import Wrapper from './Wrapper';
 
-function buildPostPreview(postData, postMessage, connection, mediaItems) {
-  // console.log('PostPreview post', post.toJS());
-  const post = postData.update('message', () => postMessage);
+function getCreatorURL(url) {
+  return url.substr(0, url.substr(0, url.length - 1).lastIndexOf('/') + 1);
+}
+
+function buildPostPreview(postData, postMessage, postTime, connection, mediaItems) {
+  const post = postData.merge({
+    message: postMessage,
+    schedule_time: postTime,
+  });
+  // console.log('PostPreview post.toJS()', postData.toJS());
+  // console.log('PostDetails connection', connection);
   let postToPreview = {};
   let type = '';
   let image = '';
@@ -61,6 +71,41 @@ function buildPostPreview(postData, postMessage, connection, mediaItems) {
         text: `${post.get('message')}${mediaUrl || ''}`,
       };
       return <TwitterBlock post={postToPreview} connection={connection} index="0" isPreview />;
+    }
+    case 'linkedin': {
+      postToPreview = {
+        ...post.toJS(),
+        timestamp: new Date(moment.unix(post.get('schedule_time'))),
+        updateContent: {
+          companyStatusUpdate: {
+            share: {
+              comment: post.get('message'),
+            },
+          },
+        },
+      };
+      return <LinkedInBlock post={postToPreview} connection={connection} isPreview />;
+    }
+    case 'pinterest': {
+      postToPreview = {
+        ...post.toJS(),
+        created_at: new Date(moment.unix(post.get('schedule_time'))),
+        image: {
+          original: {
+            url: type === 'image' && image,
+          },
+        },
+        note: post.get('message'),
+        creator: {
+          first_name: connection.parent_display_name,
+          url: getCreatorURL(connection.url),
+        },
+        board: {
+          name: connection.properties.board_data.name,
+          url: connection.properties.board_data.url,
+        },
+      };
+      return <PinterestBlock post={postToPreview} isPreview />;
     }
     default:
       return null;
@@ -117,7 +162,7 @@ function PostDetails({ post, postSet, postMessage, postTime, connection, handleR
         Preview Post
       </div>
       <div className="post-preview">
-        {buildPostPreview(post, postMessage, connection, postSet.getIn(['details', 'media_items']).toJS())}
+        {buildPostPreview(post, postMessage, postTime, connection, postSet.getIn(['details', 'media_items']).toJS())}
       </div>
     </Wrapper>
   );
