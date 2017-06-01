@@ -336,17 +336,6 @@ export function* inviteEmailToStreamSaga() {
   for (;;) {
     const { payload } = yield take(INVITE_EMAIL_TO_STREAM_REQUEST);
 
-    const streamAccounts = yield* fetchStreamAccountsWorker(payload.accountId);
-
-    console.log('---- streamAccounts --', streamAccounts);
-
-    if (streamAccounts) {
-      if (find(streamAccounts, { email: payload.email })) {
-        toastr.error('The email has already been subscribed to this stream');
-        break;
-      }
-    }
-
     let data;
 
     try {
@@ -365,24 +354,6 @@ export function* inviteEmailToStreamSaga() {
       yield put(inviteEmailToStreamSuccess(data.payload));
     }
   }
-}
-
-function* fetchStreamAccountsWorker(accountId) {
-  let streamsAccounts;
-
-  try {
-    const { data } = yield call(getData, `/account_api/account_stream_accounts/${accountId}`);
-
-    if (data.status !== 'success') {
-      throw Error('Status Wrong!');
-    }
-    streamsAccounts = data.streams_accounts;
-  } catch (error) {
-    toastr.error(error.message || 'Fetching stream accounts failed');
-    return null;
-  }
-
-  return streamsAccounts;
 }
 
 export function* mediaItemSaga() {
