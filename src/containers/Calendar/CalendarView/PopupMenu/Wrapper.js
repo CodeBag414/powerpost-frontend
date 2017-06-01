@@ -21,7 +21,7 @@ const Wrapper = styled.div`
   left: ${(props) => `${getX(props)}px`};
   top: ${(props) => `${props.position.y}px`};
   transform: translate(-50%, calc(-100% - ${arrowHeight}px));
-  z-index: 10;
+  z-index: 10000;
   &::before {
     content: "";
     position: absolute;
