@@ -645,9 +645,16 @@ export function* updatePostSetSaga() {
   yield takeLatest(UPDATE_POST_SET_REQUEST, updatePostSetWorker);
 }
 
-function* getPostsWorker({ accountId }) {
-  console.log(accountId);
-  const requestUrl = `/post_api/posts/${accountId}`;
+function* fetchPostsWorker({ accountId }) {
+  const data = {
+    payload: {
+      sort_by: 'creation_time',
+      limit: 500,
+    },
+  };
+  const params = serialize(data);
+
+  const requestUrl = `/post_api/posts/${accountId}?${params}`;
 
   const response = yield call(getData, requestUrl);
   if (response.data.status === 'success') {
@@ -676,7 +683,7 @@ function* updatePostRequestWorker({ post }) {
 }
 
 export function* fetchPostsSaga() {
-  yield takeLatest(FETCH_POSTS, getPostsWorker);
+  yield takeLatest(FETCH_POSTS, fetchPostsWorker);
 }
 
 export function* updatePostSaga() {
