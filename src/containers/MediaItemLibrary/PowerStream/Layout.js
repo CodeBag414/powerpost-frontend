@@ -88,7 +88,7 @@ class PowerStreamLayout extends Component {
       } else {
         if (!userAccount.shared_streams || userAccount.shared_streams.length === 0) {
           this.setState({
-            error: 'This brand does not have any current subscriptions to power streams.',
+            error: 'This brand does not have any current subscriptions to shared streams.',
           });
           return;
         }
