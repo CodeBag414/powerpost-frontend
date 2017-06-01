@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import Input from 'react-toolbox/lib/input';
 import PPButton from 'elements/atm.Button';
+import PPAvatar from 'elements/atm.Avatar';
 
 import Wrapper from './Wrapper';
 
@@ -26,13 +28,21 @@ class CommentInput extends Component {
   render() {
     const { user } = this.props;
     const { value } = this.state;
+    const avatarUrl = _.get(user, 'properties.thumb_url');
+    const avatarClr = _.get(user, 'properties.color');
+    const name = _.get(user, 'display_name');
     return (
       <Wrapper>
-        <img
-          className="avatar"
-          src={user && user.properties.thumb_url}
-          alt=""
-        />
+        <div className="avatar">
+          <PPAvatar
+            size={40}
+            radius={2}
+            image={avatarUrl}
+            title={name}
+            backgroundColor={avatarClr}
+            isClickable={false}
+          />
+        </div>
         <div className="input">
           <Input
             type="text"

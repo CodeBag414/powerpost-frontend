@@ -12,6 +12,7 @@ class ChannelSlots extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { posts } = this.props;
+    let oneSlotDeleted = false;
     if (nextProps.posts !== posts) {
       let newPostItem;
       if (Object.keys(nextProps.posts).length > Object.keys(posts).length) {
@@ -31,6 +32,19 @@ class ChannelSlots extends React.Component {
           if (nextProps.posts[connectionId].length > posts[connectionId].length) {
             newPostItem = differenceWith(nextProps.posts[connectionId], posts[connectionId], isEqual);
             break;
+          } else if (nextProps.posts[connectionId].length < posts[connectionId].length) {
+            oneSlotDeleted = true;
+            break;
+          }
+        }
+
+        if (oneSlotDeleted) {
+          for (const connectionId in nextProps.posts) {
+            // Making sure new posts have at least one slot
+            if (nextProps.posts[connectionId].length > 0) {
+              newPostItem = nextProps.posts[connectionId];
+              break;
+            }
           }
         }
       }

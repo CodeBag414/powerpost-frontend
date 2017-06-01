@@ -13,7 +13,7 @@ import {
   setConnection,
 } from './actions';
 
-function* getSocialFeed({ connectionId }) {
+function* fetchSocialFeedWorker({ connectionId }) {
   const requestUrl = `/connection_api/social_feed/${connectionId}`;
 
   const response = yield call(getData, requestUrl);
@@ -28,13 +28,13 @@ function* getSocialFeed({ connectionId }) {
   }
 }
 
-export function* fetchSocialFeed() {
-  const watcher = yield takeLatest(FETCH_SOCIAL_FEED, getSocialFeed);
+export function* fetchSocialFeedSaga() {
+  const watcher = yield takeLatest(FETCH_SOCIAL_FEED, fetchSocialFeedWorker);
 
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
 }
 
 export default [
-  fetchSocialFeed,
+  fetchSocialFeedSaga,
 ];

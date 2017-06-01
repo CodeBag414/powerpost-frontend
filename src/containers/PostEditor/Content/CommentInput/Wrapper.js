@@ -25,9 +25,6 @@ const Wrapper = styled.div`
     }
   }
   .avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 2px;
     position: relative;
     z-index: 100;
   }
