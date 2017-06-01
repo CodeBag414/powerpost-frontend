@@ -211,7 +211,7 @@ export function createRoutes(store, auth) {
             },
             {
               path: 'shared_streams/:stream_category(/:stream_id)',
-              name: 'Shared Streams',
+              name: 'Shared Stream',
               getComponent(nextState, cb) {
                 const importModules = Promise.all([
                   System.import('containers/MediaItemLibrary/PowerStream'),
