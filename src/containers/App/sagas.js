@@ -538,6 +538,8 @@ export function* fetchPostSetsWorker() {
   const currentAccount = yield select(makeSelectCurrentAccount());
   const data = {
     payload: {
+      sort_by: 'creation_time',
+      limit: 500,
       statuses: [1, 2, 3, 4, 5, 6],
     },
   };
