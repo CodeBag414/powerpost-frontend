@@ -73,14 +73,17 @@ function buildPostPreview(postData, postMessage, postTime, connection, mediaItem
       return <TwitterBlock post={postToPreview} connection={connection} index="0" isPreview />;
     }
     case 'linkedin': {
-      // postToPreview = {
-      //   ...post.toJS(),
-      //   created_time: {
-      //     date: new Date(moment.unix(post.get('schedule_time'))),
-      //   },
-      //   type,
-      //   full_picture: image,
-      // };
+      postToPreview = {
+        ...post.toJS(),
+        timestamp: new Date(moment.unix(post.get('schedule_time'))),
+        updateContent: {
+          companyStatusUpdate: {
+            share: {
+              comment: post.get('message'),
+            },
+          },
+        },
+      };
       return <LinkedInBlock post={postToPreview} connection={connection} isPreview />;
     }
     case 'pinterest': {

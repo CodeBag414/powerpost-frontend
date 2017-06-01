@@ -42,7 +42,7 @@ function processLinkedinText(post) {
 
   if (shareContent && shareContent.shortenedUrl) {
     const urlComponent = `<a class="ln-url" href="${shareContent.shortenedUrl}" target="_blank">${shareContent.shortenedUrl}</a>`;
-    comment = comment ? `${comment} ${urlComponent}` : urlComponent;
+    comment = comment ? `${comment}<br>${urlComponent}` : urlComponent;
   }
 
   return comment;
