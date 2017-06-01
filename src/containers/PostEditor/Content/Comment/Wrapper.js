@@ -5,7 +5,7 @@ const Wrapper = styled.div`
   align-items: flex-start;
   padding: 0 11px;
   margin-bottom: 22px;
-  .content {
+  .comment-content {
     flex: 1;
     margin-left: 11px;
     white-space: pre-wrap;
@@ -35,9 +35,6 @@ const Wrapper = styled.div`
     }
   }
   .avatar {
-    width: 25px;
-    height: 25px;
-    border-radius: 4px;
     margin-top: 3px;
   }
   .ellipsis {

@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
+import { fromJS } from 'immutable';
+import { routerActions } from 'react-router-redux';
+import filepicker from 'filepicker-js';
+
 import LinkEditor from 'containers/MediaItemLibrary/LinkEditor';
 import FileEditor from 'containers/MediaItemLibrary/FileEditor';
 import VideoEditor from 'containers/MediaItemLibrary/VideoEditor';
 import LinkDialog from 'containers/MediaItemLibrary/LinkDialog';
 import ImageEditor from 'containers/MediaItemLibrary/ImageEditor';
-import MediaLibraryDialog from '../MediaLibraryDialog';
-
-import { fromJS } from 'immutable';
-import { routerActions } from 'react-router-redux';
 
 import {
   updatePostSetRequest,
@@ -48,6 +48,7 @@ import MessageEditor from '../MessageEditor';
 import Comments from './Comments';
 import Comment from './Comment';
 import CommentInput from './CommentInput';
+import MediaLibraryDialog from '../MediaLibraryDialog';
 
 class Content extends Component {
 
@@ -58,13 +59,28 @@ class Content extends Component {
     user: PropTypes.shape(),
     pending: PropTypes.bool,
     postSet: PropTypes.object,
+    accountId: PropTypes.number,
+    filePickerKey: PropTypes.string,
+    isProcessing: PropTypes.bool,
+    pushToLibrary: PropTypes.func,
+    id: PropTypes.string,
+    urlContent: PropTypes.string,
+    filter: PropTypes.string,
+    mediaItems: PropTypes.array,
     updatePostSet: PropTypes.func,
+    fetchCollections: PropTypes.func,
+    clearUrlContent: PropTypes.func,
+    createMediaItem: PropTypes.func,
+    updateMediaItem: PropTypes.func,
+    fetchUrlData: PropTypes.func,
+    removeMediaItem: PropTypes.func,
+    setMediaItem: PropTypes.func,
   };
 
   static defaultProps = {
     params: {},
   };
-  
+
   constructor(props) {
     super(props);
     const globalMessage = !props.postSet.get('details').isEmpty() ? props.postSet.getIn(['details', 'message']) : '';
@@ -87,8 +103,7 @@ class Content extends Component {
     this.props.fetchCollections(this.props.accountId);
   }
 
-  componentWillReceiveProps({ postSet, location }) {
-
+  componentWillReceiveProps({ postSet/* , location*/ }) {
     const newMessage = postSet.getIn(['details', 'message']);
     let newMediaItem = postSet.getIn(['details', 'media_items']) || fromJS([]);
 
@@ -99,10 +114,10 @@ class Content extends Component {
     if (newMediaItem[0]) {
       this.setState({ item: newMediaItem[0] });
     }
-    if (newMediaItem.length == 0 && this.state.item.media_item_id) {
+    if (newMediaItem.length === 0 && this.state.item.media_item_id) {
       this.setState({ item: {} });
     }
-    
+
    // if(location.query.item) {
     //  const item = JSON.parse(location.query.item);
    //   this.props.setMediaItem(item);
@@ -116,7 +131,7 @@ class Content extends Component {
     const characterLimit = 140 - (globalMessage ? globalMessage.length : 0);
     this.setState({ globalMessage, characterLimit });
   }
-  
+
   handleMessageBlur = () => {
     const { updatePostSet, postSet } = this.props;
     const { globalMessage } = this.state;
@@ -126,7 +141,7 @@ class Content extends Component {
       message: globalMessage,
     });
   }
-  
+
   openLinkEditor = (linkItem) => {
     if (linkItem) {
       this.setState({ linkEditor: true, mediaItem: linkItem });
@@ -138,7 +153,7 @@ class Content extends Component {
   openFileEditor = (fileItem) => {
     this.setState({ fileEditor: true, mediaItem: fileItem });
   }
-  
+
   openMediaLibrary = () => {
     this.setState({ mediaLibrary: true });
   }
@@ -146,17 +161,17 @@ class Content extends Component {
   openImageEditor = (imageItem) => {
     this.setState({ imageEditor: true, mediaItem: imageItem });
   }
-  
+
   openVideoEditor = (videoItem) => {
     this.setState({ videoEditor: true, mediaItem: videoItem });
   }
-  
+
   openLinkDialog = () => {
     this.setState({ linkDialog: true });
   }
-  
+
   closeAllDialog = () => {
-    this.setState({ 
+    this.setState({
       linkDialog: false,
       linkEditor: false,
       videoEditor: false,
@@ -171,22 +186,22 @@ class Content extends Component {
   }
 
   handleLinkEditorSave = (item) => {
+    const { filePickerKey } = this.props;
     this.closeAllDialog();
-    const {action, ...linkItem} = item;
-    const filepicker = require('filepicker-js');
-    filepicker.setKey(this.props.filePickerKey);
-    if(linkItem.picture) {
-      filepicker.storeUrl('https://process.filestackapi.com/' + this.props.filePickerKey + '/' + linkItem.picture, (Blob) => {
-        console.log(Blob);
+    const { action, ...linkItem } = item;
+    filepicker.setKey(filePickerKey);
+    if (linkItem.picture) {
+      filepicker.storeUrl(`https://process.filestackapi.com/${filePickerKey}/${linkItem.picture}`, (Blob) => {
+        // console.log(Blob);
         linkItem.picture = Blob.url;
         linkItem.picture_key = Blob.key;
         filepicker.storeUrl(
-          'https://process.filestackapi.com/' + this.props.filePickerKey + '/resize=width:300,height:300,fit:clip/' + linkItem.picture,
-           (Blob) => {
-            linkItem.thumb_key = Blob.key;
+          `https://process.filestackapi.com/${filePickerKey}/resize=width:300,height:300,fit:clip/${linkItem.picture}`,
+          (blob) => {
+            linkItem.thumb_key = blob.key;
             linkItem.account_id = this.props.accountId;
-            console.log(linkItem);
-            linkItem.mediaItemType="link";
+            // console.log(linkItem);
+            linkItem.mediaItemType = 'link';
             if (action === 'create') {
               this.props.createMediaItem(linkItem);
             } else if (action === 'update') {
@@ -195,7 +210,7 @@ class Content extends Component {
           });
       });
     } else {
-      linkItem.mediaItemType="link";
+      linkItem.mediaItemType = 'link';
       linkItem.account_id = this.props.accountId;
       if (action === 'create') {
         this.props.createMediaItem(linkItem);
@@ -203,49 +218,49 @@ class Content extends Component {
         this.props.updateMediaItem(linkItem);
       }
     }
-    setTimeout(() => { this.handleMessageBlur()}, 5000);
+    setTimeout(() => this.handleMessageBlur(), 5000);
   }
-  
+
   openFilePicker = () => {
-    const filepicker = require('filepicker-js');
-    filepicker.setKey(this.props.filePickerKey);
-    
-    const filePickerOptions = { 
-        buttonText: 'Upload', 
-        container:'modal', 
-        multiple: false,
-        maxFiles: 1, 
-        imageQuality: 80, 
-        imageMax: [1200, 1200], 
-        services: [ 'CONVERT', 'COMPUTER', 'WEBCAM', 'VIDEO', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
-        conversions: ['crop', 'filter'],
-    }; 
+    const { filePickerKey } = this.props;
+    filepicker.setKey(filePickerKey);
+
+    const filePickerOptions = {
+      buttonText: 'Upload',
+      container: 'modal',
+      multiple: false,
+      maxFiles: 1,
+      imageQuality: 80,
+      imageMax: [1200, 1200],
+      services: ['CONVERT', 'COMPUTER', 'WEBCAM', 'VIDEO', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
+      conversions: ['crop', 'filter'],
+    };
     const filePickerStoreOptions = {
-        location: 'S3'
+      location: 'S3',
     };
     function onFail(error) {
-        console.log('error: ' + error);
+      console.log('error: ', error);
     }
-    
+
     filepicker.pickAndStore(filePickerOptions, filePickerStoreOptions, this.handleOpenFilePicker, onFail);
   }
-  
+
   handleVideoEditorSave(videoItem) {
     this.setState({ videoEditor: false, mediaItem: {} });
-    const {action, ...item} = videoItem;
-    const filepicker = require('filepicker-js');
-    filepicker.setKey(this.props.filePickerKey);
-    if(item.picture) {
-      filepicker.storeUrl('https://process.filestackapi.com/' + this.props.filePickerKey + '/' + item.picture, (Blob) => {
-        console.log(Blob);
+    const { action, ...item } = videoItem;
+    const { filePickerKey } = this.props;
+    filepicker.setKey(filePickerKey);
+    if (item.picture) {
+      filepicker.storeUrl(`https://process.filestackapi.com/${filePickerKey}/${item.picture}`, (Blob) => {
+        // console.log(Blob);
         item.picture = Blob.url;
         item.picture_key = Blob.key;
         filepicker.storeUrl(
-          'https://process.filestackapi.com/' + this.props.filePickerKey + '/resize=width:300,height:300,fit:clip/' + item.picture,
-           (Blob) => {
-            item.thumb_key = Blob.key;
+          `https://process.filestackapi.com/${filePickerKey}/resize=width:300,height:300,fit:clip/${item.picture}`,
+          (blob) => {
+            item.thumb_key = blob.key;
             item.account_id = this.props.accountId;
-            item.mediaItemType="link";
+            item.mediaItemType = 'link';
             if (action === 'create') {
               this.props.createMediaItem(item);
             } else if (action === 'update') {
@@ -253,75 +268,72 @@ class Content extends Component {
             }
           });
       });
-    } else {
-      if (action === 'update') {
-        this.props.updateMediaItem(item);
-      } else if (action === 'create') {
-        this.props.createMediaItem(item);
-      }
+    } else if (action === 'update') {
+      this.props.updateMediaItem(item);
+    } else if (action === 'create') {
+      this.props.createMediaItem(item);
     }
-    setTimeout(() => { this.handleMessageBlur()}, 3000);
+    setTimeout(() => this.handleMessageBlur(), 3000);
   }
 
   handleOpenFilePicker = (mediaItem) => {
-    const filepicker = require('filepicker-js');
-    filepicker.setKey(this.props.filePickerKey);
-    
-    if(mediaItem[0].mimetype.match('image')) {
-  
+    const { filePickerKey, accountId } = this.props;
+    filepicker.setKey(filePickerKey);
+
+    if (mediaItem[0].mimetype.match('image')) {
       filepicker.storeUrl(
-        'https://process.filestackapi.com/' + this.props.filePickerKey + '/resize=width:300,height:300,fit:clip/' + mediaItem[0].url,
-        (Blob) => {
-          mediaItem[0]["thumb_key"] = Blob.key;
-          mediaItem[0].account_id = this.props.accountId;
+        `https://process.filestackapi.com/${filePickerKey}/resize=width:300,height:300,fit:clip/${mediaItem[0].url}`,
+        (blob) => {
           const imageItem = {
             mediaItemType: 'file',
             properties: {
               ...mediaItem[0],
+              thumb_key: blob.key,
+              account_id: accountId,
             },
           };
-          console.log(mediaItem);
+          // console.log(mediaItem);
           this.openImageEditor(imageItem);
-        }); 
-    } else if(mediaItem[0].mimetype.match('video')) {
-      mediaItem[0].account_id = this.props.accountId;
+        });
+    } else if (mediaItem[0].mimetype.match('video')) {
       const videoItem = {
         mediaItemType: 'file',
         properties: {
           ...mediaItem[0],
+          account_id: accountId,
         },
       };
-      console.log(mediaItem);
+      // console.log(mediaItem);
       this.openVideoEditor(videoItem);
-    } else  {
-      console.log(mediaItem);
-      mediaItem[0].account_id = this.props.accountId;
+    } else {
+      // console.log(mediaItem);
       const fileItem = {
         mediaItemType: 'file',
         properties: {
           ...mediaItem[0],
-        }
+          account_id: accountId,
+        },
       };
       this.openFileEditor(fileItem);
     }
   }
-  
+
   handleFileEditorSave(item) {
     this.setState({ fileEditor: false, mediaItem: {} });
-    const {action, ...fileItem} = item;
-    const filepicker = require('filepicker-js');
-    filepicker.setKey(this.props.filePickerKey);
-    if(fileItem.picture) {
-      filepicker.storeUrl('https://process.filestackapi.com/' + this.props.filePickerKey + '/' + fileItem.picture, (Blob) => {
-        console.log(Blob);
+    const { action, ...fileItem } = item;
+    const { filePickerKey, accountId } = this.props;
+    filepicker.setKey(filePickerKey);
+    if (fileItem.picture) {
+      filepicker.storeUrl(`https://process.filestackapi.com/${filePickerKey}/${fileItem.picture}`, (Blob) => {
+        // console.log(Blob);
         fileItem.picture = Blob.url;
         fileItem.picture_key = Blob.key;
         filepicker.storeUrl(
-          'https://process.filestackapi.com/' + this.props.filePickerKey + '/resize=width:300,height:300,fit:clip/' + fileItem.picture,
-           (Blob) => {
-            fileItem.thumb_key = Blob.key;
-            fileItem.account_id = this.props.accountId;
-            fileItem.mediaItemType="link";
+          `https://process.filestackapi.com/${filePickerKey}/resize=width:300,height:300,fit:clip/${fileItem.picture}`,
+          (blob) => {
+            fileItem.thumb_key = blob.key;
+            fileItem.account_id = accountId;
+            fileItem.mediaItemType = 'link';
             if (action === 'create') {
               this.props.createMediaItem(fileItem);
             } else if (action === 'update') {
@@ -329,58 +341,57 @@ class Content extends Component {
             }
           });
       });
-    } else {
-      if (action === 'update') {
-        this.props.updateMediaItem(fileItem);
-      } else if (action === 'create') {
-        this.props.createMediaItem(fileItem);
-      }
+    } else if (action === 'update') {
+      this.props.updateMediaItem(fileItem);
+    } else if (action === 'create') {
+      this.props.createMediaItem(fileItem);
     }
-    setTimeout(() => { this.handleMessageBlur()}, 3000);
+    setTimeout(() => this.handleMessageBlur(), 3000);
   }
 
   handleAddLinkValue(event) {
-    this.setState({ addLinkValue: event.target.value });    
+    this.setState({ addLinkValue: event.target.value });
   }
-  
+
   handleAddLinkValueFromDialog(link) {
     this.setState({ addLinkValue: link }, () => this.handleAddLinkSubmit());
-  } 
-  
+  }
+
   handleAddLinkSubmit = () => {
-    console.log('in handle add link submit');
-    if(this.state.addLinkValue === '') {
-      console.log('no link value, abort');
-      this.setState({ addLinkValueError: 'A link URL is required'});
+    // console.log('in handle add link submit');
+    if (this.state.addLinkValue === '') {
+      // console.log('no link value, abort');
+      this.setState({ addLinkValueError: 'A link URL is required' });
       return;
     }
-    const linkItem = {
+
+    /* const linkItem = {
       source: this.state.addLinkValue,
-    };
-    
-    this.setState({ addLinkValue: '', linkDialog: false,  linkEditor: true });
-    
+    }; */
+
+    this.setState({ addLinkValue: '', linkDialog: false, linkEditor: true });
+
     this.props.fetchUrlData(this.state.addLinkValue);
   }
 
   handleImageEditorSave = (imageItem) => {
     this.setState({ imageEditor: false, mediaItem: {} });
-    const {action, ...rest} = imageItem;
+    const { action, ...rest } = imageItem;
     if (action === 'update') {
       this.props.updateMediaItem(rest);
     } else if (action === 'create') {
       this.props.createMediaItem(rest);
     }
-    setTimeout(() => { this.handleMessageBlur()}, 3000);
+    setTimeout(() => this.handleMessageBlur(), 3000);
   }
-  
+
   removeItem = () => {
     this.props.removeMediaItem();
-    setTimeout(() => { this.handleMessageBlur()}, 1500);
+    setTimeout(() => this.handleMessageBlur(), 1500);
   }
-  
+
   openEditor = (mediaItem) => {
-    if(mediaItem.type === 'image') {
+    if (mediaItem.type === 'image') {
       this.openImageEditor(mediaItem);
     } else if (mediaItem.type === 'link') {
       this.openLinkEditor(mediaItem);
@@ -390,22 +401,22 @@ class Content extends Component {
       this.openFileEditor(mediaItem);
     }
   }
-  
+
   addToPost = (mediaItem) => {
     this.props.setMediaItem(mediaItem);
     this.closeAllDialog();
-    
-    setTimeout(() => { this.handleMessageBlur()}, 3000);    
+
+    setTimeout(() => this.handleMessageBlur(), 3000);
   }
 
   render() {
     const { postComment, deleteComment, comments, user, pending, pushToLibrary, id, accountId } = this.props;
     const { globalMessage, characterLimit, item } = this.state;
-    const { params: { postset_id, account_id } } = this.props;
+    // const { params: { postset_id, account_id } } = this.props;
     const actions = [
-      { label: "close", onClick: this.closeAllDialog },
+      { label: 'close', onClick: this.closeAllDialog },
     ];
-    
+
     return (
       <Wrapper pending={pending}>
         <MessageEditor
@@ -439,11 +450,11 @@ class Content extends Component {
           )
         }
         <LinkEditor actions={actions} closeAllDialog={this.closeAllDialog} handleLinkEditorSave={this.handleLinkEditorSave} linkEditorDialog={this.state.linkEditor} urlContent={this.props.urlContent} filePickerKey={this.props.filePickerKey} linkItem={this.state.mediaItem} />
-        <ImageEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleImageEditorSave.bind(this)} isOpen={this.state.imageEditor} filePickerKey={this.props.filePickerKey} imageItem={this.state.mediaItem} />
-        <LinkDialog actions={actions} closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue.bind(this)} handleSubmit={this.handleAddLinkSubmit} value={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
-        <VideoEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleVideoEditorSave.bind(this)} isOpen={this.state.videoEditor} filePickerKey={this.props.filePickerKey} videoItem={this.state.mediaItem} />
-        <FileEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave.bind(this)} isOpen={this.state.fileEditor} filePickerKey={this.props.filePickerKey} fileItem={this.state.mediaItem} />
-        <MediaLibraryDialog actions={actions} filter={this.props.filter} closeAllDialog={this.closeAllDialog} isOpen={this.state.mediaLibrary} mediaItems={this.props.mediaItems} addToPost={this.addToPost}/>
+        <ImageEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleImageEditorSave} isOpen={this.state.imageEditor} filePickerKey={this.props.filePickerKey} imageItem={this.state.mediaItem} />
+        <LinkDialog actions={actions} closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue} handleSubmit={this.handleAddLinkSubmit} value={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
+        <VideoEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleVideoEditorSave} isOpen={this.state.videoEditor} filePickerKey={this.props.filePickerKey} videoItem={this.state.mediaItem} />
+        <FileEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave} isOpen={this.state.fileEditor} filePickerKey={this.props.filePickerKey} fileItem={this.state.mediaItem} />
+        <MediaLibraryDialog actions={actions} filter={this.props.filter} closeAllDialog={this.closeAllDialog} isOpen={this.state.mediaLibrary} mediaItems={this.props.mediaItems} addToPost={this.addToPost} />
       </Wrapper>
     );
   }
