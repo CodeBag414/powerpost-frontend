@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import enhanceWithClickOutside from 'react-click-outside';
+import PPAvatar from 'elements/atm.Avatar';
+
 import MenuPopover from './MenuPopover';
 import Wrapper from './Wrapper';
 
@@ -48,18 +50,24 @@ class Comment extends Component {
   render() {
     const { comment, removable } = this.props;
     const { popOver } = this.state;
-    const avatar = comment.getIn(['user', 'properties', 'thumb_url']);
+    const avatarUrl = comment.getIn(['user', 'properties', 'thumb_url']);
+    const avatarClr = comment.getIn(['user', 'properties', 'color']);
     const name = comment.getIn(['user', 'display_name']);
     const time = moment(comment.getIn(['creation_time']) * 1000).fromNow();
     const text = comment.getIn(['text']);
     return (
       <Wrapper onClick={this.hidePopover}>
-        <img
-          className="avatar"
-          src={avatar}
-          alt=""
-        />
-        <div className="content">
+        <div className="avatar">
+          <PPAvatar
+            size={25}
+            radius={4}
+            image={avatarUrl}
+            title={name}
+            backgroundColor={avatarClr}
+            isClickable={false}
+          />
+        </div>
+        <div className="comment-content">
           <div className="heading">
             <div className="name">{name}</div>
             <div className="time">{time}</div>
