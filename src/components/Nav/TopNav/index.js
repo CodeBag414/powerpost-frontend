@@ -105,7 +105,8 @@ class TopNav extends Component {
 
   render() {
     const isAccountPath = this.props.location.pathname.includes('/account/');
-    const avatar = this.props.user && this.props.user.properties ? this.props.user.properties.thumb_url : '#E7ECEE';
+    const avatar = this.props.user && this.props.user.properties ? this.props.user.properties.thumb_url : '';
+    const accountColor = this.props.user && this.props.user.properties ? this.props.user.properties.color : '#E7ECEE';
     const color = this.props.activeBrand && this.props.activeBrand.properties.color ? this.props.activeBrand.properties.color : '#E7ECEE';
     const thumbnail = this.props.activeBrand && this.props.activeBrand.properties.thumb_url ? this.props.activeBrand.properties.thumb_url : '';
     const menuOptions = {
@@ -117,7 +118,7 @@ class TopNav extends Component {
           radius={10}
           image={avatar}
           title={this.props.user.display_name}
-          backgroundColor={this.props.user.properties.color}
+          backgroundColor={accountColor}
           isClickable={false}
         />
       </Avatar>,
