@@ -15,6 +15,7 @@ import Layout from './Layout';
 
 const PowerStreamContainer = ({
   params: { account_id, stream_category, stream_id },
+  location: { hash },
   userAccount,
 }) => {
   if (!userAccount) {
@@ -23,6 +24,7 @@ const PowerStreamContainer = ({
 
   return (
     <Layout
+      hash={hash}
       accountId={account_id}
       streamCategory={stream_category}
       streamId={stream_id}
@@ -34,6 +36,9 @@ const PowerStreamContainer = ({
 PowerStreamContainer.propTypes = {
   params: PropTypes.object,
   userAccount: PropTypes.object,
+  location: PropTypes.shape({
+    hash: PropTypes.string,
+  }),
 };
 
 const mapStateToProps = createStructuredSelector({

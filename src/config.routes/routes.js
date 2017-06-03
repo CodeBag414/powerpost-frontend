@@ -214,11 +214,15 @@ export function createRoutes(store, auth) {
               name: 'Shared Stream',
               getComponent(nextState, cb) {
                 const importModules = Promise.all([
+                  System.import('containers/PostEditor/reducer'),
+                  System.import('containers/PostEditor/sagas'),
                   System.import('containers/MediaItemLibrary/PowerStream'),
                 ]);
                 const renderRoute = loadModule(cb);
 
-                importModules.then(([component]) => {
+                importModules.then(([postEditorReducer, postEditorSagas, component]) => {
+                  injectReducer('postEditor', postEditorReducer.default);
+                  injectSagas(postEditorSagas.default);
                   renderRoute(component);
                 });
 

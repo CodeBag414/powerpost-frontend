@@ -1,6 +1,6 @@
 import { takeLatest, takeEvery } from 'redux-saga';
 import { take, call, put, cancel, select, fork } from 'redux-saga/effects';
-import { LOCATION_CHANGE } from 'react-router-redux';
+import { LOCATION_CHANGE, push } from 'react-router-redux';
 import { find } from 'lodash';
 import { toastr } from 'lib/react-redux-toastr';
 
@@ -9,6 +9,10 @@ import {
   postData,
   putData,
 } from 'utils/request';
+
+import {
+  selectLocation,
+} from 'containers/App/selectors';
 
 import {
   makeSelectCurrentAccount,
@@ -42,6 +46,7 @@ import {
   UPDATE_MEDIA_ITEM_SUCCESS,
   FETCH_STREAM_POST_SETS_REQUEST,
   INVITE_EMAIL_TO_STREAM_REQUEST,
+  REPLICATE_POST_SET_REQUEST,
 } from './constants';
 
 import {
@@ -49,6 +54,8 @@ import {
   fetchStreamPostSetsFailure,
   inviteEmailToStreamSuccess,
   inviteEmailToStreamFailure,
+  replicatePostSetSuccess,
+  replicatePostSetFailure,
 } from './actions';
 
 export function* getCollections(action) {
@@ -356,6 +363,31 @@ export function* inviteEmailToStreamSaga() {
   }
 }
 
+export function* replicatePostSetSaga() {
+  for (;;) {
+    const { prevUrl, payload } = yield take(REPLICATE_POST_SET_REQUEST);
+
+    let data;
+
+    try {
+      const response = yield call(postData, '/post_api/replicate', { payload });
+      if (response.data.result !== 'success') {
+        throw Error('Status Wrong!');
+      }
+      data = response.data;
+    } catch (error) {
+      yield put(replicatePostSetFailure(error));
+      toastr.error(error.message || 'Can not copy the postset');
+    }
+
+    if (data) {
+      toastr.success('Success', 'Postset has been added to the stream.');
+      yield put(replicatePostSetSuccess(data.post_set));
+      yield put(push(`${prevUrl}#postset-${data.post_set.post_set_id}`));
+    }
+  }
+}
+
 export function* mediaItemSaga() {
   const watcherA = yield fork(collectionData);
   const watcherB = yield fork(linkData);
@@ -370,6 +402,7 @@ export function* mediaItemSaga() {
   const watcherK = yield fork(errorWatcher);
   const watcherL = yield fork(fetchStreamPostSetsWatcher);
   const watcherM = yield fork(inviteEmailToStreamSaga);
+  const watcherN = yield fork(replicatePostSetSaga);
 
   yield take(LOCATION_CHANGE);
 
@@ -386,6 +419,7 @@ export function* mediaItemSaga() {
   yield cancel(watcherK);
   yield cancel(watcherL);
   yield cancel(watcherM);
+  yield cancel(watcherN);
 }
 
 export default [
