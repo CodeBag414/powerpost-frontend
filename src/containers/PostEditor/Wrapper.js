@@ -6,6 +6,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   background: white;
+  z-index: 10000;
   .active-link {
     a {
       color: #424647 !important;

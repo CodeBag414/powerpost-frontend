@@ -17,9 +17,12 @@ import {
   updatePostSetRequest,
 } from 'containers/App/actions';
 
+import PostEditor from 'containers/PostEditor';
+
 import {
   fetchStreamPostSetsRequest,
   inviteEmailToStreamRequest,
+  replicatePostSetRequest,
 } from '../actions';
 import {
   makeSelectPostSets,
@@ -35,6 +38,7 @@ import InviteForm from './InviteForm';
 
 class PowerStreamLayout extends Component {
   static propTypes = {
+    hash: PropTypes.string,
     accountId: PropTypes.string,
     streamCategory: PropTypes.string,
     streamId: PropTypes.string,
@@ -45,6 +49,7 @@ class PowerStreamLayout extends Component {
     fetchStreamPostSets: PropTypes.func,  // eslint-disable-line
     updatePostSet: PropTypes.func,
     inviteEmailToStream: PropTypes.func,
+    replicatePostSet: PropTypes.func,
   }
 
   state = {
@@ -65,9 +70,9 @@ class PowerStreamLayout extends Component {
     if (this.props.postSet !== nextProps.postSet &&
       !nextProps.postSet.get('processing')) {
       if (nextProps.postSet.get('error')) {
-        toastr.error('The post has not been deleted from the stream.');
+        toastr.error('The post has NOT been updated.');
       } else {
-        toastr.success('Success', 'The post has been deleted from the stream');
+        toastr.success('Success', 'The post has been updated successfully');
       }
     }
 
@@ -79,7 +84,7 @@ class PowerStreamLayout extends Component {
     }
   }
 
-  changeStreamLink({ userAccount, accountId, streamCategory, streamId, fetchStreamPostSets }) {
+  changeStreamLink({ hash, userAccount, accountId, streamCategory, streamId, fetchStreamPostSets }) {
     let newStreamId = streamId;
 
     if (!streamId) {
@@ -98,7 +103,8 @@ class PowerStreamLayout extends Component {
       this.setState({
         error: '',
       });
-      browserHistory.push(`/account/${accountId}/library/shared_streams/${streamCategory}/${newStreamId}`);
+
+      browserHistory.push(`/account/${accountId}/library/shared_streams/${streamCategory}/${newStreamId}${hash}`);
     }
     fetchStreamPostSets(newStreamId, {
       query_by: 'stream_id',
@@ -106,16 +112,22 @@ class PowerStreamLayout extends Component {
   }
 
   handlePostSet = (removing, postSet) => {
-    const { updatePostSet, streamId } = this.props;
+    const { updatePostSet, replicatePostSet, streamId, accountId, streamCategory } = this.props;
     const postSetObj = postSet.toJS();
     if (removing) {
       updatePostSet({
         ...postSetObj,
-        id: postSetObj.post_set_id,
+        id: postSet.get('post_set_id'),
         stream_ids: filter(postSetObj.stream_ids || [], (id) => id !== streamId),
       }, 'powerstream');
     } else {
-
+      replicatePostSet(
+        `/account/${accountId}/library/shared_streams/${streamCategory}/${streamId}`,
+        {
+          account_id: accountId,
+          post_set_id: postSet.get('post_set_id'),
+        }
+      );
     }
   }
 
@@ -143,6 +155,7 @@ class PowerStreamLayout extends Component {
       accountId,
       streamCategory,
       streamId,
+      hash,
     } = this.props;
     const {
       error,
@@ -159,14 +172,6 @@ class PowerStreamLayout extends Component {
       );
     }
 
-    if (postSets.get('isFetching')) {
-      return (
-        <Wrapper>
-          <Loading />
-        </Wrapper>
-      );
-    }
-
     const owned = streamCategory === 'owned';
     const streams = owned ?
       userAccount.account_streams : userAccount.shared_streams;
@@ -177,6 +182,8 @@ class PowerStreamLayout extends Component {
     }));
     const currentStream = find(streams, { stream_id: streamId });
     const streamName = (currentStream || {}).title;
+
+    const postsetId = hash.startsWith('#postset') ? hash.split('-')[1] : null;
 
     return (
       <Wrapper>
@@ -202,6 +209,13 @@ class PowerStreamLayout extends Component {
             handleSubmit={this.sendInvite}
           />
         </CloseableDialog>
+        { postsetId &&
+          <PostEditor
+            id={postsetId}
+            accountId={accountId}
+          />
+        }
+        { postSets.get('isFetching') && <Loading /> }
       </Wrapper>
     );
   }
@@ -217,6 +231,7 @@ const mapDispatchToProps = {
   fetchStreamPostSets: fetchStreamPostSetsRequest,
   updatePostSet: updatePostSetRequest,
   inviteEmailToStream: inviteEmailToStreamRequest,
+  replicatePostSet: replicatePostSetRequest,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserCanAccount(PowerStreamLayout));
