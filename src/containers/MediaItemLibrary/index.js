@@ -443,8 +443,6 @@ class Library extends React.Component {
             <li style={{position: 'relative', listStyle: 'none', height: '40px'}}><span style={{backgroundColor: 'white', position: 'absolute', zIndex: '22', lineHeight: '40px', color: '#616669', paddingRight: '10px', fontSize: '12px'}}>Shared Streams</span><HR /></li>
             <ReactRouterMenuItem caption='Subscriptions' activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/shared_streams/subscriptions`} style={{color: '#616669', fontWeight: '700', fontSize: '13px !important'}}/>
             <ReactRouterMenuItem caption='Owned' activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/shared_streams/owned`} style={{color: '#616669', fontWeight: '700', fontSize: '13px !important'}}/>
-            <li style={{position: 'relative', listStyle: 'none', height: '40px'}}><span style={{backgroundColor: 'white', position: 'absolute', zIndex: '22', lineHeight: '40px', color: '#616669', paddingRight: '10px', fontSize: '12px'}}>Create</span><HR /></li>
-            <ReactRouterMenuItem caption='Blog Post' activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/blog`} style={{color: '#616669', fontWeight: '700', fontSize: '13px !important'}} />
             <NormalHR />
             <ReactRouterMenuItem caption='Outsource Your Content' activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/outsource`} style={{color: '#616669', fontWeight: '700', fontSize: '13px !important'}}/>
           </Menu>
