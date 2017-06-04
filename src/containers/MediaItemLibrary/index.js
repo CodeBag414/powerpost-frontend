@@ -129,6 +129,7 @@ class Library extends React.Component {
     };
     this.toggle = this.toggle.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
+    this.openAddBlog = this.openAddBlog.bind(this);
     this.openAddLink = this.openAddLink.bind(this);
     this.openFileEditor = this.openFileEditor.bind(this);
     this.openImageEditor = this.openImageEditor.bind(this);
@@ -152,6 +153,10 @@ class Library extends React.Component {
   
   openAddLink() {
     this.setState({ linkDialog: true });
+  }
+
+  openAddBlog() {
+    console.log("blog editor")
   }
   
   openLinkEditor(linkItem) {
@@ -433,6 +438,7 @@ class Library extends React.Component {
           <DropDownMenu {...menuOptions} >
             <MenuItem caption="Add File" onClick={this.openAddFile} />
             <MenuItem caption="Add Link" onClick={this.openAddLink} />
+            <MenuItem caption="Add Blog" onClick={this.openAddBlog} />
           </DropDownMenu>
           </div>
           <Menu style={{margin: '0 auto', padding: '0', width: '150px' }} selectable>
