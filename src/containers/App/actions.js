@@ -425,10 +425,10 @@ export function setConnections(connections) {
   return { type: SET_CONNECTIONS, connections };
 }
 
-export function createPostSetRequest(postSet) {
-  return { type: CREATE_POST_SET_REQUEST, postSet };
+export function createPostSetRequest(postSet, edit = true) {
+  return { type: CREATE_POST_SET_REQUEST, postSet, edit };
 }
 
-export function createPostSetSuccess(postSet) {
-  return { type: CREATE_POST_SET_SUCCESS, postSet };
+export function createPostSetSuccess(postSet, edit) {
+  return { type: CREATE_POST_SET_SUCCESS, postSet, edit };
 }

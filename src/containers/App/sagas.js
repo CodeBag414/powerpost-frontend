@@ -710,7 +710,7 @@ export function* fetchConnectionsSaga() {
   yield takeLatest(FETCH_CONNECTIONS, fetchConnectionsWorker);
 }
 
-function* createPostSetWorker({ postSet }) {
+function* createPostSetWorker({ postSet, edit }) {
   const requestUrl = '/post_api/post_set';
   const requestData = {
     payload: {
@@ -720,7 +720,7 @@ function* createPostSetWorker({ postSet }) {
 
   const response = yield call(postData, requestUrl, requestData);
   if (response.data.status === 'success') {
-    yield put(createPostSetSuccess(response.data.post_set));
+    yield put(createPostSetSuccess(response.data.post_set, edit));
   } else {
     console.log(response);
   }
