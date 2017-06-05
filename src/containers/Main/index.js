@@ -10,7 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
-
+import { toastr } from 'lib/react-redux-toastr';
 import Nav from 'components/Nav';
 
 import { UserIsAuthenticated } from 'config.routes/UserIsAuthenticated';
@@ -20,6 +20,7 @@ import { makeSelectUser,
          makeSelectSubAccounts,
          makeSelectUserAvatar,
          makeSelectPostSet,
+         makeSelectPostSetEdit,
 } from 'containers/App/selectors';
 
 import { checkUser,
@@ -80,7 +81,11 @@ class Main extends React.Component {
     if (postSet && postSet.createSuccess && (!this.props.postSet || this.props.postSet.post_set_id !== postSet.post_set_id)) {
       // FIXME: In case we need to show popup on any page
       // browserHistory.push(`/account/${this.props.location.pathname}#postset-${postSet.post_set_id}`);
-      browserHistory.push(`/account/${userAccount.account_id}/publishing/calendar#postset-${postSet.post_set_id}`); // <-- defaulting to calendar
+      if (nextProps.postSetEdit) {
+        browserHistory.push(`/account/${userAccount.account_id}/publishing/calendar#postset-${postSet.post_set_id}`); // <-- defaulting to calendar
+      } else {
+        toastr.success('Success', 'The Post is created successfully!');
+      }
     }
   }
 
@@ -153,6 +158,7 @@ const mapStateToProps = () => {
   const selectAccountPermissions = makeSelectAccountPermissions();
   const selectUserPermissions = makeSelectUserPermissions();
   const selectPostSet = makeSelectPostSet();
+  const selectPostSetEdit = makeSelectPostSetEdit();
   return (state, ownProps) => ({
     user: selectUser(state),
     menuCollapsed: selectMenuCollapsed(state),
@@ -164,6 +170,7 @@ const mapStateToProps = () => {
     accountPermissions: selectAccountPermissions(state),
     userPermissions: selectUserPermissions(state),
     postSet: selectPostSet(state),
+    postSetEdit: selectPostSetEdit(state),
     location: ownProps.location,
   });
 };
