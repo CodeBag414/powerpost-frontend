@@ -1,4 +1,4 @@
-import { 
+import {
   FETCH_COLLECTIONS,
   FETCH_URL_CONTENT,
   CLEAR_URL_CONTENT,
@@ -63,7 +63,7 @@ export function createFeed(data) {
   return {
     type: CREATE_RSS_FEED,
     data,
-  }
+  };
 }
 export function getRSSItems(feedId) {
   return {

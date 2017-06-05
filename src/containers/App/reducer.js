@@ -301,7 +301,7 @@ function globalReducer(state = initialState, action) {
       return state.set('post_set', {
         ...action.postSet,
         createSuccess: true,
-      });
+      }).set('post_edit', action.edit);
     default:
       return state;
   }
