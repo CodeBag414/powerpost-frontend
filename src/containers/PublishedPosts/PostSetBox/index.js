@@ -26,10 +26,12 @@ class PostSetBox extends Component {
 
   addPostsIdea = (postSet, edit) => {
     const { createPostSet } = this.props;
+    const postSetJS = postSet.toJS();
     const newPostSet = {
-      ...postSet.toJS(),
+      ...postSetJS,
       status: '6',
-      type: postSet.toJS().post_type,
+      type: postSetJS.post_type,
+      media_item_ids: postSetJS.media_items.map((mediaItem) => mediaItem.media_item_id),
     };
     delete newPostSet.id;
     delete newPostSet.creation_time;
