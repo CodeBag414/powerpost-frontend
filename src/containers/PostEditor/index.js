@@ -67,6 +67,7 @@ class PostEditor extends Component {
 
   componentWillMount() {
     this.initialize();
+    console.log('@@@@@__--', this.props);
   }
 
   componentWillReceiveProps({ postSet }) {

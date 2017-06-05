@@ -41,6 +41,9 @@ import {
   INVITE_EMAIL_TO_STREAM_REQUEST,
   INVITE_EMAIL_TO_STREAM_SUCCESS,
   INVITE_EMAIL_TO_STREAM_FAILURE,
+  REPLICATE_POST_SET_REQUEST,
+  REPLICATE_POST_SET_SUCCESS,
+  REPLICATE_POST_SET_FAILURE,
 } from './constants';
 
 // The initial application state
@@ -86,6 +89,7 @@ const initialState = fromJS({
     data: {},
     error: null,
   },
+  postSetReplicationProcessing: false,
 });
 
 // Takes care of changing the application state
@@ -186,6 +190,14 @@ function mediaLibraryReducer(state = initialState, action) {
       return state
         .setIn(['emailInvited', 'processing'], false)
         .setIn(['emailInvited', 'error'], action.payload);
+    case REPLICATE_POST_SET_REQUEST:
+      return state.setIn(['postSets', 'isFetching'], true);
+    case REPLICATE_POST_SET_SUCCESS:
+      return state
+        .setIn(['postSets', 'isFetching'], false)
+        .updateIn(['postSets', 'data'], (postSets) => postSets.push(fromJS(action.payload)));
+    case REPLICATE_POST_SET_FAILURE:
+      return state.setIn(['postSets', 'isFetching'], false);
     default:
       return state;
   }
