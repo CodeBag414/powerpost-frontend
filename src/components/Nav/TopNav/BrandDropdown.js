@@ -8,17 +8,17 @@ const Wrapper = styled.div`
   position: absolute;
   background: white;
   z-index: 10;
-  top: 30px;
-  right: 10px;
+  top: 50px;
+  left: 180px;
   -webkit-filter: drop-shadow(0 1px 5px rgba(60, 92, 129, 0.42));
   filter        : drop-shadow(0 1px 5px rgba(60, 92, 129, 0.42));
   -ms-filter    : "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=1, Color='#383C5C81')";
-
+  border-radius: 4px; 
   &:after {
     content: '';
     display: block;
     position: absolute;
-    right: 10px;
+    left: 20px;
     bottom: 100%;
     width: 0;
     height: 0;

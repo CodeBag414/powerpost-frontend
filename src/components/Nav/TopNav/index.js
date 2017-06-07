@@ -9,7 +9,7 @@ import PPMenuItem from 'elements/atm.MenuItem';
 import PPAvatar from 'elements/atm.Avatar';
 import withReactRouter from 'elements/hoc.withReactRouter';
 
-
+import BrandDropdown from './BrandDropdown';
 import PPLogo from './PPLogo';
 import Avatar from './Avatar';
 import AvatarWrapper from './AvatarWrapper';
@@ -27,6 +27,83 @@ const DropDownMenu = styled(DropdownMenu)`
       width: 130px;
       text-align:center;
     }
+  }
+`;
+const SubBrandItem = styled.div`
+  width: 200px;
+  margin-left: 50px;
+  margin-right: 10px;
+  border-radius: 4px;
+  height: 30px;
+  line-height: 30px;
+  cursor: pointer;
+  background-color: ${(props) => props.isActive ? '#E7ECEE' : 'white'};
+  &:hover {
+    background-color: #E7ECEE;
+  }
+  div {
+    float: left;
+    height: 20px;
+    width: 20px;
+    margin: 5px;
+  }
+
+  span {
+    font-family: Lato-Regular;
+    font-size: 12px;
+    color: #616668;
+    letter-spacing: 0;
+    margin-left: 10px;
+  }
+`;
+const BrandItem = styled.div`
+  width: 250px;
+  margin-right: 10px;
+  margin-left: 10px;
+  border-radius: 4px;
+  height: 42px;
+  line-height: 42px;
+  cursor: pointer;
+  background-color: ${(props) => props.isActive ? '#E7ECEE' : 'white'};
+  &:hover {
+    background-color: #E7ECEE;
+  }
+  div {
+    float: left;
+    height: 32px;
+    width: 32px;
+    margin: 5px;
+  }
+
+  span {
+    font-family: Lato-Regular;
+    font-size: 13px;
+    color: #616668;
+    letter-spacing: 0;
+    margin-left: 10px;
+  }
+`;
+const BrandItemLink = withReactRouter(BrandItem);
+const SubBrandItemLink = withReactRouter(SubBrandItem);
+
+const BrandIcon = styled.div`
+  border-radius: 2.5px;
+  background-image: ${(props) => props.thumbnail ? `url(${props.thumbnail})` : `linear-gradient(-180deg, ${props.color} 26%, ${props.color} 100%)`};
+  opacity: 1;
+  width: 32px;
+  height: 32px;
+  margin: 0 auto;
+  background-size: cover;
+  background-repeat: no-repeat;
+  line-height: 32px;
+  font-size: 12px;
+  margin-bottom: 20px;
+  margin-top: 18px;
+  position: relative;
+  color: white;
+  transition: all .3s ease;
+  &:active, &:focus {
+    text-decoration: none;
   }
 `;
 
@@ -59,6 +136,23 @@ const Wrapper = styled.div`
   }
 `;
 
+const DropdownButton = styled.div`
+  display: inline-block;
+  margin-left: 20px;
+  line-height: 60px;
+  cursor: pointer;
+  span {
+    font-size: 14px;
+    color: #FFFFFF;
+    letter-spacing: 0;
+  }
+  i {
+    color: white;
+    margin-left: 5px;
+    font-size: 12px;
+  }
+`;
+
 class TopNav extends Component {
   constructor(props) {
     super(props);
@@ -70,7 +164,6 @@ class TopNav extends Component {
 
     this.handleTouchTap = this.handleTouchTap.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
-    this.handleTouch = this.handleTouch.bind(this);
   }
 
   handleTouchTap(event) {
@@ -102,6 +195,7 @@ class TopNav extends Component {
     const accountColor = this.props.user && this.props.user.properties ? this.props.user.properties.color : '#E7ECEE';
     const color = this.props.activeBrand && this.props.activeBrand.properties.color ? this.props.activeBrand.properties.color : '#E7ECEE';
     const thumbnail = this.props.activeBrand && this.props.activeBrand.properties.thumb_url ? this.props.activeBrand.properties.thumb_url : '';
+    const accountId = this.props.accountId;
     const menuOptions = {
       isOpen: this.state.userMenuOpen,
       close: this.handleRequestClose,
@@ -121,6 +215,38 @@ class TopNav extends Component {
     return (
       <Wrapper>
         <PPLogo />
+        <DropdownButton onClick={this.toggleBrands}>
+          <span>{this.props.activeBrand.title}</span><i className='fa fa-chevron-down' />
+        </DropdownButton>
+        { this.state.brandMenuOpen &&
+        <BrandDropdown onOutsideClick={this.toggleBrands}>
+          {this.props.userAccount && this.props.userAccount.account_type_id !== '5' &&
+            <BrandItemLink to={`/account/${this.props.userAccount.account_id}`} isActive={this.props.userAccount.account_id === accountId}>
+              <BrandIcon thumbnail={this.props.userAccount.properties && this.props.userAccount.properties.thumb_url ? this.props.userAccount.properties.thumb_url : null} color={this.props.userAccount.properties && this.props.userAccount.properties.color ? this.props.userAccount.properties.color : '#E52466'} />
+              <span>{this.props.userAccount.title}</span>
+            </BrandItemLink>
+          }
+          {this.props.userAccount.subaccounts.length > 0 && this.props.userAccount.subaccounts.map((brand, i) => 
+            <SubBrandItemLink key={i} to={`/account/${brand.account_id}`} isActive={brand.account_id === accountId}>
+              <BrandIcon thumbnail={brand.properties && brand.properties.thumb_url ? brand.properties.thumb_url : null} color={brand.properties && brand.properties.color ? brand.properties.color : '#E52466'} />
+              <span>{brand.title}</span>
+            </SubBrandItemLink>
+          )}
+          {(this.props.sharedAccounts.length > 0 && this.props.sharedAccounts.map((brand, i) => {
+            return <BrandItemLink key={i} to={`/account/${brand.account_id}`} isActive={brand.account_id === accountId} >
+              <BrandIcon thumbnail={brand.properties && brand.properties.thumb_url ? brand.properties.thumb_url : null} color={brand.properties && brand.properties.color ? brand.properties.color : '#E52466'} />
+              <span>{brand.title}</span>
+            </BrandItemLink>
+            { brand.subaccounts.length > 0 && brand.subaccounts.map((subbrand, i) => 
+              <SubBrandItemLink key={i} to={`/account/${subbrand.account_id}`} isActive={subbrand.account_id === accountId}>
+                <BrandIcon thumbnail={subbrand.properties && subbrand.properties.thumb_url ? subbrand.properties.thumb_url : null} color={subbrand.properties && subbrand.properties.color ? subbrand.properties.color : '#E52466'} />
+                <span>{subbrand.title}</span>
+              </SubBrandItemLink>             
+            )}
+            }
+          ))}
+        </BrandDropdown>
+       }
         <AvatarWrapper>
           <DropDownMenu {...menuOptions}>
             <ReactRouterMenuItem caption="Dashboard" to={`/`} />

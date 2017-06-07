@@ -52,48 +52,6 @@ class Sidebar extends React.Component {
   renderFull() {
     return (
       <div>
-        { this.props.activeBrand && (this.props.activeBrand.account_type_id == 2 || this.props.activeBrand.account_type_id == 3 || this.props.activeBrand.account_type_id == 7) && !this.props.isMenuCollapsed &&
-        <BrandNavWrapper>
-            { this.props.activeBrand && this.props.activeBrand.subAccounts.length > 0 &&
-            <LinkWithTooltip tooltip={this.props.activeBrand.title} tooltipPosition="right" to={`/account/${this.props.activeBrand.account_id}`} key={this.props.activeBrand.account_id}>
-              <BrandIcon isActive={this.props.accountId === this.props.activeBrand.account_id} thumbnail={this.props.activeBrand.properties && this.props.activeBrand.properties.thumb_url ? this.props.activeBrand.properties.thumb_url : null} color={this.props.activeBrand.properties && this.props.activeBrand.properties.color ? this.props.activeBrand.properties.color : '#E52466'}>
-                {this.props.activeBrand.title && ((this.props.activeBrand.properties && !this.props.activeBrand.properties.thumb_url) || (!this.props.activeBrand.properties)) ? this.props.activeBrand.title.slice(0, 2).toUpperCase() : ''}
-              </BrandIcon>
-            </LinkWithTooltip>
-            }
-            { this.props.activeBrand && this.props.activeBrand.parentAccount &&
-            <LinkWithTooltip tooltip={this.props.activeBrand.parentAccount.title} tooltipPosition="right" to={`/account/${this.props.activeBrand.parentAccount.account_id}`} key={this.props.activeBrand.parentAccount.account_id}>
-              <BrandIcon isActive={this.props.accountId === this.props.activeBrand.parentAccount.account_id} thumbnail={this.props.activeBrand.parentAccount.properties && this.props.activeBrand.parentAccount.properties.thumb_url ? this.props.activeBrand.parentAccount.properties.thumb_url : null} color={this.props.activeBrand.parentAccount.properties && this.props.activeBrand.parentAccount.properties.color ? this.props.activeBrand.parentAccount.properties.color : '#E52466'}>
-                {this.props.activeBrand.parentAccount.title && ((this.props.activeBrand.parentAccount.properties && !this.props.activeBrand.parentAccount.properties.thumb_url) || (!this.props.activeBrand.parentAccount.properties)) ? this.props.activeBrand.parentAccount.title.slice(0, 2).toUpperCase() : ''}
-              </BrandIcon>
-            </LinkWithTooltip>
-            }
-            { this.props.activeBrand && this.props.activeBrand.subAccounts.map((account) =>
-              <LinkWithTooltip tooltip={account.title} tooltipPosition="right" to={`/account/${account.account_id}`} key={account.account_id}>
-                <BrandIcon isActive={this.props.accountId === account.account_id} thumbnail={account.properties && account.properties.thumb_url ? account.properties.thumb_url : null} color={account.properties && account.properties.color ? account.properties.color : '#E52466'}>
-                  {account.title && ((account.properties && !account.properties.thumb_url) || (!account.properties)) ? account.title.slice(0, 2).toUpperCase() : ''}
-                </BrandIcon>
-              </LinkWithTooltip>)
-            }
-            { this.props.activeBrand && this.props.activeBrand.parentAccount && this.props.activeBrand.parentAccount.subaccounts.map((account) =>
-              <LinkWithTooltip tooltip={account.title} tooltipPosition="right" to={`/account/${account.account_id}`} key={account.account_id}>
-                <BrandIcon isActive={this.props.accountId === account.account_id} thumbnail={account.properties && account.properties.thumb_url ? account.properties.thumb_url : null} color={account.properties && account.properties.color ? account.properties.color : '#E52466'}>
-                  {account.title && ((account.properties && !account.properties.thumb_url) || (!account.properties)) ? account.title.slice(0, 2).toUpperCase() : ''}
-                </BrandIcon>
-              </LinkWithTooltip>)
-            }
-        </BrandNavWrapper>
-        }
-        <ReactCSSTransitionGroup
-          transitionName={{
-            enter: styles.enter,
-            enterActive: styles.enterActive,
-            leave: styles.leave,
-            leaveActive: styles.leaveActive,
-          }}
-          transitionEnterTimeout={300}
-          transitionLeaveTimeout={300}
-        >
           { this.props.location.pathname.match('/account/') &&
             <MainNavWrapper isCollapsed={this.props.isMenuCollapsed} key="mainNavKey" isMultiBrand={this.props.activeBrand && (this.props.activeBrand.account_type_id == 2 || this.props.activeBrand.account_type_id == 3 || this.props.activeBrand.account_type_id == 7)}>
                <PPButton
@@ -111,16 +69,28 @@ class Sidebar extends React.Component {
               <PPMenu isSidebar selectable>
                 <ReactRouterMenuItem caption="Dashboard" activeClassName={styles.active} isSidebar icon={<i className="fa fa-home" />} to={`/account/${this.props.accountId}`} />
                 { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('brands') > -1 &&
-                <ReactRouterMenuItem caption="Brands" activeClassName={styles.active} isSidebar icon={<FontIcon>library_add</FontIcon>} to={`/account/${this.props.accountId}/brands`} />
+                <ReactRouterMenuItem caption="Brands" activeClassName={styles.active} isSidebar icon={<i className="f fa-th-large" />} to={`/account/${this.props.accountId}/brands`} />
                 }
                 {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('content_library') > -1 &&
-                  <ReactRouterMenuItem caption="Planet Content" activeClassName={styles.active} isSidebar icon={<i className="fa fa-database" />} to={`/account/${this.props.accountId}/library`} />
+                  <ReactRouterMenuItem caption="Content" activeClassName={styles.active} isSidebar icon={<i className="fa fa-folder" />} to={`/account/${this.props.accountId}/library`} />
                 }
                 {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
-                  <ReactRouterMenuItem caption="Publishing" activeClassName={styles.active} isSidebar icon={<i className="fa fa-paper-plane" />} to={`/account/${this.props.accountId}/publishing/calendar`} />
+                  <ReactRouterMenuItem caption="Boards" activeClassName={styles.active} isSidebar icon={<i className="fa fa-columns" />} to={`/account/${this.props.accountId}/publishing/boards`} />
+                }
+                {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
+                  <ReactRouterMenuItem caption="Calendar" activeClassName={styles.active} isSidebar icon={<i className="fa fa-calendar" />} to={`/account/${this.props.accountId}/publishing/calendar`} />
+                }
+                {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
+                  <ReactRouterMenuItem caption="Posts" activeClassName={styles.active} isSidebar icon={<i className="fa fa-send" />} to={`/account/${this.props.accountId}/posts`} />
+                }
+                {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
+                  <ReactRouterMenuItem caption="Published" activeClassName={styles.active} isSidebar icon={<i className="fa fa-history" />} to={`/account/${this.props.accountId}/published`} />
+                }
+                {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
+                  <ReactRouterMenuItem caption="Social Feeds" activeClassName={styles.active} isSidebar icon={<i className="fa fa-list-ul" />} to={`/account/${this.props.accountId}/publishing/social_feeds`} />
                 }
                 { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('statistics') > -1 &&
-                  <ReactRouterMenuItem caption="Statistics" activeClassName={styles.active} isSidebar icon={<i className="fa fa-line-chart" />} to={`/account/${this.props.accountId}/statistics`} />
+                  <ReactRouterMenuItem caption="Analytics" activeClassName={styles.active} isSidebar icon={<i className="fa fa-bar-chart" />} to={`/account/${this.props.accountId}/statistics`} />
                 }
                 { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('connections') > -1 &&
                   <ReactRouterMenuItem caption="Connections" activeClassName={styles.active} isSidebar icon={<i className="fa fa-exchange" />} to={`/account/${this.props.accountId}/settings/connections`} />
@@ -134,8 +104,7 @@ class Sidebar extends React.Component {
                 <PPMenuItem onClick={this.props.handleMenuToggle} caption="Collapse Menu" isSidebar style={{ position: 'fixed', bottom: '0', marginBottom: '10px' }} icon={<i className='fa fa-compress' />} />
               </PPMenu>
             </MainNavWrapper>
-                    }
-        </ReactCSSTransitionGroup>
+        }
       </div>
     );
   }
