@@ -95,7 +95,7 @@ class AccountDashboard extends Component {
               <p>Go here to upload, find and modify content to be used in your posts.</p>
             </span>
           </ReactRouterCapsule>
-          <ReactRouterCapsule to={`/account/${account.account_id}/publishing/calendar`}>
+          <ReactRouterCapsule to={`/account/${account.account_id}/calendar`}>
             <i className="fa fa-paper-plane" />
             <span>
               <h5>Publishing</h5>
