@@ -11,49 +11,13 @@ import PPMenu from 'elements/atm.Menu';
 import PPMenuItem from 'elements/atm.MenuItem';
 
 import PPTooltip from 'elements/atm.Tooltip';
+import PPButton from 'elements/atm.Button';
 
 import styles from './styles.scss';
 import CollapsedWrapper from './CollapsedWrapper';
 import BrandNavWrapper from './BrandNavWrapper';
 import MainNavWrapper from './MainNavWrapper';
 import BrandIcon from './BrandIcon';
-require('rc-collapse/assets/index.css');
-
-const Panel = styled(Collapse.Panel)`
-   i {
-      font-size: 20px;
-      &:before {
-          border: none !important;
-          font-family: 'FontAwesome';
-          content: '\f067' !important;
-      }
-      &.pinterest-icon-color {
-        color: ${(props) => props.theme.pinterestColor} !important;
-      }
-      &.twitter-icon-color {
-        color: ${(props) => props.theme.twitterColor} !important;
-      }
-      &.facebook-icon-color {
-        color: ${(props) => props.theme.facebookColor} !important;
-      }
-      &.linkedin-icon-color {
-        color: ${(props) => props.theme.linkedinColor} !important;
-      }
-   }
-  & > div:first-of-type {
-    color: #616668;
-    font-weight: 700;
-    text-transform: uppercase;
-  }
-  div {
-    background-color: transparent !important;
-  }
-`;
-
-const Collapser = styled(Collapse)`
-  background-color: transparent !important;
-  border: none !important;
-`;
 
 const ReactRouterMenuItem = withReactRouter(PPMenuItem);
 const ReactRouterMenuItemWithTooltip = PPTooltip(ReactRouterMenuItem);
@@ -132,6 +96,18 @@ class Sidebar extends React.Component {
         >
           { this.props.location.pathname.match('/account/') &&
             <MainNavWrapper isCollapsed={this.props.isMenuCollapsed} key="mainNavKey" isMultiBrand={this.props.activeBrand && (this.props.activeBrand.account_type_id == 2 || this.props.activeBrand.account_type_id == 3 || this.props.activeBrand.account_type_id == 7)}>
+               <PPButton
+                label={
+                  <div>
+                    <span className="button-plus">+ </span>
+                    <span className="button-title">Create New PowerPost</span>
+                  </div>
+                }
+                style={{ margin: '0 auto',display: 'block',marginTop: '10px',width: '200px'}}
+                className="new-post-button"
+                onClick={this.props.createPostSet}
+                primary
+              />
               <PPMenu isSidebar selectable>
                 <ReactRouterMenuItem caption="Dashboard" activeClassName={styles.active} isSidebar icon={<i className="fa fa-home" />} to={`/account/${this.props.accountId}`} />
                 { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('brands') > -1 &&
@@ -155,7 +131,7 @@ class Sidebar extends React.Component {
                 { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('settings') > -1 &&
                   <ReactRouterMenuItem caption="Settings" activeClassName={styles.active} isSidebar icon={<i className="fa fa-cog" />} to={`/account/${this.props.accountId}/settings`} />
                 }
-                
+                <PPMenuItem onClick={this.props.handleMenuToggle} caption="Collapse Menu" isSidebar style={{ position: 'fixed', bottom: '0', marginBottom: '10px' }} icon={<i className='fa fa-compress' />} />
               </PPMenu>
             </MainNavWrapper>
                     }
@@ -169,6 +145,13 @@ class Sidebar extends React.Component {
       <div>
         { this.props.location.pathname.match('/account/') &&
         <CollapsedWrapper isCollapsed={this.props.isMenuCollapsed}>
+          <PPButton
+            label={<i className="fa fa-plus" />}
+            style={{ margin: '0 auto',display: 'block',marginTop: '10px',width: '40px', minWidth: '0px'}}
+            className="new-post-button"
+            onClick={this.props.createPostSet}
+            primary
+          />
           <PPMenu isSidebar selectable >
             <ReactRouterMenuItemWithTooltip tooltip="Dashboard" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-home" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}`} />
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('brands') > -1 &&
@@ -194,6 +177,7 @@ class Sidebar extends React.Component {
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('settings') > -1 &&
               <ReactRouterMenuItemWithTooltip tooltip="Settings" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-cog" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/settings`} />
             }
+            <PPMenuItem onClick={this.props.handleMenuToggle} isCollapsed isSidebar style={{ width: '60px', position: 'fixed', bottom: '0', marginBottom: '10px' }} icon={<i className='fa fa-expand' />} />
           </PPMenu>
         </CollapsedWrapper>
         }
