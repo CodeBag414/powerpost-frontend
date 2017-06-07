@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Link } from 'react-router';
 import DropdownMenu from 'react-dd-menu';
-
-import PPButton from 'elements/atm.Button';
 import PPMenuItem from 'elements/atm.MenuItem';
 import PPAvatar from 'elements/atm.Avatar';
 import withReactRouter from 'elements/hoc.withReactRouter';
@@ -29,6 +26,7 @@ const DropDownMenu = styled(DropdownMenu)`
     }
   }
 `;
+
 const SubBrandItem = styled.div`
   width: 200px;
   margin-left: 50px;
@@ -56,6 +54,7 @@ const SubBrandItem = styled.div`
     margin-left: 10px;
   }
 `;
+
 const BrandItem = styled.div`
   width: 250px;
   margin-right: 10px;
@@ -83,6 +82,7 @@ const BrandItem = styled.div`
     margin-left: 10px;
   }
 `;
+
 const BrandItemLink = withReactRouter(BrandItem);
 const SubBrandItemLink = withReactRouter(SubBrandItem);
 
@@ -193,9 +193,8 @@ class TopNav extends Component {
     const isAccountPath = this.props.location.pathname.includes('/account/');
     const avatar = this.props.user && this.props.user.properties ? this.props.user.properties.thumb_url : '';
     const accountColor = this.props.user && this.props.user.properties ? this.props.user.properties.color : '#E7ECEE';
-    const color = this.props.activeBrand && this.props.activeBrand.properties.color ? this.props.activeBrand.properties.color : '#E7ECEE';
-    const thumbnail = this.props.activeBrand && this.props.activeBrand.properties.thumb_url ? this.props.activeBrand.properties.thumb_url : '';
     const accountId = this.props.accountId;
+    const startingTitle = isAccountPath ? this.props.activeBrand.title : 'Select Brand';
     const menuOptions = {
       isOpen: this.state.userMenuOpen,
       close: this.handleRequestClose,
@@ -215,42 +214,41 @@ class TopNav extends Component {
     return (
       <Wrapper>
         <PPLogo />
-
         <DropdownButton onClick={this.toggleBrands}>
-          <span>{this.props.activeBrand.title}</span><i className='fa fa-chevron-down' />
+          <span>{startingTitle}</span><i className="fa fa-chevron-down" />
         </DropdownButton>
         { this.state.brandMenuOpen &&
-        <BrandDropdown onOutsideClick={this.toggleBrands}>
-          {this.props.userAccount && this.props.userAccount.account_type_id !== '5' &&
-            <BrandItemLink to={`/account/${this.props.userAccount.account_id}`} isActive={this.props.userAccount.account_id === accountId}>
-              <BrandIcon thumbnail={this.props.userAccount.properties && this.props.userAccount.properties.thumb_url ? this.props.userAccount.properties.thumb_url : null} color={this.props.userAccount.properties && this.props.userAccount.properties.color ? this.props.userAccount.properties.color : '#E52466'} />
-              <span>{this.props.userAccount.title}</span>
-            </BrandItemLink>
-          }
-          {this.props.userAccount.subaccounts.length > 0 && this.props.userAccount.subaccounts.map((brand, i) => 
-            <SubBrandItemLink key={i} to={`/account/${brand.account_id}`} isActive={brand.account_id === accountId}>
-              <BrandIcon thumbnail={brand.properties && brand.properties.thumb_url ? brand.properties.thumb_url : null} color={brand.properties && brand.properties.color ? brand.properties.color : '#E52466'} />
-              <span>{brand.title}</span>
-            </SubBrandItemLink>
-          )}
-          {(this.props.sharedAccounts.length > 0 && this.props.sharedAccounts.map((brand, i) => {
-            return <BrandItemLink key={i} to={`/account/${brand.account_id}`} isActive={brand.account_id === accountId} >
-              <BrandIcon thumbnail={brand.properties && brand.properties.thumb_url ? brand.properties.thumb_url : null} color={brand.properties && brand.properties.color ? brand.properties.color : '#E52466'} />
-              <span>{brand.title}</span>
-            </BrandItemLink>
-            { brand.subaccounts.length > 0 && brand.subaccounts.map((subbrand, i) => 
-              <SubBrandItemLink key={i} to={`/account/${subbrand.account_id}`} isActive={subbrand.account_id === accountId}>
-                <BrandIcon thumbnail={subbrand.properties && subbrand.properties.thumb_url ? subbrand.properties.thumb_url : null} color={subbrand.properties && subbrand.properties.color ? subbrand.properties.color : '#E52466'} />
-                <span>{subbrand.title}</span>
-              </SubBrandItemLink>             
-            )}
+          <BrandDropdown onOutsideClick={this.toggleBrands}>
+            {this.props.userAccount && this.props.userAccount.account_type_id !== '5' &&
+              <BrandItemLink to={`/account/${this.props.userAccount.account_id}`} isActive={this.props.userAccount.account_id === accountId}>
+                <BrandIcon thumbnail={this.props.userAccount.properties && this.props.userAccount.properties.thumb_url ? this.props.userAccount.properties.thumb_url : null} color={this.props.userAccount.properties && this.props.userAccount.properties.color ? this.props.userAccount.properties.color : '#E52466'} />
+                <span>{this.props.userAccount.title}</span>
+              </BrandItemLink>
             }
-          ))}
-        </BrandDropdown>
-       }
+            {this.props.userAccount.subaccounts.length > 0 && this.props.userAccount.subaccounts.map((brand, i) =>
+              <SubBrandItemLink key={i} to={`/account/${brand.account_id}`} isActive={brand.account_id === accountId}>
+                <BrandIcon thumbnail={brand.properties && brand.properties.thumb_url ? brand.properties.thumb_url : null} color={brand.properties && brand.properties.color ? brand.properties.color : '#E52466'} />
+                <span>{brand.title}</span>
+              </SubBrandItemLink>
+            )}
+            {(this.props.sharedAccounts.length > 0 && this.props.sharedAccounts.map((brand, i) => {
+              return <BrandItemLink key={i} to={`/account/${brand.account_id}`} isActive={brand.account_id === accountId} >
+                <BrandIcon thumbnail={brand.properties && brand.properties.thumb_url ? brand.properties.thumb_url : null} color={brand.properties && brand.properties.color ? brand.properties.color : '#E52466'} />
+                <span>{brand.title}</span>
+              </BrandItemLink>
+                {brand.subaccounts.length > 0 && brand.subaccounts.map((subbrand, i) => 
+                  <SubBrandItemLink key={i} to={`/account/${subbrand.account_id}`} isActive={subbrand.account_id === accountId}>
+                    <BrandIcon thumbnail={subbrand.properties && subbrand.properties.thumb_url ? subbrand.properties.thumb_url : null} color={subbrand.properties && subbrand.properties.color ? subbrand.properties.color : '#E52466'} />
+                    <span>{subbrand.title}</span>
+                  </SubBrandItemLink>
+                )}
+              }             
+            ))}
+          </BrandDropdown>
+        }
         <AvatarWrapper>
           <DropDownMenu {...menuOptions}>
-            <ReactRouterMenuItem caption="Dashboard" to={`/`} />
+            <ReactRouterMenuItem caption="Dashboard" to={'/'} />
             <ReactRouterMenuItem caption="Settings" to={'/user/settings'} />
             <PPMenuItem caption="Logout" onTouchTap={this.props.logout} />
           </DropDownMenu>
@@ -262,13 +260,13 @@ class TopNav extends Component {
 
 
 TopNav.propTypes = {
-  isMenuCollapsed: PropTypes.bool,
+  accountId: PropTypes.string,
   location: PropTypes.shape(),
+  userAccount: PropTypes.object,
+  sharedAccounts: PropTypes.array,
   user: PropTypes.shape(),
   activeBrand: PropTypes.shape(),
   logout: PropTypes.func,
-  handleMenuToggle: PropTypes.func,
-  createPostSet: PropTypes.func,
 };
 
 export default TopNav;
