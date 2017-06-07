@@ -8,6 +8,7 @@ const Wrapper = styled.div`
   position: absolute;
   background: white;
   z-index: 10;
+
   top: 50px;
   left: 180px;
   -webkit-filter: drop-shadow(0 1px 5px rgba(60, 92, 129, 0.42));

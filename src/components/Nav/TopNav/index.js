@@ -215,6 +215,7 @@ class TopNav extends Component {
     return (
       <Wrapper>
         <PPLogo />
+
         <DropdownButton onClick={this.toggleBrands}>
           <span>{this.props.activeBrand.title}</span><i className='fa fa-chevron-down' />
         </DropdownButton>
