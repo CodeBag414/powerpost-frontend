@@ -209,13 +209,20 @@ class AddConnectionDialog extends React.Component {
         sub: true,
         url: this.props.socialUrls ? this.props.socialUrls.pinterest : '',
       },
-      { name: 'Google + Profile',
+      { name: 'Google+ Profile',
         icon: 'fa fa-google-plus-square',
         text: 'Log into your Google Plus account to start sharing content',
         channel: 'googleplus',
         sub: false,
         url: this.props.socialUrls ? this.props.socialUrls.google : '',
       },
+      { name: 'Google+ Business Page',
+        icon: 'fa fa-google-plus-square',
+        text: 'Log into your Google Plus account to start sharing content',
+        channel: 'googleplus',
+        sub: true,
+        url: this.props.socialUrls ? this.props.socialUrls.google : '',
+      }
     ];
     const len = ((this.props.subChannel && Object.getOwnPropertyNames(this.props.subChannel)) || []).length;
     if (len !== 0) {

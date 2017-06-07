@@ -9,9 +9,11 @@ import PPMenuItem from 'elements/atm.MenuItem';
 import PPAvatar from 'elements/atm.Avatar';
 import withReactRouter from 'elements/hoc.withReactRouter';
 
-
+import AccountLogo from './AccountLogo';
 import PPLogo from './PPLogo';
 import Avatar from './Avatar';
+import HeaderNavLogo from './HeaderNavLogo.png';
+import HeaderLogo from './HeaderLogo';
 import AvatarWrapper from './AvatarWrapper';
 
 const ReactRouterMenuItem = withReactRouter(PPMenuItem);
@@ -37,8 +39,8 @@ const Wrapper = styled.div`
   height: 60px;
   right: 0;
   transition: transform .3s ease-in-out, width .3s ease-in-out;
-  background-image: linear-gradient(-180deg, #E81C64 1%, #B6134D 100%);
-  box-shadow: 0 1px 6px 0 rgba(60,92,129,0.20);
+  box-shadow: 0 1px 5px 0 rgba(60,92,129,0.20);
+  background-color: #fff;
   width: ${(props) => props.isNotFullWidth ? 'calc(100% - 60px)' : '100%'};
 
   .new-post-button {
@@ -59,13 +61,20 @@ const Wrapper = styled.div`
   }
 `;
 
+const DashboardLink = styled(Link)`
+  float: right;
+  font-size: 20px;
+  color: #424647;
+  line-height: 60px;
+  margin-right: 20px;
+`;
+
 class TopNav extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       userMenuOpen: false,
-      brandMenuOpen: false,
     };
 
     this.handleTouchTap = this.handleTouchTap.bind(this);
@@ -82,18 +91,16 @@ class TopNav extends Component {
     });
   }
 
-  toggleBrands = () => {
-    this.setState({ brandMenuOpen: !this.state.brandMenuOpen });
-  }
-
   toggle = () => {
     this.setState({ userMenuOpen: !this.state.userMenuOpen });
   }
-
   handleRequestClose() {
     this.setState({
       userMenuOpen: false,
     });
+  }
+  handleTouch(event) {
+    console.log('in handleTouch', event);
   }
 
   render() {
@@ -118,21 +125,41 @@ class TopNav extends Component {
       align: 'left',
     };
 
+    const showSidebar = this.props.activeBrand.account_type_id === 2 || this.props.activeBrand.account_type_id === 3 || this.props.activeBrand.account_type_id === 7;
+
     return (
-      <Wrapper>
-        <PPLogo />
+      <Wrapper isNotFullWidth={this.props.activeBrand && showSidebar && !this.props.isMenuCollapsed} >
+
+        <AccountLogo isAccountPath={isAccountPath} isCollapsed={this.props.isMenuCollapsed} color={color} title={this.props.activeBrand.title} thumbnail={thumbnail} />
+        <PPLogo isAccountPath={isAccountPath} />
+
+        { isAccountPath &&
+          <PPButton onClick={this.props.handleMenuToggle} style={{ marginTop: '10px', float: 'left' }} icon={this.props.isMenuCollapsed ? 'menu' : 'keyboard_arrow_left'} floating mini />
+        }
+        { !isAccountPath && <div style={{ float: 'left', height: '24px', marginTop: '18px', marginLeft: '10px', fontSize: '16px', fontWeight: '700', color: '#8C9496' }}>Welcome</div> }
+        <HeaderLogo src={HeaderNavLogo} />
         <AvatarWrapper>
           <DropDownMenu {...menuOptions}>
-            <ReactRouterMenuItem caption="Dashboard" to={`/`} />
             <ReactRouterMenuItem caption="Settings" to={'/user/settings'} />
             <PPMenuItem caption="Logout" onTouchTap={this.props.logout} />
           </DropDownMenu>
         </AvatarWrapper>
+        <PPButton
+          label={
+            <div>
+              <span className="button-plus">+</span>
+              <span className="button-title">New Power Post</span>
+            </div>
+          }
+          className="new-post-button"
+          onClick={this.props.createPostSet}
+          primary
+        />
+        <DashboardLink to={'/'}><i className="fa fa-home" /></DashboardLink>
       </Wrapper>
     );
   }
 }
-
 
 TopNav.propTypes = {
   isMenuCollapsed: PropTypes.bool,
