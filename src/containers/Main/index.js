@@ -70,7 +70,7 @@ class Main extends React.Component {
 
   componentDidMount() {
     this.props.fetchAccount(this.props.params.account_id);
-    this.props.getPostSetsAction();
+    this.props.getPostSetsAction(this.props.params.account_id);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -138,7 +138,7 @@ Main.propTypes = {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    getPostSetsAction: () => dispatch(getPostSets()),
+    getPostSetsAction: (accountId) => dispatch(getPostSets(accountId)),
     checkUserObject: (user) => dispatch(checkUser(user)),
     toggleMenuCollapse: (isCollapsed) => dispatch(toggleMenu(isCollapsed)),
     logout: () => dispatch(logout()),

@@ -534,8 +534,7 @@ const serialize = function serialize(obj, prefix) {
   return str.join('&');
 };
 
-export function* fetchPostSetsWorker() {
-  const currentAccount = yield select(makeSelectCurrentAccount());
+export function* fetchPostSetsWorker(payload) {
   const data = {
     payload: {
       sort_by: 'creation_time',
@@ -544,9 +543,8 @@ export function* fetchPostSetsWorker() {
     },
   };
   const params = serialize(data);
-  const requestUrl = `/post_api/post_sets/${currentAccount.account_id}?${params}`;
+  const requestUrl = `/post_api/post_sets/${payload.accountId}?${params}`;
   const result = yield call(getData, requestUrl);
-
   if (result.data.status === 'success') {
     const postSets = result.data.post_sets;
     yield put({ type: SET_POST_SETS, postSets });
@@ -615,7 +613,7 @@ export function* updatePostSetWorker(action) {
     const { data } = response;
     if (data.status === 'success') {
       yield put(updatePostSetSuccess(data.post_set, section));
-      yield put(getPostSets());
+      yield put(getPostSets(data.post_set.account_id));
       yield put(fetchPosts(data.post_set.account_id));
     } else {
       throw data.message;

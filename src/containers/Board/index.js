@@ -13,7 +13,7 @@ import { UserCanBoard } from 'config.routes/UserRoutePermissions';
 
 import PostEditor from 'containers/PostEditor';
 import PostSetsGroup from './PostSetsGroup';
-import { getPostSets, deletePostSetRequest, changePostSetStatusRequest } from '../App/actions';
+import { deletePostSetRequest, changePostSetStatusRequest } from '../App/actions';
 import { makeSelectPostSets } from '../App/selectors';
 import styles from './styles.scss';
 
@@ -25,7 +25,6 @@ class Board extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getPostSetsAction();
   }
 
   onDragEnter = (status) => {
@@ -82,7 +81,6 @@ class Board extends React.Component {
 }
 
 Board.propTypes = {
-  getPostSetsAction: PropTypes.func.isRequired,
   deletePostSetAction: PropTypes.func.isRequired,
   changePostSetStatusRequest: PropTypes.func.isRequired,
   postSets: ImmutablePropTypes.listOf(
@@ -100,7 +98,6 @@ Board.propTypes = {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    getPostSetsAction: () => dispatch(getPostSets()),
     deletePostSetAction: (id) => dispatch(deletePostSetRequest(id)),
     changePostSetStatusRequest: (id, status) => dispatch(changePostSetStatusRequest(id, status)),
   };

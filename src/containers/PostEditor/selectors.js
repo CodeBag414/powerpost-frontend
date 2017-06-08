@@ -36,7 +36,10 @@ const makeSelectUrlContent = () => createSelector(
 
 const selectPostSet = () => createSelector(
   selectPostSetEditor,
-  (postSetEditor) => postSetEditor.get('postSet'),
+  (postSetEditor) => {
+    console.log('postSetEditor', postSetEditor);
+    return postSetEditor.get('postSet');
+  },
 );
 
 const makeSelectActiveCollection = () => createSelector(
@@ -66,17 +69,19 @@ const makeSelectVisibleMediaItems = () => createSelector(
       case SHOW_ALL:
         return mediaItems;
       case SHOW_BLOGS:
-        return mediaItems.filter(t => t.type === 'blog');
+        return mediaItems.filter((t) => t.type === 'blog');
       case SHOW_IMAGES:
-        return mediaItems.filter(t => t.type === 'image');
+        return mediaItems.filter((t) => t.type === 'image');
       case SHOW_LINKS:
-        return mediaItems.filter(t => t.type === 'link');
+        return mediaItems.filter((t) => t.type === 'link');
       case SHOW_VIDEOS:
-        return mediaItems.filter(t => t.type === 'video');
+        return mediaItems.filter((t) => t.type === 'video');
       case SHOW_FILES:
-        return mediaItems.filter(t => t.type === 'document');
+        return mediaItems.filter((t) => t.type === 'document');
+      default:
+        return mediaItems;
     }
-});
+  });
 
 export {
   makeSelectComments,

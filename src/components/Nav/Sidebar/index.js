@@ -67,7 +67,7 @@ class Sidebar extends React.Component {
                 <ReactRouterMenuItem caption="Calendar" activeClassName={styles.active} isSidebar icon={<i className="fa fa-calendar" />} to={`/account/${this.props.accountId}/calendar`} />
               }
               {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
-                <ReactRouterMenuItem caption="Posts" activeClassName={styles.active} isSidebar icon={<i className="fa fa-send" />} to={`/account/${this.props.accountId}/list`} />
+                <ReactRouterMenuItem caption="Posts" activeClassName={styles.active} isSidebar icon={<i className="fa fa-send" />} to={`/account/${this.props.accountId}/posts`} />
               }
               {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
                 <ReactRouterMenuItem caption="Published" activeClassName={styles.active} isSidebar icon={<i className="fa fa-history" />} to={`/account/${this.props.accountId}/published`} />
