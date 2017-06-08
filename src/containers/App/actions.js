@@ -45,6 +45,9 @@ import {
   FETCH_POST_SET_REQUEST,
   FETCH_POST_SET_SUCCESS,
   FETCH_POST_SET_ERROR,
+  FETCH_POST_SETS_BY_ST_REQUEST,
+  FETCH_POST_SETS_BY_ST_SUCCESS,
+  FETCH_POST_SETS_BY_ST_FAILURE,
   UPDATE_POST_SET_REQUEST,
   UPDATE_POST_SET_SUCCESS,
   UPDATE_POST_SET_ERROR,
@@ -431,4 +434,16 @@ export function createPostSetRequest(postSet, edit = true) {
 
 export function createPostSetSuccess(postSet, edit) {
   return { type: CREATE_POST_SET_SUCCESS, postSet, edit };
+}
+
+export function fetchPostSetsBySTRequest(accountId) {
+  return { type: FETCH_POST_SETS_BY_ST_REQUEST, accountId };
+}
+
+export function fetchPostSetsBySTSuccess(postSets) {
+  return { type: FETCH_POST_SETS_BY_ST_SUCCESS, postSets };
+}
+
+export function fetchPostSetsBySTFailure(error) {
+  return { type: FETCH_POST_SETS_BY_ST_FAILURE, error };
 }

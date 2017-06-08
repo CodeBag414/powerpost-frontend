@@ -5,6 +5,7 @@ const Wrapper = styled.div`
   height: 100%;
   background: #fff;
   padding: 25px 20px;
+  overflow-y: auto;
 
   .cal-sidebar-title {
     color: #616669;
@@ -81,6 +82,7 @@ const Wrapper = styled.div`
       line-height: 28px;
       height: 28px;
       position: relative;
+      cursor: pointer;
       .fa-ellipsis-h {
         visibility: hidden;
         font-size: 15px;

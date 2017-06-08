@@ -41,7 +41,7 @@ import {
   SET_POST_SETS,
   FETCH_POST_SETS,
   DELETE_POST_SET_REQUEST,
-  DELETE_POST_SET,
+  DELETE_POST_SET_SUCCESS,
   CHANGE_POST_SET_REQUEST,
   CHANGE_POST_SET_STATUS,
   FETCH_POST_SET_REQUEST,
@@ -50,6 +50,7 @@ import {
   UPDATE_POST_REQUEST,
   FETCH_CONNECTIONS,
   CREATE_POST_SET_REQUEST,
+  FETCH_POST_SETS_BY_ST_REQUEST,
 } from './constants';
 
 import {
@@ -73,13 +74,14 @@ import {
   addUserToGroupError,
   removeUserFromGroupSuccess,
   removeUserFromGroupError,
-  getPostSets,
-  fetchPosts,
   fetchPostSetRequest,
   fetchPostSetSuccess,
   fetchPostSetError,
+  fetchPostSetsBySTSuccess,
+  fetchPostSetsBySTFailure,
   updatePostSetSuccess,
   updatePostSetError,
+  getPostSets,
   setPosts,
   setConnections,
   createPostSetSuccess,
@@ -564,7 +566,7 @@ export function* deletePostSetRequest(payload) {
     const response = yield call(putData, requestUrl, requestData);
     const { data } = response;
     if (data.status === 'success') {
-      yield put({ type: DELETE_POST_SET, id: payload.id });
+      yield put({ type: DELETE_POST_SET_SUCCESS, id: payload.id });
     }
   } catch (error) {
     console.log(error);
@@ -605,6 +607,16 @@ export function* fetchPostSetWorker(action) {
   }
 }
 
+function* fetchPostSetsBySTRequestWorker({ accountId }) {
+  const requestUrl = `/post_api/post_sets_by_schedule_time/${accountId}`;
+  const response = yield call(getData, requestUrl);
+  if (response.data.status === 'success') {
+    yield put(fetchPostSetsBySTSuccess(response.data));
+  } else {
+    yield put(fetchPostSetsBySTFailure(response.statusText));
+  }
+}
+
 export function* updatePostSetWorker(action) {
   const { payload, section } = action;
 
@@ -614,7 +626,6 @@ export function* updatePostSetWorker(action) {
     if (data.status === 'success') {
       yield put(updatePostSetSuccess(data.post_set, section));
       yield put(getPostSets(data.post_set.account_id));
-      yield put(fetchPosts(data.post_set.account_id));
     } else {
       throw data.message;
     }
@@ -637,6 +648,10 @@ export function* changePostSetStatus() {
 
 export function* fetchPostSetSaga() {
   yield takeLatest(FETCH_POST_SET_REQUEST, fetchPostSetWorker);
+}
+
+export function* fetchPostSetsBySTRequestWatcher() {
+  yield takeLatest(FETCH_POST_SETS_BY_ST_REQUEST, fetchPostSetsBySTRequestWorker);
 }
 
 export function* updatePostSetSaga() {
@@ -755,6 +770,7 @@ export default [
   fetchPostSetSaga,
   updatePostSetSaga,
   fetchPostsSaga,
+  fetchPostSetsBySTRequestWatcher,
   updatePostSaga,
   fetchConnectionsSaga,
   createPostSetSaga,

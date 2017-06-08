@@ -2,7 +2,7 @@
 
 import { createSelector } from 'reselect';
 
-const selectCalendar = (state) => state.get('posts');
+const selectCalendar = (state) => state.get('calendar');
 
 const makeSelectPosts = () => createSelector(
     selectCalendar,
