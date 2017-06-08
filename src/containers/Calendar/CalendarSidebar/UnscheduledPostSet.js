@@ -49,13 +49,19 @@ class UnscheduledPost extends React.Component {
     menuVisible: false,
   };
 
+  handleClickDelete = (e) => {
+    const { postSet, onDelete } = this.props;
+    e.stopPropagation();
+    onDelete(postSet);
+  }
+
   handleHidePopup = () => {
     this.setState({ menuVisible: false });
   }
 
   handleShowEditor = () => {
     const { postSet, currentAccount } = this.props;
-    browserHistory.push(`/account/${currentAccount.account_id}/publishing/calendar#postset-${postSet.post_set_id}`);
+    browserHistory.push(`/account/${currentAccount.account_id}/calendar#postset-${postSet.post_set_id}`);
   }
 
   handleShowPopup = (e) => {
@@ -66,7 +72,7 @@ class UnscheduledPost extends React.Component {
   }
 
   render() {
-    const { postSet, onDelete } = this.props;
+    const { postSet } = this.props;
     const { menuVisible } = this.state;
 
     return (
@@ -75,7 +81,7 @@ class UnscheduledPost extends React.Component {
         <i className="fa fa-ellipsis-h" onClick={this.handleShowPopup} />
         {menuVisible &&
           <Popup onOutsideClick={this.handleHidePopup}>
-            <CustomMenuItem onClick={() => onDelete(postSet)}>
+            <CustomMenuItem onClick={this.handleClickDelete}>
               <i className="fa fa-trash" />
               <MenuItemCaption>Delete</MenuItemCaption>
             </CustomMenuItem>

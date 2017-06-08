@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 const wrapperWidth = 362;
+const wrapperHeight = 275;
 const arrowHeight = 20;
 
 function getX({ position }) {
@@ -8,6 +9,13 @@ function getX({ position }) {
     return window.innerWidth - (wrapperWidth / 2) - 4;
   }
   return position.x;
+}
+
+function getY({ position }) {
+  if (position.y - wrapperHeight < 0) {
+    return wrapperHeight;
+  }
+  return position.y;
 }
 
 const Wrapper = styled.div`
@@ -19,7 +27,7 @@ const Wrapper = styled.div`
   filter        : drop-shadow(0 1px 5px rgba(60, 92, 129, 0.42));
   -ms-filter    : "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=1, Color='#383C5C81')";
   left: ${(props) => `${getX(props)}px`};
-  top: ${(props) => `${props.position.y}px`};
+  top: ${(props) => `${getY(props)}px`};
   transform: translate(-50%, calc(-100% - ${arrowHeight}px));
   z-index: 10000;
   &::before {
@@ -88,6 +96,13 @@ const Wrapper = styled.div`
     color: #616669;
     font-size: 11px;
     line-height: 15px;
+  }
+
+  .event-popup-channel-count {
+    color: #333;
+    font-size: 11px;
+    font-weight: bold;
+    font-style: italic;
     margin-bottom: 32px;
   }
 

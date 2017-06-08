@@ -54,6 +54,8 @@ import {
   FETCH_POSTS,
   SET_POSTS,
   UPDATE_POST_REQUEST,
+  UPDATE_BUNCH_POST_REQUEST,
+  UPDATE_BUNCH_POST_SUCCESS,
   FETCH_CONNECTIONS,
   SET_CONNECTIONS,
   CREATE_POST_SET_REQUEST,
@@ -420,6 +422,14 @@ export function updatePostRequest(post) {
   return { type: UPDATE_POST_REQUEST, post };
 }
 
+export function updateBunchPostRequest(posts) {
+  return { type: UPDATE_BUNCH_POST_REQUEST, posts };
+}
+
+export function updateBunchPostSuccess() {
+  return { type: UPDATE_BUNCH_POST_SUCCESS };
+}
+
 export function fetchConnections(accountId) {
   return { type: FETCH_CONNECTIONS, accountId };
 }
@@ -436,8 +446,8 @@ export function createPostSetSuccess(postSet, edit) {
   return { type: CREATE_POST_SET_SUCCESS, postSet, edit };
 }
 
-export function fetchPostSetsBySTRequest(accountId) {
-  return { type: FETCH_POST_SETS_BY_ST_REQUEST, accountId };
+export function fetchPostSetsBySTRequest() {
+  return { type: FETCH_POST_SETS_BY_ST_REQUEST };
 }
 
 export function fetchPostSetsBySTSuccess(postSets) {

@@ -49,7 +49,7 @@ import {
   CHANGE_POST_SET_STATUS,
   FETCH_POSTS,
   SET_POSTS,
-  UPDATE_POST_SUCCESS,
+  // UPDATE_POST_SUCCESS,
   // UPDATE_POST_SET_SUCCESS,
   SET_CONNECTIONS,
   CREATE_POST_SET_SUCCESS,
@@ -75,7 +75,7 @@ const initialState = fromJS({
   inviteEmailToGroup: {},
   postSets: [],
   postSetsByST: {
-    requesting: false,
+    requesting: true, // As soon as calendar view mounts, it starts loading. Maybe change later..
     error: null,
     data: null,
   },
@@ -203,11 +203,7 @@ function globalReducer(state = initialState, action) {
           error: action.payload,
         });
     case FETCH_POST_SETS_BY_ST_REQUEST:
-      return state.set('postSetsByST', fromJS({
-        requesting: true,
-        error: null,
-        data: null,
-      }));
+      return state.setIn(['postSetsByST', 'requesting'], true);
     case FETCH_POST_SETS_BY_ST_SUCCESS:
       return state.set('postSetsByST', fromJS({
         requesting: false,
@@ -317,22 +313,27 @@ function globalReducer(state = initialState, action) {
       return state.set('posts', []);
     case SET_POSTS:
       return state.set('posts', action.posts);
-    case UPDATE_POST_SUCCESS: {
-      const index = state.get('posts').findIndex((post) => post.post.post_id === action.post.post_id);
-      return (index > -1) ?
-        state.update('posts', (posts) => {
-          const reducedPosts = [...posts];
-          reducedPosts[index].post = action.post;
-          return reducedPosts;
-        })
-      :
-        state;
-    }
-    // TODO: Add updating the postSets and postSetsByST states
+    // case UPDATE_POST_SUCCESS: {
+    //   const index = state.get('posts').findIndex((post) => post.post.post_id === action.post.post_id);
+    //   return (index > -1) ?
+    //     state.update('posts', (posts) => {
+    //       const reducedPosts = [...posts];
+    //       reducedPosts[index].post = action.post;
+    //       return reducedPosts;
+    //     })
+    //   :
+    //     state;
+    // }
     // case UPDATE_POST_SET_SUCCESS: {
-    //   // const newState = state.updateIn(['postSetsByST'])
-    //   // return state.updateIn(['postSetsByST'])
-    //   return state;
+    //   // TODO: Do this for unscheduled_post_sets, post_when_ready_post_sets and state.get('postSets')
+    //   const scheduledPostSets = state.getIn(['postSetsByST', 'data', 'scheduled_post_sets']);
+    //   const index = scheduledPostSets.findIndex((postSet) => postSet.get('post_set_id') === action.payload.post_set_id);
+    //   return (index > -1) ?
+    //     state.updateIn(['postSetsByST', 'data', 'scheduled_post_sets', index], (postSet) => (fromJS({
+    //       ...action.payload,
+    //       schedule_time: postSet.get('schedule_time'),
+    //     })))
+    //     : state;
     // }
     case SET_CONNECTIONS:
       return state.set('connections', action.connections);
