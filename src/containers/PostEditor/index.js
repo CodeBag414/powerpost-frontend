@@ -20,6 +20,7 @@ import {
   makeSelectUser,
   selectGroupUsers,
   makeSelectUserAccount,
+  selectConnections,
 } from 'containers/App/selectors';
 
 import {
@@ -38,6 +39,8 @@ import Sidebar from './Sidebar';
 import UserAssignment from './Sidebar/UserAssignment';
 import StatusChooser from './Sidebar/StatusChooser';
 import Tags from './Sidebar/Tags';
+import WordpressSettings from './Sidebar/WordpressSettings';
+
 import Content from './Content';
 import Channels from './Channels';
 import SharedStreams from './SharedStreams';
@@ -58,6 +61,7 @@ class PostEditor extends Component {
     updatePost: PropTypes.func,
     id: PropTypes.string,
     accountId: PropTypes.string,
+    connections: PropTypes.array,
     modal: PropTypes.bool,
   };
 
@@ -122,7 +126,17 @@ class PostEditor extends Component {
   }
 
   render() {
-    const { user, postSet, groupUsers, userAccount, updatePostSet, updatePost, modal } = this.props;
+    const {
+      user,
+      postSet,
+      groupUsers,
+      userAccount,
+      updatePostSet,
+      updatePost,
+      connections,
+      modal,
+    } = this.props;
+
     const { postTitle, selectedTab } = this.state;
     const postsArray = postSet.getIn(['details', 'posts']);
     const posts = {};
@@ -191,6 +205,9 @@ class PostEditor extends Component {
                 updatePostSet={updatePostSet}
                 userAccount={userAccount}
               />
+              <WordpressSettings
+                connections={connections}
+              />
               <Tags
                 updatePostSet={updatePostSet}
                 postSet={postSet.get('details')}
@@ -220,6 +237,7 @@ const mapStateToProps = createStructuredSelector({
   postSet: selectPostSet(),
   groupUsers: selectGroupUsers(),
   userAccount: makeSelectUserAccount(),
+  connections: selectConnections(),
 });
 
 export default UserCanPostEdit(connect(mapStateToProps, mapDispatchToProps)(PostEditor));

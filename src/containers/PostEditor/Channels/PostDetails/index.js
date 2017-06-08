@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import DatePicker from 'react-toolbox/lib/date_picker';
-import TimePicker from 'react-toolbox/lib/time_picker';
 import moment from 'moment';
 
+import DatePicker from 'elements/atm.DatePicker';
+import TimePicker from 'elements/atm.TimePicker';
 import PPButton from 'elements/atm.Button';
 
 import FacebookBlock from 'containers/Feed/FacebookBlock';
