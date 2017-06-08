@@ -45,12 +45,17 @@ import {
   FETCH_POST_SET_REQUEST,
   FETCH_POST_SET_SUCCESS,
   FETCH_POST_SET_ERROR,
+  FETCH_POST_SETS_BY_ST_REQUEST,
+  FETCH_POST_SETS_BY_ST_SUCCESS,
+  FETCH_POST_SETS_BY_ST_FAILURE,
   UPDATE_POST_SET_REQUEST,
   UPDATE_POST_SET_SUCCESS,
   UPDATE_POST_SET_ERROR,
   FETCH_POSTS,
   SET_POSTS,
   UPDATE_POST_REQUEST,
+  UPDATE_BUNCH_POST_REQUEST,
+  UPDATE_BUNCH_POST_SUCCESS,
   FETCH_CONNECTIONS,
   SET_CONNECTIONS,
   CREATE_POST_SET_REQUEST,
@@ -344,8 +349,8 @@ export function removeUserFromGroupError(payload) {
   };
 }
 
-export function getPostSets() {
-  return { type: FETCH_POST_SETS };
+export function getPostSets(accountId) {
+  return { type: FETCH_POST_SETS, accountId };
 }
 
 export function setPostSets(postSets) {
@@ -417,6 +422,14 @@ export function updatePostRequest(post) {
   return { type: UPDATE_POST_REQUEST, post };
 }
 
+export function updateBunchPostRequest(posts) {
+  return { type: UPDATE_BUNCH_POST_REQUEST, posts };
+}
+
+export function updateBunchPostSuccess() {
+  return { type: UPDATE_BUNCH_POST_SUCCESS };
+}
+
 export function fetchConnections(accountId) {
   return { type: FETCH_CONNECTIONS, accountId };
 }
@@ -431,4 +444,16 @@ export function createPostSetRequest(postSet, edit = true) {
 
 export function createPostSetSuccess(postSet, edit) {
   return { type: CREATE_POST_SET_SUCCESS, postSet, edit };
+}
+
+export function fetchPostSetsBySTRequest() {
+  return { type: FETCH_POST_SETS_BY_ST_REQUEST };
+}
+
+export function fetchPostSetsBySTSuccess(postSets) {
+  return { type: FETCH_POST_SETS_BY_ST_SUCCESS, postSets };
+}
+
+export function fetchPostSetsBySTFailure(error) {
+  return { type: FETCH_POST_SETS_BY_ST_FAILURE, error };
 }

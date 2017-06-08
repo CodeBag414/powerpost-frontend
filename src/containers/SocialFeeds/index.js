@@ -68,7 +68,7 @@ class SocialFeeds extends React.Component {
                           title={connection.display_name}
                           isSidebar
                           icon={<i className={connection.channel_icon} />}
-                          to={`/account/${this.props.params.account_id}/publishing/social_feeds/feed/${connection.connection_id}`}
+                          to={`/account/${this.props.params.account_id}/social_feeds/feed/${connection.connection_id}`}
                           selected={this.props.location.pathname.match(`/feed/${connection.connection_id}`) != null}
                         />
                     )

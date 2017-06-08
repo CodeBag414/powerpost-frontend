@@ -16,9 +16,9 @@ class Publishing extends React.Component {
         return (
             <div>
                 <div className={ styles.settingsBar }>
-                    <TabLink to={'/account/' + this.props.params.account_id + '/publishing/calendar' } label="Calendar" />
-                    <TabLink to={'/account/' + this.props.params.account_id + '/publishing/boards' } label="Boards" />
-                    <TabLink to={`/account/${this.props.params.account_id}/publishing/social_feeds` } label="Social Feeds" />
+                    <TabLink to={'/account/' + this.props.params.account_id + '/calendar' } label="Calendar" />
+                    <TabLink to={'/account/' + this.props.params.account_id + '/boards' } label="Boards" />
+                    <TabLink to={`/account/${this.props.params.account_id}/social_feeds` } label="Social Feeds" />
                 </div>
                 <div className={ styles.settingsContent }>
                     { this.props.children }

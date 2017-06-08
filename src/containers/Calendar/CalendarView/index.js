@@ -24,10 +24,8 @@ const formats = {
 class CalendarView extends React.Component {
 
   static propTypes = {
-    posts: PropTypes.array,
+    postSets: PropTypes.array,
     currentAccount: PropTypes.object,
-    query: PropTypes.string,
-    filters: PropTypes.array,
     onMoveEvent: PropTypes.func,
     onDeleteEvent: PropTypes.func,
   };
@@ -35,20 +33,22 @@ class CalendarView extends React.Component {
   state = {
     showPopup: false,
     popupPosition: { x: 0, y: 0 },
-    currentPost: null,
+    currentPostSet: null,
   };
 
   eventPropGetter = (event) => {
-    const { post, post_set } = event.post;
+    const { postSet } = event;
     let bgColor;
     let fgColor;
     let borderColor;
-    if (moment().diff(moment.unix(post.schedule_time)) > 0) { // if the post is in the past, it means it's already published. Otherwise, it's an error, so don't show it
+
+    // if the postSet is in the past, it means it's already published. Otherwise, it's an error, so don't show it
+    if (moment().diff(moment.unix(postSet.schedule_time)) > 0) {
       bgColor = '#F3F6F7';
       borderColor = '#E7ECEE';
       fgColor = '#ACB5B8';
     } else {
-      switch (post_set.status) {
+      switch (postSet.status) {
         case '3':
           bgColor = 'rgba(171,230,106,0.5)'; // Ready
           borderColor = '#ABE76A';
@@ -69,7 +69,7 @@ class CalendarView extends React.Component {
           borderColor = '#ABE76A';
           fgColor = '#65883D';
           break;
-        case '1' && (post.status === '3'):
+        case '1':
           bgColor = '#F3F6F7';
           borderColor = '#E7ECEE';
           fgColor = '#ACB5B8';
@@ -99,7 +99,7 @@ class CalendarView extends React.Component {
     this.setState({
       showPopup: true,
       popupPosition: { x, y },
-      currentPost: event.post,
+      currentPostSet: event.postSet,
     });
   }
 
@@ -108,44 +108,22 @@ class CalendarView extends React.Component {
   }
 
   render() {
-    const { showPopup, popupPosition, currentPost } = this.state;
-    const { posts, query, filters, onMoveEvent, onDeleteEvent, currentAccount } = this.props;
-    // console.log('posts', posts);
-    // console.log('filters', filters);
-    const queryLower = query.toLowerCase();
-    const formattedPosts = posts.map((post) => {
-      if (moment().diff(moment.unix(post.post.schedule_time)) > 0 && post.post.status !== '2') { // Don't show posts in the past & unpublished
-        return null;
-      }
-      if (post.post.status === '0') return null; // Don't show deleted posts
-      const titleMatch = !query || (post.post_set.title && post.post_set.title.toLowerCase().indexOf(queryLower) !== -1);
-      let tagsMatch = !query;
-      if (post.post_set.tags) {
-        for (let i = 0; i < post.post_set.tags.length; i += 1) {
-          const tag = post.post_set.tags[i].toLowerCase();
-          if (tag.indexOf(queryLower) !== -1) {
-            tagsMatch = true;
-            break;
-          }
-        }
-      }
-      const filterMatch = filters[post.post_set.status];
-      if ((titleMatch || tagsMatch) && filterMatch) {
-        return {
-          post,
-          title: post.post_set.title ? post.post_set.title : 'Untitled post',
-          start: new Date(moment.unix(post.post.schedule_time)),
-          end: new Date(moment.unix(post.post.schedule_time)),
-        };
-      }
-      return null;
-    }).filter((post) => post);
+    const { showPopup, popupPosition, currentPostSet } = this.state;
+    const { postSets, onMoveEvent, onDeleteEvent, currentAccount } = this.props;
+
+    const events = postSets.map((postSet) => ({
+      postSet,
+      title: postSet.title ? postSet.title : 'Untitled post',
+      start: new Date(moment.unix(postSet.schedule_time)),
+      end: new Date(moment.unix(postSet.schedule_time)),
+    }));
+
     return (
       <Wrapper>
         <DragAndDropCalendar
           selectable
           popup
-          events={formattedPosts}
+          events={events}
           components={{
             toolbar: Toolbar,
           }}
@@ -159,7 +137,7 @@ class CalendarView extends React.Component {
             popupPosition={popupPosition}
             onOutsideClick={this.dismissPopup}
             onDelete={onDeleteEvent}
-            post={currentPost}
+            postSet={currentPostSet}
             currentAccount={currentAccount}
           />
         }

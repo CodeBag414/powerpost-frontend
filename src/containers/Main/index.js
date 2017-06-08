@@ -70,7 +70,7 @@ class Main extends React.Component {
 
   componentDidMount() {
     this.props.fetchAccount(this.props.params.account_id);
-    this.props.getPostSetsAction();
+    this.props.getPostSetsAction(this.props.params.account_id);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -82,7 +82,7 @@ class Main extends React.Component {
       // FIXME: In case we need to show popup on any page
       // browserHistory.push(`/account/${this.props.location.pathname}#postset-${postSet.post_set_id}`);
       if (nextProps.postSetEdit) {
-        browserHistory.push(`/account/${userAccount.account_id}/publishing/calendar#postset-${postSet.post_set_id}`); // <-- defaulting to calendar
+        browserHistory.push(`/account/${userAccount.account_id}/calendar#postset-${postSet.post_set_id}`); // <-- defaulting to calendar
       } else {
         toastr.success('Success', 'The Post is created successfully!');
       }
@@ -138,7 +138,7 @@ Main.propTypes = {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    getPostSetsAction: () => dispatch(getPostSets()),
+    getPostSetsAction: (accountId) => dispatch(getPostSets(accountId)),
     checkUserObject: (user) => dispatch(checkUser(user)),
     toggleMenuCollapse: (isCollapsed) => dispatch(toggleMenu(isCollapsed)),
     logout: () => dispatch(logout()),

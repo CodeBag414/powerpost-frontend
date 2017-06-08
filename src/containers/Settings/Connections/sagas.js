@@ -86,6 +86,9 @@ export function* createSubChannels(action, dispatch) { // eslint-disable-line no
   } else if (data.channel === 'linkedin') {
     apiUrl = 'create_linkedin_company';
     channelId = 'linkedin_company_id';
+  } else if (data.channel === 'googleplus') {
+    apiUrl = 'create_google_page';
+    channelId = 'google_page_id';
   } else {
     apiUrl = 'create_wordpress_blog';
     channelId = 'wordpress';

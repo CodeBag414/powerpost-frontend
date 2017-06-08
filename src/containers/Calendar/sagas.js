@@ -17,7 +17,7 @@ import {
   setPosts,
 } from './actions';
 
-function* getPosts({ accountId }) {
+function* fetchPostsWorker({ accountId }) {
   const requestUrl = `/post_api/posts/${accountId}`;
 
   const response = yield call(getData, requestUrl);
@@ -29,7 +29,7 @@ function* getPosts({ accountId }) {
   }
 }
 
-function* updatePostRequest({ post }) {
+function* updatePostWorker({ post }) {
   const requestUrl = `/post_api/post/${post.post_id}`;
   const requestData = {
     payload: {
@@ -45,19 +45,19 @@ function* updatePostRequest({ post }) {
   }
 }
 
-export function* fetchPosts() {
-  const watcher = yield takeLatest(FETCH_POSTS, getPosts);
+export function* fetchPostsWatcher() {
+  const watcher = yield takeLatest(FETCH_POSTS, fetchPostsWorker);
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
 }
 
-export function* updatePost() {
-  const watcher = yield takeLatest(UPDATE_POST_REQUEST, updatePostRequest);
+export function* updatePostWatcher() {
+  const watcher = yield takeLatest(UPDATE_POST_REQUEST, updatePostWorker);
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
 }
 
 export default [
-  fetchPosts,
-  updatePost,
+  // fetchPostsWatcher,
+  // updatePostWatcher,
 ];
