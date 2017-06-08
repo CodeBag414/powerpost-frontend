@@ -1,19 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Link } from 'react-router';
 import DropdownMenu from 'react-dd-menu';
-
-import PPButton from 'elements/atm.Button';
 import PPMenuItem from 'elements/atm.MenuItem';
 import PPAvatar from 'elements/atm.Avatar';
 import withReactRouter from 'elements/hoc.withReactRouter';
 
-import AccountLogo from './AccountLogo';
+import BrandDropdown from './BrandDropdown';
 import PPLogo from './PPLogo';
 import Avatar from './Avatar';
-import HeaderNavLogo from './HeaderNavLogo.png';
-import HeaderLogo from './HeaderLogo';
 import AvatarWrapper from './AvatarWrapper';
 
 const ReactRouterMenuItem = withReactRouter(PPMenuItem);
@@ -32,6 +27,86 @@ const DropDownMenu = styled(DropdownMenu)`
   }
 `;
 
+const SubBrandItem = styled.div`
+  width: 200px;
+  margin-left: 50px;
+  margin-right: 10px;
+  border-radius: 4px;
+  height: 30px;
+  line-height: 30px;
+  cursor: pointer;
+  background-color: ${(props) => props.isActive ? '#E7ECEE' : 'white'};
+  &:hover {
+    background-color: #E7ECEE;
+  }
+  div {
+    float: left;
+    height: 20px;
+    width: 20px;
+    margin: 5px;
+  }
+
+  span {
+    font-family: Lato-Regular;
+    font-size: 12px;
+    color: #616668;
+    letter-spacing: 0;
+    margin-left: 10px;
+  }
+`;
+
+const BrandItem = styled.div`
+  width: 250px;
+  margin-right: 10px;
+  margin-left: 10px;
+  border-radius: 4px;
+  height: 42px;
+  line-height: 42px;
+  cursor: pointer;
+  background-color: ${(props) => props.isActive ? '#E7ECEE' : 'white'};
+  &:hover {
+    background-color: #E7ECEE;
+  }
+  div {
+    float: left;
+    height: 32px;
+    width: 32px;
+    margin: 5px;
+  }
+
+  span {
+    font-family: Lato-Regular;
+    font-size: 13px;
+    color: #616668;
+    letter-spacing: 0;
+    margin-left: 10px;
+  }
+`;
+
+const BrandItemLink = withReactRouter(BrandItem);
+const SubBrandItemLink = withReactRouter(SubBrandItem);
+
+const BrandIcon = styled.div`
+  border-radius: 2.5px;
+  background-image: ${(props) => props.thumbnail ? `url(${props.thumbnail})` : `linear-gradient(-180deg, ${props.color} 26%, ${props.color} 100%)`};
+  opacity: 1;
+  width: 32px;
+  height: 32px;
+  margin: 0 auto;
+  background-size: cover;
+  background-repeat: no-repeat;
+  line-height: 32px;
+  font-size: 12px;
+  margin-bottom: 20px;
+  margin-top: 18px;
+  position: relative;
+  color: white;
+  transition: all .3s ease;
+  &:active, &:focus {
+    text-decoration: none;
+  }
+`;
+
 const Wrapper = styled.div`
   position:fixed;
   top: 0;
@@ -39,8 +114,8 @@ const Wrapper = styled.div`
   height: 60px;
   right: 0;
   transition: transform .3s ease-in-out, width .3s ease-in-out;
-  box-shadow: 0 1px 5px 0 rgba(60,92,129,0.20);
-  background-color: #fff;
+  background-image: linear-gradient(-180deg, #E81C64 1%, #B6134D 100%);
+  box-shadow: 0 1px 6px 0 rgba(60,92,129,0.20);
   width: ${(props) => props.isNotFullWidth ? 'calc(100% - 60px)' : '100%'};
 
   .new-post-button {
@@ -61,12 +136,21 @@ const Wrapper = styled.div`
   }
 `;
 
-const DashboardLink = styled(Link)`
-  float: right;
-  font-size: 20px;
-  color: #424647;
+const DropdownButton = styled.div`
+  display: inline-block;
+  margin-left: 20px;
   line-height: 60px;
-  margin-right: 20px;
+  cursor: pointer;
+  span {
+    font-size: 14px;
+    color: #FFFFFF;
+    letter-spacing: 0;
+  }
+  i {
+    color: white;
+    margin-left: 5px;
+    font-size: 12px;
+  }
 `;
 
 class TopNav extends Component {
@@ -75,11 +159,11 @@ class TopNav extends Component {
 
     this.state = {
       userMenuOpen: false,
+      brandMenuOpen: false,
     };
 
     this.handleTouchTap = this.handleTouchTap.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
-    this.handleTouch = this.handleTouch.bind(this);
   }
 
   handleTouchTap(event) {
@@ -91,24 +175,26 @@ class TopNav extends Component {
     });
   }
 
+  toggleBrands = () => {
+    this.setState({ brandMenuOpen: !this.state.brandMenuOpen });
+  }
+
   toggle = () => {
     this.setState({ userMenuOpen: !this.state.userMenuOpen });
   }
+
   handleRequestClose() {
     this.setState({
       userMenuOpen: false,
     });
-  }
-  handleTouch(event) {
-    console.log('in handleTouch', event);
   }
 
   render() {
     const isAccountPath = this.props.location.pathname.includes('/account/');
     const avatar = this.props.user && this.props.user.properties ? this.props.user.properties.thumb_url : '';
     const accountColor = this.props.user && this.props.user.properties ? this.props.user.properties.color : '#E7ECEE';
-    const color = this.props.activeBrand && this.props.activeBrand.properties.color ? this.props.activeBrand.properties.color : '#E7ECEE';
-    const thumbnail = this.props.activeBrand && this.props.activeBrand.properties.thumb_url ? this.props.activeBrand.properties.thumb_url : '';
+    const accountId = this.props.accountId;
+    const startingTitle = isAccountPath ? this.props.activeBrand.title : 'Select Brand';
     const menuOptions = {
       isOpen: this.state.userMenuOpen,
       close: this.handleRequestClose,
@@ -125,50 +211,62 @@ class TopNav extends Component {
       align: 'left',
     };
 
-    const showSidebar = this.props.activeBrand.account_type_id === 2 || this.props.activeBrand.account_type_id === 3 || this.props.activeBrand.account_type_id === 7;
-
     return (
-      <Wrapper isNotFullWidth={this.props.activeBrand && showSidebar && !this.props.isMenuCollapsed} >
-
-        <AccountLogo isAccountPath={isAccountPath} isCollapsed={this.props.isMenuCollapsed} color={color} title={this.props.activeBrand.title} thumbnail={thumbnail} />
-        <PPLogo isAccountPath={isAccountPath} />
-
-        { isAccountPath &&
-          <PPButton onClick={this.props.handleMenuToggle} style={{ marginTop: '10px', float: 'left' }} icon={this.props.isMenuCollapsed ? 'menu' : 'keyboard_arrow_left'} floating mini />
+      <Wrapper>
+        <PPLogo />
+        <DropdownButton onClick={this.toggleBrands}>
+          <span>{startingTitle}</span><i className="fa fa-chevron-down" />
+        </DropdownButton>
+        { this.state.brandMenuOpen &&
+          <BrandDropdown onOutsideClick={this.toggleBrands}>
+            {this.props.userAccount && this.props.userAccount.account_type_id !== '5' &&
+              <BrandItemLink to={`/account/${this.props.userAccount.account_id}`} isActive={this.props.userAccount.account_id === accountId}>
+                <BrandIcon thumbnail={this.props.userAccount.properties && this.props.userAccount.properties.thumb_url ? this.props.userAccount.properties.thumb_url : null} color={this.props.userAccount.properties && this.props.userAccount.properties.color ? this.props.userAccount.properties.color : '#E52466'} />
+                <span>{this.props.userAccount.title}</span>
+              </BrandItemLink>
+            }
+            {this.props.userAccount.subaccounts.length > 0 && this.props.userAccount.subaccounts.map((brand, i) =>
+              <SubBrandItemLink key={i} to={`/account/${brand.account_id}`} isActive={brand.account_id === accountId}>
+                <BrandIcon thumbnail={brand.properties && brand.properties.thumb_url ? brand.properties.thumb_url : null} color={brand.properties && brand.properties.color ? brand.properties.color : '#E52466'} />
+                <span>{brand.title}</span>
+              </SubBrandItemLink>
+            )}
+            {(this.props.sharedAccounts.length > 0 && this.props.sharedAccounts.map((brand, i) => {
+              return <BrandItemLink key={i} to={`/account/${brand.account_id}`} isActive={brand.account_id === accountId} >
+                <BrandIcon thumbnail={brand.properties && brand.properties.thumb_url ? brand.properties.thumb_url : null} color={brand.properties && brand.properties.color ? brand.properties.color : '#E52466'} />
+                <span>{brand.title}</span>
+              </BrandItemLink>
+                {brand.subaccounts.length > 0 && brand.subaccounts.map((subbrand, i) => 
+                  <SubBrandItemLink key={i} to={`/account/${subbrand.account_id}`} isActive={subbrand.account_id === accountId}>
+                    <BrandIcon thumbnail={subbrand.properties && subbrand.properties.thumb_url ? subbrand.properties.thumb_url : null} color={subbrand.properties && subbrand.properties.color ? subbrand.properties.color : '#E52466'} />
+                    <span>{subbrand.title}</span>
+                  </SubBrandItemLink>
+                )}
+              }             
+            ))}
+          </BrandDropdown>
         }
-        { !isAccountPath && <div style={{ float: 'left', height: '24px', marginTop: '18px', marginLeft: '10px', fontSize: '16px', fontWeight: '700', color: '#8C9496' }}>Welcome</div> }
-        <HeaderLogo src={HeaderNavLogo} />
         <AvatarWrapper>
           <DropDownMenu {...menuOptions}>
+            <ReactRouterMenuItem caption="Dashboard" to={'/'} />
             <ReactRouterMenuItem caption="Settings" to={'/user/settings'} />
             <PPMenuItem caption="Logout" onTouchTap={this.props.logout} />
           </DropDownMenu>
         </AvatarWrapper>
-        <PPButton
-          label={
-            <div>
-              <span className="button-plus">+</span>
-              <span className="button-title">New Power Post</span>
-            </div>
-          }
-          className="new-post-button"
-          onClick={this.props.createPostSet}
-          primary
-        />
-        <DashboardLink to={'/'}><i className="fa fa-home" /></DashboardLink>
       </Wrapper>
     );
   }
 }
 
+
 TopNav.propTypes = {
-  isMenuCollapsed: PropTypes.bool,
+  accountId: PropTypes.string,
   location: PropTypes.shape(),
+  userAccount: PropTypes.object,
+  sharedAccounts: PropTypes.array,
   user: PropTypes.shape(),
   activeBrand: PropTypes.shape(),
   logout: PropTypes.func,
-  handleMenuToggle: PropTypes.func,
-  createPostSet: PropTypes.func,
 };
 
 export default TopNav;

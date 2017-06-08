@@ -3,7 +3,7 @@ import styled from 'styled-components';
 const MainNavWrapper = styled.div`
   width: 216px;
   position: absolute;
-  left: ${(props) => props.isMultiBrand ? '60px' : '0px'};
+  left: 0px;
   height: 100%;
   background-color: #F8FAFA;
   color: #8C9497;
