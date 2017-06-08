@@ -29,6 +29,9 @@ import {
   FETCH_PAYMENT_SOURCES_ERROR,
   FETCH_PAYMENT_HISTORY_SUCCESS,
   FETCH_PAYMENT_HISTORY_ERROR,
+  FETCH_POST_SETS_BY_ST_REQUEST,
+  FETCH_POST_SETS_BY_ST_SUCCESS,
+  FETCH_POST_SETS_BY_ST_FAILURE,
   FETCH_GROUP_USERS,
   FETCH_GROUP_USERS_SUCCESS,
   FETCH_GROUP_USERS_ERROR,
@@ -42,11 +45,12 @@ import {
   REMOVE_USER_FROM_GROUP_SUCCESS,
   REMOVE_USER_FROM_GROUP_ERROR,
   SET_POST_SETS,
-  DELETE_POST_SET,
+  DELETE_POST_SET_SUCCESS,
   CHANGE_POST_SET_STATUS,
   FETCH_POSTS,
   SET_POSTS,
-  UPDATE_POST_SUCCESS,
+  // UPDATE_POST_SUCCESS,
+  // UPDATE_POST_SET_SUCCESS,
   SET_CONNECTIONS,
   CREATE_POST_SET_SUCCESS,
 } from './constants';
@@ -70,6 +74,11 @@ const initialState = fromJS({
   groupUsers: {},
   inviteEmailToGroup: {},
   postSets: [],
+  postSetsByST: {
+    requesting: true, // As soon as calendar view mounts, it starts loading. Maybe change later..
+    error: null,
+    data: null,
+  },
 });
 
 // Takes care of changing the application state
@@ -193,6 +202,20 @@ function globalReducer(state = initialState, action) {
           details: null,
           error: action.payload,
         });
+    case FETCH_POST_SETS_BY_ST_REQUEST:
+      return state.setIn(['postSetsByST', 'requesting'], true);
+    case FETCH_POST_SETS_BY_ST_SUCCESS:
+      return state.set('postSetsByST', fromJS({
+        requesting: false,
+        error: null,
+        data: action.postSets,
+      }));
+    case FETCH_POST_SETS_BY_ST_FAILURE:
+      return state.set('postSetsByST', fromJS({
+        requesting: false,
+        error: action.error,
+        data: null,
+      }));
     case FETCH_GROUP_USERS:
       return state
         .set('groupUsers', {
@@ -272,9 +295,15 @@ function globalReducer(state = initialState, action) {
     case SET_POST_SETS:
       return state
         .set('postSets', fromJS(action.postSets));
-    case DELETE_POST_SET:
-      return state
+    case DELETE_POST_SET_SUCCESS: {
+      // Deleting a post set could mean deleting it from the Calendar's unscheduled post sets
+      const newState = state.updateIn(
+        ['postSetsByST', 'data', 'unscheduled_post_sets'],
+        (postSets) => postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
+      );
+      return newState
         .updateIn(['postSets'], (postSets) => postSets.filter((postSet) => postSet.get('post_set_id') !== action.id));
+    }
     case CHANGE_POST_SET_STATUS:
       return state
         .updateIn(['postSets'], (postSets) => postSets.map((postSet) =>
@@ -284,17 +313,28 @@ function globalReducer(state = initialState, action) {
       return state.set('posts', []);
     case SET_POSTS:
       return state.set('posts', action.posts);
-    case UPDATE_POST_SUCCESS: {
-      const index = state.get('posts').findIndex((post) => post.post.post_id === action.post.post_id);
-      return (index > -1) ?
-        state.update('posts', (posts) => {
-          const reducedPosts = [...posts];
-          reducedPosts[index].post = action.post;
-          return reducedPosts;
-        })
-      :
-        state;
-    }
+    // case UPDATE_POST_SUCCESS: {
+    //   const index = state.get('posts').findIndex((post) => post.post.post_id === action.post.post_id);
+    //   return (index > -1) ?
+    //     state.update('posts', (posts) => {
+    //       const reducedPosts = [...posts];
+    //       reducedPosts[index].post = action.post;
+    //       return reducedPosts;
+    //     })
+    //   :
+    //     state;
+    // }
+    // case UPDATE_POST_SET_SUCCESS: {
+    //   // TODO: Do this for unscheduled_post_sets, post_when_ready_post_sets and state.get('postSets')
+    //   const scheduledPostSets = state.getIn(['postSetsByST', 'data', 'scheduled_post_sets']);
+    //   const index = scheduledPostSets.findIndex((postSet) => postSet.get('post_set_id') === action.payload.post_set_id);
+    //   return (index > -1) ?
+    //     state.updateIn(['postSetsByST', 'data', 'scheduled_post_sets', index], (postSet) => (fromJS({
+    //       ...action.payload,
+    //       schedule_time: postSet.get('schedule_time'),
+    //     })))
+    //     : state;
+    // }
     case SET_CONNECTIONS:
       return state.set('connections', action.connections);
     case CREATE_POST_SET_SUCCESS:

@@ -2,12 +2,13 @@ import React, { PropTypes } from 'react';
 import Checkbox from 'react-toolbox/lib/checkbox';
 
 import Wrapper from './Wrapper';
-import UnscheduledPost from './UnscheduledPost';
+import UnscheduledPostSet from './UnscheduledPostSet';
 
 class CalendarSidebar extends React.Component {
 
   static propTypes = {
-    posts: PropTypes.array,
+    postSets: PropTypes.array,
+    currentAccount: PropTypes.object,
     query: PropTypes.string,
     onSearch: PropTypes.func,
     onToggleFilter: PropTypes.func,
@@ -21,14 +22,6 @@ class CalendarSidebar extends React.Component {
     showIdea: true,
   };
 
-  getUnscheduledPosts = (posts) =>
-    posts.map((post) => {
-      if (post.post.status !== '0' && post.post.schedule_time === '0') {
-        return post;
-      }
-      return null;
-    }).filter((post) => post);
-
   handleChangeCheckbox = (value, event) => {
     const { onToggleFilter } = this.props;
     const filter = event.target.name;
@@ -40,9 +33,7 @@ class CalendarSidebar extends React.Component {
 
   render() {
     const { showReady, showReview, showDraft, showIdea } = this.state;
-    const { posts, query, onSearch, onDelete } = this.props;
-    const unscheduledPosts = this.getUnscheduledPosts(posts);
-    // console.log('CalendarSidebar -- posts', unscheduledPosts);
+    const { postSets, currentAccount, query, onSearch, onDelete } = this.props;
     return (
       <Wrapper>
         <div className="cal-sidebar-search">
@@ -82,12 +73,19 @@ class CalendarSidebar extends React.Component {
             className="cal-sidebar-checkbox showIdea"
           />
         </div>
+        <div className="cal-sidebar-title">
+          Unscheduled ({postSets.length})
+        </div>
         <div className="cal-sidebar-unscheduled">
-          <div className="cal-sidebar-title">
-            Unscheduled ({unscheduledPosts.length})
-          </div>
           {
-            unscheduledPosts.map((post) => <UnscheduledPost key={post.post.post_id} post={post} onDelete={onDelete} />)
+            postSets.map((postSet) =>
+              <UnscheduledPostSet
+                currentAccount={currentAccount}
+                key={postSet.post_set_id}
+                postSet={postSet}
+                onDelete={onDelete}
+              />
+            )
           }
         </div>
       </Wrapper>

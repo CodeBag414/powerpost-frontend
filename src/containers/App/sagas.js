@@ -6,7 +6,7 @@
 /* eslint-disable camelcase */
 
 import { takeLatest, delay } from 'redux-saga';
-import { take, call, put, race, select } from 'redux-saga/effects';
+import { take, call, put, race, select, fork } from 'redux-saga/effects';
 import { browserHistory } from 'react-router';
 import { toastr } from 'lib/react-redux-toastr';
 import { getData, postData, putData } from 'utils/request';
@@ -41,15 +41,17 @@ import {
   SET_POST_SETS,
   FETCH_POST_SETS,
   DELETE_POST_SET_REQUEST,
-  DELETE_POST_SET,
+  DELETE_POST_SET_SUCCESS,
   CHANGE_POST_SET_REQUEST,
   CHANGE_POST_SET_STATUS,
   FETCH_POST_SET_REQUEST,
   UPDATE_POST_SET_REQUEST,
   FETCH_POSTS,
   UPDATE_POST_REQUEST,
+  UPDATE_BUNCH_POST_REQUEST,
   FETCH_CONNECTIONS,
   CREATE_POST_SET_REQUEST,
+  FETCH_POST_SETS_BY_ST_REQUEST,
 } from './constants';
 
 import {
@@ -73,13 +75,16 @@ import {
   addUserToGroupError,
   removeUserFromGroupSuccess,
   removeUserFromGroupError,
-  getPostSets,
-  fetchPosts,
   fetchPostSetRequest,
   fetchPostSetSuccess,
   fetchPostSetError,
+  fetchPostSetsBySTRequest,
+  fetchPostSetsBySTSuccess,
+  fetchPostSetsBySTFailure,
   updatePostSetSuccess,
   updatePostSetError,
+  getPostSets,
+  updateBunchPostSuccess,
   setPosts,
   setConnections,
   createPostSetSuccess,
@@ -553,6 +558,17 @@ export function* fetchPostSetsWorker(payload) {
   }
 }
 
+function* fetchPostSetsBySTRequestWorker() {
+  const currentAccount = yield select(makeSelectCurrentAccount());
+  const requestUrl = `/post_api/post_sets_by_schedule_time/${currentAccount.account_id}`;
+  const response = yield call(getData, requestUrl);
+  if (response.data.status === 'success') {
+    yield put(fetchPostSetsBySTSuccess(response.data));
+  } else {
+    yield put(fetchPostSetsBySTFailure(response.statusText));
+  }
+}
+
 export function* deletePostSetRequest(payload) {
   const requestData = {
     payload: {
@@ -564,7 +580,7 @@ export function* deletePostSetRequest(payload) {
     const response = yield call(putData, requestUrl, requestData);
     const { data } = response;
     if (data.status === 'success') {
-      yield put({ type: DELETE_POST_SET, id: payload.id });
+      yield put({ type: DELETE_POST_SET_SUCCESS, id: payload.id });
     }
   } catch (error) {
     console.log(error);
@@ -614,7 +630,7 @@ export function* updatePostSetWorker(action) {
     if (data.status === 'success') {
       yield put(updatePostSetSuccess(data.post_set, section));
       yield put(getPostSets(data.post_set.account_id));
-      yield put(fetchPosts(data.post_set.account_id));
+      yield put(fetchPostSetsBySTRequest());
     } else {
       throw data.message;
     }
@@ -625,6 +641,10 @@ export function* updatePostSetWorker(action) {
 
 export function* fetchPostSets() {
   yield takeLatest(FETCH_POST_SETS, fetchPostSetsWorker);
+}
+
+export function* fetchPostSetsBySTRequestSaga() {
+  yield takeLatest(FETCH_POST_SETS_BY_ST_REQUEST, fetchPostSetsBySTRequestWorker);
 }
 
 export function* deletePostSet() {
@@ -675,9 +695,40 @@ function* updatePostRequestWorker({ post }) {
   if (response.data.result === 'success') {
     yield put({ type: 'UPDATE_POST_SUCCESS', post: response.data.post });
     yield put(fetchPostSetRequest({ id: response.data.post.post_set_id }));
+    yield put(fetchPostSetsBySTRequest());
   } else {
     console.log(response);
   }
+}
+
+/* Independent update post function to update a single post (for Bunch post updating) */
+function* updatePost(post) {
+  const requestUrl = `/post_api/post/${post.post_id}`;
+  const requestData = {
+    payload: {
+      ...post,
+    },
+  };
+
+  const response = yield call(putData, requestUrl, requestData);
+  if (response.data.result === 'success') {
+    yield put({ type: 'UPDATE_POST_SUCCESS', post: response.data.post });
+  } else {
+    console.log(response);
+  }
+}
+
+function* updateBunchPosts(posts) {
+  for (let i = 0; i < posts.length; i += 1) {
+    const post = posts[i];
+    yield fork(updatePost, post);
+  }
+}
+
+function* updateBunchPostRequestWorker({ posts }) {
+  yield call(updateBunchPosts, posts);
+  yield put(fetchPostSetsBySTRequest());
+  yield put(updateBunchPostSuccess());
 }
 
 export function* fetchPostsSaga() {
@@ -686,6 +737,10 @@ export function* fetchPostsSaga() {
 
 export function* updatePostSaga() {
   yield takeLatest(UPDATE_POST_REQUEST, updatePostRequestWorker);
+}
+
+export function* updateBunchPostSaga() {
+  yield takeLatest(UPDATE_BUNCH_POST_REQUEST, updateBunchPostRequestWorker);
 }
 
 function* fetchConnectionsWorker({ accountId }) {
@@ -755,7 +810,9 @@ export default [
   fetchPostSetSaga,
   updatePostSetSaga,
   fetchPostsSaga,
+  fetchPostSetsBySTRequestSaga,
   updatePostSaga,
+  updateBunchPostSaga,
   fetchConnectionsSaga,
   createPostSetSaga,
 ];
