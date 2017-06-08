@@ -102,6 +102,11 @@ const makeSelectPostSet = () => createSelector(
     (auth) => auth.get('post_set'),
 );
 
+const makeSelectPostSetsByST = () => createSelector(
+    selectAuth,
+    (auth) => auth.get('postSetsByST'),
+);
+
 const makeSelectPostSetEdit = () => createSelector(
     selectAuth,
     (auth) => auth.get('post_edit'),
@@ -129,5 +134,6 @@ export {
     makeSelectPosts,
     selectConnections,
     makeSelectPostSet,
+    makeSelectPostSetsByST,
     makeSelectPostSetEdit,
 };

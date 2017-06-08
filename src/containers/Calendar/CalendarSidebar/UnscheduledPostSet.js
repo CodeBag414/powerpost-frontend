@@ -1,7 +1,10 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { browserHistory } from 'react-router';
+
 import { MenuItem } from 'react-toolbox/lib/menu';
 
 import Popup from './Popup';
@@ -37,8 +40,9 @@ const MenuItemCaption = styled.div`
 class UnscheduledPost extends React.Component {
 
   static propTypes = {
-    onDelete: React.PropTypes.func,
-    post: React.PropTypes.object,
+    onDelete: PropTypes.func,
+    postSet: PropTypes.object,
+    currentAccount: PropTypes.object,
   };
 
   state = {
@@ -49,23 +53,29 @@ class UnscheduledPost extends React.Component {
     this.setState({ menuVisible: false });
   }
 
-  handleShowPopup = () => {
+  handleShowEditor = () => {
+    const { postSet, currentAccount } = this.props;
+    browserHistory.push(`/account/${currentAccount.account_id}/publishing/calendar#postset-${postSet.post_set_id}`);
+  }
+
+  handleShowPopup = (e) => {
+    e.stopPropagation();
     this.setState({
       menuVisible: true,
     });
   }
 
   render() {
-    const { post, onDelete } = this.props;
+    const { postSet, onDelete } = this.props;
     const { menuVisible } = this.state;
 
     return (
-      <div key={post.post.post_id} className={`cal-sidebar-unscheduled-item ${menuVisible && 'active'}`}>
-        {post.post_set.title ? post.post_set.title : 'Untitled post'}
+      <div key={postSet.post_set_id} className={`cal-sidebar-unscheduled-item ${menuVisible && 'active'}`} onClick={this.handleShowEditor}>
+        {postSet.title || 'Untitled post'}
         <i className="fa fa-ellipsis-h" onClick={this.handleShowPopup} />
         {menuVisible &&
           <Popup onOutsideClick={this.handleHidePopup}>
-            <CustomMenuItem onClick={() => onDelete(post)}>
+            <CustomMenuItem onClick={() => onDelete(postSet)}>
               <i className="fa fa-trash" />
               <MenuItemCaption>Delete</MenuItemCaption>
             </CustomMenuItem>
