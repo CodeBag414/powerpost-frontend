@@ -35,41 +35,6 @@ const Wrapper = styled.div`
 
   .cal-sidebar-statuses {
     margin-bottom: 33px;
-    .cal-sidebar-checkbox {
-      margin-bottom: 13px;
-      > div {
-        width: 14px;
-        height: 14px;
-        &::after {
-          transform: scale(0.8) rotate(45deg) !important;
-          margin-left: -0.2rem;
-          margin-top: -0.1rem;
-        }
-      }
-      > span {
-        color: #616669;
-        font-size: 13px;
-        font-weight: normal;
-        line-height: 14px;
-        padding-left: 16px;
-      }
-    }
-    .showReady > div {
-      background-color: #ABE66A;
-      border-color: #ABE66A;
-    }
-    .showReview > div {
-      background-color: #B171B5;
-      border-color: #B171B5;
-    }
-    .showDraft > div {
-      background-color: #67C5E6;
-      border-color: #67C5E6;
-    }
-    .showIdea > div {
-      background-color: #ACB5B8;
-      border-color: #ACB5B8;
-    }
   }
 
   .cal-sidebar-unscheduled {

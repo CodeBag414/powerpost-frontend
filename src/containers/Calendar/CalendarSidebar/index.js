@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
-import Checkbox from 'react-toolbox/lib/checkbox';
+
+import Checkbox from 'elements/atm.Checkbox';
 
 import Wrapper from './Wrapper';
 import UnscheduledPostSet from './UnscheduledPostSet';
@@ -49,28 +50,32 @@ class CalendarSidebar extends React.Component {
             label="Ready"
             name="showReady"
             onChange={this.handleChangeCheckbox}
-            className="cal-sidebar-checkbox showReady"
+            marginBottom={13}
+            bgColor="#ABE66A"
           />
           <Checkbox
             checked={showReview}
             label="Review"
             name="showReview"
             onChange={this.handleChangeCheckbox}
-            className="cal-sidebar-checkbox showReview"
+            marginBottom={13}
+            bgColor="#B171B5"
           />
           <Checkbox
             checked={showDraft}
             label="Draft"
             name="showDraft"
             onChange={this.handleChangeCheckbox}
-            className="cal-sidebar-checkbox showDraft"
+            marginBottom={13}
+            bgColor="#67C5E6"
           />
           <Checkbox
             checked={showIdea}
             label="Idea"
             name="showIdea"
             onChange={this.handleChangeCheckbox}
-            className="cal-sidebar-checkbox showIdea"
+            marginBottom={13}
+            bgColor="#ACB5B8"
           />
         </div>
         <div className="cal-sidebar-title">
