@@ -58,6 +58,11 @@ class PostEditor extends Component {
     updatePost: PropTypes.func,
     id: PropTypes.string,
     accountId: PropTypes.string,
+    modal: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    modal: true,
   };
 
   state = {
@@ -117,7 +122,7 @@ class PostEditor extends Component {
   }
 
   render() {
-    const { user, postSet, groupUsers, userAccount, updatePostSet, updatePost } = this.props;
+    const { user, postSet, groupUsers, userAccount, updatePostSet, updatePost, modal } = this.props;
     const { postTitle, selectedTab } = this.state;
     const postsArray = postSet.getIn(['details', 'posts']);
     const posts = {};
@@ -139,7 +144,7 @@ class PostEditor extends Component {
       { name: 'Shared Stream', component: <SharedStreams postSet={postSet} /> },
     ];
     return (
-      <Wrapper>
+      <Wrapper modal={modal}>
         <GeneralInfo
           user={user}
           postSet={postSet.get('details').toJS()}
@@ -148,6 +153,7 @@ class PostEditor extends Component {
           handleTitleBlur={this.handleTitleBlur}
           handleTitleFocus={this.handleTitleFocus}
           handleTitleKeyDown={this.handleTitleKeyDown}
+          closeButtonHidden={!modal}
         />
         <div className="content-wrapper">
           <div className="content">

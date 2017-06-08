@@ -5,9 +5,7 @@ import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { UserCanAccount } from 'config.routes/UserRoutePermissions';
-import {
-  createPostSetRequest,
-} from 'containers/App/actions';
+
 import {
   makeSelectPostSets,
   makeSelectPostSet,
@@ -18,10 +16,11 @@ import ErrorWrapper from './ErrorWrapper';
 import Wrapper from './Wrapper';
 import PostSetBox from './PostSetBox';
 
-class PublishedPostsLayout extends Component {
+class PostsLayout extends Component {
   static propTypes = {
     postSets: ImmutablePropTypes.map,
-    createPostSet: PropTypes.func,
+    // postSet: ImmutablePropTypes.map,
+    accountId: PropTypes.string,
   }
 
   state = {
@@ -32,21 +31,10 @@ class PublishedPostsLayout extends Component {
   componentWillMount() {
   }
 
-  /* componentWillReceiveProps(nextProps) {
-    if (this.props.postSet !== nextProps.postSet &&
-      !nextProps.postSet.get('processing')) {
-      if (nextProps.postSet.get('error')) {
-        toastr.error('The post has not been deleted from the stream.');
-      } else {
-        toastr.success('Success', 'The post has been deleted from the stream');
-      }
-    }
-  } */
-
   render() {
     const {
       postSets,
-      createPostSet,
+      accountId,
     } = this.props;
     const {
       error,
@@ -70,13 +58,11 @@ class PublishedPostsLayout extends Component {
       );
     }
 
-    const postSetsFiltered = postSets.slice(0, 50);
-
     return (
       <Wrapper>
         <PostSetBox
-          postSets={postSetsFiltered}
-          createPostSet={createPostSet}
+          postSets={postSets}
+          accountId={accountId}
         />
       </Wrapper>
     );
@@ -89,7 +75,6 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = {
-  createPostSet: createPostSetRequest,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserCanAccount(PublishedPostsLayout));
+export default connect(mapStateToProps, mapDispatchToProps)(UserCanAccount(PostsLayout));

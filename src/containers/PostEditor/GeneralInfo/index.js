@@ -14,7 +14,8 @@ function handleTitleKeyDown(e) {
   }
 }
 
-function GeneralInfo({ user, postSet, postTitle, handleTitleChange, handleTitleBlur }) {
+function GeneralInfo({ user, postSet, postTitle, handleTitleChange, handleTitleBlur, closeButtonHidden }) {
+
   const onBack = () => {
     browserHistory.goBack();
   };
@@ -37,9 +38,13 @@ function GeneralInfo({ user, postSet, postTitle, handleTitleChange, handleTitleB
         <br />
         <Subtitle>{`Created by ${userName} \u00a0\u00a0 | \u00a0\u00a0 ${creationTime}`}</Subtitle>
       </div>
-      <div className="back-button" onClick={onBack}>
-        ×
-      </div>
+      {
+        closeButtonHidden ? null : (
+          <div className="back-button" onClick={onBack}>
+            ×
+          </div>
+        )
+      }
     </Wrapper>
   );
 }
@@ -50,6 +55,7 @@ GeneralInfo.propTypes = {
   postTitle: PropTypes.string,
   handleTitleChange: PropTypes.func,
   handleTitleBlur: PropTypes.func,
+  closeButtonHidden: PropTypes.bool,
 };
 
 export default GeneralInfo;
