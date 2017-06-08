@@ -296,8 +296,6 @@ export function createRoutes(store, auth) {
           name: 'board',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
-              System.import('containers/Board/reducer'),
-              System.import('containers/Board/sagas'),
               System.import('containers/PostEditor/reducer'),
               System.import('containers/PostEditor/sagas'),
               System.import('containers/Board'),
@@ -305,10 +303,9 @@ export function createRoutes(store, auth) {
 
             const renderRoute = loadModule(cb);
 
-            importModules.then(([boardReducer, boardSagas, postEditorReducer, postEditorSagas, component]) => {
-              injectReducer('board', boardReducer.default);
-              injectReducer('postEditor', postEditorReducer.default);
-              injectSagas(boardSagas.default.concat(postEditorSagas.default));
+            importModules.then(([reducer, sagas, component]) => {
+              injectReducer('postEditor', reducer.default);
+              injectSagas(sagas.default);
               renderRoute(component);
             });
 
@@ -320,13 +317,11 @@ export function createRoutes(store, auth) {
           name: 'Published Posts',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
-              System.import('containers/PublishedPosts/reducer'),
               System.import('containers/PublishedPosts'),
             ]);
             const renderRoute = loadModule(cb);
 
-            importModules.then(([reducer, component]) => {
-              injectReducer('publishedPosts', reducer.default);
+            importModules.then(([component]) => {
               renderRoute(component);
             });
 
@@ -396,16 +391,20 @@ export function createRoutes(store, auth) {
           },
         },
         {
-          path: '/account(/:account_id)/list',
-          name: 'list',
+          path: '/account(/:account_id)/posts',
+          name: 'posts',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
-              System.import('containers/List'),
+              System.import('containers/PostEditor/reducer'),
+              System.import('containers/PostEditor/sagas'),
+              System.import('containers/Posts'),
             ]);
 
             const renderRoute = loadModule(cb);
 
-            importModules.then(([component]) => {
+            importModules.then(([reducer, sagas, component]) => {
+              injectReducer('postEditor', reducer.default);
+              injectSagas(sagas.default);
               renderRoute(component);
             });
 

@@ -344,8 +344,8 @@ export function removeUserFromGroupError(payload) {
   };
 }
 
-export function getPostSets() {
-  return { type: FETCH_POST_SETS };
+export function getPostSets(accountId) {
+  return { type: FETCH_POST_SETS, accountId };
 }
 
 export function setPostSets(postSets) {
