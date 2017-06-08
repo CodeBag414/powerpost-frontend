@@ -16,7 +16,7 @@ import {
 
 // The initial application state
 const initialState = fromJS({
-  menuCollapsed: true,
+  menuCollapsed: false,
   activeBrand: {
     account_id: false,
     user_id: false,
