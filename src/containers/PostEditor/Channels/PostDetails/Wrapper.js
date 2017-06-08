@@ -34,18 +34,6 @@ const Wrapper = styled.div`
     margin-top: 40px;
   }
 
-  div[data-react-toolbox=input] {
-    padding: 0;
-    input {
-      color: #616669;
-      border: 1px solid #CFD8DC;
-      border-radius: 4px;
-      font-size: 13px;
-      line-height: 14px;
-      padding: 9px 12px;
-    }
-  }
-
   .channel-summary {
     margin-bottom: 15px;
     i {

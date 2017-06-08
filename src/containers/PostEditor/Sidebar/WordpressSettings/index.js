@@ -5,14 +5,14 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import Autocomplete from 'react-toolbox/lib/autocomplete';
 import SmoothCollapse from 'react-smooth-collapse';
-import DatePicker from 'react-toolbox/lib/date_picker';
-import TimePicker from 'react-toolbox/lib/time_picker';
 import moment from 'moment';
 
 import Heading from 'components/Heading';
 import MultiLineInput from 'components/MultiLineInput';
 import Dropdown from 'elements/atm.Dropdown';
 import PPTextField from 'elements/atm.TextField';
+import DatePicker from 'elements/atm.DatePicker';
+import TimePicker from 'elements/atm.TimePicker';
 
 import Wrapper from './Wrapper';
 import LabelWrapper from './LabelWrapper';
