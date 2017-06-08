@@ -9,7 +9,7 @@ import {
   deletePostSetRequest,
   fetchPostSetsBySTRequest,
   updatePostRequest,
-  // updatePostSetRequest,
+  updateBunchPostRequest,
 } from 'containers/App/actions';
 
 import {
@@ -38,6 +38,7 @@ class Calendar extends React.Component {
     location: PropTypes.object,
     fetchPostSetsByST: PropTypes.func,
     updatePost: PropTypes.func,
+    updateBunchPost: PropTypes.func,
     deletePostSet: PropTypes.func,
     postSetsByST: PropTypes.any,
     currentAccount: PropTypes.object,
@@ -57,15 +58,19 @@ class Calendar extends React.Component {
   }
 
   onDeletePostSet = () => {
-    const { deletePostSet } = this.props;
+    const { deletePostSet, updateBunchPost } = this.props;
     const { postSetToDelete } = this.state;
 
     let id = null;
 
     if (postSetToDelete.posts.length === 0) { // Meaning the postSet is unscheduled
       id = postSetToDelete.post_set_id;
-    } else { // Meaning that the postSet is scheduled or post-when-ready, i.e. need to bunch delete the posts
-
+    } else { // TODO: This is the case when the postSet is scheduled or post-when-ready, i.e. need to bunch delete the posts
+      const postsToDelete = postSetToDelete.posts.map((post) => ({
+        ...post,
+        status: 0,
+      }));
+      updateBunchPost(postsToDelete);
     }
 
     if (id) {
@@ -124,22 +129,22 @@ class Calendar extends React.Component {
   }
 
   handleMoveEvent = ({ event, start }) => {
-    const { post } = event;
-    const { updatePost } = this.props;
+    const { postSet } = event;
+    const { updateBunchPost } = this.props;
     const scheduleTime = moment(start).format('X');
     /* eslint-disable no-alert */
-    if (moment().diff(moment.unix(post.post.schedule_time)) > 0) { // If the dragged post is in the past
+    if (moment().diff(moment.unix(postSet.schedule_time)) > 0) { // If the dragged post is in the past
       alert('You cannot reschedule a past event.');
       return;
     } else if (moment().diff(moment(start)) > 0) {
       alert('You cannot schedule a post in the past.');
       return;
     }
-    const newPost = {
-      ...post.post,
+    const postsToUpdate = postSet.posts.map((post) => ({
+      ...post,
       schedule_time: scheduleTime,
-    };
-    updatePost(newPost);
+    }));
+    updateBunchPost(postsToUpdate);
   }
 
   handleDeleteEvent = (postSet) => {
@@ -154,15 +159,13 @@ class Calendar extends React.Component {
   }
 
   loadPostSetsByST = () => {
-    const { params, fetchPostSetsByST } = this.props;
-    const accountId = params.account_id;
-    fetchPostSetsByST(accountId);
+    this.props.fetchPostSetsByST();
   }
 
   render() {
     const { query, showDeletePopup } = this.state;
     const { postSetsByST, currentAccount, params, location: { hash } } = this.props;
-    if (postSetsByST.get('requesting') || !postSetsByST.get('data')) {
+    if (postSetsByST.get('requesting') && !postSetsByST.get('data')) {
       return <Loading />;
     }
 
@@ -183,14 +186,12 @@ class Calendar extends React.Component {
           onToggleFilter={this.handleToggleFilter}
           onDelete={this.handleDeleteEvent}
         />
-        {/* <CalendarView
-          postSetsByST={postSetsByST}
+        <CalendarView
+          postSets={scheduledPostSets}
           currentAccount={currentAccount}
-          query={query}
-          filters={filters}
           onMoveEvent={this.handleMoveEvent}
           onDeleteEvent={this.handleDeleteEvent}
-        />*/}
+        />
         <DeletePostSetDialog
           active={showDeletePopup}
           handleDialogToggle={this.hideDeletePopup}
@@ -206,8 +207,9 @@ class Calendar extends React.Component {
 
 const mapDispatchToProps = (dispatch) => (
   {
-    fetchPostSetsByST: (accountId) => dispatch(fetchPostSetsBySTRequest(accountId)),
+    fetchPostSetsByST: () => dispatch(fetchPostSetsBySTRequest()),
     updatePost: (post) => dispatch(updatePostRequest(post)),
+    updateBunchPost: (posts) => dispatch(updateBunchPostRequest(posts)),
     deletePostSet: (id) => dispatch(deletePostSetRequest(id)),
   }
 );
