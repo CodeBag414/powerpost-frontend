@@ -82,7 +82,11 @@ class Main extends React.Component {
       // FIXME: In case we need to show popup on any page
       // browserHistory.push(`/account/${this.props.location.pathname}#postset-${postSet.post_set_id}`);
       if (nextProps.postSetEdit) {
-        browserHistory.push(`/account/${userAccount.account_id}/calendar#postset-${postSet.post_set_id}`); // <-- defaulting to calendar
+        browserHistory.push({
+          pathname: `/account/${userAccount.account_id}/calendar`,
+          hash: `#postset-${postSet.post_set_id}`,
+          state: { prevUrl: window.location.href },
+        });
       } else {
         toastr.success('Success', 'The Post is created successfully!');
       }
