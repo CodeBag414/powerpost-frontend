@@ -53,27 +53,27 @@ import Channels from './Channels';
 import SharedStreams from './SharedStreams';
 
 class PostEditor extends Component {
-
   static propTypes = {
     // getComments: PropTypes.func,
     // getAccountTags: PropTypes.func,
     // fetchPostSet: PropTypes.func,
     // fetchGroupUsers: PropTypes.func,
     // fetchConnections: PropTypes.func,
-    user: PropTypes.shape(),
-    postSet: ImmutablePropTypes.map,
-    groupUsers: PropTypes.object,
-    userAccount: PropTypes.object,
-    wordpressGUI: ImmutablePropTypes.map,
-    post: ImmutablePropTypes.map,
-    updatePostSet: PropTypes.func,
-    updatePost: PropTypes.func,
-    fetchWordpressGUI: PropTypes.func,
-    createPost: PropTypes.func,
-    id: PropTypes.string,
     accountId: PropTypes.string,
     connections: PropTypes.array,
+    groupUsers: PropTypes.object,
+    id: PropTypes.string,
+    location: PropTypes.object,
     modal: PropTypes.bool,
+    updatePost: PropTypes.func,
+    updatePostSet: PropTypes.func,
+    postSet: ImmutablePropTypes.map,
+    user: PropTypes.shape(),
+    userAccount: PropTypes.object,
+    createPost: PropTypes.func,
+    fetchWordpressGUI: PropTypes.func,
+    wordpressGUI: ImmutablePropTypes.map,
+    post: ImmutablePropTypes.map,
   };
 
   static defaultProps = {
@@ -137,18 +137,19 @@ class PostEditor extends Component {
 
   render() {
     const {
-      user,
-      postSet,
+      connections,
       groupUsers,
-      userAccount,
-      updatePostSet,
+      location,
+      modal,
+      postSet,
       updatePost,
+      updatePostSet,
+      user,
+      userAccount,
       createPost,
       fetchWordpressGUI,
-      connections,
       wordpressGUI,
       post,
-      modal,
     } = this.props;
 
     if (postSet.get('isFetching')) {
@@ -182,14 +183,15 @@ class PostEditor extends Component {
     return (
       <Wrapper modal={modal}>
         <GeneralInfo
-          user={user}
-          postSet={postSet.get('details').toJS()}
-          postTitle={postTitle}
-          handleTitleChange={this.handleTitleChange}
+          closeButtonHidden={!modal}
           handleTitleBlur={this.handleTitleBlur}
+          handleTitleChange={this.handleTitleChange}
           handleTitleFocus={this.handleTitleFocus}
           handleTitleKeyDown={this.handleTitleKeyDown}
-          closeButtonHidden={!modal}
+          location={location}
+          postSet={postSet.get('details').toJS()}
+          postTitle={postTitle}
+          user={user}
         />
         <div className="content-wrapper">
           <div className="content">

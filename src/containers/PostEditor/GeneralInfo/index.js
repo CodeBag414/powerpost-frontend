@@ -14,11 +14,11 @@ function handleTitleKeyDown(e) {
   }
 }
 
-function GeneralInfo({ user, postSet, postTitle, handleTitleChange, handleTitleBlur, closeButtonHidden }) {
-
+function GeneralInfo({ user, postSet, postTitle, handleTitleChange, handleTitleBlur, closeButtonHidden, location }) {
   const onBack = () => {
-    browserHistory.goBack();
+    browserHistory.push(location.state.prevUrl);
   };
+
   // console.log('user', user);
   // console.log('postSet', postSet);
   if (!postSet.post_set_id) return null;
@@ -50,12 +50,13 @@ function GeneralInfo({ user, postSet, postTitle, handleTitleChange, handleTitleB
 }
 
 GeneralInfo.propTypes = {
-  user: PropTypes.shape(),
+  closeButtonHidden: PropTypes.bool,
+  handleTitleBlur: PropTypes.func,
+  handleTitleChange: PropTypes.func,
+  location: PropTypes.object,
   postSet: PropTypes.object,
   postTitle: PropTypes.string,
-  handleTitleChange: PropTypes.func,
-  handleTitleBlur: PropTypes.func,
-  closeButtonHidden: PropTypes.bool,
+  user: PropTypes.shape(),
 };
 
 export default GeneralInfo;

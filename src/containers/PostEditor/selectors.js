@@ -36,10 +36,7 @@ const makeSelectUrlContent = () => createSelector(
 
 const selectPostSet = () => createSelector(
   selectPostSetEditor,
-  (postSetEditor) => {
-    console.log('postSetEditor', postSetEditor);
-    return postSetEditor.get('postSet');
-  },
+  (postSetEditor) => postSetEditor.get('postSet')
 );
 
 const makeSelectActiveCollection = () => createSelector(

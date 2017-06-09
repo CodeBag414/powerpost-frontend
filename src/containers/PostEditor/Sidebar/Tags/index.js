@@ -7,7 +7,7 @@ import SmoothCollapse from 'react-smooth-collapse';
 import { values } from 'lodash';
 
 import Heading from 'components/Heading';
-import AutoMultiSelect from 'components/PPAutoComplete';
+import AutoMultiSelect from 'components/AutoMultiSelect';
 
 import { makeSelectAccountTags } from 'containers/PostEditor/selectors';
 import Wrapper from './Wrapper';
