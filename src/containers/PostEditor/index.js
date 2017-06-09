@@ -217,17 +217,17 @@ class PostEditor extends Component {
               }
             </div>
             <Sidebar>
+              <StatusChooser
+                postSet={postSet}
+                updatePostSet={updatePostSet}
+                userAccount={userAccount}
+              />
               <UserAssignment
                 isFetching={groupUsers.isFetching || postSet.get('isFetching')}
                 postSet={postSet.get('details').toJS()}
                 assignee={postSet.getIn(['details', 'user_assignments', 0])}
                 users={groupUsers.details ? groupUsers.details.groups_users : []}
                 updatePostSet={updatePostSet}
-              />
-              <StatusChooser
-                postSet={postSet}
-                updatePostSet={updatePostSet}
-                userAccount={userAccount}
               />
               <WordpressSettings
                 postSet={postSet}
