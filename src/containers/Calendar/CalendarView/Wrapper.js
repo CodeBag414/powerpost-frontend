@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  flex-grow: 1;
   color: #6f6f6f;
+  flex-grow: 1;
   font-family: Lato;
   font-size: 11px;
+  height: calc(100vh - 60px);
 
   .rbc-header {
     background-color: #efefef;
