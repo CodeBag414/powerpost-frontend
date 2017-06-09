@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export default styled.div`
-  margin: 0 0 40px 24px;
+  margin: 16px 0 0 24px;
 
   .status-chooser-title {
     color: #8C9496;
