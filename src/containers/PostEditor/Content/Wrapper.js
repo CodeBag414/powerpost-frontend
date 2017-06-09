@@ -13,8 +13,8 @@ function pendingStyle({ pending }) {
 const Wrapper = styled.div`
   ${pendingStyle};
   margin-top: 27px;
-  max-width: 408px;
-  width: 50%;
+  max-width: 450px;
+  width: 100%;
   .comment-input {
     margin-top: 29px;
     margin-bottom: 19px;
