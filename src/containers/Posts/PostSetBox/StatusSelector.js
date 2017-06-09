@@ -15,7 +15,8 @@ const StatusSelector = ({
           onClick={() => onChange(status.status)}
           style={{ backgroundColor: status.statusColor, border: `2px solid ${status.statusColor}` }}
         >
-          {status.name} ({status.size})
+          {status.name}
+          <span className="status-size">{status.size}</span>
         </div>
       )
     }

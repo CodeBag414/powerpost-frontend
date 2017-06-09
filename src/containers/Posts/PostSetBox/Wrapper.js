@@ -9,7 +9,7 @@ const Wrapper = styled.div`
   display: flex;
   .post-list-container {
     width: 40%;
-    max-width: 370px;
+    max-width: 300px;
     height: 100%;
     float: left;
     display: flex;
@@ -17,6 +17,7 @@ const Wrapper = styled.div`
     .status-selector {
       display: flex;
       padding: 10px 5px;
+      font-size: 14px;
       .status-item {
         cursor: pointer;
         flex: 1;
@@ -27,9 +28,16 @@ const Wrapper = styled.div`
         color: white;
         transition: color 0.5s, background-color 0.5s;
         white-space: nowrap;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         &:not(.active-status) {
           background-color: white !important;
           color: black;
+        }
+        .status-size {
+          font-size: 10px;
+          padding: 2px;
         }
       }
     }
