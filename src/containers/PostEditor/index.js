@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { UserCanPostEdit } from 'config.routes/UserRoutePermissions';
 
@@ -26,11 +27,17 @@ import {
 import {
   fetchComments,
   fetchAccountTags,
+  fetchWordpressGUIRequest,
+  createPostRequest,
 } from 'containers/PostEditor/actions';
 
 import {
   selectPostSet,
+  selectWordpressGUI,
+  selectPost,
 } from 'containers/PostEditor/selectors';
+
+import Loading from 'components/Loading';
 
 import Wrapper from './Wrapper';
 import GeneralInfo from './GeneralInfo';
@@ -54,11 +61,15 @@ class PostEditor extends Component {
     // fetchGroupUsers: PropTypes.func,
     // fetchConnections: PropTypes.func,
     user: PropTypes.shape(),
-    postSet: PropTypes.object,
+    postSet: ImmutablePropTypes.map,
     groupUsers: PropTypes.object,
     userAccount: PropTypes.object,
+    wordpressGUI: ImmutablePropTypes.map,
+    post: ImmutablePropTypes.map,
     updatePostSet: PropTypes.func,
     updatePost: PropTypes.func,
+    fetchWordpressGUI: PropTypes.func,
+    createPost: PropTypes.func,
     id: PropTypes.string,
     accountId: PropTypes.string,
     connections: PropTypes.array,
@@ -76,7 +87,6 @@ class PostEditor extends Component {
 
   componentWillMount() {
     this.initialize();
-    console.log('@@@@@__--', this.props);
   }
 
   componentWillReceiveProps({ postSet }) {
@@ -133,9 +143,21 @@ class PostEditor extends Component {
       userAccount,
       updatePostSet,
       updatePost,
+      createPost,
+      fetchWordpressGUI,
       connections,
+      wordpressGUI,
+      post,
       modal,
     } = this.props;
+
+    if (postSet.get('isFetching')) {
+      return (
+        <Wrapper modal={modal}>
+          <Loading />
+        </Wrapper>
+      );
+    }
 
     const { postTitle, selectedTab } = this.state;
     const postsArray = postSet.getIn(['details', 'posts']);
@@ -206,7 +228,13 @@ class PostEditor extends Component {
                 userAccount={userAccount}
               />
               <WordpressSettings
+                postSet={postSet}
                 connections={connections}
+                wordpressGUI={wordpressGUI}
+                post={post}
+                updatePost={updatePost}
+                createPost={createPost}
+                fetchWordpressGUI={fetchWordpressGUI}
               />
               <Tags
                 updatePostSet={updatePostSet}
@@ -229,6 +257,8 @@ export function mapDispatchToProps(dispatch) {
     updatePostSet: (payload) => dispatch(updatePostSetRequest(payload)),
     updatePost: (payload) => dispatch(updatePostRequest(payload)),
     fetchConnections: (payload) => dispatch(fetchConnections(payload)),
+    fetchWordpressGUI: (payload) => dispatch(fetchWordpressGUIRequest(payload)),
+    createPost: (payload) => dispatch(createPostRequest(payload)),
   };
 }
 
@@ -238,6 +268,8 @@ const mapStateToProps = createStructuredSelector({
   groupUsers: selectGroupUsers(),
   userAccount: makeSelectUserAccount(),
   connections: selectConnections(),
+  wordpressGUI: selectWordpressGUI(),
+  post: selectPost(),
 });
 
 export default UserCanPostEdit(connect(mapStateToProps, mapDispatchToProps)(PostEditor));

@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
 import Autocomplete from 'react-toolbox/lib/autocomplete';
 import SmoothCollapse from 'react-smooth-collapse';
 import moment from 'moment';
@@ -13,6 +11,7 @@ import Dropdown from 'elements/atm.Dropdown';
 import PPTextField from 'elements/atm.TextField';
 import DatePicker from 'elements/atm.DatePicker';
 import TimePicker from 'elements/atm.TimePicker';
+import Checkbox from 'elements/atm.Checkbox';
 
 import Wrapper from './Wrapper';
 import LabelWrapper from './LabelWrapper';
@@ -25,7 +24,13 @@ const defaultDestinationOption = {
 
 export class WordpressSettings extends Component {
   static propTypes = {
+    postSet: ImmutablePropTypes.map,
     connections: PropTypes.array,
+    wordpressGUI: ImmutablePropTypes.map,
+    post: ImmutablePropTypes.map,
+    updatePost: PropTypes.func,
+    createPost: PropTypes.func,
+    fetchWordpressGUI: PropTypes.func,
   };
 
   constructor(props) {
@@ -33,10 +38,24 @@ export class WordpressSettings extends Component {
 
     this.state = {
       destination: defaultDestinationOption,
-      urlName: '',
+      slug: '',
       description: '',
       scheduleTime: new Date().getTime() / 1000,
+      allowComments: true,
+      categories: [],
+      tags: {},
+      authorId: 0,
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.wordpressGUI.get('isFetching') && !nextProps.wordpressGUI.get('isFetching')) {
+      if (!nextProps.wordpressGUI.get('error')) {
+        this.setState({
+          categories: nextProps.wordpressGUI.getIn(['data', 'categories']),
+        });
+      }
+    }
   }
 
   expand = (isExpanded) => {
@@ -44,14 +63,57 @@ export class WordpressSettings extends Component {
   }
 
   handleBlogChange = (option) => {
+    const {
+      fetchWordpressGUI,
+      createPost,
+      updatePost,
+      postSet,
+      post,
+      wordpressGUI,
+    } = this.props;
+
     this.setState({
       destination: option,
+      categories: wordpressGUI.getIn(['data', 'categories']),
+      tags: postSet.getIn(['details', 'tags']),
+    });
+
+    if (post.get('data').isEmpty()) {
+      createPost({
+        post_set_id: postSet.getIn(['details', 'post_set_id']),
+        connection_id: option.value,
+        status: 2,
+        schedule_time: new Date().getTime() / 1000,
+        message: postSet.getIn(['details', 'message']),
+      });
+    } else {
+      const data = post.get('data').toJS();
+      if (option.value === '0') { // Do not post to wordpress
+        updatePost({
+          ...data,
+          status: 0,    // Set to inactive
+        });
+      } else {
+        updatePost({
+          ...data,
+          connection_id: option.value,
+        });
+      }
+    }
+    fetchWordpressGUI({
+      connectionId: option.value,
     });
   }
 
+  handleCommentsChange = (value) => {
+    this.setState({
+      allowComments: value,
+    });
+    this.handlePostSave();
+  }
+
   handleDateChange = (date) => {
-    const { updatePost } = this.props;
-    const { currentPost } = this.state;
+    const { post, updatePost } = this.props;
 
     const newDate = new Date(date).getTime() / 1000;
     this.setState({
@@ -59,7 +121,7 @@ export class WordpressSettings extends Component {
     });
 
     const newPost = {
-      ...currentPost.toJS(),
+      ...post.get('data').toJS(),
       schedule_time: newDate,
     };
     updatePost(newPost);
@@ -71,16 +133,40 @@ export class WordpressSettings extends Component {
     });
   }
 
-  handleUrlNameChange = (ev) => {
+  handleSlugChange = (ev) => {
     const { value } = ev.target;
 
     this.setState({
-      urlName: value,
+      slug: value,
     });
   }
 
   handlePostSave = () => {
+    const { post, updatePost } = this.props;
+    const {
+      authorId,
+      slug,
+      description,
+      allowComments,
+      tags,
+      categories,
+    } = this.state;
 
+    const newPost = {
+      ...post.get('data').toJS(),
+      properties: {
+        ...post.getIn(['data', 'properties']),
+        author_id: authorId,
+        slug,
+        description,
+        allow_comments: allowComments,
+        tags,
+        categories,
+        // featured_image_id
+      },
+    };
+
+    updatePost(newPost);
   }
 
   render() {
@@ -91,16 +177,21 @@ export class WordpressSettings extends Component {
     const {
       isExpanded,
       destination,
-      urlName,
+      slug,
       description,
       scheduleTime,
+      allowComments,
     } = this.state;
 
+    const wordpressOptions = connections
+    .filter((c) => c.channel === 'wordpress')
+    .map((c) => ({
+      value: c.connection_id,
+      label: c.display_name,
+    }));
+
     const destinationOptions = [defaultDestinationOption]
-      .concat(connections.map((c) => ({
-        value: c.connection_id,
-        label: c.display_name,
-      })));
+      .concat(wordpressOptions);
 
     const minDate = new Date();
     minDate.setDate(minDate.getDate() - 1);
@@ -130,9 +221,9 @@ export class WordpressSettings extends Component {
             type="text"
             name="urlName"
             hintText="Url Name"
-            value={urlName}
+            value={slug}
             onBlur={this.handlePostSave}
-            onChange={this.handleUrlNameChange}
+            onChange={this.handleSlugChange}
           />
           <LabelWrapper style={{ marginTop: '6px' }}>Description</LabelWrapper>
           <MultiLineInput
@@ -161,18 +252,19 @@ export class WordpressSettings extends Component {
               />
             </div>
           </ScheduleRowWrapper>
+          <LabelWrapper>Categories</LabelWrapper>
+          
+          <Checkbox
+            checked={allowComments}
+            disabled={disabled}
+            label="Allow Comments"
+            name="allow"
+            onChange={this.handleCommentsChange}
+          />
         </SmoothCollapse>
       </Wrapper>
     );
   }
 }
 
-function mapDispatchToProps() {
-  return {};
-}
-
-const mapStateToProps = createStructuredSelector({
-  
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(WordpressSettings);
+export default WordpressSettings;
