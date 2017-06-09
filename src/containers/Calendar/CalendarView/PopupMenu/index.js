@@ -44,7 +44,11 @@ class PopupMenu extends Component {
 
   handleClickEdit = () => {
     const { postSet, currentAccount } = this.props;
-    browserHistory.push(`/account/${currentAccount.account_id}/calendar#postset-${postSet.post_set_id}`);
+    browserHistory.push({
+      pathname: `/account/${currentAccount.account_id}/calendar`,
+      hash: `#postset-${postSet.post_set_id}`,
+      state: { prevUrl: window.location.href },
+    });
   }
 
   buildTags = (postSet) => {

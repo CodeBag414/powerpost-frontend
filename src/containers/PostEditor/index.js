@@ -46,23 +46,23 @@ import Channels from './Channels';
 import SharedStreams from './SharedStreams';
 
 class PostEditor extends Component {
-
   static propTypes = {
     // getComments: PropTypes.func,
     // getAccountTags: PropTypes.func,
     // fetchPostSet: PropTypes.func,
     // fetchGroupUsers: PropTypes.func,
     // fetchConnections: PropTypes.func,
-    user: PropTypes.shape(),
-    postSet: PropTypes.object,
-    groupUsers: PropTypes.object,
-    userAccount: PropTypes.object,
-    updatePostSet: PropTypes.func,
-    updatePost: PropTypes.func,
-    id: PropTypes.string,
     accountId: PropTypes.string,
     connections: PropTypes.array,
+    groupUsers: PropTypes.object,
+    id: PropTypes.string,
+    location: PropTypes.object,
     modal: PropTypes.bool,
+    updatePost: PropTypes.func,
+    updatePostSet: PropTypes.func,
+    postSet: PropTypes.object,
+    user: PropTypes.shape(),
+    userAccount: PropTypes.object,
   };
 
   static defaultProps = {
@@ -76,7 +76,6 @@ class PostEditor extends Component {
 
   componentWillMount() {
     this.initialize();
-    console.log('@@@@@__--', this.props);
   }
 
   componentWillReceiveProps({ postSet }) {
@@ -127,14 +126,15 @@ class PostEditor extends Component {
 
   render() {
     const {
-      user,
-      postSet,
-      groupUsers,
-      userAccount,
-      updatePostSet,
-      updatePost,
       connections,
+      groupUsers,
+      location,
       modal,
+      postSet,
+      updatePost,
+      updatePostSet,
+      user,
+      userAccount,
     } = this.props;
 
     const { postTitle, selectedTab } = this.state;
@@ -160,14 +160,15 @@ class PostEditor extends Component {
     return (
       <Wrapper modal={modal}>
         <GeneralInfo
-          user={user}
-          postSet={postSet.get('details').toJS()}
-          postTitle={postTitle}
-          handleTitleChange={this.handleTitleChange}
+          closeButtonHidden={!modal}
           handleTitleBlur={this.handleTitleBlur}
+          handleTitleChange={this.handleTitleChange}
           handleTitleFocus={this.handleTitleFocus}
           handleTitleKeyDown={this.handleTitleKeyDown}
-          closeButtonHidden={!modal}
+          location={location}
+          postSet={postSet.get('details').toJS()}
+          postTitle={postTitle}
+          user={user}
         />
         <div className="content-wrapper">
           <div className="content">

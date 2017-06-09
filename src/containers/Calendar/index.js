@@ -8,7 +8,6 @@ import { UserCanPostSet } from 'config.routes/UserRoutePermissions';
 import {
   deletePostSetRequest,
   fetchPostSetsBySTRequest,
-  updatePostRequest,
   updateBunchPostRequest,
 } from 'containers/App/actions';
 
@@ -37,7 +36,6 @@ class Calendar extends React.Component {
   static propTypes = {
     location: PropTypes.object,
     fetchPostSetsByST: PropTypes.func,
-    updatePost: PropTypes.func,
     updateBunchPost: PropTypes.func,
     deletePostSet: PropTypes.func,
     postSetsByST: PropTypes.any,
@@ -65,7 +63,7 @@ class Calendar extends React.Component {
 
     if (postSetToDelete.posts.length === 0) { // Meaning the postSet is unscheduled
       id = postSetToDelete.post_set_id;
-    } else { // TODO: This is the case when the postSet is scheduled or post-when-ready, i.e. need to bunch delete the posts
+    } else {
       const postsToDelete = postSetToDelete.posts.map((post) => ({
         ...post,
         status: 0,
@@ -208,7 +206,6 @@ class Calendar extends React.Component {
 const mapDispatchToProps = (dispatch) => (
   {
     fetchPostSetsByST: () => dispatch(fetchPostSetsBySTRequest()),
-    updatePost: (post) => dispatch(updatePostRequest(post)),
     updateBunchPost: (posts) => dispatch(updateBunchPostRequest(posts)),
     deletePostSet: (id) => dispatch(deletePostSetRequest(id)),
   }
