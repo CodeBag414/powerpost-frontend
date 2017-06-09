@@ -77,13 +77,13 @@ class Main extends React.Component {
     if (nextProps.params.account_id !== this.props.params.account_id) {
       this.props.fetchAccount(nextProps.params.account_id);
     }
-    const { postSet, userAccount } = nextProps;
+    const { postSet, activeBrand } = nextProps;
     if (postSet && postSet.createSuccess && (!this.props.postSet || this.props.postSet.post_set_id !== postSet.post_set_id)) {
       // FIXME: In case we need to show popup on any page
       // browserHistory.push(`/account/${this.props.location.pathname}#postset-${postSet.post_set_id}`);
       if (nextProps.postSetEdit) {
         browserHistory.push({
-          pathname: `/account/${userAccount.account_id}/calendar`,
+          pathname: `/account/${activeBrand.account_id}/calendar`,
           hash: `#postset-${postSet.post_set_id}`,
           state: { prevUrl: window.location.href },
         });
@@ -98,9 +98,9 @@ class Main extends React.Component {
   }
 
   createPostSet = () => {
-    const { userAccount, createPostSet } = this.props;
+    const { createPostSet, activeBrand } = this.props;
     const postSet = {
-      account_id: userAccount.account_id,
+      account_id: activeBrand.account_id,
       message: '',
       type: 'text',
       status: '6',
@@ -114,19 +114,19 @@ class Main extends React.Component {
     return (
       <div>
         <Nav
-          userPermissions={this.props.userPermissions}
+          accountId={this.props.params.account_id}
           accountPermissions={this.props.accountPermissions}
-          location={this.props.location}
-          logout={this.props.logout}
-          user={this.props.user}
+          activeBrand={this.props.activeBrand}
+          createPostSet={this.createPostSet}
           handleMenuToggle={this.handleMenuToggle}
           isMenuCollapsed={this.props.menuCollapsed}
-          activeBrand={this.props.activeBrand}
-          accountId={this.props.params.account_id}
-          userAccount={this.props.userAccount}
+          location={this.props.location}
+          logout={this.props.logout}
           sharedAccounts={this.props.sharedAccounts}
           subAccounts={this.props.subAccounts}
-          createPostSet={this.createPostSet}
+          user={this.props.user}
+          userAccount={this.props.userAccount}
+          userPermissions={this.props.userPermissions}
         />
         <div id="main-panel" className={[viewContentStyle, styles.viewContent].join(' ')}>
           {this.props.children}
