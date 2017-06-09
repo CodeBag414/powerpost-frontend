@@ -43,7 +43,16 @@ import {
   FETCH_MEDIA_ITEMS_SUCCESS,
   PROCESS_ITEM,
   PROCESS_ITEM_SUCCESS,
+  FETCH_WORDPRESS_GUI_REQUEST,
+  CREATE_POST_REQUEST,
 } from './constants';
+
+import {
+  fetchWordpressGUISuccess,
+  fetchWordpressGUIFailure,
+  createPostSuccess,
+  createPostFailure,
+} from './actions';
 
 export function* getComments(payload) {
   const requestUrl = `/post_api/comments/${payload.postSetId}`;
@@ -247,6 +256,48 @@ export function* getCollections(action) {
   }
 }
 
+export function* fetchWordpressGUIWorker({ payload }) {
+  let data;
+
+  try {
+    const response = yield call(getData, `/connection_api/wordpress_gui/${payload.connectionId}`);
+    if (response.data.result !== 'success') {
+      throw Error('Status Wrong!');
+    }
+    data = response.data;
+  } catch (error) {
+    yield put(fetchWordpressGUIFailure(error));
+  }
+
+  if (data) {
+    yield put(fetchWordpressGUISuccess(data));
+  }
+}
+
+function* createPostWorker({ payload }) {
+  let data;
+
+  try {
+    const response = yield call(postData, '/post_api/post', { payload });
+    if (response.data.result !== 'success') {
+      throw Error('Status Wrong!');
+    }
+    data = response.data;
+  } catch (error) {
+    yield put(createPostFailure(error));
+  }
+
+  if (data) {
+    yield put(createPostSuccess(data.post));
+  }
+}
+
+export function* createPostSaga() {
+  const watcher = yield takeLatest(CREATE_POST_REQUEST, createPostWorker);
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
 export function* fetchComments() {
   const watcher = yield takeLatest(FETCH_COMMENTS_REQUEST, getComments);
   yield take(LOCATION_CHANGE);
@@ -293,7 +344,7 @@ export function* updateMedia() {
 
 export function* linkData() {
   const watcher = yield takeLatest(FETCH_URL_CONTENT, getLinkData);
-  
+
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
 }
@@ -312,6 +363,13 @@ export function* collectionData() {
   yield cancel(watcher);
 }
 
+export function* fetchWordpressGUISaga() {
+  const watcher = yield takeLatest(FETCH_WORDPRESS_GUI_REQUEST, fetchWordpressGUIWorker);
+
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
 export default [
   fetchComments,
   postComment,
@@ -323,6 +381,8 @@ export default [
   updateMedia,
   linkData,
   getItem,
+  fetchWordpressGUISaga,
+  createPostSaga,
 ];
 
 const serialize = (obj, prefix) => {

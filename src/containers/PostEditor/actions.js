@@ -17,6 +17,12 @@ import {
   SET_MEDIA_ITEM,
   FETCH_COLLECTIONS,
   SET_VISIBILITY_FILTER,
+  FETCH_WORDPRESS_GUI_REQUEST,
+  FETCH_WORDPRESS_GUI_SUCCESS,
+  FETCH_WORDPRESS_GUI_FAILURE,
+  CREATE_POST_REQUEST,
+  CREATE_POST_SUCCESS,
+  CREATE_POST_FAILURE,
 } from './constants';
 
 export function fetchCollections(accountId) {
@@ -111,5 +117,45 @@ export function setVisibilityFilter(filter) {
   return {
     type: SET_VISIBILITY_FILTER,
     filter,
+  };
+}
+
+export function fetchWordpressGUIRequest(payload) {
+  return {
+    type: FETCH_WORDPRESS_GUI_REQUEST,
+    payload,
+  };
+}
+
+export function fetchWordpressGUISuccess(payload) {
+  return {
+    type: FETCH_WORDPRESS_GUI_SUCCESS,
+    payload,
+  };
+}
+
+export function fetchWordpressGUIFailure(payload) {
+  return {
+    type: FETCH_WORDPRESS_GUI_FAILURE,
+    payload,
+  };
+}
+
+export function createPostRequest(payload) {
+  return {
+    type: CREATE_POST_REQUEST,
+    payload,
+  };
+}
+export function createPostSuccess(payload) {
+  return {
+    type: CREATE_POST_SUCCESS,
+    payload,
+  };
+}
+export function createPostFailure(payload) {
+  return {
+    type: CREATE_POST_FAILURE,
+    payload,
   };
 }

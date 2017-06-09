@@ -80,6 +80,16 @@ const makeSelectVisibleMediaItems = () => createSelector(
     }
   });
 
+const selectWordpressGUI = () => createSelector(
+  selectPostSetEditor,
+  (postSetEditor) => postSetEditor.get('wordpressGUI'),
+);
+
+const selectPost = () => createSelector(
+    selectPostSetEditor,
+    (postSetEditor) => postSetEditor.get('post'),
+);
+
 export {
   makeSelectComments,
   makeSelectAccountTags,
@@ -92,4 +102,6 @@ export {
   makeSelectIsProcessing,
   makeSelectFilter,
   makeSelectVisibleMediaItems,
+  selectWordpressGUI,
+  selectPost,
 };
