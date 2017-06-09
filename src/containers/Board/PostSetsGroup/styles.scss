@@ -38,7 +38,8 @@
 .postSetsCount {
   text-align: center;
   line-height: 20px;
-  width: 20px;
+  min-width: 20px;
+  padding: 0 3px;
   height: 20px;
   border-radius: 3px;
   color: white;

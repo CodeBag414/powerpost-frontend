@@ -1,16 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const statuses = [
-  { status: 3, statusColor: '#ABE66A', name: 'Ready' },
-  { status: 5, statusColor: '#B171B5', name: 'Review' },
-  { status: 2, statusColor: '#67C5E6', name: 'Draft' },
-  { status: 6, statusColor: '#ACB5B8', name: 'Idea' },
-];
-
 const StatusSelector = ({
   activeStatus,
   onChange,
+  statuses,
 }) => (
   <div className="status-selector">
     {
@@ -21,7 +15,7 @@ const StatusSelector = ({
           onClick={() => onChange(status.status)}
           style={{ backgroundColor: status.statusColor, border: `2px solid ${status.statusColor}` }}
         >
-          {status.name}
+          {status.name} ({status.size})
         </div>
       )
     }
@@ -31,6 +25,7 @@ const StatusSelector = ({
 StatusSelector.propTypes = {
   activeStatus: PropTypes.bool,
   onChange: PropTypes.func,
+  statuses: PropTypes.array,
 };
 
 export default StatusSelector;
