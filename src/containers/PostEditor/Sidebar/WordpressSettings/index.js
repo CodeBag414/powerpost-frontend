@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import Autocomplete from 'react-toolbox/lib/autocomplete';
 import SmoothCollapse from 'react-smooth-collapse';
 import moment from 'moment';
+import { Map } from 'immutable';
 
 import Heading from 'components/Heading';
 import MultiLineInput from 'components/MultiLineInput';
+import AutoMultiSelect from 'components/AutoMultiSelect';
+import Loading from 'components/Loading';
+
 import Dropdown from 'elements/atm.Dropdown';
 import PPTextField from 'elements/atm.TextField';
 import DatePicker from 'elements/atm.DatePicker';
@@ -36,14 +39,18 @@ export class WordpressSettings extends Component {
   constructor(props) {
     super(props);
 
+    const tagSuggestions = props.postSet.getIn(['details', 'tags']) || new Map();
+
     this.state = {
       destination: defaultDestinationOption,
       slug: '',
       description: '',
       scheduleTime: new Date().getTime() / 1000,
-      allowComments: true,
+      allowComments: false,
       categories: [],
-      tags: {},
+      categorySuggestions: [],
+      tags: [],
+      tagSuggestions: tagSuggestions.toArray(),
       authorId: 0,
     };
   }
@@ -52,7 +59,9 @@ export class WordpressSettings extends Component {
     if (this.props.wordpressGUI.get('isFetching') && !nextProps.wordpressGUI.get('isFetching')) {
       if (!nextProps.wordpressGUI.get('error')) {
         this.setState({
-          categories: nextProps.wordpressGUI.getIn(['data', 'categories']),
+          categorySuggestions: nextProps.wordpressGUI
+            .getIn(['data', 'categories'])
+            .map((c) => c.get('slug')),
         });
       }
     }
@@ -69,13 +78,10 @@ export class WordpressSettings extends Component {
       updatePost,
       postSet,
       post,
-      wordpressGUI,
     } = this.props;
 
     this.setState({
       destination: option,
-      categories: wordpressGUI.getIn(['data', 'categories']),
-      tags: postSet.getIn(['details', 'tags']),
     });
 
     if (post.get('data').isEmpty()) {
@@ -100,16 +106,27 @@ export class WordpressSettings extends Component {
         });
       }
     }
-    fetchWordpressGUI({
-      connectionId: option.value,
-    });
+
+    if (option.value !== '0') {
+      fetchWordpressGUI({
+        connectionId: option.value,
+      });
+    }
   }
 
-  handleCommentsChange = (value) => {
+  handleCategoriesChange = (categories) => {
     this.setState({
-      allowComments: value,
+      categories,
     });
-    this.handlePostSave();
+
+    this.handlePostSave({ categories });
+  }
+
+  handleCommentsChange = (allowComments) => {
+    this.setState({
+      allowComments,
+    });
+    this.handlePostSave({ allowComments });
   }
 
   handleDateChange = (date) => {
@@ -141,7 +158,7 @@ export class WordpressSettings extends Component {
     });
   }
 
-  handlePostSave = () => {
+  handlePostSave = (newParam) => {
     const { post, updatePost } = this.props;
     const {
       authorId,
@@ -152,10 +169,11 @@ export class WordpressSettings extends Component {
       categories,
     } = this.state;
 
+    const purePost = post.get('data').toJS();
     const newPost = {
-      ...post.get('data').toJS(),
+      ...purePost,
       properties: {
-        ...post.getIn(['data', 'properties']),
+        ...purePost.properties,
         author_id: authorId,
         slug,
         description,
@@ -163,14 +181,24 @@ export class WordpressSettings extends Component {
         tags,
         categories,
         // featured_image_id
+        ...newParam,
       },
     };
 
     updatePost(newPost);
   }
 
+  handleTagsChange = (tags) => {
+    this.setState({
+      tags,
+    });
+
+    this.handlePostSave({ tags });
+  }
+
   render() {
     const {
+      post,
       connections = [],
     } = this.props;
 
@@ -181,6 +209,10 @@ export class WordpressSettings extends Component {
       description,
       scheduleTime,
       allowComments,
+      categories,
+      categorySuggestions,
+      tags,
+      tagSuggestions,
     } = this.state;
 
     const wordpressOptions = connections
@@ -222,7 +254,7 @@ export class WordpressSettings extends Component {
             name="urlName"
             hintText="Url Name"
             value={slug}
-            onBlur={this.handlePostSave}
+            onBlur={() => this.handlePostSave()}
             onChange={this.handleSlugChange}
           />
           <LabelWrapper style={{ marginTop: '6px' }}>Description</LabelWrapper>
@@ -231,7 +263,7 @@ export class WordpressSettings extends Component {
             disabled={disabled}
             message={description}
             handleMessageChange={this.handleDescriptionChange}
-            onBlur={this.handlePostSave}
+            onBlur={() => this.handlePostSave()}
           />
           <LabelWrapper>Schedule</LabelWrapper>
           <ScheduleRowWrapper>
@@ -253,7 +285,17 @@ export class WordpressSettings extends Component {
             </div>
           </ScheduleRowWrapper>
           <LabelWrapper>Categories</LabelWrapper>
-          
+          <AutoMultiSelect
+            items={categories}
+            suggestions={categorySuggestions}
+            onChange={this.handleCategoriesChange}
+          />
+          <LabelWrapper>Tags</LabelWrapper>
+          <AutoMultiSelect
+            items={tags}
+            suggestions={tagSuggestions}
+            onChange={this.handleTagsChange}
+          />
           <Checkbox
             checked={allowComments}
             disabled={disabled}
@@ -262,6 +304,9 @@ export class WordpressSettings extends Component {
             onChange={this.handleCommentsChange}
           />
         </SmoothCollapse>
+        { post.get('processing') &&
+          <Loading />
+        }
       </Wrapper>
     );
   }

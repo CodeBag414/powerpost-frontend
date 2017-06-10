@@ -1,9 +1,12 @@
 import { fromJS } from 'immutable';
 
 import {
+  UPDATE_POST_SUCCESS,
+} from 'containers/App/constants';
+
+import {
   FETCH_POSTS,
   SET_POSTS,
-  UPDATE_POST_SUCCESS,
 } from './constants';
 
 const initialState = fromJS({

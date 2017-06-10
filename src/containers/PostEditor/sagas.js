@@ -261,7 +261,7 @@ export function* fetchWordpressGUIWorker({ payload }) {
 
   try {
     const response = yield call(getData, `/connection_api/wordpress_gui/${payload.connectionId}`);
-    if (response.data.result !== 'success') {
+    if (response.data.status !== 'success') {
       throw Error('Status Wrong!');
     }
     data = response.data;
