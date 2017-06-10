@@ -37,7 +37,7 @@ export class WordpressSettings extends Component {
 
   constructor(props) {
     super(props);
-console.log('***', props.postSet.toJS());
+
     this.state = {
       title: props.postSet.getIn(['details', 'title']),
       destination: defaultDestinationOption,
@@ -130,7 +130,7 @@ console.log('***', props.postSet.toJS());
     this.setState({
       allowComments,
     });
-    this.handlePostSave({ allowComments });
+    this.handlePostSave({ allow_comments: allowComments });
   }
 
   handleDateChange = (date) => {
