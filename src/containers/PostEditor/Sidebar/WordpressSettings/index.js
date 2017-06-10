@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import SmoothCollapse from 'react-smooth-collapse';
 import moment from 'moment';
-import { Map } from 'immutable';
 
 import Heading from 'components/Heading';
 import MultiLineInput from 'components/MultiLineInput';
@@ -39,8 +38,6 @@ export class WordpressSettings extends Component {
   constructor(props) {
     super(props);
 
-    const tagSuggestions = props.postSet.getIn(['details', 'tags']) || new Map();
-
     this.state = {
       destination: defaultDestinationOption,
       slug: '',
@@ -50,7 +47,7 @@ export class WordpressSettings extends Component {
       categories: [],
       categorySuggestions: [],
       tags: [],
-      tagSuggestions: tagSuggestions.toArray(),
+      tagSuggestions: [],
       authorId: 0,
     };
   }
@@ -62,6 +59,9 @@ export class WordpressSettings extends Component {
           categorySuggestions: nextProps.wordpressGUI
             .getIn(['data', 'categories'])
             .map((c) => c.get('slug')),
+          tagSuggestions: nextProps.wordpressGUI
+            .getIn(['data', 'terms'])
+            .map((t) => t.get('slug')),
         });
       }
     }
@@ -82,6 +82,8 @@ export class WordpressSettings extends Component {
 
     this.setState({
       destination: option,
+      categories: [],
+      tags: [],
     });
 
     if (post.get('data').isEmpty()) {
@@ -286,16 +288,19 @@ export class WordpressSettings extends Component {
           </ScheduleRowWrapper>
           <LabelWrapper>Categories</LabelWrapper>
           <AutoMultiSelect
+            disabled={disabled}
             items={categories}
             suggestions={categorySuggestions}
             onChange={this.handleCategoriesChange}
           />
           <LabelWrapper>Tags</LabelWrapper>
           <AutoMultiSelect
+            disabled={disabled}
             items={tags}
             suggestions={tagSuggestions}
             onChange={this.handleTagsChange}
           />
+          <LabelWrapper />
           <Checkbox
             checked={allowComments}
             disabled={disabled}

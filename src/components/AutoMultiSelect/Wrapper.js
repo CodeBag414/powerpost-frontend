@@ -26,6 +26,7 @@ export default styled.div`
       }
     }
     & > div {
+      padding: 6px 0 2rem;
       span, &:after {
         display: none;
       }
