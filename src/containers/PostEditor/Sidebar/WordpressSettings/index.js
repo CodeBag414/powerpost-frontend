@@ -37,8 +37,9 @@ export class WordpressSettings extends Component {
 
   constructor(props) {
     super(props);
-
+console.log('***', props.postSet.toJS());
     this.state = {
+      title: props.postSet.getIn(['details', 'title']),
       destination: defaultDestinationOption,
       slug: '',
       description: '',
@@ -49,6 +50,7 @@ export class WordpressSettings extends Component {
       tags: [],
       tagSuggestions: [],
       authorId: 0,
+      isExpanded: true,
     };
   }
 
@@ -164,6 +166,7 @@ export class WordpressSettings extends Component {
     const { post, updatePost } = this.props;
     const {
       authorId,
+      title,
       slug,
       description,
       allowComments,
@@ -177,6 +180,7 @@ export class WordpressSettings extends Component {
       properties: {
         ...purePost.properties,
         author_id: authorId,
+        title,
         slug,
         description,
         allow_comments: allowComments,
@@ -198,6 +202,14 @@ export class WordpressSettings extends Component {
     this.handlePostSave({ tags });
   }
 
+  handleTitleChange = (ev) => {
+    const { value } = ev.target;
+
+    this.setState({
+      title: value,
+    });
+  }
+
   render() {
     const {
       post,
@@ -207,6 +219,7 @@ export class WordpressSettings extends Component {
     const {
       isExpanded,
       destination,
+      title,
       slug,
       description,
       scheduleTime,
@@ -249,11 +262,21 @@ export class WordpressSettings extends Component {
             placeholder="-"
             onChange={this.handleBlogChange}
           />
+          <LabelWrapper>Title</LabelWrapper>
+          <PPTextField
+            disabled={disabled}
+            type="text"
+            name="title"
+            hintText="Title"
+            value={title}
+            onBlur={() => this.handlePostSave()}
+            onChange={this.handleTitleChange}
+          />
           <LabelWrapper>URL Name</LabelWrapper>
           <PPTextField
             disabled={disabled}
             type="text"
-            name="urlName"
+            name="slug"
             hintText="Url Name"
             value={slug}
             onBlur={() => this.handlePostSave()}

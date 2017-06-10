@@ -152,7 +152,7 @@ class PostEditor extends Component {
       post,
     } = this.props;
 
-    if (postSet.get('isFetching')) {
+    if (postSet.get('isFetching') || postSet.get('details').isEmpty()) {
       return (
         <Wrapper modal={modal}>
           <Loading />
