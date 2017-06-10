@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-
+import { routerActions } from 'react-router-redux';
 import { UserCanPostEdit } from 'config.routes/UserRoutePermissions';
 
 import {
@@ -78,6 +78,8 @@ class PostEditor extends Component {
 
   static defaultProps = {
     modal: true,
+    accountId: PropTypes.string,
+    goBack: PropTypes.func,
   };
 
   state = {
@@ -192,6 +194,7 @@ class PostEditor extends Component {
           postSet={postSet.get('details').toJS()}
           postTitle={postTitle}
           user={user}
+          goBack={this.props.goBack}
         />
         <div className="content-wrapper">
           <div className="content">
@@ -261,6 +264,7 @@ export function mapDispatchToProps(dispatch) {
     fetchConnections: (payload) => dispatch(fetchConnections(payload)),
     fetchWordpressGUI: (payload) => dispatch(fetchWordpressGUIRequest(payload)),
     createPost: (payload) => dispatch(createPostRequest(payload)),
+    goBack: () => dispatch(routerActions.goBack()),
   };
 }
 

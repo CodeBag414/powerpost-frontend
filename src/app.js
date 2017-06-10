@@ -22,15 +22,13 @@ import auth from 'utils/auth';
 // import 'sanitize.css/sanitize.css';
 // import 'react-redux-toastr/src/styles/index.scss';
 import './lib/react-toggle/styles.css';
+import './lib/react-redux-toastr/src/styles/index.scss';
 
 import configureStore from './config.redux/store';
 import ReduxToastr from './lib/react-redux-toastr';
 import { makeSelectLocationState } from './config.redux/selectors';
 import { createRoutes } from './config.routes/routes';
 import PPTheme from './theme';
-
-Stripe.setPublishableKey('pk_test_X9sZwXwoYLj4fFnWCvXWntmO');   // TEST KEY
-// Stripe.setPublishableKey('pk_live_qElipTZ1MpTIsPNjdn3IxCCN');   // LIVE KEY
 
 export const historyObj = browserHistory;
 // Needed for material-ui libarry
