@@ -1,7 +1,7 @@
 /*
  * Library View
  *
- * 
+ *
  */
 
 import React, { PropTypes } from 'react';
@@ -25,11 +25,11 @@ import PostEditor from 'containers/PostEditor';
 
 import DropdownMenu from 'react-dd-menu';
 
-import { 
+import {
   createPostSetRequest,
 } from 'containers/App/actions';
 
-import { 
+import {
   fetchCollections,
   fetchUrlData,
   clearUrlContent,
@@ -144,16 +144,16 @@ class Library extends React.Component {
     this.handleVideoEditorSave = this.handleVideoEditorSave.bind(this);
     this.handleAddLinkValueFromDialog = this.handleAddLinkValueFromDialog.bind(this);
   }
-  
+
   componentDidMount() {
     this.props.getMediaItems(this.props.params.account_id);
     this.props.getFeeds(this.props.params.account_id);
   }
-  
+
   openAddLink() {
     this.setState({ linkDialog: true });
   }
-  
+
   openLinkEditor(linkItem) {
     if (linkItem) {
       this.setState({ linkEditorDialog: true, linkItem: linkItem });
@@ -165,47 +165,47 @@ class Library extends React.Component {
   openFileEditor(fileItem) {
     this.setState({ fileEditorDialog: true, fileItem: fileItem });
   }
-  
+
   openImageEditor(imageItem) {
     this.setState({ imageEditorDialog: true, imageItem: imageItem });
   }
-  
+
   openVideoEditor(videoItem) {
     this.setState({ videoEditorDialog: true, videoItem: videoItem });
   }
-  
+
   handleRequestClose() {
     this.setState({
       addMenuOpen: false,
     });
   }
-  
+
   openAddFile() {
     const filepicker = require('filepicker-js');
     filepicker.setKey(this.props.filePickerKey);
-    
-    const filePickerOptions = { 
-        buttonText: 'Upload', 
-        container:'modal', 
+
+    const filePickerOptions = {
+        buttonText: 'Upload',
+        container:'modal',
         multiple: false,
-        maxFiles: 1, 
-        imageQuality: 80, 
-        imageMax: [1200, 1200], 
+        maxFiles: 1,
+        imageQuality: 80,
+        imageMax: [1200, 1200],
         services: [ 'CONVERT','COMPUTER', 'WEBCAM', 'VIDEO', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
         conversions: ['crop', 'filter'],
-    }; 
+    };
     const filePickerStoreOptions = {
         location: 'S3'
     };
     function onFail(error) {
         console.log('error: ' + error);
     }
-    
+
     filepicker.pickAndStore(filePickerOptions, filePickerStoreOptions, this.handleOpenAddFile, onFail);
   }
-  
+
   closeAllDialog() {
-    this.setState({ 
+    this.setState({
       linkDialog: false,
       linkEditorDialog: false,
       videoEditorDialog: false,
@@ -219,7 +219,7 @@ class Library extends React.Component {
     });
     this.props.clearUrlContent();
   }
-  
+
   handleVideoEditorSave(videoItem) {
     this.setState({ videoEditorDialog: false, videoItem: {} });
     const {action, ...item} = videoItem;
@@ -251,7 +251,7 @@ class Library extends React.Component {
       }
     }
   }
-  
+
   handleFileEditorSave(item) {
     this.setState({ fileEditorDialog: false, fileItem: {} });
     const {action, ...fileItem} = item;
@@ -283,7 +283,7 @@ class Library extends React.Component {
       }
     }
   }
-  
+
   handleLinkEditorSave(item) {
     this.closeAllDialog();
     const {action, ...linkItem} = item;
@@ -317,7 +317,7 @@ class Library extends React.Component {
       }
     }
   }
-  
+
   handleImageEditorSave(imageItem) {
     this.setState({ imageEditorDialog: false, imageItem: {} });
     const {action, ...rest} = imageItem;
@@ -327,15 +327,15 @@ class Library extends React.Component {
       this.props.createMediaItem(rest);
     }
   }
-  
+
   handleAddLinkValue(event) {
-    this.setState({ addLinkValue: event.target.value });    
+    this.setState({ addLinkValue: event.target.value });
   }
-  
+
   handleAddLinkValueFromDialog(link) {
     this.setState({ addLinkValue: link }, () => this.handleAddLinkSubmit());
-  } 
-  
+  }
+
   handleAddLinkSubmit = () => {
     console.log('in handle add link submit');
     if(this.state.addLinkValue === '') {
@@ -346,17 +346,17 @@ class Library extends React.Component {
     const linkItem = {
       source: this.state.addLinkValue,
     };
-    
+
     this.setState({ addLinkValue: '', linkDialog: false, searchDialog: false, rssFeedDialog: false, linkEditorDialog: true });
-    
+
     this.props.fetchUrlData(this.state.addLinkValue);
   }
-  
+
   handleOpenAddFile(mediaItem) {
     filepicker.setKey(this.props.filePickerKey);
-    
+
     if(mediaItem[0].mimetype.match('image')) {
-  
+
       filepicker.storeUrl(
         'https://process.filestackapi.com/' + this.props.filePickerKey + '/resize=width:300,height:300,fit:clip/' + mediaItem[0].url,
         (Blob) => {
@@ -370,7 +370,7 @@ class Library extends React.Component {
           };
           console.log(mediaItem);
           this.openImageEditor(imageItem);
-        }); 
+        });
     } else if(mediaItem[0].mimetype.match('video')) {
       mediaItem[0].collection_id = this.props.activeCollection.collection_id;
       const videoItem = {
@@ -394,11 +394,11 @@ class Library extends React.Component {
       // this.props.createMediaItem(fileItem);
     }
   }
-  
+
   toggle() {
     this.setState({ addMenuOpen: !this.state.addMenuOpen });
   }
-  
+
   createPostSet = (mediaItem) => {
     const { params: { account_id }, createPostSet } = this.props;
     const postSet = {
@@ -415,7 +415,7 @@ class Library extends React.Component {
   render() {
     const { location: { hash } } = this.props;
     const postsetId = hash.startsWith('#postset') ? hash.split('-')[1] : 0;
-    
+
     const actions = [
       { label: "close", onClick: this.closeAllDialog },
     ];
@@ -425,7 +425,7 @@ class Library extends React.Component {
       toggle: <Button label="Add New Item" primary onClick={this.toggle} />,
       align: 'left',
     };
-    
+
     return (
       <Wrapper>
         <SidebarWrapper>
@@ -458,7 +458,7 @@ class Library extends React.Component {
         <VideoEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleVideoEditorSave.bind(this)} isOpen={this.state.videoEditorDialog} filePickerKey={this.props.filePickerKey} videoItem={this.state.videoItem} />
         <FileEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave.bind(this)} isOpen={this.state.fileEditorDialog} filePickerKey={this.props.filePickerKey} fileItem={this.state.fileItem} />
          <div className="post-editor">
-          { postsetId ? <PostEditor id={postsetId} accountId={this.props.params.account_id} location={this.props.location} /> : null}
+          { postsetId ? <PostEditor id={postsetId} accountId={this.props.params.account_id} /> : null}
         </div>
       </Wrapper>
     );
