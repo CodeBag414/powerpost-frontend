@@ -14,6 +14,11 @@ const Wrapper = styled.div`
   border: 1px solid #E7ECEE;
   border-top: none;
   border-left: none;
+  cursor: pointer;
+
+  &:hover {
+    opacity: ${(props) => props.active ? '1' : '0.6'};
+  }
 
   .right-box {
     flex: 1;
@@ -37,26 +42,27 @@ const Wrapper = styled.div`
     }
     .date {
       color: #888888;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
       line-height: 13px;
     }
     .title {
-      margin-top: 4px;
       color: #616669;
-      font-size: 11px;
+      font-size: 13px;
       font-weight: 900;
-      line-height: 13px;
-      height: 13px;
+      line-height: 15px;
+      height: 15px;
+      flex: 1;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      margin-right: 5px;
     }
     .message {
       display: -webkit-box;
       margin-top: 9px;
       color: #8C9496;
-      font-size: 11px;
+      font-size: 12px;
       line-height: 14px;
       height: 28px;
       overflow: hidden;
@@ -69,7 +75,6 @@ const Wrapper = styled.div`
 const PostSetItem = ({
   active,
   mediaItems,
-  streamName,
   title,
   message,
   date,
@@ -84,10 +89,9 @@ const PostSetItem = ({
     />
     <div className="right-box">
       <div className="horizontal-flex">
-        <div className="stream-name">{streamName}</div>
+        <div className="title">{title}</div>
         <div className="date">{date}</div>
       </div>
-      <div className="title">{title}</div>
       <div className="message">{message}</div>
     </div>
   </Wrapper>
@@ -96,7 +100,6 @@ const PostSetItem = ({
 PostSetItem.propTypes = {
   active: PropTypes.bool,
   mediaItems: ImmutablePropTypes.list,
-  streamName: PropTypes.string,
   title: PropTypes.string,
   message: PropTypes.string,
   date: PropTypes.string,

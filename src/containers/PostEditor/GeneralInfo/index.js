@@ -13,7 +13,7 @@ function handleTitleKeyDown(e) {
   }
 }
 
-function GeneralInfo({ user, postSet, postTitle, handleTitleChange, handleTitleBlur, closeButtonHidden, goBack }) {
+function GeneralInfo({ user, postSet, postTitle, handleTitleChange, handleTitleBlur, modal, goBack }) {
   const onBack = () => {
     goBack();
   };
@@ -24,7 +24,7 @@ function GeneralInfo({ user, postSet, postTitle, handleTitleChange, handleTitleB
   const userName = postSet.user_id === user.user_id ? user.display_name : postSet.user.display_name;
   const creationTime = moment.unix(postSet.creation_time).format('M/DD/YYYY hh:mma');
   return (
-    <Wrapper>
+    <Wrapper modal={modal}>
       <div>
         <Title
           contentEditable
@@ -38,27 +38,24 @@ function GeneralInfo({ user, postSet, postTitle, handleTitleChange, handleTitleB
         <Subtitle>{`Created by ${userName} \u00a0\u00a0 | \u00a0\u00a0 ${creationTime}`}</Subtitle>
       </div>
       {
-        closeButtonHidden ? null : (
+        modal ? (
           <div className="back-button" onClick={onBack}>
             ×
           </div>
-        )
+        ) : null
       }
     </Wrapper>
   );
 }
 
 GeneralInfo.propTypes = {
-  closeButtonHidden: PropTypes.bool,
   handleTitleBlur: PropTypes.func,
   handleTitleChange: PropTypes.func,
-  location: PropTypes.object,
+  goBack: PropTypes.func,
   postSet: PropTypes.object,
   postTitle: PropTypes.string,
   user: PropTypes.shape(),
-  handleTitleChange: PropTypes.func,
-  handleTitleBlur: PropTypes.func,
-  goBack: PropTypes.func,
+  modal: PropTypes.bool,
 };
 
 export default GeneralInfo;

@@ -74,6 +74,7 @@ class PostEditor extends Component {
     fetchWordpressGUI: PropTypes.func,
     wordpressGUI: ImmutablePropTypes.map,
     post: ImmutablePropTypes.map,
+    goBack: PropTypes.func,
   };
 
   static defaultProps = {
@@ -152,6 +153,7 @@ class PostEditor extends Component {
       fetchWordpressGUI,
       wordpressGUI,
       post,
+      goBack,
     } = this.props;
 
     if (postSet.get('isFetching')) {
@@ -167,10 +169,10 @@ class PostEditor extends Component {
     const posts = {};
     let totalTimeslots = 0;
     if (postsArray) {
-      postsArray.map((post) => {
-        if (post.get('status') !== '0') {
-          if (!posts[post.get('connection_id')]) posts[post.get('connection_id')] = [];
-          posts[post.get('connection_id')].push(post);
+      postsArray.map((postItem) => {
+        if (postItem.get('status') !== '0') {
+          if (!posts[postItem.get('connection_id')]) posts[postItem.get('connection_id')] = [];
+          posts[postItem.get('connection_id')].push(postItem);
           totalTimeslots += 1;
         }
         return true;
@@ -182,23 +184,28 @@ class PostEditor extends Component {
       { name: 'Channels & Times', component: <Channels postSet={postSet} posts={posts} updatePost={updatePost} />, count: totalTimeslots },
       { name: 'Shared Stream', component: <SharedStreams postSet={postSet} /> },
     ];
+
+    const generalInfo = (
+      <GeneralInfo
+        user={user}
+        postSet={postSet.get('details').toJS()}
+        postTitle={postTitle}
+        location={location}
+        handleTitleChange={this.handleTitleChange}
+        handleTitleBlur={this.handleTitleBlur}
+        handleTitleFocus={this.handleTitleFocus}
+        handleTitleKeyDown={this.handleTitleKeyDown}
+        modal={modal}
+        goBack={goBack}
+      />
+    );
     return (
       <Wrapper modal={modal}>
-        <GeneralInfo
-          closeButtonHidden={!modal}
-          handleTitleBlur={this.handleTitleBlur}
-          handleTitleChange={this.handleTitleChange}
-          handleTitleFocus={this.handleTitleFocus}
-          handleTitleKeyDown={this.handleTitleKeyDown}
-          location={location}
-          postSet={postSet.get('details').toJS()}
-          postTitle={postTitle}
-          user={user}
-          goBack={this.props.goBack}
-        />
+        { modal ? generalInfo : null }
         <div className="content-wrapper">
           <div className="content">
             <div className="main">
+              { modal ? null : generalInfo }
               <div>
                 {
                   tabs.map((tab) =>
