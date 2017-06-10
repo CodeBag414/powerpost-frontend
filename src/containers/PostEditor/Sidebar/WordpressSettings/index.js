@@ -309,14 +309,14 @@ export class WordpressSettings extends Component {
               />
             </div>
           </ScheduleRowWrapper>
-          <LabelWrapper>Categories</LabelWrapper>
+          <LabelWrapper rightLabel="Create new categories">Categories</LabelWrapper>
           <AutoMultiSelect
             disabled={disabled}
             items={categories}
             suggestions={categorySuggestions}
             onChange={this.handleCategoriesChange}
           />
-          <LabelWrapper>Tags</LabelWrapper>
+          <LabelWrapper rightLabel="Create new tags">Tags</LabelWrapper>
           <AutoMultiSelect
             disabled={disabled}
             items={tags}
