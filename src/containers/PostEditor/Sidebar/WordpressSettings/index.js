@@ -49,7 +49,8 @@ export class WordpressSettings extends Component {
       categorySuggestions: [],
       tags: [],
       tagSuggestions: [],
-      authorId: 0,
+      author: {},
+      authorOptions: [],
       isExpanded: true,
     };
   }
@@ -57,13 +58,24 @@ export class WordpressSettings extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.wordpressGUI.get('isFetching') && !nextProps.wordpressGUI.get('isFetching')) {
       if (!nextProps.wordpressGUI.get('error')) {
+        const { wordpressGUI } = nextProps;
+
         this.setState({
-          categorySuggestions: nextProps.wordpressGUI
+          categorySuggestions: wordpressGUI
             .getIn(['data', 'categories'])
-            .map((c) => c.get('slug')),
-          tagSuggestions: nextProps.wordpressGUI
+            .map((c) => c.get('slug'))
+            .toJS(),
+          tagSuggestions: wordpressGUI
             .getIn(['data', 'terms'])
-            .map((t) => t.get('slug')),
+            .map((t) => t.get('slug'))
+            .toJS(),
+          authorOptions: wordpressGUI
+            .getIn(['data', 'authors'])
+            .map((a) => ({
+              value: a.get('user_id'),
+              label: a.get('display_name'),
+            }))
+            .toJS(),
         });
       }
     }
@@ -71,6 +83,15 @@ export class WordpressSettings extends Component {
 
   expand = (isExpanded) => {
     this.setState({ isExpanded });
+  }
+
+  handleAuthorChange = (option) => {
+    this.setState({
+      author: option,
+    });
+    this.handlePostSave({
+      author_id: option.value,
+    });
   }
 
   handleBlogChange = (option) => {
@@ -165,7 +186,7 @@ export class WordpressSettings extends Component {
   handlePostSave = (newParam) => {
     const { post, updatePost } = this.props;
     const {
-      authorId,
+      author,
       title,
       slug,
       description,
@@ -179,7 +200,7 @@ export class WordpressSettings extends Component {
       ...purePost,
       properties: {
         ...purePost.properties,
-        author_id: authorId,
+        author_id: author.value,
         title,
         slug,
         description,
@@ -228,6 +249,8 @@ export class WordpressSettings extends Component {
       categorySuggestions,
       tags,
       tagSuggestions,
+      author,
+      authorOptions,
     } = this.state;
 
     const wordpressOptions = connections
@@ -322,6 +345,14 @@ export class WordpressSettings extends Component {
             items={tags}
             suggestions={tagSuggestions}
             onChange={this.handleTagsChange}
+          />
+          <LabelWrapper>Author</LabelWrapper>
+          <Dropdown
+            disabled={disabled}
+            value={author}
+            options={authorOptions}
+            placeholder="Choose Author"
+            onChange={this.handleAuthorChange}
           />
           <LabelWrapper />
           <Checkbox
