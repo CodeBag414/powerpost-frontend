@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import Autocomplete from 'react-toolbox/lib/autocomplete';
 import SmoothCollapse from 'react-smooth-collapse';
 import moment from 'moment';
 
 import Heading from 'components/Heading';
 import MultiLineInput from 'components/MultiLineInput';
+import AutoMultiSelect from 'components/AutoMultiSelect';
+import Loading from 'components/Loading';
+
 import Dropdown from 'elements/atm.Dropdown';
 import PPTextField from 'elements/atm.TextField';
 import DatePicker from 'elements/atm.DatePicker';
@@ -37,14 +39,18 @@ export class WordpressSettings extends Component {
     super(props);
 
     this.state = {
+      title: props.postSet.getIn(['details', 'title']),
       destination: defaultDestinationOption,
       slug: '',
       description: '',
       scheduleTime: new Date().getTime() / 1000,
-      allowComments: true,
+      allowComments: false,
       categories: [],
-      tags: {},
+      categorySuggestions: [],
+      tags: [],
+      tagSuggestions: [],
       authorId: 0,
+      isExpanded: true,
     };
   }
 
@@ -52,7 +58,12 @@ export class WordpressSettings extends Component {
     if (this.props.wordpressGUI.get('isFetching') && !nextProps.wordpressGUI.get('isFetching')) {
       if (!nextProps.wordpressGUI.get('error')) {
         this.setState({
-          categories: nextProps.wordpressGUI.getIn(['data', 'categories']),
+          categorySuggestions: nextProps.wordpressGUI
+            .getIn(['data', 'categories'])
+            .map((c) => c.get('slug')),
+          tagSuggestions: nextProps.wordpressGUI
+            .getIn(['data', 'terms'])
+            .map((t) => t.get('slug')),
         });
       }
     }
@@ -69,13 +80,12 @@ export class WordpressSettings extends Component {
       updatePost,
       postSet,
       post,
-      wordpressGUI,
     } = this.props;
 
     this.setState({
       destination: option,
-      categories: wordpressGUI.getIn(['data', 'categories']),
-      tags: postSet.getIn(['details', 'tags']),
+      categories: [],
+      tags: [],
     });
 
     if (post.get('data').isEmpty()) {
@@ -100,16 +110,27 @@ export class WordpressSettings extends Component {
         });
       }
     }
-    fetchWordpressGUI({
-      connectionId: option.value,
-    });
+
+    if (option.value !== '0') {
+      fetchWordpressGUI({
+        connectionId: option.value,
+      });
+    }
   }
 
-  handleCommentsChange = (value) => {
+  handleCategoriesChange = (categories) => {
     this.setState({
-      allowComments: value,
+      categories,
     });
-    this.handlePostSave();
+
+    this.handlePostSave({ categories });
+  }
+
+  handleCommentsChange = (allowComments) => {
+    this.setState({
+      allowComments,
+    });
+    this.handlePostSave({ allow_comments: allowComments });
   }
 
   handleDateChange = (date) => {
@@ -141,10 +162,11 @@ export class WordpressSettings extends Component {
     });
   }
 
-  handlePostSave = () => {
+  handlePostSave = (newParam) => {
     const { post, updatePost } = this.props;
     const {
       authorId,
+      title,
       slug,
       description,
       allowComments,
@@ -152,35 +174,60 @@ export class WordpressSettings extends Component {
       categories,
     } = this.state;
 
+    const purePost = post.get('data').toJS();
     const newPost = {
-      ...post.get('data').toJS(),
+      ...purePost,
       properties: {
-        ...post.getIn(['data', 'properties']),
+        ...purePost.properties,
         author_id: authorId,
+        title,
         slug,
         description,
         allow_comments: allowComments,
         tags,
         categories,
         // featured_image_id
+        ...newParam,
       },
     };
 
     updatePost(newPost);
   }
 
+  handleTagsChange = (tags) => {
+    this.setState({
+      tags,
+    });
+
+    this.handlePostSave({ tags });
+  }
+
+  handleTitleChange = (ev) => {
+    const { value } = ev.target;
+
+    this.setState({
+      title: value,
+    });
+  }
+
   render() {
     const {
+      post,
       connections = [],
     } = this.props;
 
     const {
       isExpanded,
       destination,
+      title,
       slug,
       description,
       scheduleTime,
       allowComments,
+      categories,
+      categorySuggestions,
+      tags,
+      tagSuggestions,
     } = this.state;
 
     const wordpressOptions = connections
@@ -215,14 +262,24 @@ export class WordpressSettings extends Component {
             placeholder="-"
             onChange={this.handleBlogChange}
           />
+          <LabelWrapper>Title</LabelWrapper>
+          <PPTextField
+            disabled={disabled}
+            type="text"
+            name="title"
+            hintText="Title"
+            value={title}
+            onBlur={() => this.handlePostSave()}
+            onChange={this.handleTitleChange}
+          />
           <LabelWrapper>URL Name</LabelWrapper>
           <PPTextField
             disabled={disabled}
             type="text"
-            name="urlName"
+            name="slug"
             hintText="Url Name"
             value={slug}
-            onBlur={this.handlePostSave}
+            onBlur={() => this.handlePostSave()}
             onChange={this.handleSlugChange}
           />
           <LabelWrapper style={{ marginTop: '6px' }}>Description</LabelWrapper>
@@ -231,7 +288,7 @@ export class WordpressSettings extends Component {
             disabled={disabled}
             message={description}
             handleMessageChange={this.handleDescriptionChange}
-            onBlur={this.handlePostSave}
+            onBlur={() => this.handlePostSave()}
           />
           <LabelWrapper>Schedule</LabelWrapper>
           <ScheduleRowWrapper>
@@ -252,8 +309,21 @@ export class WordpressSettings extends Component {
               />
             </div>
           </ScheduleRowWrapper>
-          <LabelWrapper>Categories</LabelWrapper>
-          
+          <LabelWrapper rightLabel="Create new categories">Categories</LabelWrapper>
+          <AutoMultiSelect
+            disabled={disabled}
+            items={categories}
+            suggestions={categorySuggestions}
+            onChange={this.handleCategoriesChange}
+          />
+          <LabelWrapper rightLabel="Create new tags">Tags</LabelWrapper>
+          <AutoMultiSelect
+            disabled={disabled}
+            items={tags}
+            suggestions={tagSuggestions}
+            onChange={this.handleTagsChange}
+          />
+          <LabelWrapper />
           <Checkbox
             checked={allowComments}
             disabled={disabled}
@@ -262,6 +332,9 @@ export class WordpressSettings extends Component {
             onChange={this.handleCommentsChange}
           />
         </SmoothCollapse>
+        { post.get('processing') &&
+          <Loading />
+        }
       </Wrapper>
     );
   }

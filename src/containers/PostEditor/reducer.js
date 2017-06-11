@@ -7,6 +7,9 @@ import {
   UPDATE_POST_SET_REQUEST,
   UPDATE_POST_SET_SUCCESS,
   UPDATE_POST_SET_ERROR,
+  UPDATE_POST_REQUEST,
+  UPDATE_POST_SUCCESS,
+  UPDATE_POST_FAILURE,
 } from 'containers/App/constants';
 
 import {
@@ -234,6 +237,17 @@ function boardReducer(state = initialState, action) {
         .setIn(['post', 'data'], fromJS(action.payload))
         .setIn(['post', 'error'], null);
     case CREATE_POST_FAILURE:
+      return state
+        .setIn(['post', 'processing'], false)
+        .setIn(['post', 'error'], fromJS(action.payload));
+    case UPDATE_POST_REQUEST:
+      return state
+        .setIn(['post', 'processing'], true);
+    case UPDATE_POST_SUCCESS:
+      return state
+        .setIn(['post', 'processing'], false)
+        .setIn(['post', 'data'], fromJS(action.post));
+    case UPDATE_POST_FAILURE:
       return state
         .setIn(['post', 'processing'], false)
         .setIn(['post', 'error'], fromJS(action.payload));

@@ -8,6 +8,7 @@ import Tag from './Tag';
 
 class AutoMultiSelect extends Component {
   static propTypes = {
+    disabled: PropTypes.bool,
     direction: PropTypes.string,
     selectedPosition: PropTypes.string,
     items: PropTypes.array,
@@ -83,6 +84,7 @@ class AutoMultiSelect extends Component {
     const {
       direction,
       selectedPosition,
+      disabled,
     } = this.props;
 
     const { items } = this.state;
@@ -90,6 +92,7 @@ class AutoMultiSelect extends Component {
     return (
       <Wrapper>
         <Autocomplete
+          disabled={disabled}
           direction={direction}
           selectedPosition={selectedPosition}
           onChange={this.handleChange}
