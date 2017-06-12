@@ -299,12 +299,19 @@ function globalReducer(state = initialState, action) {
       return state
         .set('postSets', fromJS(action.postSets));
     case DELETE_POST_SET_SUCCESS: {
-      // Deleting a post set could mean deleting it from the Calendar's unscheduled post sets
-      const newState = state.updateIn(
-        ['postSetsByST', 'data', 'unscheduled_post_sets'],
-        (postSets) => postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
-      );
-      return newState
+      return state
+        .updateIn(
+          ['postSetsByST', 'data', 'unscheduled_post_sets'],
+          (postSets) => postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
+        )
+        .updateIn(
+          ['postSetsByST', 'data', 'scheduled_post_sets'],
+          (postSets) => postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
+        )
+        .updateIn(
+          ['postSetsByST', 'data', 'post_when_ready_post_sets'],
+          (postSets) => postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
+        )
         .updateIn(['postSets'], (postSets) => postSets.filter((postSet) => postSet.get('post_set_id') !== action.id));
     }
     case CHANGE_POST_SET_STATUS:
