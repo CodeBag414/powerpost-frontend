@@ -45,7 +45,6 @@ class AccountDashboard extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps.params.account_id, '%%%%%%%%%%%%%%%%%%%', this.state.accountId);
     if (this.state.accountId !== nextProps.params.account_id) {
       this.setState({ accountId: nextProps.params.account_id }, () => {
         this.props.getMediaItems(nextProps.params.account_id);
