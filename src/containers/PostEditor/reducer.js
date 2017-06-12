@@ -7,6 +7,9 @@ import {
   UPDATE_POST_SET_REQUEST,
   UPDATE_POST_SET_SUCCESS,
   UPDATE_POST_SET_ERROR,
+  UPDATE_POST_REQUEST,
+  UPDATE_POST_SUCCESS,
+  UPDATE_POST_FAILURE,
 } from 'containers/App/constants';
 
 import {
@@ -38,6 +41,12 @@ import {
   SHOW_IMAGES,
   SHOW_VIDEOS,
   SHOW_FILES,
+  FETCH_WORDPRESS_GUI_REQUEST,
+  FETCH_WORDPRESS_GUI_SUCCESS,
+  FETCH_WORDPRESS_GUI_FAILURE,
+  CREATE_POST_REQUEST,
+  CREATE_POST_SUCCESS,
+  CREATE_POST_FAILURE,
 } from './constants';
 
 const initialState = fromJS({
@@ -70,6 +79,16 @@ const initialState = fromJS({
   },
   pending: false,
   filter: SHOW_ALL,
+  wordpressGUI: {
+    isFetching: false,
+    error: null,
+    data: {},
+  },
+  post: {
+    processing: false,
+    error: null,
+    data: {},
+  },
 });
 
 function boardReducer(state = initialState, action) {
@@ -197,6 +216,41 @@ function boardReducer(state = initialState, action) {
     case PROCESS_ITEM_SUCCESS:
       return state
         .set('isProcessing', false);
+    case FETCH_WORDPRESS_GUI_REQUEST:
+      return state
+        .setIn(['wordpressGUI', 'isFetching'], true);
+    case FETCH_WORDPRESS_GUI_SUCCESS:
+      return state
+        .setIn(['wordpressGUI', 'isFetching'], false)
+        .setIn(['wordpressGUI', 'data'], fromJS(action.payload))
+        .setIn(['wordpressGUI', 'error'], null);
+    case FETCH_WORDPRESS_GUI_FAILURE:
+      return state
+        .setIn(['wordpressGUI', 'isFetching'], false)
+        .setIn(['wordpressGUI', 'error'], fromJS(action.payload));
+    case CREATE_POST_REQUEST:
+      return state
+        .setIn(['post', 'processing'], true);
+    case CREATE_POST_SUCCESS:
+      return state
+        .setIn(['post', 'processing'], false)
+        .setIn(['post', 'data'], fromJS(action.payload))
+        .setIn(['post', 'error'], null);
+    case CREATE_POST_FAILURE:
+      return state
+        .setIn(['post', 'processing'], false)
+        .setIn(['post', 'error'], fromJS(action.payload));
+    case UPDATE_POST_REQUEST:
+      return state
+        .setIn(['post', 'processing'], true);
+    case UPDATE_POST_SUCCESS:
+      return state
+        .setIn(['post', 'processing'], false)
+        .setIn(['post', 'data'], fromJS(action.post));
+    case UPDATE_POST_FAILURE:
+      return state
+        .setIn(['post', 'processing'], false)
+        .setIn(['post', 'error'], fromJS(action.payload));
     default: return state;
   }
 }

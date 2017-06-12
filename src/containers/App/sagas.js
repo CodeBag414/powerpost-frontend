@@ -708,6 +708,7 @@ function* updatePostRequestWorker({ post }) {
     yield put(fetchPostSetsBySTRequest());
   } else {
     console.log(response);
+    yield put({ type: 'UPDATE_POST_FAILURE', payload: response.data });
   }
 }
 

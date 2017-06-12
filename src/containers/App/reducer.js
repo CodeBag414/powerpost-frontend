@@ -1,7 +1,7 @@
 /*
  * The reducer takes care of state changes in our app through actions
  */
-import { fromJS } from 'immutable';
+import { fromJS, Map } from 'immutable';
 import { find, remove } from 'lodash';
 import auth from 'utils/auth';
 

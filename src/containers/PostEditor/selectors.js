@@ -36,10 +36,7 @@ const makeSelectUrlContent = () => createSelector(
 
 const selectPostSet = () => createSelector(
   selectPostSetEditor,
-  (postSetEditor) => {
-    console.log('postSetEditor', postSetEditor);
-    return postSetEditor.get('postSet');
-  },
+  (postSetEditor) => postSetEditor.get('postSet')
 );
 
 const makeSelectActiveCollection = () => createSelector(
@@ -83,6 +80,16 @@ const makeSelectVisibleMediaItems = () => createSelector(
     }
   });
 
+const selectWordpressGUI = () => createSelector(
+  selectPostSetEditor,
+  (postSetEditor) => postSetEditor.get('wordpressGUI'),
+);
+
+const selectPost = () => createSelector(
+    selectPostSetEditor,
+    (postSetEditor) => postSetEditor.get('post'),
+);
+
 export {
   makeSelectComments,
   makeSelectAccountTags,
@@ -95,4 +102,6 @@ export {
   makeSelectIsProcessing,
   makeSelectFilter,
   makeSelectVisibleMediaItems,
+  selectWordpressGUI,
+  selectPost,
 };

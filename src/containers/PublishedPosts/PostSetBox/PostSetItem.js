@@ -23,7 +23,13 @@ const Wrapper = styled.div`
       display: flex;
       margin-top: 1px;
     }
-    .stream-name {
+    .date {
+      color: #888888;
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 13px;
+    }
+    .title {
       color: #616669;
       font-size: 12px;
       font-weight: 900;
@@ -34,23 +40,6 @@ const Wrapper = styled.div`
       text-overflow: ellipsis;
       white-space: nowrap;
       margin-right: 5px;
-    }
-    .date {
-      color: #888888;
-      font-size: 11px;
-      font-weight: 600;
-      line-height: 13px;
-    }
-    .title {
-      margin-top: 4px;
-      color: #616669;
-      font-size: 11px;
-      font-weight: 900;
-      line-height: 13px;
-      height: 13px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
     }
     .message {
       display: -webkit-box;
@@ -69,7 +58,6 @@ const Wrapper = styled.div`
 const PostSetItem = ({
   active,
   mediaItems,
-  streamName,
   title,
   message,
   date,
@@ -84,10 +72,9 @@ const PostSetItem = ({
     />
     <div className="right-box">
       <div className="horizontal-flex">
-        <div className="stream-name">{streamName}</div>
+        <div className="title">{title}</div>
         <div className="date">{date}</div>
       </div>
-      <div className="title">{title}</div>
       <div className="message">{message}</div>
     </div>
   </Wrapper>
@@ -96,7 +83,6 @@ const PostSetItem = ({
 PostSetItem.propTypes = {
   active: PropTypes.bool,
   mediaItems: ImmutablePropTypes.list,
-  streamName: PropTypes.string,
   title: PropTypes.string,
   message: PropTypes.string,
   date: PropTypes.string,

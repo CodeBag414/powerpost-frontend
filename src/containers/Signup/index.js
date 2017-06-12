@@ -74,6 +74,9 @@ class Signup extends Component {
       newPrice *= (100 - percent_off) / 100;
     }
 
+    Stripe.setPublishableKey('pk_test_X9sZwXwoYLj4fFnWCvXWntmO');   // TEST KEY
+    // Stripe.setPublishableKey('pk_live_qElipTZ1MpTIsPNjdn3IxCCN');   // LIVE KEY
+    
     return (
       <Wrapper>
         <LeftPane>

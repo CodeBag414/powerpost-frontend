@@ -5,7 +5,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-
+import ImmutablePropTypes from 'react-immutable-proptypes';
+import { routerActions } from 'react-router-redux';
 import { UserCanPostEdit } from 'config.routes/UserRoutePermissions';
 
 import {
@@ -26,11 +27,17 @@ import {
 import {
   fetchComments,
   fetchAccountTags,
+  fetchWordpressGUIRequest,
+  createPostRequest,
 } from 'containers/PostEditor/actions';
 
 import {
   selectPostSet,
+  selectWordpressGUI,
+  selectPost,
 } from 'containers/PostEditor/selectors';
+
+import Loading from 'components/Loading';
 
 import Wrapper from './Wrapper';
 import GeneralInfo from './GeneralInfo';
@@ -46,27 +53,34 @@ import Channels from './Channels';
 import SharedStreams from './SharedStreams';
 
 class PostEditor extends Component {
-
   static propTypes = {
     // getComments: PropTypes.func,
     // getAccountTags: PropTypes.func,
     // fetchPostSet: PropTypes.func,
     // fetchGroupUsers: PropTypes.func,
     // fetchConnections: PropTypes.func,
-    user: PropTypes.shape(),
-    postSet: PropTypes.object,
-    groupUsers: PropTypes.object,
-    userAccount: PropTypes.object,
-    updatePostSet: PropTypes.func,
-    updatePost: PropTypes.func,
-    id: PropTypes.string,
     accountId: PropTypes.string,
     connections: PropTypes.array,
+    groupUsers: PropTypes.object,
+    id: PropTypes.string,
+    location: PropTypes.object,
     modal: PropTypes.bool,
+    updatePost: PropTypes.func,
+    updatePostSet: PropTypes.func,
+    postSet: ImmutablePropTypes.map,
+    user: PropTypes.shape(),
+    userAccount: PropTypes.object,
+    createPost: PropTypes.func,
+    fetchWordpressGUI: PropTypes.func,
+    wordpressGUI: ImmutablePropTypes.map,
+    post: ImmutablePropTypes.map,
+    goBack: PropTypes.func,
   };
 
   static defaultProps = {
     modal: true,
+    accountId: PropTypes.string,
+    goBack: PropTypes.func,
   };
 
   state = {
@@ -76,7 +90,6 @@ class PostEditor extends Component {
 
   componentWillMount() {
     this.initialize();
-    console.log('@@@@@__--', this.props);
   }
 
   componentWillReceiveProps({ postSet }) {
@@ -127,25 +140,39 @@ class PostEditor extends Component {
 
   render() {
     const {
-      user,
-      postSet,
-      groupUsers,
-      userAccount,
-      updatePostSet,
-      updatePost,
       connections,
+      groupUsers,
+      location,
       modal,
+      postSet,
+      updatePost,
+      updatePostSet,
+      user,
+      userAccount,
+      createPost,
+      fetchWordpressGUI,
+      wordpressGUI,
+      post,
+      goBack,
     } = this.props;
+
+    if (postSet.get('isFetching') || postSet.get('details').isEmpty()) {
+      return (
+        <Wrapper modal={modal}>
+          <Loading />
+        </Wrapper>
+      );
+    }
 
     const { postTitle, selectedTab } = this.state;
     const postsArray = postSet.getIn(['details', 'posts']);
     const posts = {};
     let totalTimeslots = 0;
     if (postsArray) {
-      postsArray.map((post) => {
-        if (post.get('status') !== '0') {
-          if (!posts[post.get('connection_id')]) posts[post.get('connection_id')] = [];
-          posts[post.get('connection_id')].push(post);
+      postsArray.map((postItem) => {
+        if (postItem.get('status') !== '0') {
+          if (!posts[postItem.get('connection_id')]) posts[postItem.get('connection_id')] = [];
+          posts[postItem.get('connection_id')].push(postItem);
           totalTimeslots += 1;
         }
         return true;
@@ -157,21 +184,28 @@ class PostEditor extends Component {
       { name: 'Channels & Times', component: <Channels postSet={postSet} posts={posts} updatePost={updatePost} />, count: totalTimeslots },
       { name: 'Shared Stream', component: <SharedStreams postSet={postSet} /> },
     ];
+
+    const generalInfo = (
+      <GeneralInfo
+        user={user}
+        postSet={postSet.get('details').toJS()}
+        postTitle={postTitle}
+        location={location}
+        handleTitleChange={this.handleTitleChange}
+        handleTitleBlur={this.handleTitleBlur}
+        handleTitleFocus={this.handleTitleFocus}
+        handleTitleKeyDown={this.handleTitleKeyDown}
+        modal={modal}
+        goBack={goBack}
+      />
+    );
     return (
       <Wrapper modal={modal}>
-        <GeneralInfo
-          user={user}
-          postSet={postSet.get('details').toJS()}
-          postTitle={postTitle}
-          handleTitleChange={this.handleTitleChange}
-          handleTitleBlur={this.handleTitleBlur}
-          handleTitleFocus={this.handleTitleFocus}
-          handleTitleKeyDown={this.handleTitleKeyDown}
-          closeButtonHidden={!modal}
-        />
+        { modal ? generalInfo : null }
         <div className="content-wrapper">
           <div className="content">
             <div className="main">
+              { modal ? null : generalInfo }
               <div>
                 {
                   tabs.map((tab) =>
@@ -193,6 +227,11 @@ class PostEditor extends Component {
               }
             </div>
             <Sidebar>
+              <StatusChooser
+                postSet={postSet}
+                updatePostSet={updatePostSet}
+                userAccount={userAccount}
+              />
               <UserAssignment
                 isFetching={groupUsers.isFetching || postSet.get('isFetching')}
                 postSet={postSet.get('details').toJS()}
@@ -200,13 +239,14 @@ class PostEditor extends Component {
                 users={groupUsers.details ? groupUsers.details.groups_users : []}
                 updatePostSet={updatePostSet}
               />
-              <StatusChooser
-                postSet={postSet}
-                updatePostSet={updatePostSet}
-                userAccount={userAccount}
-              />
               <WordpressSettings
+                postSet={postSet}
                 connections={connections}
+                wordpressGUI={wordpressGUI}
+                post={post}
+                updatePost={updatePost}
+                createPost={createPost}
+                fetchWordpressGUI={fetchWordpressGUI}
               />
               <Tags
                 updatePostSet={updatePostSet}
@@ -229,6 +269,9 @@ export function mapDispatchToProps(dispatch) {
     updatePostSet: (payload) => dispatch(updatePostSetRequest(payload)),
     updatePost: (payload) => dispatch(updatePostRequest(payload)),
     fetchConnections: (payload) => dispatch(fetchConnections(payload)),
+    fetchWordpressGUI: (payload) => dispatch(fetchWordpressGUIRequest(payload)),
+    createPost: (payload) => dispatch(createPostRequest(payload)),
+    goBack: () => dispatch(routerActions.goBack()),
   };
 }
 
@@ -238,6 +281,8 @@ const mapStateToProps = createStructuredSelector({
   groupUsers: selectGroupUsers(),
   userAccount: makeSelectUserAccount(),
   connections: selectConnections(),
+  wordpressGUI: selectWordpressGUI(),
+  post: selectPost(),
 });
 
 export default UserCanPostEdit(connect(mapStateToProps, mapDispatchToProps)(PostEditor));
