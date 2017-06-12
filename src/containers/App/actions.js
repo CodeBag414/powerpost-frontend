@@ -61,6 +61,9 @@ import {
   CREATE_POST_SET_REQUEST,
   CREATE_POST_SET_SUCCESS,
   // CHECK_USER_OBJECT,
+  FETCH_MEDIA_ITEMS_REQUEST,
+  FETCH_MEDIA_ITEMS_SUCCESS,
+  FETCH_MEDIA_ITEMS_ERROR,
 } from './constants';
 
 /**
@@ -446,8 +449,8 @@ export function createPostSetSuccess(postSet, edit) {
   return { type: CREATE_POST_SET_SUCCESS, postSet, edit };
 }
 
-export function fetchPostSetsBySTRequest() {
-  return { type: FETCH_POST_SETS_BY_ST_REQUEST };
+export function fetchPostSetsBySTRequest(accountId) {
+  return { type: FETCH_POST_SETS_BY_ST_REQUEST, accountId };
 }
 
 export function fetchPostSetsBySTSuccess(postSets) {
@@ -456,4 +459,16 @@ export function fetchPostSetsBySTSuccess(postSets) {
 
 export function fetchPostSetsBySTFailure(error) {
   return { type: FETCH_POST_SETS_BY_ST_FAILURE, error };
+}
+
+export function fetchMediaItems(accountId) {
+  return { type: FETCH_MEDIA_ITEMS_REQUEST, accountId };
+}
+
+export function fetchMediaItemsSuccess(mediaItems) {
+  return { type: FETCH_MEDIA_ITEMS_SUCCESS, mediaItems };
+}
+
+export function fetchMediaItemsFailure(error) {
+  return { type: FETCH_MEDIA_ITEMS_ERROR, error };
 }

@@ -112,6 +112,11 @@ const makeSelectPostSetEdit = () => createSelector(
     (auth) => auth.get('post_edit'),
 );
 
+const makeSelectMediaItems = () => createSelector(
+  selectAuth,
+  (auth) => auth.get('mediaItems')
+);
+
 export {
     selectAuth,
     selectLoggedIn,
@@ -136,4 +141,5 @@ export {
     makeSelectPostSet,
     makeSelectPostSetsByST,
     makeSelectPostSetEdit,
+    makeSelectMediaItems,
 };
