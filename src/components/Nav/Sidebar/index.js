@@ -55,7 +55,7 @@ class Sidebar extends React.Component {
             <PPMenu isSidebar selectable>
               <ReactRouterMenuItem caption="Dashboard" activeClassName={styles.active} isSidebar icon={<i className="fa fa-home" />} to={`/account/${this.props.accountId}`} />
               { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('brands') > -1 &&
-              <ReactRouterMenuItem caption="Brands" activeClassName={styles.active} isSidebar icon={<i className="f fa-th-large" />} to={`/account/${this.props.accountId}/brands`} />
+              <ReactRouterMenuItem caption="Brands" activeClassName={styles.active} isSidebar icon={<i className="fa fa-th-large" />} to={`/account/${this.props.accountId}/brands`} />
               }
               {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('content_library') > -1 &&
                 <ReactRouterMenuItem caption="Content" activeClassName={styles.active} isSidebar icon={<i className="fa fa-folder" />} to={`/account/${this.props.accountId}/library`} />
