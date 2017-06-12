@@ -30,6 +30,7 @@ import {
   VIDEO_PROCESSING,
   CREATE_MEDIA_ITEM,
   CREATE_MEDIA_ITEM_SUCCESS,
+  CREATE_MEDIA_ITEM_ERROR,
   UPDATE_MEDIA_ITEM,
   UPDATE_MEDIA_ITEM_SUCCESS,
   FETCH_URL_CONTENT,
@@ -216,6 +217,8 @@ export function* createMediaItem(action) {
         yield put({ type: CREATE_MEDIA_ITEM_SUCCESS, mediaItems });
         yield put({ type: PROCESS_ITEM_SUCCESS });
       }
+    } else {
+      yield put({ type: CREATE_MEDIA_ITEM_ERROR });
     }
   }
 }

@@ -28,6 +28,7 @@ import {
   SUBMIT_BUNCH_POSTS_REQUEST,
   SUBMIT_BUNCH_POSTS_SUCCESS,
   CREATE_MEDIA_ITEM_SUCCESS,
+  CREATE_MEDIA_ITEM_ERROR,
   UPDATE_MEDIA_ITEM_SUCCESS,
   REMOVE_MEDIA_ITEM,
   SET_MEDIA_ITEM,
@@ -47,6 +48,7 @@ import {
   CREATE_POST_REQUEST,
   CREATE_POST_SUCCESS,
   CREATE_POST_FAILURE,
+  CLEAR_MEDIA_ITEM,
 } from './constants';
 
 const initialState = fromJS({
@@ -89,6 +91,7 @@ const initialState = fromJS({
     error: null,
     data: {},
   },
+  newMediaItem: {},
 });
 
 function boardReducer(state = initialState, action) {
@@ -186,7 +189,12 @@ function boardReducer(state = initialState, action) {
       return state
         .updateIn(['postSet', 'details'], (postSetDetails) => postSetDetails.set('post_type', action.mediaItems[0].type))
         .updateIn(['postSet', 'details', 'media_items'], (mediaItems) => mediaItems.set(0, fromJS(action.mediaItems[0])))
-        .updateIn(['postSet', 'details', 'media_item_ids'], (mediaItemIds) => mediaItemIds.set(0, action.mediaItems[0].media_item_id));
+        .updateIn(['postSet', 'details', 'media_item_ids'], (mediaItemIds) => mediaItemIds.set(0, action.mediaItems[0].media_item_id))
+        .set('newMediaItem', fromJS(action.mediaItems[0]));
+    case CREATE_MEDIA_ITEM_ERROR:
+    case CLEAR_MEDIA_ITEM:
+      return state
+        .set('newMediaItem', fromJS({}));
     case REMOVE_MEDIA_ITEM:
       return state
         .updateIn(['postSet', 'details'], (postSetDetails) => postSetDetails.set('post_type', 'text'))

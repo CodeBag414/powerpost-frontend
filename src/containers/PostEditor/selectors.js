@@ -86,8 +86,13 @@ const selectWordpressGUI = () => createSelector(
 );
 
 const selectPost = () => createSelector(
-    selectPostSetEditor,
-    (postSetEditor) => postSetEditor.get('post'),
+  selectPostSetEditor,
+  (postSetEditor) => postSetEditor.get('post'),
+);
+
+const selectNewMediaItem = () => createSelector(
+  selectPostSetEditor,
+  (postSetEditor) => postSetEditor.get('newMediaItem'),
 );
 
 export {
@@ -104,4 +109,5 @@ export {
   makeSelectVisibleMediaItems,
   selectWordpressGUI,
   selectPost,
+  selectNewMediaItem,
 };

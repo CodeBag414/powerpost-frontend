@@ -22,6 +22,7 @@ import {
   selectGroupUsers,
   makeSelectUserAccount,
   selectConnections,
+  makeSelectFilePickerKey,
 } from 'containers/App/selectors';
 
 import {
@@ -29,12 +30,16 @@ import {
   fetchAccountTags,
   fetchWordpressGUIRequest,
   createPostRequest,
+  fetchCollections,
+  createMediaItem,
+  clearMediaItem,
 } from 'containers/PostEditor/actions';
 
 import {
   selectPostSet,
   selectWordpressGUI,
   selectPost,
+  selectNewMediaItem,
 } from 'containers/PostEditor/selectors';
 
 import Loading from 'components/Loading';
@@ -70,11 +75,16 @@ class PostEditor extends Component {
     postSet: ImmutablePropTypes.map,
     user: PropTypes.shape(),
     userAccount: PropTypes.object,
+    filePickerKey: PropTypes.string,
+    newMediaItem: ImmutablePropTypes.map,
     createPost: PropTypes.func,
     fetchWordpressGUI: PropTypes.func,
     wordpressGUI: ImmutablePropTypes.map,
     post: ImmutablePropTypes.map,
     goBack: PropTypes.func,
+    fetchCollections: PropTypes.func,
+    createMediaItem: PropTypes.func,
+    clearMediaItem: PropTypes.func,
   };
 
   static defaultProps = {
@@ -90,6 +100,7 @@ class PostEditor extends Component {
 
   componentWillMount() {
     this.initialize();
+    this.props.clearMediaItem();
   }
 
   componentWillReceiveProps({ postSet }) {
@@ -118,6 +129,7 @@ class PostEditor extends Component {
     const payload = { accountId };
     props.fetchGroupUsers(payload);
     props.fetchConnections(accountId);
+    props.fetchCollections(accountId);
   }
 
   handleTitleChange = () => {
@@ -140,6 +152,8 @@ class PostEditor extends Component {
 
   render() {
     const {
+      filePickerKey,
+      accountId,
       connections,
       groupUsers,
       location,
@@ -149,6 +163,7 @@ class PostEditor extends Component {
       updatePostSet,
       user,
       userAccount,
+      newMediaItem,
       createPost,
       fetchWordpressGUI,
       wordpressGUI,
@@ -240,13 +255,18 @@ class PostEditor extends Component {
                 updatePostSet={updatePostSet}
               />
               <WordpressSettings
+                filePickerKey={filePickerKey}
+                accountId={accountId}
                 postSet={postSet}
                 connections={connections}
                 wordpressGUI={wordpressGUI}
                 post={post}
+                newMediaItem={newMediaItem}
                 updatePost={updatePost}
                 createPost={createPost}
                 fetchWordpressGUI={fetchWordpressGUI}
+                createMediaItem={this.props.createMediaItem}
+                clearMediaItem={this.props.clearMediaItem}
               />
               <Tags
                 updatePostSet={updatePostSet}
@@ -272,6 +292,9 @@ export function mapDispatchToProps(dispatch) {
     fetchWordpressGUI: (payload) => dispatch(fetchWordpressGUIRequest(payload)),
     createPost: (payload) => dispatch(createPostRequest(payload)),
     goBack: () => dispatch(routerActions.goBack()),
+    fetchCollections: (accountId) => dispatch(fetchCollections(accountId)),
+    createMediaItem: (mediaItem) => dispatch(createMediaItem(mediaItem)),
+    clearMediaItem: () => dispatch(clearMediaItem()),
   };
 }
 
@@ -283,6 +306,8 @@ const mapStateToProps = createStructuredSelector({
   connections: selectConnections(),
   wordpressGUI: selectWordpressGUI(),
   post: selectPost(),
+  filePickerKey: makeSelectFilePickerKey(),
+  newMediaItem: selectNewMediaItem(),
 });
 
 export default UserCanPostEdit(connect(mapStateToProps, mapDispatchToProps)(PostEditor));

@@ -23,6 +23,7 @@ import {
   CREATE_POST_REQUEST,
   CREATE_POST_SUCCESS,
   CREATE_POST_FAILURE,
+  CLEAR_MEDIA_ITEM,
 } from './constants';
 
 export function fetchCollections(accountId) {
@@ -157,5 +158,11 @@ export function createPostFailure(payload) {
   return {
     type: CREATE_POST_FAILURE,
     payload,
+  };
+}
+
+export function clearMediaItem() {
+  return {
+    type: CLEAR_MEDIA_ITEM,
   };
 }
