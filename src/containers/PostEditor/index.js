@@ -10,6 +10,7 @@ import { routerActions } from 'react-router-redux';
 import { UserCanPostEdit } from 'config.routes/UserRoutePermissions';
 
 import {
+  deletePostSetRequest,
   fetchGroupUsers,
   fetchPostSetRequest,
   updatePostSetRequest,
@@ -42,6 +43,8 @@ import {
   selectNewMediaItem,
 } from 'containers/PostEditor/selectors';
 
+import Button from 'elements/atm.Button';
+import DeletePostSetDialog from 'components/DeletePostSetDialog';
 import Loading from 'components/Loading';
 
 import Wrapper from './Wrapper';
@@ -66,36 +69,38 @@ class PostEditor extends Component {
     // fetchConnections: PropTypes.func,
     accountId: PropTypes.string,
     connections: PropTypes.array,
+    clearMediaItem: PropTypes.func,
+    createMediaItem: PropTypes.func,
+    createPost: PropTypes.func,
+    deletePostSet: PropTypes.func.isRequired,
+    fetchCollections: PropTypes.func,
+    fetchWordpressGUI: PropTypes.func,
+    filePickerKey: PropTypes.string,
+    goBack: PropTypes.func,
     groupUsers: PropTypes.object,
     id: PropTypes.string,
     location: PropTypes.object,
     modal: PropTypes.bool,
+    newMediaItem: ImmutablePropTypes.map,
+    post: ImmutablePropTypes.map,
+    postSet: ImmutablePropTypes.map,
     updatePost: PropTypes.func,
     updatePostSet: PropTypes.func,
-    postSet: ImmutablePropTypes.map,
     user: PropTypes.shape(),
     userAccount: PropTypes.object,
-    filePickerKey: PropTypes.string,
-    newMediaItem: ImmutablePropTypes.map,
-    createPost: PropTypes.func,
-    fetchWordpressGUI: PropTypes.func,
     wordpressGUI: ImmutablePropTypes.map,
-    post: ImmutablePropTypes.map,
-    goBack: PropTypes.func,
-    fetchCollections: PropTypes.func,
-    createMediaItem: PropTypes.func,
-    clearMediaItem: PropTypes.func,
   };
 
   static defaultProps = {
     modal: true,
-    accountId: PropTypes.string,
-    goBack: PropTypes.func,
+    accountId: '',
+    goBack: () => {},
   };
 
   state = {
     postTitle: '',
     selectedTab: 'Power Post',
+    showDeletePopup: false,
   };
 
   componentWillMount() {
@@ -119,6 +124,13 @@ class PostEditor extends Component {
     }
   }
 
+  onDeletePostSet = () => {
+    const { postSet, deletePostSet, goBack } = this.props;
+    const id = postSet.getIn(['details', 'post_set_id']);
+    deletePostSet(id);
+    goBack();
+  }
+
   initialize = (props = this.props) => {
     const { accountId, id } = props;
     props.getComments(id);
@@ -130,6 +142,10 @@ class PostEditor extends Component {
     props.fetchGroupUsers(payload);
     props.fetchConnections(accountId);
     props.fetchCollections(accountId);
+  }
+
+  handleClickDelete = () => {
+    this.setState({ showDeletePopup: true });
   }
 
   handleTitleChange = () => {
@@ -148,6 +164,10 @@ class PostEditor extends Component {
         postTitle: 'Untitled Post',
       });
     }
+  }
+
+  hideDeletePopup = () => {
+    this.setState({ showDeletePopup: false });
   }
 
   render() {
@@ -179,7 +199,7 @@ class PostEditor extends Component {
       );
     }
 
-    const { postTitle, selectedTab } = this.state;
+    const { postTitle, selectedTab, showDeletePopup } = this.state;
     const postsArray = postSet.getIn(['details', 'posts']);
     const posts = {};
     let totalTimeslots = 0;
@@ -247,6 +267,7 @@ class PostEditor extends Component {
                 updatePostSet={updatePostSet}
                 userAccount={userAccount}
               />
+              <Button onClick={this.handleClickDelete} className="button-flat" flat>Delete Post</Button>
               <UserAssignment
                 isFetching={groupUsers.isFetching || postSet.get('isFetching')}
                 postSet={postSet.get('details').toJS()}
@@ -275,6 +296,11 @@ class PostEditor extends Component {
             </Sidebar>
           </div>
         </div>
+        <DeletePostSetDialog
+          active={showDeletePopup}
+          handleDialogToggle={this.hideDeletePopup}
+          deletePostSet={this.onDeletePostSet}
+        />
       </Wrapper>
     );
   }
@@ -282,6 +308,7 @@ class PostEditor extends Component {
 
 export function mapDispatchToProps(dispatch) {
   return {
+    deletePostSet: (id) => dispatch(deletePostSetRequest(id)),
     getAccountTags: (accountId) => dispatch(fetchAccountTags(accountId)),
     getComments: (postSetId) => dispatch(fetchComments(postSetId)),
     fetchPostSet: (payload) => dispatch(fetchPostSetRequest(payload)),
