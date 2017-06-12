@@ -53,6 +53,8 @@ import {
   // UPDATE_POST_SET_SUCCESS,
   SET_CONNECTIONS,
   CREATE_POST_SET_SUCCESS,
+  FETCH_MEDIA_ITEMS_SUCCESS,
+  FETCH_MEDIA_ITEMS_ERROR,
 } from './constants';
 
 // The initial application state
@@ -79,6 +81,7 @@ const initialState = fromJS({
     error: null,
     data: null,
   },
+  mediaItmes: [],
 });
 
 // Takes care of changing the application state
@@ -342,6 +345,11 @@ function globalReducer(state = initialState, action) {
         ...action.postSet,
         createSuccess: true,
       }).set('post_edit', action.edit);
+    case FETCH_MEDIA_ITEMS_SUCCESS:
+      return state.set('mediaItems', fromJS(action.mediaItems.data.collection.media_items.filter((t) => t.status !== '0')));
+    case FETCH_MEDIA_ITEMS_ERROR:
+      return state
+        .set('error', action.mediaItems.data.message);
     default:
       return state;
   }
