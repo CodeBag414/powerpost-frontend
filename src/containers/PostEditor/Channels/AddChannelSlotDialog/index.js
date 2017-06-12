@@ -104,7 +104,7 @@ class AddChannelSlotDialog extends Component {
               Set the date, time and channels.
             </div>
             <div className="post-style" onClick={() => this.setState({ isPostUponReady: !isPostUponReady })}>
-              { isPostUponReady ? 'Schedule Post' : 'Post Upon Ready' }
+              { isPostUponReady ? 'Schedule Post' : 'Post Instantly Upon Ready' }
             </div>
             {
               isPostUponReady ||
@@ -113,6 +113,11 @@ class AddChannelSlotDialog extends Component {
                   onChangeScheduleTimes={this.onChangeScheduleTimes}
                   scheduleTimes={scheduleTimes}
                 />
+              </div>
+            }
+            {isPostUponReady &&
+              <div className="instruction highlighted">
+                This post will be sent instantly when the status is set to Ready.
               </div>
             }
             <div className="channels-block">
