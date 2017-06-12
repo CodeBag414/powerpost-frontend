@@ -36,6 +36,11 @@ const Wrapper = styled.div`
     font-size: 12px;
     line-height: 15px;
     margin-top: 11px;
+
+    &.highlighted {
+      color: #333;
+      font-weight: bold;
+    }
   }
 
   .post-style {
