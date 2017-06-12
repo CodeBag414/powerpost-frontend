@@ -15,8 +15,8 @@ const RightLabelWrapper = styled.span`
   font-size: 11px;
 `;
 
-const LabelWrapper = ({ children, rightLabel }) => (
-  <Wrapper>
+const LabelWrapper = ({ children, rightLabel, ...props }) => (
+  <Wrapper {...props}>
     { children }
     { rightLabel &&
       <RightLabelWrapper>
