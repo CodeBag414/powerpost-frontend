@@ -168,7 +168,10 @@ class TopNav extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.accountId !== nextProps.accountId) {
-      this.toggleBrands();
+      this.setState({
+        brandMenuOpen: false,
+        userMenuOpen: false,
+      });
     }
   }
 
