@@ -83,6 +83,7 @@ class MessageEditor extends Component {
           message={message}
           handleMessageChange={handleMessageChange}
           onBlur={handleMessageBlur}
+          placeholder="What do you want to say?"
         />
         {isProcessing &&
           <Spinner />
