@@ -166,6 +166,12 @@ class TopNav extends Component {
     this.handleRequestClose = this.handleRequestClose.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.accountId !== nextProps.accountId) {
+      this.toggleBrands();
+    }
+  }
+
   handleTouchTap(event) {
     event.preventDefault();
 
