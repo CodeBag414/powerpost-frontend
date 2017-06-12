@@ -40,6 +40,7 @@ class AccountDashboard extends Component {
   };
 
   componentDidMount() {
+    this.props.getPostSetsAction(this.props.params.account_id);
     this.props.getMediaItems(this.props.params.account_id);
     this.props.getPostSetsbyST(this.props.params.account_id);
   }
@@ -248,6 +249,7 @@ class AccountDashboard extends Component {
 }
 
 AccountDashboard.propTypes = {
+  getPostSetsAction: PropTypes.func,
   getMediaItems: PropTypes.func,
   getPostSetsbyST: PropTypes.func,
   params: PropTypes.object,
