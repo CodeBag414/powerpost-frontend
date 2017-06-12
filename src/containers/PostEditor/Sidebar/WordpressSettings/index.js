@@ -278,91 +278,94 @@ export class WordpressSettings extends Component {
           isExpanded={isExpanded}
         />
         <SmoothCollapse expanded={isExpanded}>
-          <LabelWrapper>Destination</LabelWrapper>
-          <Dropdown
-            value={destination}
-            options={destinationOptions}
-            placeholder="-"
-            onChange={this.handleBlogChange}
-          />
-          <LabelWrapper>Title</LabelWrapper>
-          <PPTextField
-            disabled={disabled}
-            type="text"
-            name="title"
-            hintText="Title"
-            value={title}
-            onBlur={() => this.handlePostSave()}
-            onChange={this.handleTitleChange}
-          />
-          <LabelWrapper>URL Name</LabelWrapper>
-          <PPTextField
-            disabled={disabled}
-            type="text"
-            name="slug"
-            hintText="Url Name"
-            value={slug}
-            onBlur={() => this.handlePostSave()}
-            onChange={this.handleSlugChange}
-          />
-          <LabelWrapper style={{ marginTop: '6px' }}>Description</LabelWrapper>
-          <MultiLineInput
-            hasBorder
-            disabled={disabled}
-            message={description}
-            handleMessageChange={this.handleDescriptionChange}
-            onBlur={() => this.handlePostSave()}
-          />
-          <LabelWrapper>Schedule</LabelWrapper>
-          <ScheduleRowWrapper>
-            <div>
-              <DatePicker
-                readonly={disabled}
-                minDate={minDate}
-                value={moment.unix(scheduleTime).toDate()}
-                onChange={this.handleDateChange}
-              />
-            </div>
-            <div>
-              <TimePicker
-                readonly={disabled}
-                format="ampm"
-                value={moment.unix(scheduleTime).toDate()}
-                onChange={this.handleDateChange}
-              />
-            </div>
-          </ScheduleRowWrapper>
-          <LabelWrapper rightLabel="Create new categories">Categories</LabelWrapper>
-          <AutoMultiSelect
-            disabled={disabled}
-            items={categories}
-            suggestions={categorySuggestions}
-            onChange={this.handleCategoriesChange}
-          />
-          <LabelWrapper rightLabel="Create new tags">Tags</LabelWrapper>
-          <AutoMultiSelect
-            disabled={disabled}
-            items={tags}
-            suggestions={tagSuggestions}
-            onChange={this.handleTagsChange}
-          />
-          <LabelWrapper>Author</LabelWrapper>
-          <Dropdown
-            disabled={disabled}
-            value={author}
-            options={authorOptions}
-            placeholder="Choose Author"
-            onChange={this.handleAuthorChange}
-          />
-          <LabelWrapper />
-          <Checkbox
-            checked={allowComments}
-            disabled={disabled}
-            label="Allow Comments"
-            name="allow"
-            onChange={this.handleCommentsChange}
-          />
+          <div style={{ paddingBottom: '200px' }}>
+            <LabelWrapper>Destination</LabelWrapper>
+            <Dropdown
+              value={destination}
+              options={destinationOptions}
+              placeholder="-"
+              onChange={this.handleBlogChange}
+            />
+            <LabelWrapper>Title</LabelWrapper>
+            <PPTextField
+              disabled={disabled}
+              type="text"
+              name="title"
+              hintText="Title"
+              value={title}
+              onBlur={() => this.handlePostSave()}
+              onChange={this.handleTitleChange}
+            />
+            <LabelWrapper>URL Name</LabelWrapper>
+            <PPTextField
+              disabled={disabled}
+              type="text"
+              name="slug"
+              hintText="Url Name"
+              value={slug}
+              onBlur={() => this.handlePostSave()}
+              onChange={this.handleSlugChange}
+            />
+            <LabelWrapper style={{ marginTop: '6px' }}>Description</LabelWrapper>
+            <MultiLineInput
+              hasBorder
+              disabled={disabled}
+              message={description}
+              handleMessageChange={this.handleDescriptionChange}
+              onBlur={() => this.handlePostSave()}
+            />
+            <LabelWrapper>Schedule</LabelWrapper>
+            <ScheduleRowWrapper>
+              <div>
+                <DatePicker
+                  readonly={disabled}
+                  minDate={minDate}
+                  value={moment.unix(scheduleTime).toDate()}
+                  onChange={this.handleDateChange}
+                />
+              </div>
+              <div>
+                <TimePicker
+                  readonly={disabled}
+                  format="ampm"
+                  value={moment.unix(scheduleTime).toDate()}
+                  onChange={this.handleDateChange}
+                />
+              </div>
+            </ScheduleRowWrapper>
+            <LabelWrapper rightLabel="Create new categories">Categories</LabelWrapper>
+            <AutoMultiSelect
+              disabled={disabled}
+              items={categories}
+              suggestions={categorySuggestions}
+              onChange={this.handleCategoriesChange}
+            />
+            <LabelWrapper rightLabel="Create new tags">Tags</LabelWrapper>
+            <AutoMultiSelect
+              disabled={disabled}
+              items={tags}
+              suggestions={tagSuggestions}
+              onChange={this.handleTagsChange}
+            />
+            <LabelWrapper>Author</LabelWrapper>
+            <Dropdown
+              disabled={disabled}
+              value={author}
+              options={authorOptions}
+              placeholder="Choose Author"
+              onChange={this.handleAuthorChange}
+            />
+            <LabelWrapper />
+            <Checkbox
+              checked={allowComments}
+              disabled={disabled}
+              label="Allow Comments"
+              name="allow"
+              onChange={this.handleCommentsChange}
+            />
+          </div>
         </SmoothCollapse>
+        <div style={{ marginTop: '-200px' }} />
         { post.get('processing') &&
           <Loading />
         }
