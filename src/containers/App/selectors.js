@@ -92,7 +92,7 @@ const makeSelectPosts = () => createSelector(
     (auth) => auth.get('posts'),
 );
 
-const selectConnections = () => createSelector(
+const makeSelectConnections = () => createSelector(
     selectAuth,
     (auth) => auth.get('connections'),
 );
@@ -137,7 +137,7 @@ export {
     selectInviteEmailToGroup,
     makeSelectPostSets,
     makeSelectPosts,
-    selectConnections,
+    makeSelectConnections,
     makeSelectPostSet,
     makeSelectPostSetsByST,
     makeSelectPostSetEdit,
