@@ -19,11 +19,6 @@ class ChannelsPreview extends Component {
     isExpanded: true,
   };
 
-  channelTypeFromId = (id) => {
-    const { connections } = this.props;
-    return connections.find((c) => c.connection_id === id);
-  }
-
   buildChannelList = () => {
     const { connections, postSet } = this.props;
 
@@ -32,16 +27,21 @@ class ChannelsPreview extends Component {
     const uniqueChannels = {};
     postSet.getIn(['details', 'posts']).forEach((post) => {
       if (post.get('status') === '0') return;
-      const connection = this.channelTypeFromId(post.get('connection_id'));
+      const connection = this.channelFromId(post.get('connection_id'));
       uniqueChannels[connection.channel] = connection;
     });
 
     const channels = Object.keys(uniqueChannels);
-    if (!channels || channels.length === 0) return <span>No channels chosen</span>;
+    if (!channels || channels.length === 0) return <span>No channels chosen.</span>;
 
     const channelList = channels.map((channel) =>
       <SocialIcon icon={uniqueChannels[channel].channel_icon} />);
     return channelList;
+  }
+
+  channelFromId = (id) => {
+    const { connections } = this.props;
+    return connections.find((c) => c.connection_id === id);
   }
 
   expand = (isExpanded) => {
