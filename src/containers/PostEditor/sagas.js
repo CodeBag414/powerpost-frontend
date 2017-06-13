@@ -202,11 +202,9 @@ export function* createMediaItem(action) {
   }
   
   if (url !== '') {
-    console.log(data);
     const res = yield call(postData, url, data);
-    console.log(res);
     if (res.data.result === 'success') {
-      if(res.data.media_items[0].status === '3') {
+      if (res.data.media_items[0].status === '3') {
         const id = res.data.media_items[0].media_item_id;
         yield put({ type: VIDEO_PROCESSING, id });
         const mediaItems = res.data.media_items;
