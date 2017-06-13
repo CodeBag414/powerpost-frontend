@@ -18,6 +18,7 @@ import {
 } from 'containers/App/actions';
 
 import {
+  makeSelectConnections,
   makeSelectUser,
   makeSelectFilePickerKey,
 } from 'containers/App/selectors';
@@ -56,6 +57,7 @@ class Content extends Component {
     postComment: PropTypes.func,
     deleteComment: PropTypes.func,
     comments: ImmutablePropTypes.list,
+    connections: PropTypes.array,
     user: PropTypes.shape(),
     pending: PropTypes.bool,
     postSet: PropTypes.object,
@@ -84,11 +86,12 @@ class Content extends Component {
   constructor(props) {
     super(props);
     const globalMessage = !props.postSet.get('details').isEmpty() ? props.postSet.getIn(['details', 'message']) : '';
-    const characterLimit = 140 - (globalMessage ? globalMessage.length : 0);
+    const characterLimit = this.calculateCharacterLimit(globalMessage, {}, false);
     this.state = {
       globalMessage,
       characterLimit,
       fileEditor: false,
+      hasWordPressPost: false,
       imageEditor: false,
       videoEditor: false,
       linkEditor: false,
@@ -103,7 +106,7 @@ class Content extends Component {
     this.props.fetchCollections(this.props.accountId);
   }
 
-  componentWillReceiveProps({ postSet/* , location*/ }) {
+  componentWillReceiveProps({ postSet }) {
     const newMessage = postSet.getIn(['details', 'message']);
     let newMediaItem = postSet.getIn(['details', 'media_items']) || fromJS([]);
 
@@ -112,16 +115,42 @@ class Content extends Component {
       this.setState({ globalMessage: newMessage || '' });
     }
     if (newMediaItem[0]) {
-      this.setState({ item: newMediaItem[0] });
+      this.setState({
+        item: newMediaItem[0],
+      });
     }
     if (newMediaItem.length === 0 && this.state.item.media_item_id) {
       this.setState({ item: {} });
     }
+
+    const hasWordPressPost = postSet.getIn(['details', 'posts']).some((post) => {
+      if (post.get('status') === '0') return false;
+      const type = this.channelTypeFromId(post.get('connection_id'));
+      if (type === 'wordpress') return true;
+      return false;
+    });
+
+    this.setState({
+      characterLimit: this.calculateCharacterLimit(newMessage, newMediaItem[0], hasWordPressPost),
+      hasWordPressPost,
+    });
+  }
+
+  calculateCharacterLimit = (globalMessage = this.state.globalMessage, item = this.state.item, hasWordPressPost = this.state.hasWordPressPost) => {
+    let mediaLength = (item && Object.keys(item).length > 0) ? 24 : 0;
+    if (hasWordPressPost) mediaLength += 24;
+    return 140 - (globalMessage ? globalMessage.length : 0) - mediaLength;
+  }
+
+  channelTypeFromId = (id) => {
+    const { connections } = this.props;
+    const connection = connections.find((c) => c.connection_id === id);
+    return connection.channel;
   }
 
   handleMessageChange = (value) => {
     const globalMessage = value;
-    const characterLimit = 140 - (globalMessage ? globalMessage.length : 0);
+    const characterLimit = this.calculateCharacterLimit(globalMessage);
     this.setState({ globalMessage, characterLimit });
   }
 
@@ -471,6 +500,7 @@ export function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   comments: makeSelectComments(),
+  connections: makeSelectConnections(),
   user: makeSelectUser(),
   pending: makeSelectInProgress(),
   filePickerKey: makeSelectFilePickerKey(),
