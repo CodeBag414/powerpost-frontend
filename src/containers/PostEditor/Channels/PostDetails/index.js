@@ -14,6 +14,7 @@ import PinterestBlock from 'containers/Feed/PinterestBlock';
 
 import MultiLineInput from 'components/MultiLineInput';
 import Wrapper from './Wrapper';
+import LimitIndicator from './LimitIndicator';
 
 function getCreatorURL(url) {
   return url.substr(0, url.substr(0, url.length - 1).lastIndexOf('/') + 1);
@@ -116,6 +117,8 @@ function PostDetails({ post, postSet, postMessage, postTime, connection, handleR
   const minDate = new Date();
   minDate.setDate(minDate.getDate() - 1);
   // console.log('PostDetails postSet', postSet.toJS());
+
+  const characterCount = 140 - (postMessage ? postMessage.length : 0);
   return (
     <Wrapper>
       <div className="section-title">
@@ -138,6 +141,7 @@ function PostDetails({ post, postSet, postMessage, postTime, connection, handleR
       }
       <div className="section-title modify-content">
         Modify Content
+        <LimitIndicator className={characterCount < 0 && 'negative'}>{characterCount}</LimitIndicator>
       </div>
       {/* <div className="channel-summary">
         <i className={connection.channel_icon} />
