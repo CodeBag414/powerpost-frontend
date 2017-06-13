@@ -22,7 +22,7 @@ import {
   makeSelectUser,
   selectGroupUsers,
   makeSelectUserAccount,
-  selectConnections,
+  makeSelectConnections,
   makeSelectFilePickerKey,
 } from 'containers/App/selectors';
 
@@ -55,6 +55,7 @@ import UserAssignment from './Sidebar/UserAssignment';
 import StatusChooser from './Sidebar/StatusChooser';
 import Tags from './Sidebar/Tags';
 import WordpressSettings from './Sidebar/WordpressSettings';
+import ChannelsPreview from './Sidebar/ChannelsPreview';
 
 import Content from './Content';
 import Channels from './Channels';
@@ -73,7 +74,7 @@ class PostEditor extends Component {
     createMediaItem: PropTypes.func,
     createPost: PropTypes.func,
     deletePostSet: PropTypes.func.isRequired,
-    fetchCollections: PropTypes.func,
+    // fetchCollections: PropTypes.func,
     fetchWordpressGUI: PropTypes.func,
     filePickerKey: PropTypes.string,
     goBack: PropTypes.func,
@@ -289,6 +290,10 @@ class PostEditor extends Component {
                 createMediaItem={this.props.createMediaItem}
                 clearMediaItem={this.props.clearMediaItem}
               />
+              <ChannelsPreview
+                connections={connections}
+                postSet={postSet}
+              />
               <Tags
                 updatePostSet={updatePostSet}
                 postSet={postSet.get('details')}
@@ -330,7 +335,7 @@ const mapStateToProps = createStructuredSelector({
   postSet: selectPostSet(),
   groupUsers: selectGroupUsers(),
   userAccount: makeSelectUserAccount(),
-  connections: selectConnections(),
+  connections: makeSelectConnections(),
   wordpressGUI: selectWordpressGUI(),
   post: selectPost(),
   filePickerKey: makeSelectFilePickerKey(),
