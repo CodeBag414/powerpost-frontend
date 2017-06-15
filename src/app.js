@@ -70,7 +70,7 @@ ReactDOM.render(
                 applyRouterMiddleware(useScroll())
             }
           />
-          <ReduxToastr />
+          <ReduxToastr position="top-right" timeOut={30000} preventDuplicates />
         </div>
       </Provider>
     </ThemeProvider>
