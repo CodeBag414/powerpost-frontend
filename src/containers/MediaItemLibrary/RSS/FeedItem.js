@@ -61,7 +61,7 @@ const SourceWrapper = styled.div`
   }
 `;
 
-function FeedItem({ item, feedName, onAddFeed }) {
+function FeedItem({ item, feedName, onAddFeed, createPost }) {
   return (
     <Wrapper>
       <InfoWrapper>
@@ -83,6 +83,12 @@ function FeedItem({ item, feedName, onAddFeed }) {
         neutral={false}
         onClick={onAddFeed}
       />
+      <Button
+        label="Create Post"
+        style={{ background: 'red' }}
+        neutral={false}
+        onClick={createPost}
+      />
     </Wrapper>
   );
 }
@@ -91,6 +97,7 @@ FeedItem.propTypes = {
   item: PropTypes.shape(),
   feedName: PropTypes.string,
   onAddFeed: PropTypes.func,
+  createPost: PropTypes.func,
 };
 
 export default FeedItem;

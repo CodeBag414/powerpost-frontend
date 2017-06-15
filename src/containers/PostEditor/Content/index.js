@@ -50,6 +50,7 @@ import Comments from './Comments';
 import Comment from './Comment';
 import CommentInput from './CommentInput';
 import MediaLibraryDialog from '../MediaLibraryDialog';
+import Toolbar from './Toolbar';
 
 class Content extends Component {
 
@@ -457,6 +458,7 @@ class Content extends Component {
           openMediaLibrary={this.openMediaLibrary}
           isProcessing={this.props.isProcessing}
         />
+        <Toolbar openEditor={this.openEditor} openLinkDialog={this.openLinkDialog} openMediaLibrary={this.openMediaLibrary} hidden={item.media_item_id ? false : true } />
         <Comments />
         <div className="comment-input">
           <CommentInput user={user} postComment={(text) => postComment(id, text)} />
