@@ -50,7 +50,6 @@ function dashboardReducer(state = initialState, action) {
             .set('isFetchingAccount', true)
             .set('fetchingError', false);
     case FETCH_ACCOUNT_SUCCESS:
-      // console.log(action.account);
       return state
             .set('isFetchingAccount', false)
             .set('fetchingError', false)

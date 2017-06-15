@@ -20,9 +20,11 @@ import {
 } from 'config.routes/UserRoutePermissions';
 import {
   makeSelectUser,
-  makeSelectUserAccount,
   makeSelectSharedAccounts,
 } from 'containers/App/selectors';
+import {
+  makeSelectCurrentAccount,
+} from 'containers/Main/selectors';
 
 import Background from './Background';
 import BrandItem from './BrandItem';
@@ -37,6 +39,7 @@ const ReactRouterButton = withReactRouter(PPButton);
 const Dashboard = (props) => {
   const brands = props.brands || null;
   const userInfo = props.user || null;
+
   const userOwnAccount = props.userOwnAccount || null;
   const accountType = userOwnAccount && userOwnAccount.account_type_id ? userOwnAccount.account_type_id : 0;
 
@@ -137,7 +140,7 @@ Dashboard.propTypes = {
 
 const mapStateToProps = createStructuredSelector({
   user: makeSelectUser(),
-  userOwnAccount: makeSelectUserAccount(),
+  userOwnAccount: makeSelectCurrentAccount(),
   brands: makeSelectSharedAccounts(),
 });
 
