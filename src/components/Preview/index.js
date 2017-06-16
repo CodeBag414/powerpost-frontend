@@ -70,6 +70,8 @@ const Preview = ({ item }) => {
   let size = '';
   switch (type) {
     case 'link':
+      image = item.properties.thumb_url || item.properties.picture_url;
+      break;
     case 'document':
       image = item.properties.picture;
       size = `${(item.properties.size / 1024 / 1024).toFixed(2)} MB`;

@@ -28,6 +28,7 @@ class RSS extends Component {
     getFeedItems: PropTypes.func,
     createFeed: PropTypes.func,
     handleAddLinkValueFromDialog: PropTypes.func,
+    createPostSet: PropTypes.func,
   }
   constructor(props) {
     super(props);
@@ -95,6 +96,7 @@ class RSS extends Component {
               item={item}
               feedName={this.state.selectedFeed && this.state.selectedFeed.label}
               onAddFeed={() => this.props.handleAddLinkValueFromDialog(item.source_url || item.source)}
+              createPost={() => this.props.createPostSet(item)}
             />
             )
           }

@@ -77,36 +77,36 @@ class MessageEditor extends Component {
     const { message, isProcessing, handleMessageChange, handleMessageBlur, characterLimit, openFilePicker, mediaItem, removeMediaItem, openEditor, pushToLibrary, accountId, postSetId, openLinkDialog, openMediaLibrary } = this.props;
     const { menuVisible } = this.state;
     return (
-      <Wrapper>
-        <MessageToolbar characterLimit={characterLimit} openFilePicker={openFilePicker} pushToLibrary={pushToLibrary} accountId={accountId} postSetId={postSetId} openLinkDialog={openLinkDialog} openMediaLibrary={openMediaLibrary} />
-        <MultiLineInput
-          message={message}
-          handleMessageChange={handleMessageChange}
-          onBlur={handleMessageBlur}
-          placeholder="What do you want to say?"
-        />
-        {isProcessing &&
-          <Spinner />
-        }
-        {mediaItem.media_item_id && !isProcessing &&
-        <ItemWrapper>
-          <IMenu className="fa fa-ellipsis-h" onClick={this.handleShowPopup} />
-            {menuVisible &&
-              <Popup onOutsideClick={this.handleHidePopup}>
-                <CustomMenuItem onClick={removeMediaItem} >
-                  <i className="fa fa-trash" />
-                  <MenuItemCaption>Remove</MenuItemCaption>
-                </CustomMenuItem>
-                <CustomMenuItem onClick={() => openEditor(mediaItem)}>
-                  <i className="fa fa-edit" />
-                  <MenuItemCaption>Edit</MenuItemCaption>
-                </CustomMenuItem>
-              </Popup>
-            }
-          <Preview item={mediaItem} />
-        </ItemWrapper>
-        }
-      </Wrapper>
+        <Wrapper>
+          <MessageToolbar characterLimit={characterLimit} openFilePicker={openFilePicker} pushToLibrary={pushToLibrary} accountId={accountId} postSetId={postSetId} openLinkDialog={openLinkDialog} openMediaLibrary={openMediaLibrary} />
+          <MultiLineInput
+            message={message}
+            handleMessageChange={handleMessageChange}
+            onBlur={handleMessageBlur}
+            placeholder="What do you want to say?"
+          />
+          {isProcessing &&
+            <Spinner />
+          }
+          {mediaItem.media_item_id && !isProcessing &&
+          <ItemWrapper>
+            <IMenu className="fa fa-ellipsis-h" onClick={this.handleShowPopup} />
+              {menuVisible &&
+                <Popup onOutsideClick={this.handleHidePopup}>
+                  <CustomMenuItem onClick={removeMediaItem} >
+                    <i className="fa fa-trash" />
+                    <MenuItemCaption>Remove</MenuItemCaption>
+                  </CustomMenuItem>
+                  <CustomMenuItem onClick={() => openEditor(mediaItem)}>
+                    <i className="fa fa-edit" />
+                    <MenuItemCaption>Edit</MenuItemCaption>
+                  </CustomMenuItem>
+                </Popup>
+              }
+            <Preview item={mediaItem} />
+          </ItemWrapper>
+          }
+        </Wrapper>
     );
   }
 }

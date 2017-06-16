@@ -130,7 +130,7 @@ const auth = {
     const url = `${API_URL}/user_api/user`;
     return axios.put(url, userData, headers)
       .then((response) => {
-        console.log(`response:${response}`);
+        console.log(response);
         return response.data;
       })
       .catch((error) => Promise.reject(error.response));

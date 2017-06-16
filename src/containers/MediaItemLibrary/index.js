@@ -401,6 +401,7 @@ class Library extends React.Component {
 
   createPostSet = (mediaItem) => {
     const { params: { account_id }, createPostSet } = this.props;
+    console.log(mediaItem);
     const postSet = {
       account_id: account_id,
       message: '',

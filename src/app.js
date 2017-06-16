@@ -20,9 +20,11 @@ import auth from 'utils/auth';
 
 // import sanitize css
 // import 'sanitize.css/sanitize.css';
-// import 'react-redux-toastr/src/styles/index.scss';
+
+// import './react-redux-toastr/src/styles/index.scss';
 import './lib/react-toggle/styles.css';
-import './lib/react-redux-toastr/src/styles/index.scss';
+//import './lib/react-redux-toastr/src/styles/index.scss';
+import './globals.scss';
 
 import configureStore from './config.redux/store';
 import ReduxToastr from './lib/react-redux-toastr';
@@ -70,7 +72,7 @@ ReactDOM.render(
                 applyRouterMiddleware(useScroll())
             }
           />
-          <ReduxToastr />
+          <ReduxToastr position="top-right" timeOut={30000} preventDuplicates />
         </div>
       </Provider>
     </ThemeProvider>
