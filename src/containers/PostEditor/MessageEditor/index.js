@@ -77,9 +77,8 @@ class MessageEditor extends Component {
     const { message, isProcessing, handleMessageChange, handleMessageBlur, characterLimit, openFilePicker, mediaItem, removeMediaItem, openEditor, pushToLibrary, accountId, postSetId, openLinkDialog, openMediaLibrary } = this.props;
     const { menuVisible } = this.state;
     return (
-      <div>
-        <MessageToolbar characterLimit={characterLimit} openFilePicker={openFilePicker} pushToLibrary={pushToLibrary} accountId={accountId} postSetId={postSetId} openLinkDialog={openLinkDialog} openMediaLibrary={openMediaLibrary} />
-        <Wrapper addMargin={mediaItem.media_item_id} >
+        <Wrapper>
+          <MessageToolbar characterLimit={characterLimit} openFilePicker={openFilePicker} pushToLibrary={pushToLibrary} accountId={accountId} postSetId={postSetId} openLinkDialog={openLinkDialog} openMediaLibrary={openMediaLibrary} />
           <MultiLineInput
             message={message}
             handleMessageChange={handleMessageChange}
@@ -107,8 +106,7 @@ class MessageEditor extends Component {
             <Preview item={mediaItem} />
           </ItemWrapper>
           }
-       </Wrapper>
-      </div>
+        </Wrapper>
     );
   }
 }
