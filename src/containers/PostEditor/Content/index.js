@@ -18,7 +18,6 @@ import {
 } from 'containers/App/actions';
 
 import {
-  makeSelectConnections,
   makeSelectUser,
   makeSelectFilePickerKey,
 } from 'containers/App/selectors';
@@ -57,7 +56,6 @@ class Content extends Component {
     postComment: PropTypes.func,
     deleteComment: PropTypes.func,
     comments: ImmutablePropTypes.list,
-    connections: PropTypes.array,
     user: PropTypes.shape(),
     pending: PropTypes.bool,
     postSet: PropTypes.object,
@@ -125,8 +123,7 @@ class Content extends Component {
 
     const hasWordPressPost = postSet.getIn(['details', 'posts']).some((post) => {
       if (post.get('status') === '0') return false;
-      const type = this.channelTypeFromId(post.get('connection_id'));
-      if (type === 'wordpress') return true;
+      if (post.get('connection_channel') === 'wordpress') return true;
       return false;
     });
 
@@ -140,12 +137,6 @@ class Content extends Component {
     let mediaLength = (item && Object.keys(item).length > 0) ? 24 : 0;
     if (hasWordPressPost) mediaLength += 24;
     return 140 - (globalMessage ? globalMessage.length : 0) - mediaLength;
-  }
-
-  channelTypeFromId = (id) => {
-    const { connections } = this.props;
-    const connection = connections.find((c) => c.connection_id === id);
-    return connection.channel;
   }
 
   handleMessageChange = (value) => {
@@ -500,7 +491,6 @@ export function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   comments: makeSelectComments(),
-  connections: makeSelectConnections(),
   user: makeSelectUser(),
   pending: makeSelectInProgress(),
   filePickerKey: makeSelectFilePickerKey(),
