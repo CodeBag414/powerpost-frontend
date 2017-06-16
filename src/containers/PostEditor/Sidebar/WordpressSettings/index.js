@@ -8,7 +8,6 @@ import filepicker from 'filepicker-js';
 import Heading from 'components/Heading';
 import MultiLineInput from 'components/MultiLineInput';
 import AutoMultiSelect from 'components/AutoMultiSelect';
-import Loading from 'components/Loading';
 
 import Dropdown from 'elements/atm.Dropdown';
 import PPTextField from 'elements/atm.TextField';
@@ -94,7 +93,7 @@ export class WordpressSettings extends Component {
 
     if (this.props.newMediaItem !== nextProps.newMediaItem) {
       const { newMediaItem } = nextProps;
-      const featuredImageId = newMediaItem.get('media_item_id');        
+      const featuredImageId = newMediaItem.get('media_item_id');
       this.setState({
         featuredImageUrl: newMediaItem.getIn(['properties', 'url']),
         featuredImageId,
@@ -489,9 +488,6 @@ export class WordpressSettings extends Component {
           />
         </SmoothCollapse>
         <div style={{ marginTop: '-200px' }} />
-        { post.get('processing') &&
-          <Loading />
-        }
       </Wrapper>
     );
   }
