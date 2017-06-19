@@ -6,6 +6,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import { fromJS } from 'immutable';
 import { routerActions } from 'react-router-redux';
 import filepicker from 'filepicker-js';
+import * as linkify from 'linkifyjs';
 
 import LinkEditor from 'containers/MediaItemLibrary/LinkEditor';
 import FileEditor from 'containers/MediaItemLibrary/FileEditor';
@@ -95,22 +96,41 @@ class Content extends Component {
       linkEditor: false,
       linkDialog: false,
       mediaItem: {},
-      urlContent: {},
       item: {},
+      urls: [],
     };
   }
 
   componentDidMount() {
     this.props.fetchCollections(this.props.accountId);
+    const { globalMessage } = this.state;
+    this.linkifyMessage(globalMessage);
   }
 
-  componentWillReceiveProps({ postSet }) {
+  componentWillReceiveProps(nextProps) {
+    const { postSet, urlContent } = nextProps;
+    const { messageUrls, globalMessage } = this.state;
+
+    if (urlContent !== this.props.urlContent) {
+      for (let i = 0; i < messageUrls.length; i += 1) {
+        const url = messageUrls[i];
+        if (urlContent.original_url === url.href) {
+          const newMessage = globalMessage.replace(url.value, urlContent.short_url);
+          this.setState({ globalMessage: newMessage });
+          this.handleMessageChange(newMessage);
+          this.handleMessageBlur(newMessage);
+          return;
+        }
+      }
+    }
+
     const newMessage = postSet.getIn(['details', 'message']);
     let newMediaItem = postSet.getIn(['details', 'media_items']) || fromJS([]);
 
     newMediaItem = newMediaItem.toJS();
     if (this.props.postSet.get('details').isEmpty() || this.props.postSet.getIn(['details', 'post_set_id']) !== postSet.getIn(['details', 'post_set_id'])) {
       this.setState({ globalMessage: newMessage || '' });
+      this.linkifyMessage(newMessage);
     }
     if (newMediaItem[0]) {
       this.setState({
@@ -143,15 +163,25 @@ class Content extends Component {
     const globalMessage = value;
     const characterLimit = this.calculateCharacterLimit(globalMessage);
     this.setState({ globalMessage, characterLimit });
+    this.linkifyMessage(globalMessage);
   }
 
-  handleMessageBlur = () => {
+  linkifyMessage = (message) => {
+    const links = linkify.find(message);
+    let urls = [];
+    if (links && links.length) {
+      urls = links.filter((link) =>
+        link.type === 'url' && link.href.indexOf('upo.st') === -1);
+    }
+    this.setState({ messageUrls: urls });
+  }
+
+  handleMessageBlur = (message = this.state.globalMessage) => {
     const { updatePostSet, postSet } = this.props;
-    const { globalMessage } = this.state;
     updatePostSet({
       ...postSet.get('details').toJS(),
       id: postSet.getIn(['details', 'post_set_id']),
-      message: globalMessage,
+      message,
     });
   }
 
@@ -192,7 +222,6 @@ class Content extends Component {
       fileEditor: false,
       mediaLibrary: false,
       mediaItem: {},
-      urlContent: {},
       addLinkValue: '',
     });
     this.props.clearUrlContent();
@@ -422,9 +451,16 @@ class Content extends Component {
     setTimeout(() => this.handleMessageBlur(), 3000);
   }
 
+  shortenUrl = () => {
+    const { messageUrls } = this.state;
+    messageUrls.forEach((url) => {
+      this.props.fetchUrlData(url.value);
+    });
+  }
+
   render() {
     const { postComment, deleteComment, comments, user, pending, pushToLibrary, id, accountId } = this.props;
-    const { globalMessage, characterLimit, item } = this.state;
+    const { globalMessage, characterLimit, item, messageUrls } = this.state;
     // const { params: { postset_id, account_id } } = this.props;
     const actions = [
       { label: 'close', onClick: this.closeAllDialog },
@@ -447,6 +483,8 @@ class Content extends Component {
           openLinkDialog={this.openLinkDialog}
           openMediaLibrary={this.openMediaLibrary}
           isProcessing={this.props.isProcessing}
+          urls={messageUrls}
+          shortenUrl={this.shortenUrl}
         />
         <Comments />
         <div className="comment-input">

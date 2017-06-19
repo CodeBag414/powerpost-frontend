@@ -1,4 +1,4 @@
-import { takeLatest } from 'redux-saga';
+import { takeLatest, takeEvery } from 'redux-saga';
 import { take, call, put, cancel, select, fork } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import moment from 'moment';
@@ -67,18 +67,21 @@ export function* getComments(payload) {
 }
 
 export function* getLinkData(action) {
-  
   const data = {
     payload: {
       url: action.url,
     },
   };
-  
+
   const params = serialize(data);
-  
+
   const result = yield call(getData, `/media_api/url_content?${params}`);
   if (result.data.result === 'success') {
-    const urlData = result.data.url_data[0];
+    const urlData = {
+      ...result.data.url_data[0],
+      short_url: result.data.short_url,
+    };
+
     yield put({ type: FETCH_URL_CONTENT_SUCCESS, urlData });
   } else {
     yield put({ type: POST_EDITOR_ERROR, error: 'Error getting url content' });
@@ -344,7 +347,7 @@ export function* updateMedia() {
 }
 
 export function* linkData() {
-  const watcher = yield takeLatest(FETCH_URL_CONTENT, getLinkData);
+  const watcher = yield takeEvery(FETCH_URL_CONTENT, getLinkData);
 
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
