@@ -102,6 +102,7 @@ class AccountDashboard extends Component {
 
   render() {
     const {
+      accountId,
       statusData,
       lastestMediaItems,
       upcomingPosts,
@@ -111,13 +112,13 @@ class AccountDashboard extends Component {
     return (
       <Wrapper>
         <LeftPane>
-          <StatusBoards data={statusData} />
-          <Calendar posts={upcomingPosts} />
+          <StatusBoards data={statusData} path={`/account/${accountId}/boards`} />
+          <Calendar posts={upcomingPosts} path={`/account/${accountId}/calendar`} />
         </LeftPane>
         <RightPane>
           <div className="pane-name">Recent Activity</div>
-          <Posts posts={latestPosts}></Posts>
-          <Contents mediaItems={lastestMediaItems} />
+          <Posts posts={latestPosts} path={`/account/${accountId}/posts`} />
+          <Contents mediaItems={lastestMediaItems} path={`/account/${accountId}/library`} />
         </RightPane>
       </Wrapper>
     );

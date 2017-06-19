@@ -1,12 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
+import { Link } from 'react-router';
 
 import Wrapper from './Wrapper';
 import Item from './Item';
 import HeaderWrapper from '../HeaderWrapper';
 import GoTo from '../GoTo';
 
-function Posts({ posts }) {
+function Posts({ posts, path }) {
   return (
     <Wrapper>
       <HeaderWrapper>
@@ -24,9 +26,11 @@ function Posts({ posts }) {
         }
       </table>
       <div className="bottom-wrapper">
-        <GoTo style={{ color: '#616669', float: 'right' }}>
-          <span>View All</span><i className="fa fa-chevron-right" />
-        </GoTo>
+        <Link to={path}>
+          <GoTo style={{ color: '#616669', float: 'right' }}>
+            <span>View All</span><i className="fa fa-chevron-right" />
+          </GoTo>
+        </Link>
       </div>
     </Wrapper>
   );
@@ -34,6 +38,7 @@ function Posts({ posts }) {
 
 Posts.propTypes = {
   posts: ImmutablePropTypes.list,
+  path: PropTypes.string,
 };
 
 export default Posts;

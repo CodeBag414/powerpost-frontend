@@ -1,5 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
+import { Link } from 'react-router';
 
 import Wrapper from './Wrapper';
 import ListWrapper from './ListWrapper';
@@ -7,7 +9,7 @@ import Item from './Item';
 import HeaderWrapper from '../HeaderWrapper';
 import GoTo from '../GoTo';
 
-function Calendar({ posts }) {
+function Calendar({ posts, path }) {
   return (
     <Wrapper>
       <HeaderWrapper>
@@ -26,9 +28,11 @@ function Calendar({ posts }) {
           }
         </table>
         <div className="bottom-wrapper">
-          <GoTo style={{ color: '#E35A88' }}>
-            <span>View All</span><i className="fa fa-chevron-right" />
-          </GoTo>
+          <Link to={path}>
+            <GoTo style={{ color: '#E35A88' }}>
+              <span>View All</span><i className="fa fa-chevron-right" />
+            </GoTo>
+          </Link>
         </div>
       </ListWrapper>
     </Wrapper>
@@ -37,6 +41,7 @@ function Calendar({ posts }) {
 
 Calendar.propTypes = {
   posts: ImmutablePropTypes.list,
+  path: PropTypes.string,
 };
 
 export default Calendar;

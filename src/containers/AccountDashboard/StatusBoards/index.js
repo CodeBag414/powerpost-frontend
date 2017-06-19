@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 
 import Wrapper from './Wrapper';
 import Header from './Header';
@@ -8,7 +9,7 @@ import StatusItem from './StatusItem';
 import HeaderWrapper from '../HeaderWrapper';
 import GoTo from '../GoTo';
 
-function StatusBoard({ data }) {
+function StatusBoard({ data, path }) {
   return (
     <Wrapper>
       <Header>
@@ -16,9 +17,11 @@ function StatusBoard({ data }) {
           <div className="title">Status Boards</div>
           <div className="description">Check the status of upcoming posts.</div>
         </HeaderWrapper>
-        <GoTo style={{ color: '#E35A88' }}>
-          <span>View All</span><i className="fa fa-chevron-right" />
-        </GoTo>
+        <Link to={path}>
+          <GoTo style={{ color: '#E35A88' }}>
+            <span>View All</span><i className="fa fa-chevron-right" />
+          </GoTo>
+        </Link>
       </Header>
       <CardWraper>
         <StatusItem>
@@ -59,6 +62,7 @@ function StatusBoard({ data }) {
 
 StatusBoard.propTypes = {
   data: PropTypes.shape(),
+  path: PropTypes.string,
 };
 
 export default StatusBoard;
