@@ -563,12 +563,20 @@ export function* fetchPostSetsWorker(payload) {
 }
 
 function* fetchPostSetsBySTRequestWorker(payload) {
+  const data = {
+    payload: {
+      sort_by: 'schedule_time',
+      sort_order: 'DESC',
+      limit: 500,
+    },
+  };
+  const params = serialize(data);
   const currentAccount = yield select(makeSelectCurrentAccount());
   let id = currentAccount.account_id;
   if (payload.accountId) {
     id = payload.accountId;
   }
-  const requestUrl = `/post_api/post_sets_by_schedule_time/${id}`;
+  const requestUrl = `/post_api/post_sets_by_schedule_time/${id}?${params}`;
 
   const response = yield call(getData, requestUrl);
   if (response.data.status === 'success') {
