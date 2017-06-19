@@ -19,24 +19,21 @@ import { makeSelectPostSets, makeSelectMediaItems, makeSelectPostSetsByST } from
 import { makeSelectCurrentAccount } from 'containers/Main/selectors';
 
 import Wrapper from './Wrapper';
-import Card from './Card';
-import PostsWrapper from './PostsWrapper';
-import StatusWrapper from './StatusWrapper';
-import ContentWrapper from './ContentWrapper';
-import UpcomingWrapper from './UpcomingWrapper';
+import LeftPane from './LeftPane';
+import RightPane from './RightPane';
+import StatusBoards from './StatusBoards';
+import Calendar from './Calendar';
+import Posts from './Posts';
+import Contents from './Contents';
 
 class AccountDashboard extends Component {
 
   state = {
     accountId: this.props.params.account_id,
     upcomingPosts: List(),
-    latestReviews: List(),
-    latestDrafts: List(),
     lastestMediaItems: List(),
-    readyPostSets: 0,
-    inReviewPostSets: 0,
-    draftPostSets: 0,
-    ideaPostSets: 0,
+    statusData: {},
+    latestPosts: List(),
   };
 
   componentDidMount() {
@@ -68,181 +65,60 @@ class AccountDashboard extends Component {
   }
 
   filterBoardStatus = (postSets) => {
-    const readyPostSets = postSets.filter((postSet) => postSet.get('status') === '3').count();
-    const inReviewPostSets = postSets.filter((postSet) => postSet.get('status') === '5').count();
-    const draftPostSets = postSets.filter((postSet) => postSet.get('status') === '2').count();
-    const ideaPostSets = postSets.filter((postSet) => postSet.get('status') === '6').count();
+    const readyPostSets = postSets.filter((postSet) => postSet.get('status') === '3').count() || 0;
+    const inReviewPostSets = postSets.filter((postSet) => postSet.get('status') === '5').count() || 0;
+    const draftPostSets = postSets.filter((postSet) => postSet.get('status') === '2').count() || 0;
+    const ideaPostSets = postSets.filter((postSet) => postSet.get('status') === '6').count() || 0;
 
     this.setState({
-      readyPostSets,
-      inReviewPostSets,
-      draftPostSets,
-      ideaPostSets,
+      statusData: {
+        readyPostSets,
+        inReviewPostSets,
+        draftPostSets,
+        ideaPostSets,
+      },
     });
   }
 
   filterUpcomingPosts = (postSets) => {
     const currentTimeStamp = moment().unix();
     const allPostSets = postSets.getIn(['data', 'scheduled_post_sets']);
-    const upcomingPosts = allPostSets.filter((postSet) => postSet.get('schedule_time') >= currentTimeStamp).takeLast(3).reverse();
+    const upcomingPosts = allPostSets.filter((postSet) => postSet.get('schedule_time') >= currentTimeStamp).takeLast(3);
     this.setState({ upcomingPosts });
   }
 
   filterPosts = (postSets) => {
-    const reviewPostSets = postSets.filter((postSet) => postSet.get('status') === '5');
-    const latestReviews = reviewPostSets.count() > 3 ? reviewPostSets.takeLast(3) : reviewPostSets;
-    const draftPostSets = postSets.filter((postSet) => postSet.get('status') === '2');
-    const latestDrafts = draftPostSets.count() > 3 ? draftPostSets.takeLast(3) : draftPostSets;
+    const filteredPosts = postSets.filter((postSet) => postSet.get('status') === '2' || postSet.get('status') === '5');
 
     this.setState({
-      latestReviews,
-      latestDrafts,
+      latestPosts: filteredPosts.takeLast(5),
     });
   }
 
   filterMediaItems = (mediaItems) => {
-    const lastestMediaItems = mediaItems.count() > 3 ? mediaItems.takeLast(3) : mediaItems;
+    const lastestMediaItems = mediaItems.count() > 5 ? mediaItems.takeLast(6) : mediaItems;
     this.setState({ lastestMediaItems });
-  }
-
-  renderMediaItem = (mediaItem) => {
-    const title = mediaItem.getIn(['properties', 'title']) || 'Untitled';
-    const mediaType = mediaItem.get('type');
-
-    let iconName = '';
-
-    switch (mediaType) {
-      case 'link':
-        iconName = 'fa fa-link';
-        break;
-      case 'video':
-        iconName = 'fa fa-video-camera';
-        break;
-      case 'image':
-        iconName = 'fa fa-picture-o';
-        break;
-      case 'file':
-        iconName = 'fa fa-text-o';
-        break;
-      case 'document':
-        iconName = 'fa fa-file-text-o';
-        break;
-      default:
-        iconName = 'fa fa-file-text-o';
-        break;
-    }
-
-    return <div className="item"><i className={iconName} /><div>{title}</div></div>;
-  }
-
-  renderUpcomingItem = (item) => {
-    const title = item.get('title');
-    const scheduleTime = item.get('schedule_time');
-    const time = moment(scheduleTime * 1000).format('MMMM D - hh:mm a');
-
-    return (<div className="item">
-      <div className="title">{title}</div>
-      <div className="time">{time}</div>
-    </div>);
   }
 
   render() {
     const {
-      latestReviews,
-      latestDrafts,
-      readyPostSets,
-      inReviewPostSets,
-      draftPostSets,
-      ideaPostSets,
+      statusData,
       lastestMediaItems,
       upcomingPosts,
+      latestPosts,
     } = this.state;
-
 
     return (
       <Wrapper>
-        <div className="pane">
-          <Card
-            title="Calendar"
-            description="Go here to get a snapshot of your brand's upcoming posts and plan out your content."
-            path={`/account/${this.state.accountId}/calendar`}
-          >
-            {upcomingPosts.count() > 0 ?
-              <UpcomingWrapper>
-                <div className="caption">
-                  Upcoming
-                </div>
-                <div className="content">
-                  {upcomingPosts.map((postSet) => this.renderUpcomingItem(postSet))}
-                </div>
-              </UpcomingWrapper>
-              :
-              <UpcomingWrapper>
-                No posts are ready to go out.
-              </UpcomingWrapper>
-            }
-          </Card>
-          <Card
-            title="Posts"
-            description="Go here to quickly edit, review and approve posts."
-            path={`/account/${this.state.accountId}/posts`}
-          >
-            <PostsWrapper>
-              <div className="group">
-                <div className="title">Latest In Review</div>
-                {latestReviews.count() > 0 ?
-                  latestReviews.map((postSet) => <div className="item">{postSet.get('title')}</div>)
-                  : <div className="item">No current posts in review.</div>
-                }
-              </div>
-              <div className="group">
-                <div className="title">Latest Draft</div>
-                {latestDrafts.count() > 0 ?
-                  latestDrafts.map((postSet) => <div className="item">{postSet.get('title')}</div>)
-                  : <div className="item">No current posts in draft.</div>
-                }
-              </div>
-            </PostsWrapper>
-          </Card>
-        </div>
-        <div className="pane">
-          <Card
-            title="Status Board"
-            description="Check the status of upcoming posts and change them as necessary."
-            path={`/account/${this.state.accountId}/boards`}
-          >
-            <StatusWrapper>
-              <div className="item">
-                {readyPostSets}<span>Ready</span>
-              </div>
-              <div className="item">
-                {inReviewPostSets}<span>In Review</span>
-              </div>
-              <div className="item">
-                {draftPostSets}<span>Drafts</span>
-              </div>
-              <div className="item">
-                {ideaPostSets}<span>Ideas</span>
-              </div>
-            </StatusWrapper>
-          </Card>
-          <Card
-            title="Content"
-            description="Upload, curate and create content and organize it all in one place."
-            path={`/account/${this.state.accountId}/library`}
-          >
-            {lastestMediaItems.count() > 0 ?
-              <ContentWrapper>
-                <div className="caption">
-                  Latest Added
-                </div>
-                <div className="content">
-                  { lastestMediaItems.map((mediaItem) => this.renderMediaItem(mediaItem))}
-                </div>
-              </ContentWrapper>
-            : <ContentWrapper>No content has been added.</ContentWrapper>}
-          </Card>
-        </div>
+        <LeftPane>
+          <StatusBoards data={statusData} />
+          <Calendar posts={upcomingPosts} />
+        </LeftPane>
+        <RightPane>
+          <div className="pane-name">Recent Activity</div>
+          <Posts posts={latestPosts}></Posts>
+          <Contents mediaItems={lastestMediaItems} />
+        </RightPane>
       </Wrapper>
     );
   }
