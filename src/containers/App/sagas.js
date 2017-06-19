@@ -53,8 +53,6 @@ import {
   CREATE_POST_SET_REQUEST,
   FETCH_POST_SETS_BY_ST_REQUEST,
   FETCH_MEDIA_ITEMS_REQUEST,
-  FETCH_MEDIA_ITEMS_SUCCESS,
-  FETCH_MEDIA_ITEMS_ERROR,
 } from './constants';
 
 import {
@@ -548,6 +546,7 @@ export function* fetchPostSetsWorker(payload) {
   const data = {
     payload: {
       sort_by: 'creation_time',
+      sort_order: 'DESC',
       limit: 500,
       statuses: [1, 2, 3, 4, 5, 6],
     },

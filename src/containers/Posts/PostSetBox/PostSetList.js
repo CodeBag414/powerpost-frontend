@@ -16,6 +16,7 @@ const PostSetList = ({
   currentPostSetIndex,
   streamName,
   handleSelectPostSet,
+  time,
 }) => (
   <Wrapper>
     {
@@ -27,7 +28,10 @@ const PostSetList = ({
           streamName={streamName}
           title={p.get('title')}
           message={p.get('message')}
-          date={moment(p.get('creation_time') * 1000).format('MMM DD')}
+          date={p.get(time)
+            ? moment(p.get(time) * 1000).format('MMM DD')
+            : ((p.get('status') === '3' && 'Post When Ready') || 'Unscheduled')
+          }
           type={p.get('post_type')}
           onClick={() => handleSelectPostSet(index)}
         />
@@ -41,6 +45,7 @@ PostSetList.propTypes = {
   currentPostSetIndex: PropTypes.number,
   streamName: PropTypes.string,
   handleSelectPostSet: PropTypes.func,
+  time: PropTypes.string,
 };
 
 export default PostSetList;
