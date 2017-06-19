@@ -76,7 +76,7 @@ class Signup extends Component {
 
     Stripe.setPublishableKey('pk_test_X9sZwXwoYLj4fFnWCvXWntmO');   // TEST KEY
     // Stripe.setPublishableKey('pk_live_qElipTZ1MpTIsPNjdn3IxCCN');   // LIVE KEY
-    
+
     return (
       <Wrapper>
         <LeftPane>
@@ -86,9 +86,6 @@ class Signup extends Component {
           <div style={{ marginTop: '15px', fontSize: '1.5rem' }}>
             <span style={{ fontSize: '2rem' }}>${parseInt(newPrice)}</span>&nbsp;
             <span>{term_length}</span>
-          </div>
-          <div style={{ marginTop: '15px', fontSize: '1.5rem' }}>
-            { features.join('. ') }
           </div>
           <div style={{ position: 'absolute', left: 0, bottom: 0 }}>Not the plan you want, we've got you covered.&nbsp;
             <Link to="https://www.powerpost.digital/pricing" target="_blank" style={{ color: 'white', textDecoration: 'underline' }}>View Plans</Link>

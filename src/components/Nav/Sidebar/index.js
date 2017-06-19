@@ -44,7 +44,7 @@ class Sidebar extends React.Component {
               label={
                 <div>
                   <span className="button-plus">+ </span>
-                  <span className="button-title">Create New PowerPost</span>
+                  <span className="button-title">Create Post</span>
                 </div>
               }
               style={{ margin: '0 auto', display: 'block', marginTop: '10px', width: '200px' }}

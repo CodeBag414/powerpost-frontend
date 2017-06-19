@@ -53,8 +53,6 @@ import {
   CREATE_POST_SET_REQUEST,
   FETCH_POST_SETS_BY_ST_REQUEST,
   FETCH_MEDIA_ITEMS_REQUEST,
-  FETCH_MEDIA_ITEMS_SUCCESS,
-  FETCH_MEDIA_ITEMS_ERROR,
 } from './constants';
 
 import {
@@ -155,7 +153,7 @@ export function* authorizeUpdate(data) {
 
     yield call(auth.updateUser, data);
     yield call(auth.updateOwnAccount, data);
-    yield call(auth.updateTags, data);
+    // yield call(auth.updateTags, data);
 
     yield put({ type: GET_USER });
 
@@ -548,6 +546,7 @@ export function* fetchPostSetsWorker(payload) {
   const data = {
     payload: {
       sort_by: 'creation_time',
+      sort_order: 'DESC',
       limit: 500,
       statuses: [1, 2, 3, 4, 5, 6],
     },
@@ -564,12 +563,20 @@ export function* fetchPostSetsWorker(payload) {
 }
 
 function* fetchPostSetsBySTRequestWorker(payload) {
+  const data = {
+    payload: {
+      sort_by: 'schedule_time',
+      sort_order: 'DESC',
+      limit: 500,
+    },
+  };
+  const params = serialize(data);
   const currentAccount = yield select(makeSelectCurrentAccount());
   let id = currentAccount.account_id;
   if (payload.accountId) {
     id = payload.accountId;
   }
-  const requestUrl = `/post_api/post_sets_by_schedule_time/${id}`;
+  const requestUrl = `/post_api/post_sets_by_schedule_time/${id}?${params}`;
 
   const response = yield call(getData, requestUrl);
   if (response.data.status === 'success') {

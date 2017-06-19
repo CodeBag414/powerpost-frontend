@@ -19,13 +19,14 @@ const Content = styled.div`
 `;
 const TitleRow = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
 `;
 const Title = styled.div`
+  flex: 1;
   margin-right: 26px;
   color: #6F6F6F;
   font-size: 18px;
+  word-break: break-all;
 `;
 const UserAndTime = styled.div`
   margin-top: 9px;

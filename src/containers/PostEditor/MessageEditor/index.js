@@ -74,11 +74,38 @@ class MessageEditor extends Component {
   }
 
   render() {
-    const { message, isProcessing, handleMessageChange, handleMessageBlur, characterLimit, openFilePicker, mediaItem, removeMediaItem, openEditor, pushToLibrary, accountId, postSetId, openLinkDialog, openMediaLibrary } = this.props;
+    const {
+      message,
+      isProcessing,
+      handleMessageChange,
+      handleMessageBlur,
+      characterLimit,
+      openFilePicker,
+      mediaItem,
+      removeMediaItem,
+      openEditor,
+      pushToLibrary,
+      accountId,
+      postSetId,
+      openLinkDialog,
+      openMediaLibrary,
+      urls,
+      shortenUrl,
+    } = this.props;
     const { menuVisible } = this.state;
     return (
       <Wrapper>
-        <MessageToolbar characterLimit={characterLimit} openFilePicker={openFilePicker} pushToLibrary={pushToLibrary} accountId={accountId} postSetId={postSetId} openLinkDialog={openLinkDialog} openMediaLibrary={openMediaLibrary} />
+        <MessageToolbar
+          characterLimit={characterLimit}
+          openFilePicker={openFilePicker}
+          pushToLibrary={pushToLibrary}
+          accountId={accountId}
+          postSetId={postSetId}
+          openLinkDialog={openLinkDialog}
+          openMediaLibrary={openMediaLibrary}
+          urls={urls}
+          shortenUrl={shortenUrl}
+        />
         <MultiLineInput
           message={message}
           handleMessageChange={handleMessageChange}
@@ -126,6 +153,8 @@ MessageEditor.propTypes = {
   accountId: PropTypes.string,
   openMediaLibrary: PropTypes.func,
   openLinkDialog: PropTypes.func,
+  urls: PropTypes.array,
+  shortenUrl: PropTypes.func,
 };
 
 export default MessageEditor;
