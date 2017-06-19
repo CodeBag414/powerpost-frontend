@@ -8,6 +8,7 @@ import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 
 import {
   makeSelectPostSets,
+  makeSelectPostSetsByST,
   makeSelectPostSet,
 } from 'containers/App/selectors';
 import Loading from 'components/Loading';
@@ -18,7 +19,8 @@ import PostSetBox from './PostSetBox';
 
 class PostsLayout extends Component {
   static propTypes = {
-    postSets: ImmutablePropTypes.map,
+    postSets: ImmutablePropTypes.list,
+    postSetsByST: ImmutablePropTypes.map,
     // postSet: ImmutablePropTypes.map,
     accountId: PropTypes.string,
   }
@@ -34,6 +36,7 @@ class PostsLayout extends Component {
   render() {
     const {
       postSets,
+      postSetsByST,
       accountId,
     } = this.props;
     const {
@@ -62,6 +65,7 @@ class PostsLayout extends Component {
       <Wrapper>
         <PostSetBox
           postSets={postSets}
+          postSetsByST={postSetsByST}
           accountId={accountId}
         />
       </Wrapper>
@@ -71,6 +75,7 @@ class PostsLayout extends Component {
 
 const mapStateToProps = createStructuredSelector({
   postSets: makeSelectPostSets(),
+  postSetsByST: makeSelectPostSetsByST(),
   postSet: makeSelectPostSet(),
 });
 

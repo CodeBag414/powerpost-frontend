@@ -1,16 +1,28 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-
+import Dropdown from 'elements/atm.Dropdown';
 import PostEditor from 'containers/PostEditor';
 import ErrorWrapper from '../ErrorWrapper';
 import Wrapper from './Wrapper';
 import PostSetList from './PostSetList';
 import StatusSelector from './StatusSelector';
 
+const sortByOptions = [
+  {
+    value: 'creation_time',
+    label: 'Creation Time',
+  },
+  {
+    value: 'schedule_time',
+    label: 'Schedule Time',
+  },
+];
+
 class PostSetBox extends Component {
   static propTypes = {
     postSets: ImmutablePropTypes.list,
+    postSetsByST: ImmutablePropTypes.map,
     accountId: PropTypes.string,
   }
 
@@ -18,6 +30,7 @@ class PostSetBox extends Component {
     currentPostSetIndex: 0,
     currentPostStatus: 3,
     searchText: null,
+    sortBy: sortByOptions[0],
   }
 
   onSearch = (searchText) => {
@@ -32,6 +45,10 @@ class PostSetBox extends Component {
     this.setState({
       currentPostSetIndex: index,
     });
+  }
+
+  handleSortByChange = (sortBy) => {
+    this.setState({ sortBy });
   }
 
   filterPostSets = (postSets) => {
@@ -58,8 +75,15 @@ class PostSetBox extends Component {
   }
 
   render() {
-    const { postSets, accountId } = this.props;
-    const { currentPostSetIndex, currentPostStatus, searchText } = this.state;
+    let { postSets } = this.props;
+    const { accountId, postSetsByST } = this.props;
+    const { currentPostSetIndex, currentPostStatus, searchText, sortBy } = this.state;
+    if (sortBy.value === 'schedule_time') {
+      const postSetsByScheduleTime = postSetsByST.get('data');
+      postSets = postSetsByScheduleTime.get('post_when_ready_post_sets')
+        .concat(postSetsByScheduleTime.get('scheduled_post_sets'))
+        .concat(postSetsByScheduleTime.get('unscheduled_post_sets'));
+    }
     if (postSets.isEmpty()) {
       return (
         <Wrapper>
@@ -72,7 +96,7 @@ class PostSetBox extends Component {
     const filteredPostSets = this.filterPostSets(postSets);
     const generatedPostSets = filteredPostSets
       .filter((postSet) => parseInt(postSet.get('status'), 10) === parseInt(currentPostStatus, 10))
-      .sort((a, b) => b.get('creation_time') - a.get('creation_time'));
+      .sort((a, b) => b.get(sortBy.value, 0) - a.get(sortBy.value, 0));
     const postsetId = generatedPostSets.getIn([currentPostSetIndex, 'post_set_id']);
     const statuses = [
       { status: 3, statusColor: '#ABE66A', name: 'Ready' },
@@ -92,9 +116,19 @@ class PostSetBox extends Component {
             onChange={this.changePostStatus}
             statuses={statuses}
           />
-          <div className="search-input">
-            <input placeholder="Search Title and Tags" value={searchText} onChange={(e) => this.onSearch(e.target.value)} />
-            <i className="fa fa-search" />
+          <div className="filter-wrapper">
+            <div className="sort_input">
+              <Dropdown
+                value={sortBy}
+                options={sortByOptions}
+                placeholder="Sort By"
+                onChange={this.handleSortByChange}
+              />
+            </div>
+            <div className="search-input">
+              <input placeholder="Search Title and Tags" value={searchText} onChange={(e) => this.onSearch(e.target.value)} />
+              <i className="fa fa-search" />
+            </div>
           </div>
         </div>
         <div className="posts-content">
@@ -103,6 +137,7 @@ class PostSetBox extends Component {
               postSets={generatedPostSets}
               currentPostSetIndex={currentPostSetIndex}
               handleSelectPostSet={this.handleSelectPostSet}
+              time={sortBy.value}
             />
           </div>
           <div className="post-editor-container">
