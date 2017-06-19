@@ -27,7 +27,7 @@ function Item({ post }) {
         <div className="description">{description}</div>
       </td>
       <td className="date">{time}</td>
-      <td className="channel">sdfa</td>
+      <td className="channel"></td>
     </Wrapper>
   );
 }
