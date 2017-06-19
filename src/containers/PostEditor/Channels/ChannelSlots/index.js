@@ -63,7 +63,7 @@ class ChannelSlots extends React.Component {
               item.connection_id === connectionId,
             )[0];
 
-            if (!connection || postItems.length === 0) return null;
+            if (!connection || postItems.length === 0 || connection.channel === 'wordpress') return null;
 
             return (
               <ChannelSlot
