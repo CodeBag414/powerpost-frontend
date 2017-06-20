@@ -21,9 +21,8 @@ import auth from 'utils/auth';
 // import sanitize css
 // import 'sanitize.css/sanitize.css';
 
-// import './react-redux-toastr/src/styles/index.scss';
 import './lib/react-toggle/styles.css';
-//import './lib/react-redux-toastr/src/styles/index.scss';
+import './lib/react-redux-toastr/src/styles/index.scss';
 import './globals.scss';
 
 import configureStore from './config.redux/store';
