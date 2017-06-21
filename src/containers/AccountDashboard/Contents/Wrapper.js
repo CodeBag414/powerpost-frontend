@@ -26,6 +26,9 @@ const Wrapper = styled.div`
   .bottom-wrapper {
     display: flex;
     justify-content: flex-end;
+    a:hover {
+      text-decoration: none;
+    }
   }
 `;
 
