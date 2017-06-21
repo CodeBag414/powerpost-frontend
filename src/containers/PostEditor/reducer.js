@@ -152,7 +152,10 @@ function boardReducer(state = initialState, action) {
       return state
         .setIn(['postSet', `${action.section}-fetching`], false)
         .setIn(['postSet', 'isFetching'], false)
-        .setIn(['postSet', 'details'], fromJS(action.payload));
+        .setIn(['postSet', 'details'], fromJS({
+          ...action.payload,
+          user: state.getIn(['postSet', 'details', 'user']),
+        }));
     case UPDATE_POST_SET_ERROR:
       return state
         .setIn(['postSet', `${action.section}-fetching`], false)
