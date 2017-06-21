@@ -1,35 +1,43 @@
 /*
  * Library View
  *
- * 
+ *
  */
 
 import React, { PropTypes } from 'react';
-import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import filepicker from 'filepicker-js';
+import { createStructuredSelector } from 'reselect';
+import { browserHistory } from 'react-router';
+import DropdownMenu from 'react-dd-menu';
+
+import PostEditor from 'containers/PostEditor';
+
+import {
+  createPostSetRequest,
+} from 'containers/App/actions';
+import {
+  makeSelectFilePickerKey,
+} from 'containers/App/selectors';
 
 import Button from 'elements/atm.Button';
 import MenuItem from 'elements/atm.MenuItem';
 import Menu from 'elements/atm.Menu';
-import { createStructuredSelector } from 'reselect';
 import withReactRouter from 'elements/hoc.withReactRouter';
-import styles from './styles.scss';
+
+import { UserCanAccount } from 'config.routes/UserRoutePermissions';
+
+import Wrapper from './Wrapper';
+import BlogEditor from './BlogEditor';
 import LinkDialog from './LinkDialog';
 import LinkEditor from './LinkEditor';
 import ImageEditor from './ImageEditor';
 import VideoEditor from './VideoEditor';
 import FileEditor from './FileEditor';
-import PostEditor from 'containers/PostEditor';
+import styles from './styles.scss';
 
-import DropdownMenu from 'react-dd-menu';
-
-import { 
-  createPostSetRequest,
-} from 'containers/App/actions';
-
-import { 
+import {
   fetchCollections,
   fetchUrlData,
   clearUrlContent,
@@ -58,12 +66,6 @@ import {
   makeSelectProcessingItem,
   makeSelectActiveMediaItem,
 } from './selectors';
-
-import {
-  makeSelectFilePickerKey,
-} from 'containers/App/selectors';
-
-import Wrapper from './Wrapper';
 
 const DropDownMenu = styled(DropdownMenu)`
  .dd-menu-items {
@@ -145,18 +147,19 @@ class Library extends React.Component {
     this.handleVideoEditorSave = this.handleVideoEditorSave.bind(this);
     this.handleAddLinkValueFromDialog = this.handleAddLinkValueFromDialog.bind(this);
   }
-  
+
   componentDidMount() {
     this.props.getMediaItems(this.props.params.account_id);
     this.props.getFeeds(this.props.params.account_id);
   }
-  
+
   openAddLink() {
     this.setState({ linkDialog: true });
   }
 
   openAddBlog() {
-    console.log("blog editor")
+    const { pathname } = this.props.location;
+    browserHistory.push(`${pathname}#blog-editor`);
   }
   
   openLinkEditor(linkItem) {
@@ -420,6 +423,7 @@ class Library extends React.Component {
   render() {
     const { location: { hash } } = this.props;
     const postsetId = hash.startsWith('#postset') ? hash.split('-')[1] : 0;
+    const blogEditor = hash.startsWith('#blog-editor');
     
     const actions = [
       { label: "close", onClick: this.closeAllDialog },
@@ -463,6 +467,7 @@ class Library extends React.Component {
         <FileEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave.bind(this)} isOpen={this.state.fileEditorDialog} filePickerKey={this.props.filePickerKey} fileItem={this.state.fileItem} />
          <div className="post-editor">
           { postsetId ? <PostEditor id={postsetId} accountId={this.props.params.account_id} location={this.props.location} /> : null}
+          { blogEditor ? <BlogEditor /> : null }
         </div>
       </Wrapper>
     );

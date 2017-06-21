@@ -27,7 +27,7 @@ function connectionsReducer(state = initialState, action) {
       return state
         .set('channelType', action.channelType);
     case SET_CONNECTIONS_LIST:
-      console.log(action.connections);
+      // console.log(action.connections);
       return state
         .set('connections', action.connections);
     case SET_SOCIAL_URLS:
