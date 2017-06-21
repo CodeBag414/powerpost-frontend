@@ -118,7 +118,7 @@ class Content extends Component {
           const newMessage = globalMessage.replace(url.value, urlContent.short_url);
           this.setState({ globalMessage: newMessage });
           this.handleMessageChange(newMessage);
-          this.handleMessageBlur(newMessage);
+          this.handleMessageBlur(null, newMessage);
           return;
         }
       }
@@ -176,7 +176,7 @@ class Content extends Component {
     this.setState({ messageUrls: urls });
   }
 
-  handleMessageBlur = (message = this.state.globalMessage) => {
+  handleMessageBlur = (event, message = this.state.globalMessage) => {
     const { updatePostSet, postSet } = this.props;
     updatePostSet({
       ...postSet.get('details').toJS(),
