@@ -4,15 +4,22 @@
  */
 
 import { createStore, applyMiddleware, compose } from 'redux';
-import { fromJS } from 'immutable';
+import { Iterable, fromJS } from 'immutable';
 import { routerMiddleware } from 'react-router-redux';
 import createSagaMiddleware from 'redux-saga';
 import createLogger from 'redux-logger';
 import createReducer from './reducers';
 
 const sagaMiddleware = createSagaMiddleware();
+
+
+const stateTransformer = (state) => {
+  if (Iterable.isIterable(state)) return state.toJS();
+  return state;
+};
 const logger = createLogger({
   collapsed: true,
+  stateTransformer,
 });
 
 export default function configureStore(initialState = {}, history) {
