@@ -11,7 +11,7 @@ const Wrapper = styled.div`
 
   .posts-heading {
     position: relative;
-    z-index: 100000;
+    z-index: 999;
     border-bottom: 1px solid #DBDFE0;
     height: 60px;
     padding: 0 12px;
