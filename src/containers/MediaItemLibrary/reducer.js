@@ -101,7 +101,7 @@ function mediaLibraryReducer(state = initialState, action) {
         .set('activeCollection', action.collections.data.collections.map((coll) => (coll.parent_collection_id == null) && coll)[0]);
     case FETCH_MEDIA_ITEMS_SUCCESS:
       return state
-        .set('mediaItems', action.mediaItems.data.collection.media_items.filter(t => t.status !== '0'));
+        .set('mediaItems', action.mediaItems.data.collection.media_items.filter((t) => t.status !== '0'));
     case FETCH_MEDIA_ITEMS_ERROR:
       return state
         .set('error', action.mediaItems.data.message);
@@ -119,7 +119,7 @@ function mediaLibraryReducer(state = initialState, action) {
         .set('searchResults', action.webResults);
     case CREATE_RSS_FEED_SUCCESS:
       return state
-        .update('feeds', feeds => feeds.concat([action.feed]));
+        .update('feeds', (feeds) => feeds.concat([action.feed]));
     case FETCH_RSS_FEEDS_SUCCESS:
       return state
         .set('feeds', action.feeds);
@@ -137,10 +137,10 @@ function mediaLibraryReducer(state = initialState, action) {
         .set('searchFilter', action.searchFilter);
     case CREATE_MEDIA_ITEM_SUCCESS:
       return state
-        .update('mediaItems', mediaItems => mediaItems.concat(action.mediaItems));
+        .update('mediaItems', (mediaItems) => mediaItems.concat(action.mediaItems));
     case VIDEO_PROCESSING_DONE:
       return state
-        .update('mediaItems', mediaItems => mediaItems.concat(action.mediaItem));
+        .update('mediaItems', (mediaItems) => mediaItems.concat(action.mediaItem));
     case SET_PROCESSING_ITEM:
       return state
         .set('processingItem', action.processingItem);
@@ -206,24 +206,24 @@ function mediaLibraryReducer(state = initialState, action) {
 export default mediaLibraryReducer;
 
 function updateObjectInArray(array, action) {
-    return array.map( (item, index) => {
-        if(item.media_item_id !== action.mediaItems[0].media_item_id) {
+  return array.map((item, index) => {
+    if (item.media_item_id !== action.mediaItems[0].media_item_id) {
             // This isn't the item we care about - keep it as-is
-            return item;
-        }
+      return item;
+    }
 
         // Otherwise, this is the one we want - return an updated value
-        return {
-            ...item,
-            ...action.mediaItems[0],
-        };    
-    });
+    return {
+      ...item,
+      ...action.mediaItems[0],
+    };
+  });
 }
 
 function deleteObjectInArray(array, action) {
   return array.map((item, index) => {
-    if(item.media_item_id !== action.id) {
-      return item; 
+    if (item.media_item_id !== action.id) {
+      return item;
     }
   });
 }

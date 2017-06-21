@@ -52,6 +52,7 @@ import {
   FETCH_CONNECTIONS,
   CREATE_POST_SET_REQUEST,
   FETCH_POST_SETS_BY_ST_REQUEST,
+  FETCH_MEDIA_ITEMS_REQUEST,
 } from './constants';
 
 import {
@@ -88,6 +89,8 @@ import {
   setPosts,
   setConnections,
   createPostSetSuccess,
+  fetchMediaItemsSuccess,
+  fetchMediaItemsFailure,
 } from './actions';
 
 /**
@@ -150,7 +153,7 @@ export function* authorizeUpdate(data) {
 
     yield call(auth.updateUser, data);
     yield call(auth.updateOwnAccount, data);
-    yield call(auth.updateTags, data);
+    // yield call(auth.updateTags, data);
 
     yield put({ type: GET_USER });
 
@@ -543,6 +546,7 @@ export function* fetchPostSetsWorker(payload) {
   const data = {
     payload: {
       sort_by: 'creation_time',
+      sort_order: 'DESC',
       limit: 500,
       statuses: [1, 2, 3, 4, 5, 6],
     },
@@ -558,9 +562,22 @@ export function* fetchPostSetsWorker(payload) {
   }
 }
 
-function* fetchPostSetsBySTRequestWorker() {
+function* fetchPostSetsBySTRequestWorker(payload) {
+  const data = {
+    payload: {
+      sort_by: 'schedule_time',
+      sort_order: 'DESC',
+      limit: 500,
+    },
+  };
+  const params = serialize(data);
   const currentAccount = yield select(makeSelectCurrentAccount());
-  const requestUrl = `/post_api/post_sets_by_schedule_time/${currentAccount.account_id}`;
+  let id = currentAccount.account_id;
+  if (payload.accountId) {
+    id = payload.accountId;
+  }
+  const requestUrl = `/post_api/post_sets_by_schedule_time/${id}?${params}`;
+
   const response = yield call(getData, requestUrl);
   if (response.data.status === 'success') {
     yield put(fetchPostSetsBySTSuccess(response.data));
@@ -698,6 +715,7 @@ function* updatePostRequestWorker({ post }) {
     yield put(fetchPostSetsBySTRequest());
   } else {
     console.log(response);
+    yield put({ type: 'UPDATE_POST_FAILURE', payload: response.data });
   }
 }
 
@@ -783,6 +801,30 @@ export function* createPostSetSaga() {
   yield takeLatest(CREATE_POST_SET_REQUEST, createPostSetWorker);
 }
 
+export function* fetchMediaItemsWorker(action) {
+  const accountId = action.accountId;
+
+  const data = {
+    payload: {
+      account_id: accountId,
+    } };
+
+  const params = serialize(data);
+  const collections = yield call(getData, `/media_api/collections?${params}`);
+  const activeCollection = collections.data.collections[0];
+
+  const mediaItems = yield call(getData, `/media_api/collection/${activeCollection.collection_id}`);
+  if (!mediaItems.data.error) {
+    yield put(fetchMediaItemsSuccess(mediaItems));
+  } else {
+    yield put(fetchMediaItemsFailure(mediaItems.data.error));
+  }
+}
+
+export function* fetchMediaItemsSaga() {
+  yield takeLatest(FETCH_MEDIA_ITEMS_REQUEST, fetchMediaItemsWorker);
+}
+
 // The root saga is what we actually send to Redux's middleware. In here we fork
 // each saga so that they are all "active" and listening.
 // Sagas are fired once at the start of an app and can be thought of as processes running
@@ -815,6 +857,7 @@ export default [
   updateBunchPostSaga,
   fetchConnectionsSaga,
   createPostSetSaga,
+  fetchMediaItemsSaga,
 ];
 
 // Little helper function to abstract going to different pages

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
 import {
-  selectConnections,
+  makeSelectConnections,
 } from 'containers/App/selectors';
 
 import NoContent from './NoContent';
@@ -164,7 +164,7 @@ function mapDispatchToProps() {
 }
 
 const mapStateToProps = createStructuredSelector({
-  connections: selectConnections(),
+  connections: makeSelectConnections(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Channels);

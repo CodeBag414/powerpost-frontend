@@ -5,10 +5,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-
+import ImmutablePropTypes from 'react-immutable-proptypes';
+import { routerActions } from 'react-router-redux';
 import { UserCanPostEdit } from 'config.routes/UserRoutePermissions';
 
 import {
+  deletePostSetRequest,
   fetchGroupUsers,
   fetchPostSetRequest,
   updatePostSetRequest,
@@ -20,17 +22,30 @@ import {
   makeSelectUser,
   selectGroupUsers,
   makeSelectUserAccount,
-  selectConnections,
+  makeSelectConnections,
+  makeSelectFilePickerKey,
 } from 'containers/App/selectors';
 
 import {
   fetchComments,
   fetchAccountTags,
+  fetchWordpressGUIRequest,
+  createPostRequest,
+  fetchCollections,
+  createMediaItem,
+  clearMediaItem,
 } from 'containers/PostEditor/actions';
 
 import {
   selectPostSet,
+  selectWordpressGUI,
+  selectPost,
+  selectNewMediaItem,
 } from 'containers/PostEditor/selectors';
+
+import Button from 'elements/atm.Button';
+import DeletePostSetDialog from 'components/DeletePostSetDialog';
+import Loading from 'components/Loading';
 
 import Wrapper from './Wrapper';
 import GeneralInfo from './GeneralInfo';
@@ -40,42 +55,58 @@ import UserAssignment from './Sidebar/UserAssignment';
 import StatusChooser from './Sidebar/StatusChooser';
 import Tags from './Sidebar/Tags';
 import WordpressSettings from './Sidebar/WordpressSettings';
+import ChannelsPreview from './Sidebar/ChannelsPreview';
 
 import Content from './Content';
 import Channels from './Channels';
 import SharedStreams from './SharedStreams';
 
 class PostEditor extends Component {
-
   static propTypes = {
     // getComments: PropTypes.func,
     // getAccountTags: PropTypes.func,
     // fetchPostSet: PropTypes.func,
     // fetchGroupUsers: PropTypes.func,
     // fetchConnections: PropTypes.func,
-    user: PropTypes.shape(),
-    postSet: PropTypes.object,
-    groupUsers: PropTypes.object,
-    userAccount: PropTypes.object,
-    updatePostSet: PropTypes.func,
-    updatePost: PropTypes.func,
-    id: PropTypes.string,
     accountId: PropTypes.string,
     connections: PropTypes.array,
+    clearMediaItem: PropTypes.func,
+    createMediaItem: PropTypes.func,
+    createPost: PropTypes.func,
+    deletePostSet: PropTypes.func.isRequired,
+    // fetchCollections: PropTypes.func,
+    fetchWordpressGUI: PropTypes.func,
+    filePickerKey: PropTypes.string,
+    goBack: PropTypes.func,
+    groupUsers: PropTypes.object,
+    id: PropTypes.string,
+    location: PropTypes.object,
     modal: PropTypes.bool,
+    newMediaItem: ImmutablePropTypes.map,
+    post: ImmutablePropTypes.map,
+    postSet: ImmutablePropTypes.map,
+    updatePost: PropTypes.func,
+    updatePostSet: PropTypes.func,
+    user: PropTypes.shape(),
+    userAccount: PropTypes.object,
+    wordpressGUI: ImmutablePropTypes.map,
   };
 
   static defaultProps = {
     modal: true,
+    accountId: '',
+    goBack: () => {},
   };
 
   state = {
     postTitle: '',
     selectedTab: 'Power Post',
+    showDeletePopup: false,
   };
 
   componentWillMount() {
     this.initialize();
+    this.props.clearMediaItem();
   }
 
   componentWillReceiveProps({ postSet }) {
@@ -94,6 +125,13 @@ class PostEditor extends Component {
     }
   }
 
+  onDeletePostSet = () => {
+    const { postSet, deletePostSet, goBack } = this.props;
+    const id = postSet.getIn(['details', 'post_set_id']);
+    deletePostSet(id);
+    goBack();
+  }
+
   initialize = (props = this.props) => {
     const { accountId, id } = props;
     props.getComments(id);
@@ -104,6 +142,11 @@ class PostEditor extends Component {
     const payload = { accountId };
     props.fetchGroupUsers(payload);
     props.fetchConnections(accountId);
+    props.fetchCollections(accountId);
+  }
+
+  handleClickDelete = () => {
+    this.setState({ showDeletePopup: true });
   }
 
   handleTitleChange = () => {
@@ -124,27 +167,48 @@ class PostEditor extends Component {
     }
   }
 
+  hideDeletePopup = () => {
+    this.setState({ showDeletePopup: false });
+  }
+
   render() {
     const {
-      user,
-      postSet,
-      groupUsers,
-      userAccount,
-      updatePostSet,
-      updatePost,
+      filePickerKey,
+      accountId,
       connections,
+      groupUsers,
+      location,
       modal,
+      postSet,
+      updatePost,
+      updatePostSet,
+      user,
+      userAccount,
+      newMediaItem,
+      createPost,
+      fetchWordpressGUI,
+      wordpressGUI,
+      post,
+      goBack,
     } = this.props;
 
-    const { postTitle, selectedTab } = this.state;
+    if (postSet.get('isFetching') || postSet.get('details').isEmpty()) {
+      return (
+        <Wrapper modal={modal}>
+          <Loading />
+        </Wrapper>
+      );
+    }
+
+    const { postTitle, selectedTab, showDeletePopup } = this.state;
     const postsArray = postSet.getIn(['details', 'posts']);
     const posts = {};
     let totalTimeslots = 0;
     if (postsArray) {
-      postsArray.map((post) => {
-        if (post.get('status') !== '0') {
-          if (!posts[post.get('connection_id')]) posts[post.get('connection_id')] = [];
-          posts[post.get('connection_id')].push(post);
+      postsArray.map((postItem) => {
+        if (postItem.get('status') !== '0' && postItem.get('connection_channel') !== 'wordpress') {
+          if (!posts[postItem.get('connection_id')]) posts[postItem.get('connection_id')] = [];
+          posts[postItem.get('connection_id')].push(postItem);
           totalTimeslots += 1;
         }
         return true;
@@ -156,21 +220,28 @@ class PostEditor extends Component {
       { name: 'Channels & Times', component: <Channels postSet={postSet} posts={posts} updatePost={updatePost} />, count: totalTimeslots },
       { name: 'Shared Stream', component: <SharedStreams postSet={postSet} /> },
     ];
+
+    const generalInfo = (
+      <GeneralInfo
+        user={user}
+        postSet={postSet.get('details').toJS()}
+        postTitle={postTitle}
+        location={location}
+        handleTitleChange={this.handleTitleChange}
+        handleTitleBlur={this.handleTitleBlur}
+        handleTitleFocus={this.handleTitleFocus}
+        handleTitleKeyDown={this.handleTitleKeyDown}
+        modal={modal}
+        goBack={goBack}
+      />
+    );
     return (
       <Wrapper modal={modal}>
-        <GeneralInfo
-          user={user}
-          postSet={postSet.get('details').toJS()}
-          postTitle={postTitle}
-          handleTitleChange={this.handleTitleChange}
-          handleTitleBlur={this.handleTitleBlur}
-          handleTitleFocus={this.handleTitleFocus}
-          handleTitleKeyDown={this.handleTitleKeyDown}
-          closeButtonHidden={!modal}
-        />
+        { modal ? generalInfo : null }
         <div className="content-wrapper">
           <div className="content">
             <div className="main">
+              { modal ? null : generalInfo }
               <div>
                 {
                   tabs.map((tab) =>
@@ -192,6 +263,12 @@ class PostEditor extends Component {
               }
             </div>
             <Sidebar>
+              <StatusChooser
+                postSet={postSet}
+                updatePostSet={updatePostSet}
+                userAccount={userAccount}
+              />
+              <Button onClick={this.handleClickDelete} className="button-flat" flat>Delete Post</Button>
               <UserAssignment
                 isFetching={groupUsers.isFetching || postSet.get('isFetching')}
                 postSet={postSet.get('details').toJS()}
@@ -199,13 +276,23 @@ class PostEditor extends Component {
                 users={groupUsers.details ? groupUsers.details.groups_users : []}
                 updatePostSet={updatePostSet}
               />
-              <StatusChooser
-                postSet={postSet}
-                updatePostSet={updatePostSet}
-                userAccount={userAccount}
-              />
               <WordpressSettings
+                filePickerKey={filePickerKey}
+                accountId={accountId}
+                postSet={postSet}
                 connections={connections}
+                wordpressGUI={wordpressGUI}
+                post={post}
+                newMediaItem={newMediaItem}
+                updatePost={updatePost}
+                createPost={createPost}
+                fetchWordpressGUI={fetchWordpressGUI}
+                createMediaItem={this.props.createMediaItem}
+                clearMediaItem={this.props.clearMediaItem}
+              />
+              <ChannelsPreview
+                connections={connections}
+                postSet={postSet}
               />
               <Tags
                 updatePostSet={updatePostSet}
@@ -214,6 +301,11 @@ class PostEditor extends Component {
             </Sidebar>
           </div>
         </div>
+        <DeletePostSetDialog
+          active={showDeletePopup}
+          handleDialogToggle={this.hideDeletePopup}
+          deletePostSet={this.onDeletePostSet}
+        />
       </Wrapper>
     );
   }
@@ -221,6 +313,7 @@ class PostEditor extends Component {
 
 export function mapDispatchToProps(dispatch) {
   return {
+    deletePostSet: (id) => dispatch(deletePostSetRequest(id)),
     getAccountTags: (accountId) => dispatch(fetchAccountTags(accountId)),
     getComments: (postSetId) => dispatch(fetchComments(postSetId)),
     fetchPostSet: (payload) => dispatch(fetchPostSetRequest(payload)),
@@ -228,6 +321,12 @@ export function mapDispatchToProps(dispatch) {
     updatePostSet: (payload) => dispatch(updatePostSetRequest(payload)),
     updatePost: (payload) => dispatch(updatePostRequest(payload)),
     fetchConnections: (payload) => dispatch(fetchConnections(payload)),
+    fetchWordpressGUI: (payload) => dispatch(fetchWordpressGUIRequest(payload)),
+    createPost: (payload) => dispatch(createPostRequest(payload)),
+    goBack: () => dispatch(routerActions.goBack()),
+    fetchCollections: (accountId) => dispatch(fetchCollections(accountId)),
+    createMediaItem: (mediaItem) => dispatch(createMediaItem(mediaItem)),
+    clearMediaItem: () => dispatch(clearMediaItem()),
   };
 }
 
@@ -236,7 +335,11 @@ const mapStateToProps = createStructuredSelector({
   postSet: selectPostSet(),
   groupUsers: selectGroupUsers(),
   userAccount: makeSelectUserAccount(),
-  connections: selectConnections(),
+  connections: makeSelectConnections(),
+  wordpressGUI: selectWordpressGUI(),
+  post: selectPost(),
+  filePickerKey: makeSelectFilePickerKey(),
+  newMediaItem: selectNewMediaItem(),
 });
 
 export default UserCanPostEdit(connect(mapStateToProps, mapDispatchToProps)(PostEditor));

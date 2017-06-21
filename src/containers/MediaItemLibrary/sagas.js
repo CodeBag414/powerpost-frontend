@@ -383,7 +383,11 @@ export function* replicatePostSetSaga() {
     if (data) {
       toastr.success('Success', 'Postset has been added to the stream.');
       yield put(replicatePostSetSuccess(data.post_set));
-      yield put(push(`${prevUrl}#postset-${data.post_set.post_set_id}`));
+      yield put(push({
+        pathname: prevUrl,
+        hash: `#postset-${data.post_set.post_set_id}`,
+        state: { prevUrl: window.location.href },
+      }));
     }
   }
 }

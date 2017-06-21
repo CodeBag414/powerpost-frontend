@@ -53,6 +53,8 @@ import {
   // UPDATE_POST_SET_SUCCESS,
   SET_CONNECTIONS,
   CREATE_POST_SET_SUCCESS,
+  FETCH_MEDIA_ITEMS_SUCCESS,
+  FETCH_MEDIA_ITEMS_ERROR,
 } from './constants';
 
 // The initial application state
@@ -79,6 +81,7 @@ const initialState = fromJS({
     error: null,
     data: null,
   },
+  mediaItmes: [],
 });
 
 // Takes care of changing the application state
@@ -296,12 +299,19 @@ function globalReducer(state = initialState, action) {
       return state
         .set('postSets', fromJS(action.postSets));
     case DELETE_POST_SET_SUCCESS: {
-      // Deleting a post set could mean deleting it from the Calendar's unscheduled post sets
-      const newState = state.updateIn(
-        ['postSetsByST', 'data', 'unscheduled_post_sets'],
-        (postSets) => postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
-      );
-      return newState
+      return state
+        .updateIn(
+          ['postSetsByST', 'data', 'unscheduled_post_sets'],
+          (postSets) => postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
+        )
+        .updateIn(
+          ['postSetsByST', 'data', 'scheduled_post_sets'],
+          (postSets) => postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
+        )
+        .updateIn(
+          ['postSetsByST', 'data', 'post_when_ready_post_sets'],
+          (postSets) => postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
+        )
         .updateIn(['postSets'], (postSets) => postSets.filter((postSet) => postSet.get('post_set_id') !== action.id));
     }
     case CHANGE_POST_SET_STATUS:
@@ -342,6 +352,11 @@ function globalReducer(state = initialState, action) {
         ...action.postSet,
         createSuccess: true,
       }).set('post_edit', action.edit);
+    case FETCH_MEDIA_ITEMS_SUCCESS:
+      return state.set('mediaItems', fromJS(action.mediaItems.data.collection.media_items.filter((t) => t.status !== '0')));
+    case FETCH_MEDIA_ITEMS_ERROR:
+      return state
+        .set('error', action.mediaItems.data.message);
     default:
       return state;
   }

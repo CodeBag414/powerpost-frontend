@@ -44,7 +44,7 @@ class Sidebar extends React.Component {
               label={
                 <div>
                   <span className="button-plus">+ </span>
-                  <span className="button-title">Create New PowerPost</span>
+                  <span className="button-title">Create Post</span>
                 </div>
               }
               style={{ margin: '0 auto', display: 'block', marginTop: '10px', width: '200px' }}
@@ -55,7 +55,7 @@ class Sidebar extends React.Component {
             <PPMenu isSidebar selectable>
               <ReactRouterMenuItem caption="Dashboard" activeClassName={styles.active} isSidebar icon={<i className="fa fa-home" />} to={`/account/${this.props.accountId}`} />
               { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('brands') > -1 &&
-              <ReactRouterMenuItem caption="Brands" activeClassName={styles.active} isSidebar icon={<i className="f fa-th-large" />} to={`/account/${this.props.accountId}/brands`} />
+              <ReactRouterMenuItem caption="Brands" activeClassName={styles.active} isSidebar icon={<i className="fa fa-th-large" />} to={`/account/${this.props.accountId}/brands`} />
               }
               {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('content_library') > -1 &&
                 <ReactRouterMenuItem caption="Content" activeClassName={styles.active} isSidebar icon={<i className="fa fa-folder" />} to={`/account/${this.props.accountId}/library`} />
@@ -110,7 +110,7 @@ class Sidebar extends React.Component {
           <PPMenu isSidebar selectable >
             <ReactRouterMenuItemWithTooltip tooltip="Dashboard" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-home" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}`} />
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('brands') > -1 &&
-              <ReactRouterMenuItemWithTooltip tooltip="Brands" tooltipPosition="right" isCollapsed style={{ width: '60px' }} isSidebar icon={<i className="f fa-th-large" />} to={`/account/${this.props.accountId}/brands`} />
+              <ReactRouterMenuItemWithTooltip tooltip="Brands" tooltipPosition="right" isCollapsed style={{ width: '60px' }} isSidebar icon={<i className="fa fa-th-large" />} to={`/account/${this.props.accountId}/brands`} />
             }
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('content_library') > -1 &&
             <ReactRouterMenuItemWithTooltip tooltip="Content" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-folder" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/library`} />

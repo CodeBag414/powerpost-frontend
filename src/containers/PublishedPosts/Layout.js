@@ -70,7 +70,7 @@ class PublishedPostsLayout extends Component {
       );
     }
 
-    const postSetsFiltered = postSets.slice(0, 50);
+    const postSetsFiltered = postSets.sort((a, b) => b.get('creation_time') - a.get('creation_time')).slice(0, 50);
 
     return (
       <Wrapper>

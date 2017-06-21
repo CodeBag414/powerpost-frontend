@@ -4,141 +4,148 @@
  *
  */
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import ImmutablePropTypes from 'react-immutable-proptypes';
+import { List } from 'immutable';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import moment from 'moment';
+
 import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 
-import PPAvatar from 'elements/atm.Avatar';
-import withReactRouter from 'elements/hoc.withReactRouter';
-
-import {
-  makeSelectCurrentAccount,
-} from 'containers/Main/selectors';
+import { getPostSets, fetchMediaItems, fetchPostSetsBySTRequest } from 'containers/App/actions';
+import { makeSelectPostSets, makeSelectMediaItems, makeSelectPostSetsByST } from 'containers/App/selectors';
+import { makeSelectCurrentAccount } from 'containers/Main/selectors';
 
 import Wrapper from './Wrapper';
-import Capsule from './capsule';
-import SimpleCapsule from './SimpleCapsule';
-
-const ReactRouterSimpleCapsule = withReactRouter(SimpleCapsule);
-const ReactRouterCapsule = withReactRouter(Capsule);
+import LeftPane from './LeftPane';
+import RightPane from './RightPane';
+import StatusBoards from './StatusBoards';
+import Calendar from './Calendar';
+import Posts from './Posts';
+import Contents from './Contents';
 
 class AccountDashboard extends Component {
 
   state = {
-    accountId: null,
+    accountId: this.props.params.account_id,
+    upcomingPosts: List(),
+    lastestMediaItems: List(),
+    statusData: {},
+    latestPosts: List(),
   };
 
-  render() {
-    const initialAccount = {
-      title: '',
-      user_access_level: '',
-      account_type_id: '',
-      account_id: 'me',
-      properties: {
-        description: '',
-        thumb_url: '',
-        color: '',
+  componentDidMount() {
+    this.props.getPostSetsAction(this.props.params.account_id);
+    this.props.getMediaItems(this.props.params.account_id);
+    this.props.getPostSetsbyST(this.props.params.account_id);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.state.accountId !== nextProps.params.account_id) {
+      this.setState({ accountId: nextProps.params.account_id }, () => {
+        this.props.getMediaItems(nextProps.params.account_id);
+        this.props.getPostSetsbyST(nextProps.params.account_id);
+      });
+    }
+
+    if (this.props.postSets !== nextProps.postSets) {
+      this.filterPosts(nextProps.postSets);
+      this.filterBoardStatus(nextProps.postSets);
+    }
+
+    if (this.props.mediaItems !== nextProps.mediaItems) {
+      this.filterMediaItems(nextProps.mediaItems);
+    }
+
+    if (!this.props.postSetsbyST.equals(nextProps.postSetsbyST)) {
+      this.filterUpcomingPosts(nextProps.postSetsbyST);
+    }
+  }
+
+  filterBoardStatus = (postSets) => {
+    const readyPostSets = postSets.filter((postSet) => postSet.get('status') === '3').count() || 0;
+    const inReviewPostSets = postSets.filter((postSet) => postSet.get('status') === '5').count() || 0;
+    const draftPostSets = postSets.filter((postSet) => postSet.get('status') === '2').count() || 0;
+    const ideaPostSets = postSets.filter((postSet) => postSet.get('status') === '6').count() || 0;
+
+    this.setState({
+      statusData: {
+        readyPostSets,
+        inReviewPostSets,
+        draftPostSets,
+        ideaPostSets,
       },
-    };
-    const account = Object.assign({}, initialAccount, this.props.account);
-    const title = account.title || '';
+    });
+  }
+
+  filterUpcomingPosts = (postSets) => {
+    const currentTimeStamp = moment().unix();
+    const allPostSets = postSets.getIn(['data', 'scheduled_post_sets']);
+    const upcomingPosts = allPostSets.filter((postSet) => postSet.get('schedule_time') >= currentTimeStamp).takeLast(3);
+    this.setState({ upcomingPosts });
+  }
+
+  filterPosts = (postSets) => {
+    const filteredPosts = postSets.filter((postSet) => postSet.get('status') === '2' || postSet.get('status') === '5');
+
+    this.setState({
+      latestPosts: filteredPosts.takeLast(5),
+    });
+  }
+
+  filterMediaItems = (mediaItems) => {
+    const lastestMediaItems = mediaItems.count() > 5 ? mediaItems.takeLast(6) : mediaItems;
+    this.setState({ lastestMediaItems });
+  }
+
+  render() {
+    const {
+      accountId,
+      statusData,
+      lastestMediaItems,
+      upcomingPosts,
+      latestPosts,
+    } = this.state;
+
     return (
       <Wrapper>
-        <div className="leftPane">
-          <div className="avatar-block">
-            <div className="avatar">
-              <PPAvatar
-                size={60}
-                title={title}
-                image={account.properties.thumb_url}
-                backgroundColor={account.properties.color}
-              />
-            </div>
-            <div className="avatar-text">
-              <div>
-                <h5>{account.title}</h5>
-              </div>
-              <p>{`Your Role: ${account.user_access_level}`}</p>
-            </div>
-          </div>
-          <h6>{account.properties.description}</h6>
-          {
-            account.account_type_id === '2' || account.account_type_id === '7' ?
-              <ReactRouterSimpleCapsule to={`/account/${account.account_id}/brands`}>
-                <h5>Manage Brands</h5>
-                <p>Go here to create and manage all of your brands for this account.</p>
-              </ReactRouterSimpleCapsule>
-            : null
-          }
-          <ReactRouterSimpleCapsule to={`/account/${account.account_id}/settings/team`}>
-            <h5>Manage Team</h5>
-            <p>Go here to invite new team members and assign roles.</p>
-          </ReactRouterSimpleCapsule>
-          <ReactRouterSimpleCapsule to={`/account/${account.account_id}/settings/connections`}>
-            <h5>Manage Connections</h5>
-            <p>Go here to add and manage connections, such as Facebook and Twitter.</p>
-          </ReactRouterSimpleCapsule>
-          <ReactRouterSimpleCapsule to={`/account/${account.account_id}/settings`}>
-            <h5>Manage Settings</h5>
-            <p>Go here to manage this account&apos;s settings, such as the team, connections and plan info.</p>
-          </ReactRouterSimpleCapsule>
-        </div>
-        <div className="rightPane">
-          <h4>{`Welcome Back ${title.replace(/^(.{1}[^\s]*).*/, '$1')}!`}</h4>
-          <p style={{ marginBottom: '30px' }}>Be everywhere in one click. Connect your high-impact content to specific audiences.</p>
-
-          <ReactRouterCapsule to={`/account/${account.account_id}/library`}>
-            <i className="fa fa-database" />
-            <span>
-              <h5>Planet Content</h5>
-              <p>Go here to upload, find and modify content to be used in your posts.</p>
-            </span>
-          </ReactRouterCapsule>
-          <ReactRouterCapsule to={`/account/${account.account_id}/calendar`}>
-            <i className="fa fa-paper-plane" />
-            <span>
-              <h5>Publishing</h5>
-              <p>Go here to prepare and publish posts across your channels.</p>
-            </span>
-          </ReactRouterCapsule>
-          <ReactRouterCapsule to={`/account/${account.account_id}/statistics`}>
-            <i className="fa fa-line-chart" />
-            <span>
-              <h5>Power Score</h5>
-              <p>Go here to get a snapshot of how well your posts are performing on your channels.</p>
-            </span>
-          </ReactRouterCapsule>
-          {/* <ReactRouterCapsule to={`/account/${account.account_id}/posts`}>
-            <span>
-              <h5>List</h5>
-              <p>Go here to easily view the content of both past and upcoming posts.</p>
-            </span>
-          </ReactRouterCapsule>
-          <ReactRouterCapsule to={`/account/${account.account_id}/workflow`}>
-            <span>
-              <h5>Workflow</h5>
-              <p>Go here to easily view and change the status of your posts.</p>
-            </span>
-          </ReactRouterCapsule>*/}
-          {/* <ReactRouterCapsule to={`/account/${account.account_id}/boards`}>
-            <span>
-              <h5>Board</h5>
-              <p>Go here to easily view and edit the posts.</p>
-            </span>
-          </ReactRouterCapsule>*/}
-        </div>
+        <LeftPane>
+          <StatusBoards data={statusData} path={`/account/${accountId}/boards`} />
+          <Calendar posts={upcomingPosts} path={`/account/${accountId}/calendar`} />
+        </LeftPane>
+        <RightPane>
+          <div className="pane-name">Recent Activity</div>
+          <Posts posts={latestPosts} path={`/account/${accountId}/posts`} />
+          <Contents mediaItems={lastestMediaItems} path={`/account/${accountId}/library`} />
+        </RightPane>
       </Wrapper>
     );
   }
 }
 
 AccountDashboard.propTypes = {
-  account: PropTypes.object,
+  getPostSetsAction: PropTypes.func,
+  getMediaItems: PropTypes.func,
+  getPostSetsbyST: PropTypes.func,
+  params: PropTypes.object,
+  postSets: ImmutablePropTypes.list,
+  mediaItems: ImmutablePropTypes.list,
+  postSetsbyST: ImmutablePropTypes.map,
 };
+
+const mapDispatchToProps = (dispatch) => ({
+  getPostSetsAction: (accountId) => dispatch(getPostSets(accountId)),
+  getMediaItems: (accountId) => dispatch(fetchMediaItems(accountId)),
+  getPostSetsbyST: (accountId) => dispatch(fetchPostSetsBySTRequest(accountId)),
+});
 
 const mapStateToProps = createStructuredSelector({
   account: makeSelectCurrentAccount(),
+  postSets: makeSelectPostSets(),
+  mediaItems: makeSelectMediaItems(),
+  postSetsbyST: makeSelectPostSetsByST(),
 });
 
-export default UserCanAccount(connect(mapStateToProps)(AccountDashboard));
+export default UserCanAccount(connect(mapStateToProps, mapDispatchToProps)(AccountDashboard));

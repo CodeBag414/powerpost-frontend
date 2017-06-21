@@ -25,7 +25,11 @@ class PostSet extends Component {
 
   goToPostEditor = () => {
     const { postSet } = this.props;
-    browserHistory.push(`/account/${postSet.get('account_id')}/boards#postset-${postSet.get('post_set_id')}`);
+    browserHistory.push({
+      pathname: `/account/${postSet.get('account_id')}/boards`,
+      hash: `#postset-${postSet.get('post_set_id')}`,
+      state: { prevUrl: window.location.href },
+    });
   }
 
   showPopover = (e) => {

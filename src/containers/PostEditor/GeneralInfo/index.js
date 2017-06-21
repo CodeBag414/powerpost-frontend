@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { browserHistory } from 'react-router';
 
 import Wrapper from './Wrapper';
 import Title from './Title';
@@ -14,18 +13,18 @@ function handleTitleKeyDown(e) {
   }
 }
 
-function GeneralInfo({ user, postSet, postTitle, handleTitleChange, handleTitleBlur, closeButtonHidden }) {
-
+function GeneralInfo({ user, postSet, postTitle, handleTitleChange, handleTitleBlur, modal, goBack }) {
   const onBack = () => {
-    browserHistory.goBack();
+    goBack();
   };
+
   // console.log('user', user);
   // console.log('postSet', postSet);
   if (!postSet.post_set_id) return null;
   const userName = postSet.user_id === user.user_id ? user.display_name : postSet.user.display_name;
   const creationTime = moment.unix(postSet.creation_time).format('M/DD/YYYY hh:mma');
   return (
-    <Wrapper>
+    <Wrapper modal={modal}>
       <div>
         <Title
           contentEditable
@@ -39,23 +38,24 @@ function GeneralInfo({ user, postSet, postTitle, handleTitleChange, handleTitleB
         <Subtitle>{`Created by ${userName} \u00a0\u00a0 | \u00a0\u00a0 ${creationTime}`}</Subtitle>
       </div>
       {
-        closeButtonHidden ? null : (
+        modal ? (
           <div className="back-button" onClick={onBack}>
             ×
           </div>
-        )
+        ) : null
       }
     </Wrapper>
   );
 }
 
 GeneralInfo.propTypes = {
-  user: PropTypes.shape(),
+  handleTitleBlur: PropTypes.func,
+  handleTitleChange: PropTypes.func,
+  goBack: PropTypes.func,
   postSet: PropTypes.object,
   postTitle: PropTypes.string,
-  handleTitleChange: PropTypes.func,
-  handleTitleBlur: PropTypes.func,
-  closeButtonHidden: PropTypes.bool,
+  user: PropTypes.shape(),
+  modal: PropTypes.bool,
 };
 
 export default GeneralInfo;

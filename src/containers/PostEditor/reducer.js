@@ -7,6 +7,9 @@ import {
   UPDATE_POST_SET_REQUEST,
   UPDATE_POST_SET_SUCCESS,
   UPDATE_POST_SET_ERROR,
+  UPDATE_POST_REQUEST,
+  UPDATE_POST_SUCCESS,
+  UPDATE_POST_FAILURE,
 } from 'containers/App/constants';
 
 import {
@@ -25,6 +28,7 @@ import {
   SUBMIT_BUNCH_POSTS_REQUEST,
   SUBMIT_BUNCH_POSTS_SUCCESS,
   CREATE_MEDIA_ITEM_SUCCESS,
+  CREATE_MEDIA_ITEM_ERROR,
   UPDATE_MEDIA_ITEM_SUCCESS,
   REMOVE_MEDIA_ITEM,
   SET_MEDIA_ITEM,
@@ -38,6 +42,13 @@ import {
   SHOW_IMAGES,
   SHOW_VIDEOS,
   SHOW_FILES,
+  FETCH_WORDPRESS_GUI_REQUEST,
+  FETCH_WORDPRESS_GUI_SUCCESS,
+  FETCH_WORDPRESS_GUI_FAILURE,
+  CREATE_POST_REQUEST,
+  CREATE_POST_SUCCESS,
+  CREATE_POST_FAILURE,
+  CLEAR_MEDIA_ITEM,
 } from './constants';
 
 const initialState = fromJS({
@@ -70,6 +81,17 @@ const initialState = fromJS({
   },
   pending: false,
   filter: SHOW_ALL,
+  wordpressGUI: {
+    isFetching: false,
+    error: null,
+    data: {},
+  },
+  post: {
+    processing: false,
+    error: null,
+    data: {},
+  },
+  newMediaItem: {},
 });
 
 function boardReducer(state = initialState, action) {
@@ -130,7 +152,10 @@ function boardReducer(state = initialState, action) {
       return state
         .setIn(['postSet', `${action.section}-fetching`], false)
         .setIn(['postSet', 'isFetching'], false)
-        .setIn(['postSet', 'details'], fromJS(action.payload));
+        .setIn(['postSet', 'details'], fromJS({
+          ...action.payload,
+          user: state.getIn(['postSet', 'details', 'user']),
+        }));
     case UPDATE_POST_SET_ERROR:
       return state
         .setIn(['postSet', `${action.section}-fetching`], false)
@@ -167,7 +192,12 @@ function boardReducer(state = initialState, action) {
       return state
         .updateIn(['postSet', 'details'], (postSetDetails) => postSetDetails.set('post_type', action.mediaItems[0].type))
         .updateIn(['postSet', 'details', 'media_items'], (mediaItems) => mediaItems.set(0, fromJS(action.mediaItems[0])))
-        .updateIn(['postSet', 'details', 'media_item_ids'], (mediaItemIds) => mediaItemIds.set(0, action.mediaItems[0].media_item_id));
+        .updateIn(['postSet', 'details', 'media_item_ids'], (mediaItemIds) => mediaItemIds.set(0, action.mediaItems[0].media_item_id))
+        .set('newMediaItem', fromJS(action.mediaItems[0]));
+    case CREATE_MEDIA_ITEM_ERROR:
+    case CLEAR_MEDIA_ITEM:
+      return state
+        .set('newMediaItem', fromJS({}));
     case REMOVE_MEDIA_ITEM:
       return state
         .updateIn(['postSet', 'details'], (postSetDetails) => postSetDetails.set('post_type', 'text'))
@@ -197,6 +227,41 @@ function boardReducer(state = initialState, action) {
     case PROCESS_ITEM_SUCCESS:
       return state
         .set('isProcessing', false);
+    case FETCH_WORDPRESS_GUI_REQUEST:
+      return state
+        .setIn(['wordpressGUI', 'isFetching'], true);
+    case FETCH_WORDPRESS_GUI_SUCCESS:
+      return state
+        .setIn(['wordpressGUI', 'isFetching'], false)
+        .setIn(['wordpressGUI', 'data'], fromJS(action.payload))
+        .setIn(['wordpressGUI', 'error'], null);
+    case FETCH_WORDPRESS_GUI_FAILURE:
+      return state
+        .setIn(['wordpressGUI', 'isFetching'], false)
+        .setIn(['wordpressGUI', 'error'], fromJS(action.payload));
+    case CREATE_POST_REQUEST:
+      return state
+        .setIn(['post', 'processing'], true);
+    case CREATE_POST_SUCCESS:
+      return state
+        .setIn(['post', 'processing'], false)
+        .setIn(['post', 'data'], fromJS(action.payload))
+        .setIn(['post', 'error'], null);
+    case CREATE_POST_FAILURE:
+      return state
+        .setIn(['post', 'processing'], false)
+        .setIn(['post', 'error'], fromJS(action.payload));
+    case UPDATE_POST_REQUEST:
+      return state
+        .setIn(['post', 'processing'], true);
+    case UPDATE_POST_SUCCESS:
+      return state
+        .setIn(['post', 'processing'], false)
+        .setIn(['post', 'data'], fromJS(action.post));
+    case UPDATE_POST_FAILURE:
+      return state
+        .setIn(['post', 'processing'], false)
+        .setIn(['post', 'error'], fromJS(action.payload));
     default: return state;
   }
 }

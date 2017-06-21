@@ -133,12 +133,6 @@ class Dropdown extends React.Component {
   componentWillReceiveProps(newProps) {
     if (newProps.value && newProps.value !== this.state.selected) {
       this.setState({ selected: newProps.value });
-    } else if (!newProps.value && newProps.placeholder) {
-      this.setState({ selected: { label: newProps.placeholder, value: '' } });
-    } else if (newProps.value === this.state.selected) {
-
-    } else {
-      this.setState({ selected: { label: PLACEHOLDER_STRING, value: '' } });
     }
   }
 
@@ -163,8 +157,8 @@ class Dropdown extends React.Component {
 
   handleMouseDown(event) {
     if (event.type === 'mousedown' && event.button !== 0) return;
-    event.stopPropagation();
-    event.preventDefault();
+    // event.stopPropagation();
+    // event.preventDefault();
 
     if (!this.props.disabled) {
       this.setState({
@@ -227,9 +221,9 @@ class Dropdown extends React.Component {
   }
 
   render() {
-    const { small } = this.props;
-    const placeHolderValue = typeof this.state.selected === 'string' ? this.state.selected : this.state.selected.label;
-    const value = (<div><span>{placeHolderValue}</span></div>);
+    const { small, placeholder } = this.props;
+    let value = typeof this.state.selected === 'string' ? this.state.selected : this.state.selected.label;
+    value = <div><span>{value || placeholder || PLACEHOLDER_STRING}</span></div>;
 
     const menu = this.state.isOpen ? <DropdownMenu>{this.buildMenu()}</DropdownMenu> : null;
 

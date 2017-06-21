@@ -4,7 +4,7 @@ const ToolbarButton = styled.span`
   display: inline-block;
   height: 100%;
   line-height: 40px;
-  font-size: 14px;
+  font-size: ${(props) => props.fontSize || '14'}px;
   color: #777;
   vertical-align: top;
   cursor: pointer;

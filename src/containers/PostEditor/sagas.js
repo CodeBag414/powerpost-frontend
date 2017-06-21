@@ -1,4 +1,4 @@
-import { takeLatest } from 'redux-saga';
+import { takeLatest, takeEvery } from 'redux-saga';
 import { take, call, put, cancel, select, fork } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import moment from 'moment';
@@ -30,6 +30,7 @@ import {
   VIDEO_PROCESSING,
   CREATE_MEDIA_ITEM,
   CREATE_MEDIA_ITEM_SUCCESS,
+  CREATE_MEDIA_ITEM_ERROR,
   UPDATE_MEDIA_ITEM,
   UPDATE_MEDIA_ITEM_SUCCESS,
   FETCH_URL_CONTENT,
@@ -43,7 +44,16 @@ import {
   FETCH_MEDIA_ITEMS_SUCCESS,
   PROCESS_ITEM,
   PROCESS_ITEM_SUCCESS,
+  FETCH_WORDPRESS_GUI_REQUEST,
+  CREATE_POST_REQUEST,
 } from './constants';
+
+import {
+  fetchWordpressGUISuccess,
+  fetchWordpressGUIFailure,
+  createPostSuccess,
+  createPostFailure,
+} from './actions';
 
 export function* getComments(payload) {
   const requestUrl = `/post_api/comments/${payload.postSetId}`;
@@ -57,18 +67,21 @@ export function* getComments(payload) {
 }
 
 export function* getLinkData(action) {
-  
   const data = {
     payload: {
       url: action.url,
     },
   };
-  
+
   const params = serialize(data);
-  
+
   const result = yield call(getData, `/media_api/url_content?${params}`);
   if (result.data.result === 'success') {
-    const urlData = result.data.url_data[0];
+    const urlData = {
+      ...result.data.url_data[0],
+      short_url: result.data.short_url,
+    };
+
     yield put({ type: FETCH_URL_CONTENT_SUCCESS, urlData });
   } else {
     yield put({ type: POST_EDITOR_ERROR, error: 'Error getting url content' });
@@ -192,11 +205,9 @@ export function* createMediaItem(action) {
   }
   
   if (url !== '') {
-    console.log(data);
     const res = yield call(postData, url, data);
-    console.log(res);
     if (res.data.result === 'success') {
-      if(res.data.media_items[0].status === '3') {
+      if (res.data.media_items[0].status === '3') {
         const id = res.data.media_items[0].media_item_id;
         yield put({ type: VIDEO_PROCESSING, id });
         const mediaItems = res.data.media_items;
@@ -207,6 +218,8 @@ export function* createMediaItem(action) {
         yield put({ type: CREATE_MEDIA_ITEM_SUCCESS, mediaItems });
         yield put({ type: PROCESS_ITEM_SUCCESS });
       }
+    } else {
+      yield put({ type: CREATE_MEDIA_ITEM_ERROR });
     }
   }
 }
@@ -245,6 +258,48 @@ export function* getCollections(action) {
   } else {
     yield put({ type: FETCH_MEDIA_ITEMS_ERROR, mediaItems });
   }
+}
+
+export function* fetchWordpressGUIWorker({ payload }) {
+  let data;
+
+  try {
+    const response = yield call(getData, `/connection_api/wordpress_gui/${payload.connectionId}`);
+    if (response.data.status !== 'success') {
+      throw Error('Status Wrong!');
+    }
+    data = response.data;
+  } catch (error) {
+    yield put(fetchWordpressGUIFailure(error));
+  }
+
+  if (data) {
+    yield put(fetchWordpressGUISuccess(data));
+  }
+}
+
+function* createPostWorker({ payload }) {
+  let data;
+
+  try {
+    const response = yield call(postData, '/post_api/post', { payload });
+    if (response.data.result !== 'success') {
+      throw Error('Status Wrong!');
+    }
+    data = response.data;
+  } catch (error) {
+    yield put(createPostFailure(error));
+  }
+
+  if (data) {
+    yield put(createPostSuccess(data.post));
+  }
+}
+
+export function* createPostSaga() {
+  const watcher = yield takeLatest(CREATE_POST_REQUEST, createPostWorker);
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
 }
 
 export function* fetchComments() {
@@ -292,8 +347,8 @@ export function* updateMedia() {
 }
 
 export function* linkData() {
-  const watcher = yield takeLatest(FETCH_URL_CONTENT, getLinkData);
-  
+  const watcher = yield takeEvery(FETCH_URL_CONTENT, getLinkData);
+
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
 }
@@ -312,6 +367,13 @@ export function* collectionData() {
   yield cancel(watcher);
 }
 
+export function* fetchWordpressGUISaga() {
+  const watcher = yield takeLatest(FETCH_WORDPRESS_GUI_REQUEST, fetchWordpressGUIWorker);
+
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
 export default [
   fetchComments,
   postComment,
@@ -323,6 +385,8 @@ export default [
   updateMedia,
   linkData,
   getItem,
+  fetchWordpressGUISaga,
+  createPostSaga,
 ];
 
 const serialize = (obj, prefix) => {

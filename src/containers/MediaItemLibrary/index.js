@@ -161,59 +161,59 @@ class Library extends React.Component {
     const { pathname } = this.props.location;
     browserHistory.push(`${pathname}#blog-editor`);
   }
-  
+
   openLinkEditor(linkItem) {
     if (linkItem) {
-      this.setState({ linkEditorDialog: true, linkItem: linkItem });
+      this.setState({ linkEditorDialog: true, linkItem });
     } else {
       this.setState({ linkEditorDialog: true });
     }
   }
 
   openFileEditor(fileItem) {
-    this.setState({ fileEditorDialog: true, fileItem: fileItem });
+    this.setState({ fileEditorDialog: true, fileItem });
   }
-  
+
   openImageEditor(imageItem) {
-    this.setState({ imageEditorDialog: true, imageItem: imageItem });
+    this.setState({ imageEditorDialog: true, imageItem });
   }
-  
+
   openVideoEditor(videoItem) {
-    this.setState({ videoEditorDialog: true, videoItem: videoItem });
+    this.setState({ videoEditorDialog: true, videoItem });
   }
-  
+
   handleRequestClose() {
     this.setState({
       addMenuOpen: false,
     });
   }
-  
+
   openAddFile() {
     const filepicker = require('filepicker-js');
     filepicker.setKey(this.props.filePickerKey);
-    
-    const filePickerOptions = { 
-        buttonText: 'Upload', 
-        container:'modal', 
-        multiple: false,
-        maxFiles: 1, 
-        imageQuality: 80, 
-        imageMax: [1200, 1200], 
-        services: [ 'CONVERT','COMPUTER', 'WEBCAM', 'VIDEO', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
-        conversions: ['crop', 'filter'],
-    }; 
+
+    const filePickerOptions = {
+      buttonText: 'Upload',
+      container: 'modal',
+      multiple: false,
+      maxFiles: 1,
+      imageQuality: 80,
+      imageMax: [1200, 1200],
+      services: ['CONVERT', 'COMPUTER', 'WEBCAM', 'VIDEO', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
+      conversions: ['crop', 'filter'],
+    };
     const filePickerStoreOptions = {
-        location: 'S3'
+      location: 'S3',
     };
     function onFail(error) {
-        console.log('error: ' + error);
+      console.log(`error: ${error}`);
     }
-    
+
     filepicker.pickAndStore(filePickerOptions, filePickerStoreOptions, this.handleOpenAddFile, onFail);
   }
-  
+
   closeAllDialog() {
-    this.setState({ 
+    this.setState({
       linkDialog: false,
       linkEditorDialog: false,
       videoEditorDialog: false,
@@ -227,97 +227,93 @@ class Library extends React.Component {
     });
     this.props.clearUrlContent();
   }
-  
+
   handleVideoEditorSave(videoItem) {
     this.setState({ videoEditorDialog: false, videoItem: {} });
-    const {action, ...item} = videoItem;
+    const { action, ...item } = videoItem;
     const filepicker = require('filepicker-js');
     filepicker.setKey(this.props.filePickerKey);
-    if(item.picture) {
-      filepicker.storeUrl('https://process.filestackapi.com/' + this.props.filePickerKey + '/' + item.picture, (Blob) => {
+    if (item.picture) {
+      filepicker.storeUrl(`https://process.filestackapi.com/${this.props.filePickerKey}/${item.picture}`, (Blob) => {
         console.log(Blob);
         item.picture = Blob.url;
         item.picture_key = Blob.key;
         filepicker.storeUrl(
-          'https://process.filestackapi.com/' + this.props.filePickerKey + '/resize=width:300,height:300,fit:clip/' + item.picture,
+          `https://process.filestackapi.com/${this.props.filePickerKey}/resize=width:300,height:300,fit:clip/${item.picture}`,
            (Blob) => {
-            item.thumb_key = Blob.key;
-            item.collection_id = this.props.activeCollection.collection_id;
-            item.mediaItemType="link";
-            if (action === 'create') {
-              this.props.createMediaItem(item);
-            } else if (action === 'update') {
-              this.props.updateMediaItem(item);
-            }
-          });
+             item.thumb_key = Blob.key;
+             item.collection_id = this.props.activeCollection.collection_id;
+             item.mediaItemType = 'link';
+             if (action === 'create') {
+               this.props.createMediaItem(item);
+             } else if (action === 'update') {
+               this.props.updateMediaItem(item);
+             }
+           });
       });
-    } else {
-      if (action === 'update') {
-        this.props.updateMediaItem(item);
-      } else if (action === 'create') {
-        this.props.createMediaItem(item);
-      }
+    } else if (action === 'update') {
+      this.props.updateMediaItem(item);
+    } else if (action === 'create') {
+      this.props.createMediaItem(item);
     }
   }
-  
+
   handleFileEditorSave(item) {
     this.setState({ fileEditorDialog: false, fileItem: {} });
-    const {action, ...fileItem} = item;
+    const { action, ...fileItem } = item;
     const filepicker = require('filepicker-js');
     filepicker.setKey(this.props.filePickerKey);
-    if(fileItem.picture) {
-      filepicker.storeUrl('https://process.filestackapi.com/' + this.props.filePickerKey + '/' + fileItem.picture, (Blob) => {
+    if (fileItem.picture) {
+      filepicker.storeUrl(`https://process.filestackapi.com/${this.props.filePickerKey}/${fileItem.picture}`, (Blob) => {
         console.log(Blob);
         fileItem.picture = Blob.url;
         fileItem.picture_key = Blob.key;
         filepicker.storeUrl(
-          'https://process.filestackapi.com/' + this.props.filePickerKey + '/resize=width:300,height:300,fit:clip/' + fileItem.picture,
+          `https://process.filestackapi.com/${this.props.filePickerKey}/resize=width:300,height:300,fit:clip/${fileItem.picture}`,
            (Blob) => {
-            fileItem.thumb_key = Blob.key;
-            fileItem.collection_id = this.props.activeCollection.collection_id;
-            fileItem.mediaItemType="link";
-            if (action === 'create') {
-              this.props.createMediaItem(fileItem);
-            } else if (action === 'update') {
-              this.props.updateMediaItem(fileItem);
-            }
-          });
+             fileItem.thumb_key = Blob.key;
+             fileItem.collection_id = this.props.activeCollection.collection_id;
+             fileItem.mediaItemType = 'link';
+             if (action === 'create') {
+               this.props.createMediaItem(fileItem);
+             } else if (action === 'update') {
+               this.props.updateMediaItem(fileItem);
+             }
+           });
       });
-    } else {
-      if (action === 'update') {
-        this.props.updateMediaItem(fileItem);
-      } else if (action === 'create') {
-        this.props.createMediaItem(fileItem);
-      }
+    } else if (action === 'update') {
+      this.props.updateMediaItem(fileItem);
+    } else if (action === 'create') {
+      this.props.createMediaItem(fileItem);
     }
   }
-  
+
   handleLinkEditorSave(item) {
     this.closeAllDialog();
-    const {action, ...linkItem} = item;
+    const { action, ...linkItem } = item;
     const filepicker = require('filepicker-js');
     filepicker.setKey(this.props.filePickerKey);
-    if(linkItem.picture) {
-      filepicker.storeUrl('https://process.filestackapi.com/' + this.props.filePickerKey + '/' + linkItem.picture, (Blob) => {
+    if (linkItem.picture) {
+      filepicker.storeUrl(`https://process.filestackapi.com/${this.props.filePickerKey}/${linkItem.picture}`, (Blob) => {
         console.log(Blob);
         linkItem.picture = Blob.url;
         linkItem.picture_key = Blob.key;
         filepicker.storeUrl(
-          'https://process.filestackapi.com/' + this.props.filePickerKey + '/resize=width:300,height:300,fit:clip/' + linkItem.picture,
+          `https://process.filestackapi.com/${this.props.filePickerKey}/resize=width:300,height:300,fit:clip/${linkItem.picture}`,
            (Blob) => {
-            linkItem.thumb_key = Blob.key;
-            linkItem.collection_id = this.props.activeCollection.collection_id;
-            console.log(linkItem);
-            linkItem.mediaItemType="link";
-            if (action === 'create') {
-              this.props.createMediaItem(linkItem);
-            } else if (action === 'update') {
-              this.props.updateMediaItem(linkItem);
-            }
-          });
+             linkItem.thumb_key = Blob.key;
+             linkItem.collection_id = this.props.activeCollection.collection_id;
+             console.log(linkItem);
+             linkItem.mediaItemType = 'link';
+             if (action === 'create') {
+               this.props.createMediaItem(linkItem);
+             } else if (action === 'update') {
+               this.props.updateMediaItem(linkItem);
+             }
+           });
       });
     } else {
-      linkItem.mediaItemType="link";
+      linkItem.mediaItemType = 'link';
       if (action === 'create') {
         this.props.createMediaItem(linkItem);
       } else if (action === 'update') {
@@ -325,50 +321,49 @@ class Library extends React.Component {
       }
     }
   }
-  
+
   handleImageEditorSave(imageItem) {
     this.setState({ imageEditorDialog: false, imageItem: {} });
-    const {action, ...rest} = imageItem;
+    const { action, ...rest } = imageItem;
     if (action === 'update') {
       this.props.updateMediaItem(rest);
     } else if (action === 'create') {
       this.props.createMediaItem(rest);
     }
   }
-  
+
   handleAddLinkValue(event) {
-    this.setState({ addLinkValue: event.target.value });    
+    this.setState({ addLinkValue: event.target.value });
   }
-  
+
   handleAddLinkValueFromDialog(link) {
     this.setState({ addLinkValue: link }, () => this.handleAddLinkSubmit());
-  } 
-  
+  }
+
   handleAddLinkSubmit = () => {
     console.log('in handle add link submit');
-    if(this.state.addLinkValue === '') {
+    if (this.state.addLinkValue === '') {
       console.log('no link value, abort');
-      this.setState({ addLinkValueError: 'A link URL is required'});
+      this.setState({ addLinkValueError: 'A link URL is required' });
       return;
     }
     const linkItem = {
       source: this.state.addLinkValue,
     };
-    
+
     this.setState({ addLinkValue: '', linkDialog: false, searchDialog: false, rssFeedDialog: false, linkEditorDialog: true });
-    
+
     this.props.fetchUrlData(this.state.addLinkValue);
   }
-  
+
   handleOpenAddFile(mediaItem) {
     filepicker.setKey(this.props.filePickerKey);
-    
-    if(mediaItem[0].mimetype.match('image')) {
-  
+
+    if (mediaItem[0].mimetype.match('image')) {
       filepicker.storeUrl(
-        'https://process.filestackapi.com/' + this.props.filePickerKey + '/resize=width:300,height:300,fit:clip/' + mediaItem[0].url,
+        `https://process.filestackapi.com/${this.props.filePickerKey}/resize=width:300,height:300,fit:clip/${mediaItem[0].url}`,
         (Blob) => {
-          mediaItem[0]["thumb_key"] = Blob.key;
+          mediaItem[0].thumb_key = Blob.key;
           mediaItem[0].collection_id = this.props.activeCollection.collection_id;
           const imageItem = {
             mediaItemType: 'file',
@@ -378,8 +373,8 @@ class Library extends React.Component {
           };
           console.log(mediaItem);
           this.openImageEditor(imageItem);
-        }); 
-    } else if(mediaItem[0].mimetype.match('video')) {
+        });
+    } else if (mediaItem[0].mimetype.match('video')) {
       mediaItem[0].collection_id = this.props.activeCollection.collection_id;
       const videoItem = {
         mediaItemType: 'file',
@@ -389,28 +384,29 @@ class Library extends React.Component {
       };
       console.log(mediaItem);
       this.openVideoEditor(videoItem);
-    } else  {
+    } else {
       console.log(mediaItem);
       mediaItem[0].collection_id = this.props.activeCollection.collection_id;
       const fileItem = {
         mediaItemType: 'file',
         properties: {
           ...mediaItem[0],
-        }
+        },
       };
       this.openFileEditor(fileItem);
       // this.props.createMediaItem(fileItem);
     }
   }
-  
+
   toggle() {
     this.setState({ addMenuOpen: !this.state.addMenuOpen });
   }
-  
+
   createPostSet = (mediaItem) => {
     const { params: { account_id }, createPostSet } = this.props;
+    console.log(mediaItem);
     const postSet = {
-      account_id: account_id,
+      account_id,
       message: '',
       type: 'text',
       status: '6',
@@ -424,9 +420,9 @@ class Library extends React.Component {
     const { location: { hash } } = this.props;
     const postsetId = hash.startsWith('#postset') ? hash.split('-')[1] : 0;
     const blogEditor = hash.startsWith('#blog-editor');
-    
+
     const actions = [
-      { label: "close", onClick: this.closeAllDialog },
+      { label: 'close', onClick: this.closeAllDialog },
     ];
     const menuOptions = {
       isOpen: this.state.addMenuOpen,
@@ -434,40 +430,41 @@ class Library extends React.Component {
       toggle: <Button label="Add New Item" primary onClick={this.toggle} />,
       align: 'left',
     };
-    
+
     return (
       <Wrapper>
         <SidebarWrapper>
-          <div style={{display: 'block', textAlign: 'center'}}>
-          <DropDownMenu {...menuOptions} >
-            <MenuItem caption="Add File" onClick={this.openAddFile} />
-            <MenuItem caption="Add Link" onClick={this.openAddLink} />
-            <MenuItem caption="Add Blog" onClick={this.openAddBlog} />
-          </DropDownMenu>
+          <div style={{ display: 'block', textAlign: 'center' }}>
+            <DropDownMenu {...menuOptions} >
+              <MenuItem caption="Add File" onClick={this.openAddFile} />
+              <MenuItem caption="Add Link" onClick={this.openAddLink} />
+              <MenuItem caption="Add Blog" onClick={this.openAddBlog} />
+            </DropDownMenu>
           </div>
-          <Menu style={{margin: '0 auto', padding: '0', width: '150px' }} selectable>
-            <ReactRouterMenuItem caption='Media Library' to={`/account/${this.props.params.account_id}/library`} style={{textAlign: 'center'}} style={{color: '#616669', fontWeight: '700', fontSize: '13px !important'}} />
-            <li style={{position: 'relative', listStyle: 'none', height: '40px'}}><span style={{backgroundColor: 'white', position: 'absolute', zIndex: '22', lineHeight: '40px', color: '#616669', paddingRight: '10px', fontSize: '12px'}}>Curate</span><HR /></li>
-            <ReactRouterMenuItem caption='RSS Feeds' activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/RSS`} style={{color: '#616669', fontWeight: '700', fontSize: '9px !important'}} />
-            <ReactRouterMenuItem caption='Search the Web' activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/search`} style={{color: '#616669', fontWeight: '700', fontSize: '13px !important'}} />
-            <li style={{position: 'relative', listStyle: 'none', height: '40px'}}><span style={{backgroundColor: 'white', position: 'absolute', zIndex: '22', lineHeight: '40px', color: '#616669', paddingRight: '10px', fontSize: '12px'}}>Shared Streams</span><HR /></li>
-            <ReactRouterMenuItem caption='Subscriptions' activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/shared_streams/subscriptions`} style={{color: '#616669', fontWeight: '700', fontSize: '13px !important'}}/>
-            <ReactRouterMenuItem caption='Owned' activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/shared_streams/owned`} style={{color: '#616669', fontWeight: '700', fontSize: '13px !important'}}/>
+          <Menu style={{ margin: '0 auto', padding: '0', width: '150px' }} selectable>
+            <ReactRouterMenuItem caption="Media Library" to={`/account/${this.props.params.account_id}/library`} style={{ textAlign: 'center' }} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
+            <li style={{ position: 'relative', listStyle: 'none', height: '40px' }}><span style={{ backgroundColor: 'white', position: 'absolute', zIndex: '22', lineHeight: '40px', color: '#616669', paddingRight: '10px', fontSize: '12px' }}>Curate</span><HR /></li>
+            <ReactRouterMenuItem caption="RSS Feeds" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/RSS`} style={{ color: '#616669', fontWeight: '700', fontSize: '9px !important' }} />
+            <ReactRouterMenuItem caption="Search the Web" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/search`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
+            <li style={{ position: 'relative', listStyle: 'none', height: '40px' }}><span style={{ backgroundColor: 'white', position: 'absolute', zIndex: '22', lineHeight: '40px', color: '#616669', paddingRight: '10px', fontSize: '12px' }}>Shared Streams</span><HR /></li>
+            <ReactRouterMenuItem caption="Subscriptions" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/shared_streams/subscriptions`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
+            <ReactRouterMenuItem caption="Owned" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/shared_streams/owned`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
             <NormalHR />
-            <ReactRouterMenuItem caption='Outsource Your Content' activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/outsource`} style={{color: '#616669', fontWeight: '700', fontSize: '13px !important'}}/>
+            <ReactRouterMenuItem caption="Outsource Your Content" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/outsource`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
           </Menu>
         </SidebarWrapper>
         <ContentWrapper>
-        {React.cloneElement(this.props.children, { ...this.props, createPostSet: this.createPostSet, openImageEditor:this.openImageEditor, openLinkEditor:this.openLinkEditor, openVideoEditor: this.openVideoEditor, openFileEditor: this.openFileEditor, handleAddLinkValueFromDialog: this.handleAddLinkValueFromDialog })}
+          {React.cloneElement(this.props.children, { ...this.props, createPostSet: this.createPostSet, openImageEditor: this.openImageEditor, openLinkEditor: this.openLinkEditor, openVideoEditor: this.openVideoEditor, openFileEditor: this.openFileEditor, handleAddLinkValueFromDialog: this.handleAddLinkValueFromDialog })}
         </ContentWrapper>
         <LinkEditor actions={actions} closeAllDialog={this.closeAllDialog} handleLinkEditorSave={this.handleLinkEditorSave.bind(this)} linkEditorDialog={this.state.linkEditorDialog} urlContent={this.props.urlContent} filePickerKey={this.props.filePickerKey} linkItem={this.state.linkItem} />
         <ImageEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleImageEditorSave.bind(this)} isOpen={this.state.imageEditorDialog} filePickerKey={this.props.filePickerKey} imageItem={this.state.imageItem} />
         <LinkDialog actions={actions} closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue.bind(this)} handleSubmit={this.handleAddLinkSubmit} value={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
         <VideoEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleVideoEditorSave.bind(this)} isOpen={this.state.videoEditorDialog} filePickerKey={this.props.filePickerKey} videoItem={this.state.videoItem} />
         <FileEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave.bind(this)} isOpen={this.state.fileEditorDialog} filePickerKey={this.props.filePickerKey} fileItem={this.state.fileItem} />
-         <div className="post-editor">
+        <div className="post-editor">
           { postsetId ? <PostEditor id={postsetId} accountId={this.props.params.account_id} location={this.props.location} /> : null}
           { blogEditor ? <BlogEditor /> : null }
+          { postsetId ? <PostEditor id={postsetId} accountId={this.props.params.account_id} /> : null}
         </div>
       </Wrapper>
     );
