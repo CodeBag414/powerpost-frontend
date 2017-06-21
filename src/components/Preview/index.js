@@ -91,7 +91,7 @@ const Preview = ({ item }) => {
       {type === 'video' &&
         <div>
           <LinkTitle style={{ marginBottom: '10px' }}>{item.properties.filename}</LinkTitle>
-          {item.status === '3' && !item.properties.source_720_url ? (<p>Video is still encoding</p>) : (
+          {item.status === '3' ? (<p>Processing video...</p>) : (
             <VideoPlayer
               style={{ margin: '0 auto' }}
               width={'initial'}
