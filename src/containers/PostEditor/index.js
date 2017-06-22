@@ -127,10 +127,13 @@ class PostEditor extends Component {
   }
 
   onDeletePostSet = () => {
-    const { postSet, deletePostSet, goBack } = this.props;
+    const { postSet, deletePostSet, goBack, location } = this.props;
     const id = postSet.getIn(['details', 'post_set_id']);
     deletePostSet(id);
-    goBack();
+
+    if (location && !location.pathname.endsWith('/posts')) {
+      goBack();
+    }
   }
 
   initialize = (props = this.props) => {
