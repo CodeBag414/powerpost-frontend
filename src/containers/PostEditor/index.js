@@ -8,6 +8,7 @@ import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { routerActions } from 'react-router-redux';
 import { UserCanPostEdit } from 'config.routes/UserRoutePermissions';
+import { withRouter } from 'react-router';
 
 import {
   deletePostSetRequest,
@@ -342,4 +343,4 @@ const mapStateToProps = createStructuredSelector({
   newMediaItem: selectNewMediaItem(),
 });
 
-export default UserCanPostEdit(connect(mapStateToProps, mapDispatchToProps)(PostEditor));
+export default UserCanPostEdit(withRouter(connect(mapStateToProps, mapDispatchToProps)(PostEditor)));
