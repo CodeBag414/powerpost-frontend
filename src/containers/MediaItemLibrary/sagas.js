@@ -4,15 +4,15 @@ import { LOCATION_CHANGE, push } from 'react-router-redux';
 import { find } from 'lodash';
 import { toastr } from 'lib/react-redux-toastr';
 
-import { 
+import {
   getData,
   postData,
   putData,
 } from 'utils/request';
 
 import {
-  selectLocation,
-} from 'containers/App/selectors';
+  createPostSetRequest,
+} from 'containers/App/actions';
 
 import {
   makeSelectCurrentAccount,
@@ -174,24 +174,37 @@ export function* createRSSFeed(action) {
 }
 
 export function* updateMediaItem(action) {
- const { mediaItemType, ...item } = action.mediaItem;
- const data = {
-   payload: item,
- };
- 
- const results = yield call(putData, `/media_api/media_item/${item.media_item_id}`, data);
- if (results.data.result === 'success') {
-   const mediaItems = results.data.media_items;
-   yield put({ type: UPDATE_MEDIA_ITEM_SUCCESS, mediaItems });
- }
+  const { mediaItemType, create, ...item } = action.mediaItem;
+  const accountId = mediaItem.account_id;
+  const data = {
+    payload: item,
+  };
+
+  const results = yield call(putData, `/media_api/media_item/${item.media_item_id}`, data);
+  if (results.data.result === 'success') {
+    const mediaItems = results.data.media_items;
+    yield put({ type: UPDATE_MEDIA_ITEM_SUCCESS, mediaItems });
+    if (create) {
+      const postSet = {
+        account_id: mediaItems[0].account_id,
+        message: '',
+        type: 'text',
+        status: '6',
+        title: '',
+        media_item_ids: [mediaItems[0].media_item_id],
+      };
+      yield put(createPostSetRequest(postSet));
+    }
+  }
 }
 
 export function* createMediaItem(action) {
-  const { mediaItemType, ...item } = action.mediaItem;
-  
+  const { mediaItemType, create, ...item } = action.mediaItem;
+  console.log('in createmediaitem');
+  console.log(item);
   let url = '';
   let data = {};
-  
+
   if (mediaItemType === 'link') {
     url = '/media_api/link';
     data = {
@@ -201,21 +214,36 @@ export function* createMediaItem(action) {
     url = '/media_api/files';
     data = {
       payload: {
-        media_items:[{...item.properties}],
-      }
+        media_items: [{ ...item.properties }],
+      },
     };
   }
-  
+
   if (url !== '') {
     const res = yield call(postData, url, data);
+    console.log(res);
     if (res.data.result === 'success') {
-      if(res.data.media_items[0].status === '3') {
-        let id = res.data.media_items[0].media_item_id;
-        yield put({ type: VIDEO_PROCESSING, id });
-      } else {
+      //if (res.data.media_items[0].status === '3') {
+      //  const id = res.data.media_items[0].media_item_id;
+      //  yield put({ type: VIDEO_PROCESSING, id });
+      //} else {
         const mediaItems = res.data.media_items;
         yield put({ type: CREATE_MEDIA_ITEM_SUCCESS, mediaItems });
-      }
+        console.log(res);
+        console.log(create);
+        if (create) {
+          console.log('in create');
+          const postSet = {
+            account_id: mediaItems[0].account_id,
+            message: '',
+            type: 'text',
+            status: '6',
+            title: '',
+            media_item_ids: [mediaItems[0].media_item_id],
+          };
+          yield put(createPostSetRequest(postSet));
+        }
+      //}
     }
   }
 }

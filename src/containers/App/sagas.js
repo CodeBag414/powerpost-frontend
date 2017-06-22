@@ -788,8 +788,9 @@ function* createPostSetWorker({ postSet, edit }) {
       ...postSet,
     },
   };
-
+  console.log('in create post set worker');
   const response = yield call(postData, requestUrl, requestData);
+  console.log(response);
   if (response.data.status === 'success') {
     yield put(createPostSetSuccess(response.data.post_set, edit));
   } else {
@@ -798,6 +799,7 @@ function* createPostSetWorker({ postSet, edit }) {
 }
 
 export function* createPostSetSaga() {
+  console.log('initiate create post set saga');
   yield takeLatest(CREATE_POST_SET_REQUEST, createPostSetWorker);
 }
 

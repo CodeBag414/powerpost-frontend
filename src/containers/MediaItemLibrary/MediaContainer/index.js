@@ -23,7 +23,7 @@ const mapStateToProps = createStructuredSelector({
 class VisibleMediaContainer extends Component {
   render() {
     return (
-      <Wrapper className='row'>
+      <Wrapper className="row">
         { !this.props.visibleMediaItems && <span>You don't have any media items yet.</span> }
         { this.props.processingItem && <ProcessingItem />}
         { this.props.visibleMediaItems && this.props.visibleMediaItems.map((item, i) => <MediaItem key={i} mediaItem={item} query={this.props.query} createPostSet={this.props.createPostSet} onDelete={this.props.onConfirmDelete} openPreview={this.props.openPreview} openEditor={this.props.openEditor} />)}
