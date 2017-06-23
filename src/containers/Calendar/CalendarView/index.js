@@ -86,11 +86,11 @@ class CalendarView extends React.Component {
       background: bgColor,
       border: `1px solid ${borderColor}`,
       color: fgColor,
+      opacity: (postSet.statusPending ? 0.5 : 1),
+      pointerEvents: (postSet.statusPending ? 'none' : 'auto'),
     };
 
-    return {
-      style,
-    };
+    return { style };
   }
 
   eventSelected = (event, e) => {

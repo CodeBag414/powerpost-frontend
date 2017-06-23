@@ -32,6 +32,7 @@ import {
   FETCH_POST_SETS_BY_ST_REQUEST,
   FETCH_POST_SETS_BY_ST_SUCCESS,
   FETCH_POST_SETS_BY_ST_FAILURE,
+  SET_POST_SETS_BY_ST,
   FETCH_GROUP_USERS,
   FETCH_GROUP_USERS_SUCCESS,
   FETCH_GROUP_USERS_ERROR,
@@ -219,6 +220,8 @@ function globalReducer(state = initialState, action) {
         error: action.error,
         data: null,
       }));
+    case SET_POST_SETS_BY_ST:
+      return state.set('postSetsByST', action.postSetsByST);
     case FETCH_GROUP_USERS:
       return state
         .set('groupUsers', {

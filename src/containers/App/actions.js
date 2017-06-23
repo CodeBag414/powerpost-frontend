@@ -48,6 +48,7 @@ import {
   FETCH_POST_SETS_BY_ST_REQUEST,
   FETCH_POST_SETS_BY_ST_SUCCESS,
   FETCH_POST_SETS_BY_ST_FAILURE,
+  SET_POST_SETS_BY_ST,
   UPDATE_POST_SET_REQUEST,
   UPDATE_POST_SET_SUCCESS,
   UPDATE_POST_SET_ERROR,
@@ -455,6 +456,10 @@ export function fetchPostSetsBySTRequest(accountId) {
 
 export function fetchPostSetsBySTSuccess(postSets) {
   return { type: FETCH_POST_SETS_BY_ST_SUCCESS, postSets };
+}
+
+export function setPostSetsByST(postSetsByST) {
+  return { type: SET_POST_SETS_BY_ST, postSetsByST };
 }
 
 export function fetchPostSetsBySTFailure(error) {
