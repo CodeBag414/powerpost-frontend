@@ -136,7 +136,7 @@ export class WordpressSettings extends Component {
       createPost({
         post_set_id: postSet.getIn(['details', 'post_set_id']),
         connection_id: option.value,
-        status: 2,
+        status: 1,
         schedule_time: new Date().getTime() / 1000,
         message: postSet.getIn(['details', 'message']),
       });
