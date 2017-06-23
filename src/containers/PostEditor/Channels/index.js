@@ -9,6 +9,8 @@ import {
   makeSelectConnections,
 } from 'containers/App/selectors';
 
+import { selectNewMediaItem } from 'containers/PostEditor/selectors';
+
 import NoContent from './NoContent';
 import ChannelSlots from './ChannelSlots';
 import AddChannelSlotDialog from './AddChannelSlotDialog';
@@ -18,9 +20,10 @@ import PostDetails from './PostDetails';
 class Channels extends Component {
 
   static propTypes = {
+    connections: PropTypes.array,
     postSet: ImmutablePropTypes.map,
     posts: PropTypes.array,
-    connections: PropTypes.array,
+    newMediaItem: ImmutablePropTypes.map,
     updatePost: PropTypes.func,
   };
 
@@ -95,7 +98,7 @@ class Channels extends Component {
   }
 
   render() {
-    const { postSet, connections, posts } = this.props;
+    const { postSet, connections, posts, newMediaItem } = this.props;
     const { isDialogShown, currentPost, postMessage, postTime } = this.state;
     const hasContent = posts && Object.keys(posts).length && connections;
     const connection = connections && connections.filter((item) =>
@@ -143,6 +146,7 @@ class Channels extends Component {
               handleMessageBlur={this.handleMessageBlur}
               handleRemoveSlot={this.handleRemoveSlot}
               handleDateChange={this.handleDateChange}
+              newMediaItem={newMediaItem.toJS()}
             />
           </div>
         :
@@ -165,6 +169,7 @@ function mapDispatchToProps() {
 
 const mapStateToProps = createStructuredSelector({
   connections: makeSelectConnections(),
+  newMediaItem: selectNewMediaItem(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Channels);
