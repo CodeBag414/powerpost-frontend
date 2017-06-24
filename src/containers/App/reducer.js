@@ -33,6 +33,9 @@ import {
   FETCH_POST_SETS_BY_ST_SUCCESS,
   FETCH_POST_SETS_BY_ST_FAILURE,
   SET_POST_SETS_BY_ST,
+  FETCH_POST_SETS_BY_SO_REQUEST,
+  FETCH_POST_SETS_BY_SO_SUCCESS,
+  FETCH_POST_SETS_BY_SO_FAILURE,
   FETCH_GROUP_USERS,
   FETCH_GROUP_USERS_SUCCESS,
   FETCH_GROUP_USERS_ERROR,
@@ -56,6 +59,7 @@ import {
   CREATE_POST_SET_SUCCESS,
   FETCH_MEDIA_ITEMS_SUCCESS,
   FETCH_MEDIA_ITEMS_ERROR,
+  CHANGE_POST_SET_SORT_ORDER_SUCCESS,
 } from './constants';
 
 // The initial application state
@@ -78,6 +82,11 @@ const initialState = fromJS({
   inviteEmailToGroup: {},
   postSets: [],
   postSetsByST: {
+    requesting: true, // As soon as calendar view mounts, it starts loading. Maybe change later..
+    error: null,
+    data: null,
+  },
+  postSetsBySO: {
     requesting: true, // As soon as calendar view mounts, it starts loading. Maybe change later..
     error: null,
     data: null,
@@ -222,6 +231,20 @@ function globalReducer(state = initialState, action) {
       }));
     case SET_POST_SETS_BY_ST:
       return state.set('postSetsByST', action.postSetsByST);
+    case FETCH_POST_SETS_BY_SO_REQUEST:
+      return state.setIn(['postSetsBySO', 'requesting'], true);
+    case FETCH_POST_SETS_BY_SO_SUCCESS:
+      return state.set('postSetsBySO', fromJS({
+        requesting: false,
+        error: null,
+        data: action.postSets,
+      }));
+    case FETCH_POST_SETS_BY_SO_FAILURE:
+      return state.set('postSetsBySO', fromJS({
+        requesting: false,
+        error: action.error,
+        data: null,
+      }));
     case FETCH_GROUP_USERS:
       return state
         .set('groupUsers', {
@@ -315,13 +338,19 @@ function globalReducer(state = initialState, action) {
           ['postSetsByST', 'data', 'post_when_ready_post_sets'],
           (postSets) => postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
         )
-        .updateIn(['postSets'], (postSets) => postSets.filter((postSet) => postSet.get('post_set_id') !== action.id));
+        .updateIn(['postSets'], (postSets) => postSets.filter((postSet) => postSet.get('post_set_id') !== action.id))
+        .updateIn(['postSetsBySO', 'data', 'post_sets'], (postSets) => postSets.filter((postSet) => postSet.get('post_set_id') !== action.id));
     }
     case CHANGE_POST_SET_STATUS:
       return state
-        .updateIn(['postSets'], (postSets) => postSets.map((postSet) =>
+        .updateIn(['postSetsBySO', 'data', 'post_sets'], (postSets = fromJS([])) => postSets.map((postSet) =>
           postSet.get('post_set_id') !== action.id ? postSet : postSet.set('status', action.status)
         ));
+    case CHANGE_POST_SET_SORT_ORDER_SUCCESS:
+      return state
+        .updateIn(['postSetsBySO', 'data', 'post_sets'], (postSets = fromJS([])) => postSets.map((postSet) =>
+          postSet.get('post_set_id') !== action.id ? postSet : postSet.set('sort_order', action.sort_order)
+        ).sort((a, b) => b.get('sort_order') - a.get('sort_order')));
     case FETCH_POSTS:
       return state.set('posts', []);
     case SET_POSTS:

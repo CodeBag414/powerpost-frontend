@@ -44,6 +44,8 @@ import {
   DELETE_POST_SET_SUCCESS,
   CHANGE_POST_SET_REQUEST,
   CHANGE_POST_SET_STATUS,
+  CHANGE_POST_SET_SORT_ORDER_REQUEST,
+  CHANGE_POST_SET_SORT_ORDER_SUCCESS,
   FETCH_POST_SET_REQUEST,
   UPDATE_POST_SET_REQUEST,
   FETCH_POSTS,
@@ -52,6 +54,7 @@ import {
   FETCH_CONNECTIONS,
   CREATE_POST_SET_REQUEST,
   FETCH_POST_SETS_BY_ST_REQUEST,
+  FETCH_POST_SETS_BY_SO_REQUEST,
   FETCH_MEDIA_ITEMS_REQUEST,
 } from './constants';
 
@@ -82,6 +85,8 @@ import {
   fetchPostSetsBySTRequest,
   fetchPostSetsBySTSuccess,
   fetchPostSetsBySTFailure,
+  fetchPostSetsBySOSuccess,
+  fetchPostSetsBySOFailure,
   updatePostSetSuccess,
   updatePostSetError,
   getPostSets,
@@ -586,6 +591,30 @@ function* fetchPostSetsBySTRequestWorker(payload) {
   }
 }
 
+function* fetchPostSetsBySORequestWorker(payload) {
+  const data = {
+    payload: {
+      sort_by: 'sort_order',
+      sort_order: 'DESC',
+      limit: 500,
+    },
+  };
+  const params = serialize(data);
+  const currentAccount = yield select(makeSelectCurrentAccount());
+  let id = currentAccount.account_id;
+  if (payload.accountId) {
+    id = payload.accountId;
+  }
+  const requestUrl = `/post_api/post_sets/${id}?${params}`;
+
+  const response = yield call(getData, requestUrl);
+  if (response.data.status === 'success') {
+    yield put(fetchPostSetsBySOSuccess(response.data));
+  } else {
+    yield put(fetchPostSetsBySOFailure(response.statusText));
+  }
+}
+
 export function* deletePostSetRequest(payload) {
   const requestData = {
     payload: {
@@ -616,6 +645,25 @@ export function* changePostSetRequest(payload) {
     const { data } = response;
     if (data.status === 'success') {
       yield put({ type: CHANGE_POST_SET_STATUS, id: payload.id, status: payload.status });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function* changePostSetSortOrderRequest(payload) {
+  const requestUrl = `/post_api/sort_order_after/${payload.id}/${payload.afterId}?`;
+  const requestData = {
+    payload: {
+      post_set_id: payload.id,
+      sort_order_after_id: payload.afterId,
+    },
+  };
+  try {
+    const response = yield call(putData, requestUrl, requestData);
+    const { data } = response;
+    if (data.status === 'success') {
+      yield put({ type: CHANGE_POST_SET_SORT_ORDER_SUCCESS, id: payload.id, sort_order: data.post_set.sort_order });
     }
   } catch (error) {
     console.log(error);
@@ -664,12 +712,20 @@ export function* fetchPostSetsBySTRequestSaga() {
   yield takeLatest(FETCH_POST_SETS_BY_ST_REQUEST, fetchPostSetsBySTRequestWorker);
 }
 
+export function* fetchPostSetsBySORequestSaga() {
+  yield takeLatest(FETCH_POST_SETS_BY_SO_REQUEST, fetchPostSetsBySORequestWorker);
+}
+
 export function* deletePostSet() {
   yield takeLatest(DELETE_POST_SET_REQUEST, deletePostSetRequest);
 }
 
 export function* changePostSetStatus() {
   yield takeLatest(CHANGE_POST_SET_REQUEST, changePostSetRequest);
+}
+
+export function* changePostSetSortOrderSaga() {
+  yield takeLatest(CHANGE_POST_SET_SORT_ORDER_REQUEST, changePostSetSortOrderRequest);
 }
 
 export function* fetchPostSetSaga() {
@@ -855,11 +911,13 @@ export default [
   updatePostSetSaga,
   fetchPostsSaga,
   fetchPostSetsBySTRequestSaga,
+  fetchPostSetsBySORequestSaga,
   updatePostSaga,
   updateBunchPostSaga,
   fetchConnectionsSaga,
   createPostSetSaga,
   fetchMediaItemsSaga,
+  changePostSetSortOrderSaga,
 ];
 
 // Little helper function to abstract going to different pages

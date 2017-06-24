@@ -11,7 +11,7 @@ import { Droppable } from 'react-drag-and-drop';
 import PostSet from '../PostSet';
 import styles from './styles.scss';
 
-const PostSetsGroup = ({ status, postSets, statusColor, deletePostSet, onDragEnter, onDrop, dragHover }) =>
+const PostSetsGroup = ({ status, postSets, statusColor, deletePostSet, onDragStart, onDragEnter, onPostDragEnter, onDrop, dragHover, postStatusId }) =>
   <Droppable types={['post_set']} onDrop={onDrop} onDragEnter={onDragEnter} className={styles.postSets}>
     <div className={styles.heading}>
       <span className={styles.status}>{status}</span>
@@ -19,8 +19,12 @@ const PostSetsGroup = ({ status, postSets, statusColor, deletePostSet, onDragEnt
     </div>
     {
       postSets.map((postSet) =>
-        <div key={postSet.get('post_set_id')} className={styles.postSet}>
-          <PostSet postSet={postSet} onDeletePostSet={() => deletePostSet(postSet.get('post_set_id'))} />
+        <div
+          key={postSet.get('post_set_id')}
+          className={`${styles.postSet} ${postStatusId === postSet.get('post_set_id') && dragHover ? styles.borderBottom : ''}`}
+          onDragEnter={() => onPostDragEnter(postSet.get('post_set_id'))}
+        >
+          <PostSet postSet={postSet} onDragStart={() => onDragStart(postSet)} onDeletePostSet={() => deletePostSet(postSet.get('post_set_id'))} />
         </div>
       )
     }
@@ -29,6 +33,8 @@ const PostSetsGroup = ({ status, postSets, statusColor, deletePostSet, onDragEnt
 
 PostSetsGroup.propTypes = {
   status: PropTypes.string.isRequired,
+  postStatusId: PropTypes.string.isRequired,
+  onDragStart: PropTypes.func.isRequired,
   postSets: ImmutablePropTypes.listOf(
     ImmutablePropTypes.contains({
 
@@ -37,6 +43,7 @@ PostSetsGroup.propTypes = {
   statusColor: PropTypes.string.isRequired,
   deletePostSet: PropTypes.func.isRequired,
   onDragEnter: PropTypes.func.isRequired,
+  onPostDragEnter: PropTypes.func.isRequired,
   onDrop: PropTypes.func.isRequired,
   dragHover: PropTypes.bool.isRequired,
 };

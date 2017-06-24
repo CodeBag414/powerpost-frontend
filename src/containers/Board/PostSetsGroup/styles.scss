@@ -22,6 +22,22 @@
 
 .postSet {
   margin-bottom: 8px;
+  position: relative;
+  .overlay {
+    content: ' ';
+    position: absolute;
+    pointer-events: none;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0, 255, 0, 0.1);
+    opacity: 0;
+    &.active {
+      opacity: 0.3;
+      border: 1px dashed black;
+    }
+  }
 }
 
 .heading {
@@ -46,4 +62,8 @@
   display: inline-block;
   margin-left: 16px;
   vertical-align: middle;
+}
+
+.borderBottom {
+  border-bottom: 2px solid rgba(0, 0, 0, 0.5);
 }
