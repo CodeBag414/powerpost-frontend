@@ -41,7 +41,7 @@ class Board extends React.Component {
   onPostDragEnter = (postStatusId) => {
     if (this.state.postStatusId === postStatusId) return;
     const { dragPostSet, moveStatus } = this.state;
-    if (dragPostSet.get('status') === moveStatus) {
+    if (parseInt(dragPostSet.get('status'), 10) === parseInt(moveStatus, 10)) {
       this.setState({ postStatusId });
     } else {
       this.setState({ postStatusId: null });
@@ -51,7 +51,7 @@ class Board extends React.Component {
   onDrop = (status) => {
     const { dragPostSet } = this.state;
     const id = dragPostSet.get('post_set_id');
-    if (dragPostSet && (dragPostSet.get('status') !== status)) {
+    if (dragPostSet && (parseInt(dragPostSet.get('status'), 10) !== parseInt(status, 10))) {
       this.props.changePostSetStatusRequest(id, status);
     } else if (id !== this.state.postStatusId) {
       this.props.changePostSetSortOrder(id, this.state.postStatusId);

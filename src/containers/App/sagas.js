@@ -45,6 +45,7 @@ import {
   CHANGE_POST_SET_REQUEST,
   CHANGE_POST_SET_STATUS,
   CHANGE_POST_SET_SORT_ORDER_REQUEST,
+  CHANGE_POST_SET_SORT_ORDER_SUCCESS,
   FETCH_POST_SET_REQUEST,
   UPDATE_POST_SET_REQUEST,
   FETCH_POSTS,
@@ -95,7 +96,6 @@ import {
   createPostSetSuccess,
   fetchMediaItemsSuccess,
   fetchMediaItemsFailure,
-  fetchPostSetsBySORequest,
 } from './actions';
 
 /**
@@ -652,7 +652,6 @@ export function* changePostSetRequest(payload) {
 }
 
 export function* changePostSetSortOrderRequest(payload) {
-  console.log(payload);
   const requestUrl = `/post_api/sort_order_after/${payload.id}/${payload.afterId}?`;
   const requestData = {
     payload: {
@@ -664,7 +663,7 @@ export function* changePostSetSortOrderRequest(payload) {
     const response = yield call(putData, requestUrl, requestData);
     const { data } = response;
     if (data.status === 'success') {
-      yield put(fetchPostSetsBySORequest());
+      yield put({ type: CHANGE_POST_SET_SORT_ORDER_SUCCESS, id: payload.id, sort_order: data.post_set.sort_order });
     }
   } catch (error) {
     console.log(error);
