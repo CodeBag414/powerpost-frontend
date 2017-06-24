@@ -48,6 +48,7 @@ import {
   CREATE_POST_REQUEST,
   CREATE_POST_SUCCESS,
   CREATE_POST_FAILURE,
+  SET_WORDPRESS_POST_REQUEST,
   CLEAR_MEDIA_ITEM,
 } from './constants';
 
@@ -262,6 +263,8 @@ function boardReducer(state = initialState, action) {
       return state
         .setIn(['post', 'processing'], false)
         .setIn(['post', 'error'], fromJS(action.payload));
+    case SET_WORDPRESS_POST_REQUEST:
+      return state.setIn(['post', 'data'], action.payload);
     default: return state;
   }
 }

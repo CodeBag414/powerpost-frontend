@@ -4,6 +4,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import SmoothCollapse from 'react-smooth-collapse';
 import moment from 'moment';
 import filepicker from 'filepicker-js';
+import { find } from 'lodash';
 
 import Heading from 'components/Heading';
 import MultiLineInput from 'components/MultiLineInput';
@@ -40,10 +41,38 @@ export class WordpressSettings extends Component {
     fetchWordpressGUI: PropTypes.func,
     createMediaItem: PropTypes.func,
     clearMediaItem: PropTypes.func,
+    setWordpressPost: PropTypes.func,
   };
 
   constructor(props) {
     super(props);
+
+    const wordpressPost = props.postSet.getIn(['details', 'posts']).find((post) => {
+      if (post.get('status') === '0') return false;
+      if (post.get('connection_channel') === 'wordpress') return true;
+      return false;
+    });
+    let currentState = {};
+    if (wordpressPost && !wordpressPost.isEmpty()) {
+      props.setWordpressPost(wordpressPost);
+      props.fetchWordpressGUI({
+        connectionId: wordpressPost.get('connection_id'),
+      });
+      const properties = wordpressPost.get('properties').toJS();
+      currentState = {
+        ...properties,
+        destination: {
+          value: wordpressPost.get('connection_id'),
+          label: wordpressPost.get('connection_display_name'),
+        },
+        author: properties.author_id ? {
+          value: properties.author_id,
+        } : {},
+        scheduleTime: wordpressPost.get('schedule_time'),
+        allowComments: properties.allow_comments === '1',
+        isExpanded: true,
+      };
+    }
 
     this.state = {
       title: props.postSet.getIn(['details', 'title']),
@@ -60,9 +89,10 @@ export class WordpressSettings extends Component {
       authorOptions: [],
       featuredImageUrl: '',
       featuredImageId: '',
-      isExpanded: true,
+      isExpanded: false,
       imageEditor: false,
       mediaItem: {},
+      ...currentState,
     };
   }
 
@@ -70,7 +100,20 @@ export class WordpressSettings extends Component {
     if (this.props.wordpressGUI.get('isFetching') && !nextProps.wordpressGUI.get('isFetching')) {
       if (!nextProps.wordpressGUI.get('error')) {
         const { wordpressGUI } = nextProps;
+        const authorOptions = wordpressGUI
+          .getIn(['data', 'authors'])
+          .map((a) => ({
+            value: a.get('user_id'),
+            label: a.get('display_name'),
+          }))
+          .toJS();
 
+        if (this.state.author && this.state.author.value) {
+          const author = find(authorOptions, { value: this.state.author.value });
+          this.setState({
+            author,
+          });
+        }
         this.setState({
           categorySuggestions: wordpressGUI
             .getIn(['data', 'categories'])
@@ -80,13 +123,7 @@ export class WordpressSettings extends Component {
             .getIn(['data', 'terms'])
             .map((t) => t.get('slug'))
             .toJS(),
-          authorOptions: wordpressGUI
-            .getIn(['data', 'authors'])
-            .map((a) => ({
-              value: a.get('user_id'),
-              label: a.get('display_name'),
-            }))
-            .toJS(),
+          authorOptions,
         });
       }
     }
