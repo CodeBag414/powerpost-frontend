@@ -42,37 +42,11 @@ export class WordpressSettings extends Component {
     createMediaItem: PropTypes.func,
     clearMediaItem: PropTypes.func,
     setWordpressPost: PropTypes.func,
+    getMediaItem: PropTypes.func,
   };
 
   constructor(props) {
     super(props);
-
-    const wordpressPost = props.postSet.getIn(['details', 'posts']).find((post) => {
-      if (post.get('status') === '0') return false;
-      if (post.get('connection_channel') === 'wordpress') return true;
-      return false;
-    });
-    let currentState = {};
-    if (wordpressPost && !wordpressPost.isEmpty()) {
-      props.setWordpressPost(wordpressPost);
-      props.fetchWordpressGUI({
-        connectionId: wordpressPost.get('connection_id'),
-      });
-      const properties = wordpressPost.get('properties').toJS();
-      currentState = {
-        ...properties,
-        destination: {
-          value: wordpressPost.get('connection_id'),
-          label: wordpressPost.get('connection_display_name'),
-        },
-        author: properties.author_id ? {
-          value: properties.author_id,
-        } : {},
-        scheduleTime: wordpressPost.get('schedule_time'),
-        allowComments: properties.allow_comments === '1',
-        isExpanded: true,
-      };
-    }
 
     this.state = {
       title: props.postSet.getIn(['details', 'title']),
@@ -92,8 +66,40 @@ export class WordpressSettings extends Component {
       isExpanded: false,
       imageEditor: false,
       mediaItem: {},
-      ...currentState,
     };
+  }
+
+  componentWillMount() {
+    const wordpressPost = this.props.postSet.getIn(['details', 'posts']).find((post) => {
+      if (post.get('status') === '0') return false;
+      if (post.get('connection_channel') === 'wordpress') return true;
+      return false;
+    });
+
+    if (wordpressPost && !wordpressPost.isEmpty()) {
+      this.props.setWordpressPost(wordpressPost);
+      this.props.fetchWordpressGUI({
+        connectionId: wordpressPost.get('connection_id'),
+      });
+      const properties = wordpressPost.get('properties').toJS();
+      if (properties.featured_image_id) {
+        this.props.getMediaItem(properties.featured_image_id);
+      }
+
+      this.setState({
+        ...properties,
+        destination: {
+          value: wordpressPost.get('connection_id'),
+          label: wordpressPost.get('connection_display_name'),
+        },
+        author: properties.author_id ? {
+          value: properties.author_id,
+        } : {},
+        scheduleTime: wordpressPost.get('schedule_time'),
+        allowComments: properties.allow_comments === '1',
+        isExpanded: true,
+      });
+    }
   }
 
   componentWillReceiveProps(nextProps) {

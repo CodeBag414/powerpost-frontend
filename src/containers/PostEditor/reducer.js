@@ -50,6 +50,7 @@ import {
   CREATE_POST_FAILURE,
   SET_WORDPRESS_POST_REQUEST,
   CLEAR_MEDIA_ITEM,
+  GET_MEDIA_ITEM_SUCCESS,
 } from './constants';
 
 const initialState = fromJS({
@@ -199,6 +200,8 @@ function boardReducer(state = initialState, action) {
     case CLEAR_MEDIA_ITEM:
       return state
         .set('newMediaItem', fromJS({}));
+    case GET_MEDIA_ITEM_SUCCESS:
+      return state.set('newMediaItem', fromJS(action.mediaItem[0]));
     case REMOVE_MEDIA_ITEM:
       return state
         .updateIn(['postSet', 'details'], (postSetDetails) => postSetDetails.set('post_type', 'text'))

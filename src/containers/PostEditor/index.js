@@ -36,6 +36,7 @@ import {
   createMediaItem,
   clearMediaItem,
   setWordpressPostRequest,
+  getMediaItem,
 } from 'containers/PostEditor/actions';
 
 import {
@@ -90,6 +91,7 @@ class PostEditor extends Component {
     postSet: ImmutablePropTypes.map,
     updatePost: PropTypes.func,
     updatePostSet: PropTypes.func,
+    getMediaItem: PropTypes.func,
     user: PropTypes.shape(),
     userAccount: PropTypes.object,
     wordpressGUI: ImmutablePropTypes.map,
@@ -296,6 +298,7 @@ class PostEditor extends Component {
                 createMediaItem={this.props.createMediaItem}
                 clearMediaItem={this.props.clearMediaItem}
                 setWordpressPost={this.props.setWordpressPost}
+                getMediaItem={this.props.getMediaItem}
               />
               <ChannelsPreview
                 connections={connections}
@@ -335,6 +338,7 @@ export function mapDispatchToProps(dispatch) {
     createMediaItem: (mediaItem) => dispatch(createMediaItem(mediaItem)),
     clearMediaItem: () => dispatch(clearMediaItem()),
     setWordpressPost: (payload) => dispatch(setWordpressPostRequest(payload)),
+    getMediaItem: (mediaItemId) => dispatch(getMediaItem(mediaItemId)),
   };
 }
 
