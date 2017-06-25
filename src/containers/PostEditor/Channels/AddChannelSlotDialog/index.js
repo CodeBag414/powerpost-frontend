@@ -68,7 +68,7 @@ class AddChannelSlotDialog extends Component {
       case 'blog':
         // TODO: Check correctly
         return false;
-      case 'file':
+      case 'document':
         return properties.picture;
       case 'image':
         return true;
