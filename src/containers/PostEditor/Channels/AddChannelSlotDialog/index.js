@@ -23,8 +23,9 @@ class AddChannelSlotDialog extends Component {
 
   static propTypes = {
     active: PropTypes.bool,
-    postSet: ImmutablePropTypes.map,
     handleDialogToggle: PropTypes.func,
+    mediaItems: PropTypes.object,
+    postSet: ImmutablePropTypes.map,
     submitPosts: PropTypes.func,
   };
 
@@ -53,6 +54,31 @@ class AddChannelSlotDialog extends Component {
 
   onChangeChannelsState = (channels) => {
     this.setState({ channels });
+  }
+
+  hasImageMediaItem = () => {
+    const { mediaItems } = this.props;
+
+    if (!mediaItems.length) return false;
+
+    const mediaItem = mediaItems[0];
+    const { properties, type } = mediaItem;
+
+    switch (type) {
+      case 'blog':
+        // TODO: Check correctly
+        return false;
+      case 'file':
+        return properties.picture;
+      case 'image':
+        return true;
+      case 'link':
+        return properties.picture_url || properties.thumb_url;
+      case 'video':
+        return properties.picture || properties.thumb_url;
+      default:
+        return false;
+    }
   }
 
   submitPosts = () => {
@@ -88,6 +114,7 @@ class AddChannelSlotDialog extends Component {
   render() {
     const { active, handleDialogToggle } = this.props;
     const { isPostUponReady, scheduleTimes, channels } = this.state;
+    const hasImage = this.hasImageMediaItem();
     return (
       <PPDialog
         active={active}
@@ -122,8 +149,9 @@ class AddChannelSlotDialog extends Component {
             }
             <div className="channels-block">
               <ChannelsBlock
-                onChangeChannelsState={this.onChangeChannelsState}
                 channels={channels}
+                hasImage={hasImage}
+                onChangeChannelsState={this.onChangeChannelsState}
               />
             </div>
           </div>

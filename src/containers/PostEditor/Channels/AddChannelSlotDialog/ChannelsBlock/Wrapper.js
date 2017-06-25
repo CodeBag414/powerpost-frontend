@@ -55,6 +55,11 @@ const Wrapper = styled.div`
         line-height: 16px;
       }
     }
+    &.disabled {
+      [data-react-toolbox=check] {
+        opacity: 0.5;
+      }
+    }
   }
   .channel-wrapper {
     display: flex;

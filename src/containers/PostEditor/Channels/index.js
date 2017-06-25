@@ -154,8 +154,9 @@ class Channels extends Component {
         }
 
         <AddChannelSlotDialog
-          handleDialogToggle={this.handleDialogToggle}
           active={isDialogShown}
+          handleDialogToggle={this.handleDialogToggle}
+          mediaItems={postSet.getIn(['details', 'media_items']).toJS()}
         />
         {isBunchPosting && <div className="overlay" />}
       </Wrapper>
