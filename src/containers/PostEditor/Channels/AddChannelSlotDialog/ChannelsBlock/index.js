@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Checkbox from 'react-toolbox/lib/checkbox';
 import _ from 'lodash';
+import classNames from 'classnames';
 
 import Wrapper from './Wrapper';
 
@@ -9,6 +10,7 @@ class ChannelsBlock extends Component {
 
   static propTypes = {
     channels: PropTypes.array,
+    hasImage: PropTypes.bool,
     onChangeChannelsState: PropTypes.func,
   };
 
@@ -34,7 +36,7 @@ class ChannelsBlock extends Component {
   normalizeType = (type) => type.split('_').map((str) => _.upperFirst(str)).join(' ')
 
   render() {
-    const { channels } = this.props;
+    const { channels, hasImage } = this.props;
     const { selectAll } = this.state;
     return (
       <Wrapper>
@@ -52,7 +54,11 @@ class ChannelsBlock extends Component {
             <div className={_.compact(['channel-wrapper', index || 'top']).join(' ')} key={index}>
               <Checkbox
                 checked={channel.checked}
-                className={channel.checked ? 'checked' : ''}
+                className={classNames({
+                  disabled: channel.connection.get('channel') === 'pinterest' && !hasImage,
+                  checked: channel.checked,
+                })}
+                disabled={channel.connection.get('channel') === 'pinterest' && !hasImage}
                 onChange={(checked) => this.handleSelectChange(index, checked)}
               />
               <div className="content">
