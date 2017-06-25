@@ -148,7 +148,7 @@ class Calendar extends React.Component {
 
     const newPostSetsByST = postSetsByST.updateIn(['data', 'scheduled_post_sets'], (postSets) => {
       const index = postSets.findIndex((item) =>
-        item.get('schedule_time') === postSet.schedule_time);
+        (item.get('schedule_time') === postSet.schedule_time) && item.get('post_set_id') === postSet.post_set_id);
 
       return postSets.set(
         index,
