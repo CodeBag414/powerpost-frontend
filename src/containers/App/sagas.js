@@ -570,8 +570,6 @@ export function* fetchPostSetsWorker(payload) {
 function* fetchPostSetsBySTRequestWorker(payload) {
   const data = {
     payload: {
-      sort_by: 'schedule_time',
-      sort_order: 'DESC',
       limit: 500,
     },
   };

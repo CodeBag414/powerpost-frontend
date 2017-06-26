@@ -167,7 +167,7 @@ class Content extends Component {
   }
 
   linkifyMessage = (message) => {
-    const links = linkify.find(message);
+    const links = linkify.find(message || '');
     let urls = [];
     if (links && links.length) {
       urls = links.filter((link) =>
