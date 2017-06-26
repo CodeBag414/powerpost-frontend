@@ -175,7 +175,8 @@ export function* getMediaItem(action) {
   try {
     const response = yield call(getData, `/media_api/media_item/${action.mediaItemId}`);
     const { data } = response;
-    if (data.result == 'result') {
+
+    if (data.result == 'success') {
       const mediaItem = [data.media_item];
       yield put({ type: GET_MEDIA_ITEM_SUCCESS, mediaItem });
     }
