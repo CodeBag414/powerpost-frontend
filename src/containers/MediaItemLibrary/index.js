@@ -301,19 +301,20 @@ class Library extends React.Component {
         filepicker.storeUrl(
           `https://process.filestackapi.com/${this.props.filePickerKey}/resize=width:300,height:300,fit:clip/${linkItem.picture}`,
            (Blob) => {
-             linkItem.thumb_key = Blob.key;
-             linkItem.collection_id = this.props.activeCollection.collection_id;
-             console.log(linkItem);
-             linkItem.mediaItemType = 'link';
-             if (action === 'create') {
-               this.props.createMediaItem(linkItem);
-             } else if (action === 'update') {
-               this.props.updateMediaItem(linkItem);
-             }
-           });
+            linkItem.thumb_key = Blob.key;
+            linkItem.collection_id = this.props.activeCollection.collection_id;
+
+            linkItem.mediaItemType = 'link';
+            if (action === 'create') {
+              this.props.createMediaItem(linkItem);
+            } else if (action === 'update') {
+              this.props.updateMediaItem(linkItem);
+            }
+          });
       });
     } else {
       linkItem.mediaItemType = 'link';
+      linkItem.collection_id = this.props.activeCollection.collection_id;
       if (action === 'create') {
         this.props.createMediaItem(linkItem);
       } else if (action === 'update') {
@@ -456,7 +457,7 @@ class Library extends React.Component {
         <ContentWrapper>
           {React.cloneElement(this.props.children, { ...this.props, createPostSet: this.createPostSet, openImageEditor: this.openImageEditor, openLinkEditor: this.openLinkEditor, openVideoEditor: this.openVideoEditor, openFileEditor: this.openFileEditor, handleAddLinkValueFromDialog: this.handleAddLinkValueFromDialog })}
         </ContentWrapper>
-        <LinkEditor actions={actions} closeAllDialog={this.closeAllDialog} handleLinkEditorSave={this.handleLinkEditorSave.bind(this)} linkEditorDialog={this.state.linkEditorDialog} urlContent={this.props.urlContent} filePickerKey={this.props.filePickerKey} linkItem={this.state.linkItem} />
+        <LinkEditor actions={actions} closeAllDialog={this.closeAllDialog} handleLinkEditorSave={this.handleLinkEditorSave.bind(this)} mediaLibraryContext={true} linkEditorDialog={this.state.linkEditorDialog} urlContent={this.props.urlContent} filePickerKey={this.props.filePickerKey} linkItem={this.state.linkItem} />
         <ImageEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleImageEditorSave.bind(this)} isOpen={this.state.imageEditorDialog} filePickerKey={this.props.filePickerKey} imageItem={this.state.imageItem} />
         <LinkDialog actions={actions} closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue.bind(this)} handleSubmit={this.handleAddLinkSubmit} value={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
         <VideoEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleVideoEditorSave.bind(this)} isOpen={this.state.videoEditorDialog} filePickerKey={this.props.filePickerKey} videoItem={this.state.videoItem} />

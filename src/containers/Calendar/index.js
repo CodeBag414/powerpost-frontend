@@ -2,12 +2,14 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import moment from 'moment';
+import { fromJS } from 'immutable';
 
 import { UserCanPostSet } from 'config.routes/UserRoutePermissions';
 
 import {
   deletePostSetRequest,
   fetchPostSetsBySTRequest,
+  setPostSetsByST,
   updateBunchPostRequest,
 } from 'containers/App/actions';
 
@@ -37,6 +39,7 @@ class Calendar extends React.Component {
     location: PropTypes.object,
     fetchPostSetsByST: PropTypes.func,
     updateBunchPost: PropTypes.func,
+    setPostSetsByST: PropTypes.func,
     deletePostSet: PropTypes.func,
     postSetsByST: PropTypes.any,
     currentAccount: PropTypes.object,
@@ -128,7 +131,7 @@ class Calendar extends React.Component {
 
   handleMoveEvent = ({ event, start }) => {
     const { postSet } = event;
-    const { updateBunchPost } = this.props;
+    const { postSetsByST, updateBunchPost } = this.props;
     const scheduleTime = moment(start).format('X');
     /* eslint-disable no-alert */
     if (moment().diff(moment.unix(postSet.schedule_time)) > 0) { // If the dragged post is in the past
@@ -142,6 +145,22 @@ class Calendar extends React.Component {
       ...post,
       schedule_time: scheduleTime,
     }));
+
+    const newPostSetsByST = postSetsByST.updateIn(['data', 'scheduled_post_sets'], (postSets) => {
+      const index = postSets.findIndex((item) =>
+        (item.get('schedule_time') === postSet.schedule_time) && item.get('post_set_id') === postSet.post_set_id);
+
+      return postSets.set(
+        index,
+        fromJS({
+          ...postSet,
+          schedule_time: scheduleTime,
+          statusPending: true, // Meaning that it is in progress
+        }),
+      );
+    });
+
+    this.props.setPostSetsByST(newPostSetsByST);
     updateBunchPost(postsToUpdate);
   }
 
@@ -207,6 +226,7 @@ const mapDispatchToProps = (dispatch) => (
   {
     fetchPostSetsByST: () => dispatch(fetchPostSetsBySTRequest()),
     updateBunchPost: (posts) => dispatch(updateBunchPostRequest(posts)),
+    setPostSetsByST: (postSetsByST) => dispatch(setPostSetsByST(postSetsByST)),
     deletePostSet: (id) => dispatch(deletePostSetRequest(id)),
   }
 );

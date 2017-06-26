@@ -48,6 +48,10 @@ import {
   FETCH_POST_SETS_BY_ST_REQUEST,
   FETCH_POST_SETS_BY_ST_SUCCESS,
   FETCH_POST_SETS_BY_ST_FAILURE,
+  SET_POST_SETS_BY_ST,
+  FETCH_POST_SETS_BY_SO_REQUEST,
+  FETCH_POST_SETS_BY_SO_SUCCESS,
+  FETCH_POST_SETS_BY_SO_FAILURE,
   UPDATE_POST_SET_REQUEST,
   UPDATE_POST_SET_SUCCESS,
   UPDATE_POST_SET_ERROR,
@@ -64,6 +68,7 @@ import {
   FETCH_MEDIA_ITEMS_REQUEST,
   FETCH_MEDIA_ITEMS_SUCCESS,
   FETCH_MEDIA_ITEMS_ERROR,
+  CHANGE_POST_SET_SORT_ORDER_REQUEST,
 } from './constants';
 
 /**
@@ -368,6 +373,10 @@ export function changePostSetStatusRequest(id, status) {
   return { type: CHANGE_POST_SET_REQUEST, id, status };
 }
 
+export function changePostSetSortOrderRequest(id, afterId) {
+  return { type: CHANGE_POST_SET_SORT_ORDER_REQUEST, id, afterId };
+}
+
 export function fetchPostSetRequest(payload) {
   return {
     type: FETCH_POST_SET_REQUEST,
@@ -457,8 +466,24 @@ export function fetchPostSetsBySTSuccess(postSets) {
   return { type: FETCH_POST_SETS_BY_ST_SUCCESS, postSets };
 }
 
+export function setPostSetsByST(postSetsByST) {
+  return { type: SET_POST_SETS_BY_ST, postSetsByST };
+}
+
 export function fetchPostSetsBySTFailure(error) {
   return { type: FETCH_POST_SETS_BY_ST_FAILURE, error };
+}
+
+export function fetchPostSetsBySORequest(accountId) {
+  return { type: FETCH_POST_SETS_BY_SO_REQUEST, accountId };
+}
+
+export function fetchPostSetsBySOSuccess(postSets) {
+  return { type: FETCH_POST_SETS_BY_SO_SUCCESS, postSets };
+}
+
+export function fetchPostSetsBySOFailure(error) {
+  return { type: FETCH_POST_SETS_BY_SO_FAILURE, error };
 }
 
 export function fetchMediaItems(accountId) {

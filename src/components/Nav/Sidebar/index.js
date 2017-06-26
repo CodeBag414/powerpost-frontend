@@ -24,17 +24,6 @@ class Sidebar extends React.Component {
     this.renderCollapsed = this.renderCollapsed.bind(this);
   }
 
-  shouldComponentUpdate(nextProps) {
-    const isPrevPathAccount = this.props.location.pathname.match('/account/');
-    const isNextPathAccount = nextProps.location.pathname.match('/account/');
-    if (!nextProps.isMenuCollapsed && !isNextPathAccount) {
-      this.props.handleMenuToggle(false);
-    } else if (nextProps.isMenuCollapsed && isNextPathAccount && !isPrevPathAccount) {
-      // this.props.handleMenuToggle(true);
-    }
-    return true;
-  }
-
   renderFull() {
     return (
       <div>

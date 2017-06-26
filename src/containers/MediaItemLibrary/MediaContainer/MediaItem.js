@@ -74,7 +74,7 @@ const IconPlaceholder = styled.i`
 `;
 
 const MediaItem = (props) => {
-  const coverImage = props.mediaItem.properties.picture || props.mediaItem.properties.thumb_url || '';
+  let coverImage = props.mediaItem.properties.picture || props.mediaItem.properties.thumb_url || false;
   const mediaType = props.mediaItem.type;
   const creationTime = props.mediaItem.creation_time;
   const title = props.mediaItem.properties.title || props.mediaItem.properties.filename || props.mediaItem.properties.description;
@@ -86,6 +86,9 @@ const MediaItem = (props) => {
   } else if (props.mediaItem.type === 'video') {
     fa = 'fa-video-camera';
     icon = 'videocam';
+    if (props.mediaItem.status === '3') {
+      coverImage = false;
+    }
   } else if (props.mediaItem.type === 'blog' || props.mediaItem.type === 'document') {
     fa = 'fa-file-text';
     icon = 'description';
@@ -100,7 +103,7 @@ const MediaItem = (props) => {
   return(
     <Wrapper>
       <ImageContainer>
-      { coverImage ? (<CoverImage src={coverImage} />) : (<IconPlaceholder className={`fa ${fa}`} />) }
+      { coverImage || coverImage === '' ? (<CoverImage src={coverImage} />) : (<IconPlaceholder className={`fa ${fa}`} />) }
       </ImageContainer>
       <Footer>
         <Title>{title}</Title>

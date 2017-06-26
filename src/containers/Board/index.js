@@ -7,33 +7,56 @@
 import React, { PropTypes } from 'react';
 
 import { connect } from 'react-redux';
+import { fromJS } from 'immutable';
 import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { UserCanBoard } from 'config.routes/UserRoutePermissions';
 
 import PostEditor from 'containers/PostEditor';
 import PostSetsGroup from './PostSetsGroup';
-import { deletePostSetRequest, changePostSetStatusRequest } from '../App/actions';
-import { makeSelectPostSets } from '../App/selectors';
+import { deletePostSetRequest, changePostSetStatusRequest, fetchPostSetsBySORequest, changePostSetSortOrderRequest } from '../App/actions';
+import { makeSelectPostSetsBySO } from '../App/selectors';
 import styles from './styles.scss';
 
 class Board extends React.Component {
 
   constructor() {
     super();
-    this.state = { moveStatus: 0, searchText: '' };
+    this.state = { moveStatus: 0, searchText: '', dragPostSet: null, postStatusId: null };
   }
 
   componentDidMount() {
+    this.props.fetchPostSetsBySO();
   }
 
-  onDragEnter = (status) => {
-    this.setState({ moveStatus: status });
+  onDragStart = (dragPostSet) => {
+    this.setState({ dragPostSet });
   }
 
-  onDrop = (id, status) => {
-    this.props.changePostSetStatusRequest(id, status);
-    this.setState({ moveStatus: 0 });
+  onDragEnter = (moveStatus) => {
+    if (this.state.moveStatus === moveStatus) return;
+    this.setState({ moveStatus });
+  }
+
+  onPostDragEnter = (postStatusId) => {
+    if (this.state.postStatusId === postStatusId) return;
+    const { dragPostSet, moveStatus } = this.state;
+    if (parseInt(dragPostSet.get('status'), 10) === parseInt(moveStatus, 10)) {
+      this.setState({ postStatusId });
+    } else {
+      this.setState({ postStatusId: null });
+    }
+  }
+
+  onDrop = (status) => {
+    const { dragPostSet } = this.state;
+    const id = dragPostSet.get('post_set_id');
+    if (dragPostSet && (parseInt(dragPostSet.get('status'), 10) !== parseInt(status, 10))) {
+      this.props.changePostSetStatusRequest(id, status);
+    } else if (id !== this.state.postStatusId) {
+      this.props.changePostSetSortOrder(id, this.state.postStatusId);
+    }
+    this.setState({ moveStatus: 0, postStatusIndex: null, dragPostSet: null });
   }
 
   onSearch = (searchText) => {
@@ -70,8 +93,9 @@ class Board extends React.Component {
       { status: 2, statusColor: '#67C5E6', name: 'Draft' },
       { status: 6, statusColor: '#ACB5B8', name: 'Idea' },
     ];
-    const { postSets, deletePostSetAction, params, location: { hash } } = this.props;
-    const { moveStatus, searchText } = this.state;
+    const { deletePostSetAction, params, location: { hash } } = this.props;
+    const { moveStatus, searchText, postStatusId } = this.state;
+    const postSets = this.props.postSets.getIn(['data', 'post_sets'], fromJS([]));
     const filterPostSets = this.filterPostSets(postSets);
     const postSetsGroups = groups.map((group) => {
       const { name, status, statusColor } = group;
@@ -98,12 +122,15 @@ class Board extends React.Component {
               <PostSetsGroup
                 key={postSetsGroup.status}
                 status={postSetsGroup.status}
+                postStatusId={postStatusId}
                 statusColor={postSetsGroup.statusColor}
                 postSets={postSetsGroup.postSets}
                 deletePostSet={deletePostSetAction}
-                onDragEnter={() => this.onDragEnter(postSetsGroup.status)}
-                onDrop={(data) => this.onDrop(data.post_set, postSetsGroup.status_id)}
-                dragHover={postSetsGroup.status === moveStatus}
+                onDragEnter={() => this.onDragEnter(postSetsGroup.status_id)}
+                onPostDragEnter={this.onPostDragEnter}
+                onDragStart={this.onDragStart}
+                onDrop={() => this.onDrop(postSetsGroup.status_id)}
+                dragHover={postSetsGroup.status_id === moveStatus}
               />
             )
           }
@@ -117,13 +144,11 @@ class Board extends React.Component {
 }
 
 Board.propTypes = {
+  fetchPostSetsBySO: PropTypes.func.isRequired,
   deletePostSetAction: PropTypes.func.isRequired,
   changePostSetStatusRequest: PropTypes.func.isRequired,
-  postSets: ImmutablePropTypes.listOf(
-    ImmutablePropTypes.contains({
-
-    })
-  ).isRequired,
+  changePostSetSortOrder: PropTypes.func.isRequired,
+  postSets: ImmutablePropTypes.map.isRequired,
   location: PropTypes.shape({
     hash: PropTypes.string,
   }),
@@ -134,13 +159,15 @@ Board.propTypes = {
 
 export function mapDispatchToProps(dispatch) {
   return {
+    fetchPostSetsBySO: () => dispatch(fetchPostSetsBySORequest()),
+    changePostSetSortOrder: (id, afterId) => dispatch(changePostSetSortOrderRequest(id, afterId)),
     deletePostSetAction: (id) => dispatch(deletePostSetRequest(id)),
     changePostSetStatusRequest: (id, status) => dispatch(changePostSetStatusRequest(id, status)),
   };
 }
 
 const mapStateToProps = createStructuredSelector({
-  postSets: makeSelectPostSets(),
+  postSets: makeSelectPostSetsBySO(),
 });
 
 export default UserCanBoard(connect(mapStateToProps, mapDispatchToProps)(Board));

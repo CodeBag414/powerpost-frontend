@@ -141,12 +141,9 @@ function mediaLibraryReducer(state = initialState, action) {
     case VIDEO_PROCESSING_DONE:
       return state
         .update('mediaItems', (mediaItems) => mediaItems.concat(action.mediaItem));
-    case SET_PROCESSING_ITEM:
-      return state
-        .set('processingItem', action.processingItem);
     case DELETE_MEDIA_ITEM_SUCCESS:
       return state
-        .set('mediaItems', deleteObjectInArray(state.get('mediaItems'), action));
+        .set('mediaItems', state.get('mediaItems').filter((o) => o.media_item_id !== action.id));
     case UPDATE_MEDIA_ITEM_SUCCESS:
       return state
         .set('mediaItems', updateObjectInArray(state.get('mediaItems'), action));
