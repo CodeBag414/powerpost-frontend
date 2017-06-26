@@ -12,10 +12,9 @@ const TooltipToolbarButton = Tooltip(ToolbarButton);
 function MessageToolbar({ characterLimit, openFilePicker, openLinkDialog, openMediaLibrary, urls, shortenUrl }) {
   return (
     <Wrapper>
-      <TooltipToolbarButton tooltip="Open Content Library" tooltipDelay={200} width={30} marginLeft={12} marginRight={12} onClick={openMediaLibrary}><i className="fa fa-folder-o" /></TooltipToolbarButton>
-      <Divider />
+      <TooltipToolbarButton tooltip="Open Content Library" tooltipDelay={200} width={30} marginLeft={12} onClick={openMediaLibrary}><i className="fa fa-folder-o" /></TooltipToolbarButton>
       <TooltipToolbarButton tooltip="Upload Content" tooltipDelay={200} width={30} marginLeft={12} onClick={openFilePicker}><i className="fa fa-upload" /></TooltipToolbarButton>
-      <TooltipToolbarButton tooltip="Insert Link" tooltipDelay={200} width={30} marginRight={12} onClick={openLinkDialog}><i className="fa fa-link" /></TooltipToolbarButton>
+      <TooltipToolbarButton tooltip="Insert Link" tooltipDelay={200} width={30} marginRight={12} marginLeft={12} onClick={openLinkDialog}><i className="fa fa-link" /></TooltipToolbarButton>
       <Divider />
       {urls && urls.length ?
         <ToolbarButton width={75} onClick={shortenUrl} fontSize={10}>Shorten URL</ToolbarButton>
