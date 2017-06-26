@@ -167,15 +167,13 @@ class Content extends Component {
   }
 
   linkifyMessage = (message) => {
-    if (message) {
-      const links = linkify.find(message);
-      let urls = [];
-      if (links && links.length) {
-        urls = links.filter((link) =>
-          link.type === 'url' && link.href.indexOf('upo.st') === -1);
-      }
-      this.setState({ messageUrls: urls });
+    const links = linkify.find(message || '');
+    let urls = [];
+    if (links && links.length) {
+      urls = links.filter((link) =>
+        link.type === 'url' && link.href.indexOf('upo.st') === -1);
     }
+    this.setState({ messageUrls: urls });
   }
 
   handleMessageBlur = (event, message = this.state.globalMessage) => {

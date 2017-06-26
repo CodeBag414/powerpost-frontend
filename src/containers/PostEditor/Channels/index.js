@@ -105,6 +105,7 @@ class Channels extends Component {
       currentPost && item.connection_id === currentPost.get('connection_id'),
     )[0];
     const isBunchPosting = postSet.get('bunch_post_fetching');
+    const currentMediaItems = (newMediaItem.type) ? [newMediaItem] : postSet.getIn(['details', 'media_items']).toJS();
     return (
       <Wrapper>
         <div className="left">
@@ -154,8 +155,9 @@ class Channels extends Component {
         }
 
         <AddChannelSlotDialog
-          handleDialogToggle={this.handleDialogToggle}
           active={isDialogShown}
+          handleDialogToggle={this.handleDialogToggle}
+          mediaItems={currentMediaItems}
         />
         {isBunchPosting && <div className="overlay" />}
       </Wrapper>

@@ -46,7 +46,7 @@ class PostSet extends Component {
   }
 
   render() {
-    const { postSet, onDeletePostSet } = this.props;
+    const { postSet, onDeletePostSet, onDragStart } = this.props;
     const { popOver, deleteConfirmPopup } = this.state;
     const imgSrc = postSet.getIn(['media_items', 0, 'properties', 'source_url']); // TODO: I couldn't get any image.
     const hasImage = !!imgSrc;
@@ -55,7 +55,7 @@ class PostSet extends Component {
     const title = postSet.get('title');
     const description = postSet.get('message');
     return (
-      <Draggable type="post_set" data={postSet.get('post_set_id')} className={styles.postSet} onClick={this.goToPostEditor}>
+      <Draggable type="post_set" className={styles.postSet} onDragStart={onDragStart} onClick={this.goToPostEditor}>
         <div className={hasImage ? styles.image : styles.noImage} style={{ backgroundImage: `url(${imgSrc})` }}>
           { hasImage ? null : <i className="fa fa-picture-o" /> }
         </div>
@@ -93,6 +93,7 @@ PostSet.propTypes = {
   postSet: ImmutablePropTypes.contains({
 
   }).isRequired,
+  onDragStart: PropTypes.func.isRequired,
   onDeletePostSet: PropTypes.func.isRequired,
 };
 
