@@ -171,6 +171,7 @@ export class WordpressSettings extends Component {
 
     this.setState({
       destination: option,
+      author: {},
       categories: [],
       tags: [],
     });
