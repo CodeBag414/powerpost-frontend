@@ -23,6 +23,9 @@ import {
   REPLICATE_POST_SET_REQUEST,
   REPLICATE_POST_SET_SUCCESS,
   REPLICATE_POST_SET_FAILURE,
+  CREATE_BLOG_ITEM_REQUEST,
+  CREATE_BLOG_ITEM_SUCCESS,
+  CREATE_BLOG_ITEM_FAILURE,
 } from './constants';
 
 export function fetchCollections(accountId) {
@@ -190,5 +193,26 @@ export function replicatePostSetFailure(payload) {
   return {
     type: REPLICATE_POST_SET_FAILURE,
     payload,
+  };
+}
+
+export function createBlogItemRequest(payload) {
+  return {
+    type: CREATE_BLOG_ITEM_REQUEST,
+    payload,
+  };
+}
+
+export function createBlogItemSuccess(payload) {
+  return {
+    type: CREATE_BLOG_ITEM_SUCCESS,
+    payload,
+  };
+}
+
+export function createBlogItemFailure(error) {
+  return {
+    type: CREATE_BLOG_ITEM_FAILURE,
+    error,
   };
 }

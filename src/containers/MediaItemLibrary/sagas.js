@@ -47,6 +47,7 @@ import {
   FETCH_STREAM_POST_SETS_REQUEST,
   INVITE_EMAIL_TO_STREAM_REQUEST,
   REPLICATE_POST_SET_REQUEST,
+  CREATE_BLOG_ITEM_REQUEST,
 } from './constants';
 
 import {
@@ -56,6 +57,8 @@ import {
   inviteEmailToStreamFailure,
   replicatePostSetSuccess,
   replicatePostSetFailure,
+  createBlogItemSuccess,
+  createBlogItemFailure,
 } from './actions';
 
 export function* getCollections(action) {
@@ -87,26 +90,25 @@ export function* search(action) {
       query: action.query,
     },
   };
-  
+
   const params = serialize(data);
-  
+
   const result = yield call(getData, `/media_api/bing?${params}`);
-  if(result.data.result === 'success') {
+  if (result.data.result === 'success') {
     const webResults = result.data.search_results;
     yield put({ type: SEARCH_BING_SUCCESS, webResults });
   }
 }
 
 export function* getLinkData(action) {
-  
   const data = {
     payload: {
       url: action.url,
     },
   };
-  
+
   const params = serialize(data);
-  
+
   const result = yield call(getData, `/media_api/url_content?${params}`);
   if (result.data.result === 'success') {
     const urlData = result.data.url_data[0];
@@ -117,14 +119,13 @@ export function* getLinkData(action) {
 }
 
 export function* getRSSFeeds(action) {
-
   const id = action.accountId;
   const data = {
     payload: {
       account_id: id,
     },
   };
-  
+
   const params = serialize(data);
   const results = yield call(getData, `/feed_api/feeds?${params}`);
   if (results.data.status === 'success') {
@@ -141,8 +142,8 @@ export function* deleteItem(action) {
     },
   };
   const results = yield call(putData, `/media_api/media_item/${id}`, data);
-  if(results.data.result === 'success') {
-    yield put({ type: DELETE_MEDIA_ITEM_SUCCESS, id});
+  if (results.data.result === 'success') {
+    yield put({ type: DELETE_MEDIA_ITEM_SUCCESS, id });
   }
 }
 export function* getRSSFeedItems(action) {
@@ -157,7 +158,7 @@ export function* getRSSFeedItems(action) {
 export function* createRSSFeed(action) {
   const currentAccount = yield select(makeSelectCurrentAccount());
   const id = currentAccount.account_id;
-  
+
   const data = {
     payload: {
       account_id: id,
@@ -165,11 +166,11 @@ export function* createRSSFeed(action) {
       url: action.data.url,
     },
   };
-  
+
   const results = yield call(postData, '/feed_api/feed', data);
   if (results.data.status === 'success') {
     const feed = results.data.feed;
-    yield put({ type: CREATE_RSS_FEED_SUCCESS, feed});
+    yield put({ type: CREATE_RSS_FEED_SUCCESS, feed });
   }
 }
 
@@ -200,8 +201,6 @@ export function* updateMediaItem(action) {
 
 export function* createMediaItem(action) {
   const { mediaItemType, create, ...item } = action.mediaItem;
-  console.log('in createmediaitem');
-  console.log(item);
   let url = '';
   let data = {};
 
@@ -221,29 +220,25 @@ export function* createMediaItem(action) {
 
   if (url !== '') {
     const res = yield call(postData, url, data);
-    console.log(res);
     if (res.data.result === 'success') {
-      //if (res.data.media_items[0].status === '3') {
+      // if (res.data.media_items[0].status === '3') {
       //  const id = res.data.media_items[0].media_item_id;
       //  yield put({ type: VIDEO_PROCESSING, id });
-      //} else {
-        const mediaItems = res.data.media_items;
-        yield put({ type: CREATE_MEDIA_ITEM_SUCCESS, mediaItems });
-        console.log(res);
-        console.log(create);
-        if (create) {
-          console.log('in create');
-          const postSet = {
-            account_id: mediaItems[0].account_id,
-            message: '',
-            type: 'text',
-            status: '6',
-            title: '',
-            media_item_ids: [mediaItems[0].media_item_id],
-          };
-          yield put(createPostSetRequest(postSet));
-        }
-      //}
+      // } else {
+      const mediaItems = res.data.media_items;
+      yield put({ type: CREATE_MEDIA_ITEM_SUCCESS, mediaItems });
+      if (create) {
+        const postSet = {
+          account_id: mediaItems[0].account_id,
+          message: '',
+          type: 'text',
+          status: '6',
+          title: '',
+          media_item_ids: [mediaItems[0].media_item_id],
+        };
+        yield put(createPostSetRequest(postSet));
+      }
+      // }
     }
   }
 }
@@ -253,20 +248,20 @@ export function* pollData(action) {
   yield put({ type: SET_PROCESSING_ITEM, processingItem });
   try {
     yield call(delay, 5000);
-    let id = action.id;
+    const id = action.id;
     const res = yield call(getData, `/media_api/media_item/${id}`);
-    if(res.data.result === 'success') {
-      if(res.data.media_item.status === '1') {
+    if (res.data.result === 'success') {
+      if (res.data.media_item.status === '1') {
         const mediaItem = res.data.media_item;
         processingItem = false;
         yield put({ type: VIDEO_PROCESSING_DONE, mediaItem });
         yield put({ type: SET_PROCESSING_ITEM, processingItem });
-      } else if(res.data.media_item.status === '3') {
+      } else if (res.data.media_item.status === '3') {
         yield put({ type: VIDEO_PROCESSING, id });
       }
     }
   } catch (error) {
-    return;
+
   }
 }
 
@@ -275,7 +270,7 @@ export function* showError(action) {
 }
 export function* linkData() {
   const watcher = yield takeLatest(FETCH_URL_CONTENT, getLinkData);
-  
+
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
 }
@@ -288,62 +283,61 @@ export function* collectionData() {
 
 export function* mediaItem() {
   const watcher = yield takeLatest(CREATE_MEDIA_ITEM, createMediaItem);
-  
+
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
 }
 
 export function* searchBing() {
   const watcher = yield takeLatest(SEARCH_BING, search);
-  
+
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
 }
 
 export function* getFeeds() {
   const watcher = yield takeLatest(FETCH_RSS_FEEDS, getRSSFeeds);
-  
+
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
 }
 
 export function* getFeedItems() {
   const watcher = yield takeLatest(FETCH_RSS_ITEMS, getRSSFeedItems);
-  
+
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
 }
 
 export function* createFeed() {
   const watcher = yield takeLatest(CREATE_RSS_FEED, createRSSFeed);
-  
+
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
 }
 
 export function* watchPollData() {
-    const watcher = yield takeEvery(VIDEO_PROCESSING, pollData);
-    yield take(VIDEO_PROCESSING_DONE);
-    yield cancel(watcher);
+  const watcher = yield takeEvery(VIDEO_PROCESSING, pollData);
+  yield take(VIDEO_PROCESSING_DONE);
+  yield cancel(watcher);
 }
 
 export function* deleteMediaItem() {
   const watcher = yield takeLatest(DELETE_MEDIA_ITEM, deleteItem);
-  
+
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
 }
 
 export function* updateMedia() {
   const watcher = yield takeLatest(UPDATE_MEDIA_ITEM, updateMediaItem);
-  
+
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
 }
 
 export function* errorWatcher() {
   const watcher = yield takeLatest(MEDIA_ERROR, showError);
-  
 }
 
 export function* fetchStreamPostSetsWorker({ id, payload }) {
@@ -420,6 +414,27 @@ export function* replicatePostSetSaga() {
   }
 }
 
+export function* createBlogItemSaga(action) {
+  const activeCollection = yield select(makeSelectActiveCollection());
+  const data = {
+    payload: {
+      ...action.payload,
+      collection_id: activeCollection.collection_id,
+    },
+  };
+
+  const results = yield call(postData, '/media_api/blog', data);
+  if (results.data.result === 'success') {
+    yield put(createBlogItemSuccess(results.data));
+  } else {
+    yield put(createBlogItemFailure(results.data.message));
+  }
+}
+
+export function* createBlogItemWatcher() {
+  yield takeLatest(CREATE_BLOG_ITEM_REQUEST, createBlogItemSaga);
+}
+
 export function* mediaItemSaga() {
   const watcherA = yield fork(collectionData);
   const watcherB = yield fork(linkData);
@@ -435,6 +450,7 @@ export function* mediaItemSaga() {
   const watcherL = yield fork(fetchStreamPostSetsWatcher);
   const watcherM = yield fork(inviteEmailToStreamSaga);
   const watcherN = yield fork(replicatePostSetSaga);
+  const watcherO = yield fork(createBlogItemWatcher);
 
   yield take(LOCATION_CHANGE);
 
@@ -452,17 +468,18 @@ export function* mediaItemSaga() {
   yield cancel(watcherL);
   yield cancel(watcherM);
   yield cancel(watcherN);
+  yield cancel(watcherO);
 }
 
 export default [
   mediaItemSaga,
 ];
 
-const delay = (millis) => {  
-    const promise = new Promise(resolve => {
-        setTimeout(() => resolve(true), millis);
-    });
-    return promise;
+const delay = (millis) => {
+  const promise = new Promise((resolve) => {
+    setTimeout(() => resolve(true), millis);
+  });
+  return promise;
 };
 
 const serialize = (obj, prefix) => {

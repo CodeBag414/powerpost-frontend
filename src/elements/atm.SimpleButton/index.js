@@ -35,5 +35,3 @@ SimpleButton.defaultProps = {
 };
 
 export default SimpleButton;
-
-

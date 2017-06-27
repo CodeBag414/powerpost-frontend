@@ -63,6 +63,7 @@ const ImageContainer = styled.div`
 
 const ActionBar = styled.div`
   width: 100%;
+  height: 36px;
   text-align: right;
 `;
 
@@ -79,7 +80,7 @@ const MediaItem = (props) => {
   const creationTime = props.mediaItem.creation_time;
   const title = props.mediaItem.properties.title || props.mediaItem.properties.filename || props.mediaItem.properties.description;
   let icon = 'photo';
-  let fa = 'fa-picture-o'
+  let fa = 'fa-picture-o';
   if (props.mediaItem.type === 'link') {
     fa = 'fa-link';
     icon = 'link';
@@ -93,17 +94,17 @@ const MediaItem = (props) => {
     fa = 'fa-file-text';
     icon = 'description';
   }
-  if ( props.mediaItem.status === 0) {
+  if (props.mediaItem.status === 0) {
     return;
   }
-  let EditorLink = <IconButtonTooltip icon='edit' tooltip="Edit" onClick={() => props.openEditor(props.mediaItem)} />;
+  let EditorLink = <IconButtonTooltip icon="edit" tooltip="Edit" onClick={() => props.openEditor(props.mediaItem)} />;
   if (props.mediaItem.type === 'blog') {
     EditorLink = <IconLink to={`/account/${props.mediaItem.account_id}/library/blog/${props.mediaItem.media_item_id}`} icon="edit" tooltip="Edit" />;
   }
-  return(
+  return (
     <Wrapper>
       <ImageContainer>
-      { coverImage || coverImage === '' ? (<CoverImage src={coverImage} />) : (<IconPlaceholder className={`fa ${fa}`} />) }
+        { coverImage || coverImage === '' ? (<CoverImage src={coverImage} />) : (<IconPlaceholder className={`fa ${fa}`} />) }
       </ImageContainer>
       <Footer>
         <Title>{title}</Title>
@@ -111,14 +112,14 @@ const MediaItem = (props) => {
       </Footer>
       <ActionBar>
         {!props.inPostEditor ? (
-        <IconButtonTooltip icon='add' tooltip="Create Post" onClick={() => props.createPostSet(props.mediaItem)} />
-        ) : ( <IconButtonTooltip icon='add' tooltip="Add to Post" onClick={() => props.addToPost(props.mediaItem)} />)
+          <IconButtonTooltip icon="add" tooltip="Create Post" onClick={() => props.createPostSet(props.mediaItem)} />
+        ) : (<IconButtonTooltip icon="add" tooltip="Add to Post" onClick={() => props.addToPost(props.mediaItem)} />)
         }
         {!props.inPostEditor &&
-        <div style={{display: 'inline-block'}}>
+        <div style={{ display: 'inline-block' }}>
           {EditorLink}
-          <IconButtonTooltip icon='remove_red_eye' tooltip="View" onClick={() => props.openPreview(props.mediaItem)} />
-          <IconButtonTooltip icon='delete_forever' tooltip="Delete" onClick={() => props.onDelete(props.mediaItem.media_item_id)} />
+          <IconButtonTooltip icon="remove_red_eye" tooltip="View" onClick={() => props.openPreview(props.mediaItem)} />
+          <IconButtonTooltip icon="delete_forever" tooltip="Delete" onClick={() => props.onDelete(props.mediaItem.media_item_id)} />
         </div>
         }
       </ActionBar>
