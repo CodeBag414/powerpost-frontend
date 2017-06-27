@@ -88,7 +88,6 @@ const ImageWrapper = styled.div`
 `;
 
 function SearchItem({ item, handleClick }) {
-  console.log(item)
   return (
     <Wrapper type={item.media_type}>
       {item.media_type === 'link' &&

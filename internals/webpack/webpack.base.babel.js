@@ -74,6 +74,8 @@ module.exports = (options) => ({
     new webpack.ProvidePlugin({
       // make fetch available
       fetch: 'exports-loader?self.fetch!whatwg-fetch',
+      $: 'jquery',
+    	jQuery: 'jquery',
     }),
     // Always expose NODE_ENV to webpack, in order to use `process.env.NODE_ENV`
     // inside your code for any environment checks; UglifyJS will automatically
@@ -85,10 +87,6 @@ module.exports = (options) => ({
     }),
     new webpack.NamedModulesPlugin(),
     new webpack.ContextReplacementPlugin(/\.\/locale$/, 'empty-module', false, /js$/),
-    new webpack.ProvidePlugin({
-    	$: 'jquery',
-    	jQuery: 'jquery',
-    }),
     new webpack.optimize.UglifyJsPlugin({
       compress: { warnings: false },
       comments: false,
