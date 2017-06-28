@@ -155,9 +155,10 @@ class Library extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.mediaItems.length !== nextProps.mediaItems.length) {
-      browserHistory.push(this.props.location.pathname);
-    }
+    // not sure what this is for?
+    //if (this.props.mediaItems.length !== nextProps.mediaItems.length) {
+    //  browserHistory.push(this.props.location.pathname);
+    //}
   }
 
   openAddLink() {

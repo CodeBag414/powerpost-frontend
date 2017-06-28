@@ -127,6 +127,7 @@ class Main extends React.Component {
           user={this.props.user}
           userAccount={this.props.userAccount}
           userPermissions={this.props.userPermissions}
+          routes={this.props.routes}
         />
         <div id="main-panel" className={[viewContentStyle, styles.viewContent].join(' ')}>
           {this.props.children}
