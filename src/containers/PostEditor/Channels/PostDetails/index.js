@@ -49,6 +49,8 @@ function buildPostPreview(postData, postMessage, postTime, connection, mediaItem
     image = mediaItem.properties.url;
   } else if (type === 'link') {
     link = mediaItem.properties;
+  } else if (type === 'video') {
+    video = mediaItem.properties;
   }
 
   switch (connection.channel) {
@@ -63,6 +65,7 @@ function buildPostPreview(postData, postMessage, postTime, connection, mediaItem
         name: link.title,
         description: link.description,
         caption: link.url,
+        source: video.source_url,
       };
       return <FacebookBlock post={postToPreview} connection={connection} isPreview />;
     case 'twitter': {
