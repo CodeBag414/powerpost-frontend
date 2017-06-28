@@ -51,7 +51,6 @@ import {
   FETCH_POSTS,
   UPDATE_POST_REQUEST,
   UPDATE_BUNCH_POST_REQUEST,
-  FETCH_CONNECTIONS,
   CREATE_POST_SET_REQUEST,
   FETCH_POST_SETS_BY_ST_REQUEST,
   FETCH_POST_SETS_BY_SO_REQUEST,
@@ -92,7 +91,6 @@ import {
   getPostSets,
   updateBunchPostSuccess,
   setPosts,
-  setConnections,
   createPostSetSuccess,
   fetchMediaItemsSuccess,
   fetchMediaItemsFailure,
@@ -800,26 +798,6 @@ export function* updateBunchPostSaga() {
   yield takeLatest(UPDATE_BUNCH_POST_REQUEST, updateBunchPostRequestWorker);
 }
 
-function* fetchConnectionsWorker({ accountId }) {
-  const data = {
-    payload: {
-      account_id: accountId,
-    },
-  };
-  const params = serialize(data);
-
-  const response = yield call(getData, `/connection_api/connections?${params}`);
-  if (response.data.status === 'success') {
-    yield put(setConnections(response.data.connections));
-  } else {
-    console.log(response);
-  }
-}
-
-export function* fetchConnectionsSaga() {
-  yield takeLatest(FETCH_CONNECTIONS, fetchConnectionsWorker);
-}
-
 function* createPostSetWorker({ postSet, edit }) {
   const requestUrl = '/post_api/post_set';
   const requestData = {
@@ -897,7 +875,6 @@ export default [
   fetchPostSetsBySORequestSaga,
   updatePostSaga,
   updateBunchPostSaga,
-  fetchConnectionsSaga,
   createPostSetSaga,
   fetchMediaItemsSaga,
   changePostSetSortOrderSaga,

@@ -8,6 +8,7 @@ import {
     TOGGLE_MENU,
     IS_LOADING_ACCOUNT,
     SET_CONNECTIONS_LIST,
+    SET_CONNECTIONS,
 } from './constants';
 
 import {
@@ -81,6 +82,8 @@ function dashboardReducer(state = initialState, action) {
     case VALIDATE_CONNECTIONS_SUCCESS:
       return state
         .setIn(['activeBrand', 'connections'], action.connections);
+    case SET_CONNECTIONS:
+      return state.set('connections', action.connections);
     default:
       return state;
   }

@@ -31,6 +31,7 @@ import { checkUser,
 
 import { toggleMenu,
          fetchCurrentAccount,
+         fetchConnections,
 } from './actions';
 
 import { makeSelectMenuCollapsed,
@@ -60,6 +61,7 @@ class Main extends React.Component {
     getPostSetsAction: PropTypes.func,
     toggleMenuCollapse: PropTypes.func,
     logout: PropTypes.func,
+    fetchConnections: PropTypes.func,
   };
 
   constructor(props) {
@@ -71,6 +73,7 @@ class Main extends React.Component {
   componentDidMount() {
     this.props.fetchAccount(this.props.params.account_id);
     this.props.getPostSetsAction(this.props.params.account_id);
+    this.props.fetchConnections(this.props.params.account_id);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -148,6 +151,7 @@ export function mapDispatchToProps(dispatch) {
     logout: () => dispatch(logout()),
     fetchAccount: (accountId) => dispatch(fetchCurrentAccount(accountId)),
     createPostSet: (postSet) => dispatch(createPostSetRequest(postSet)),
+    fetchConnections: (accountId) => dispatch(fetchConnections(accountId)),
   };
 }
 

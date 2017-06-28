@@ -16,16 +16,18 @@ import {
   fetchPostSetRequest,
   updatePostSetRequest,
   updatePostRequest,
-  fetchConnections,
 } from 'containers/App/actions';
 
 import {
   makeSelectUser,
   selectGroupUsers,
   makeSelectUserAccount,
-  makeSelectConnections,
   makeSelectFilePickerKey,
 } from 'containers/App/selectors';
+
+import {
+  makeSelectConnections,
+} from 'containers/Main/selectors';
 
 import {
   fetchComments,
@@ -70,7 +72,6 @@ class PostEditor extends Component {
     // getAccountTags: PropTypes.func,
     // fetchPostSet: PropTypes.func,
     // fetchGroupUsers: PropTypes.func,
-    // fetchConnections: PropTypes.func,
     accountId: PropTypes.string,
     connections: PropTypes.array,
     clearMediaItem: PropTypes.func,
@@ -149,7 +150,6 @@ class PostEditor extends Component {
     });
     const payload = { accountId };
     props.fetchGroupUsers(payload);
-    props.fetchConnections(accountId);
     props.fetchCollections(accountId);
   }
 
@@ -330,7 +330,6 @@ export function mapDispatchToProps(dispatch) {
     fetchGroupUsers: (payload) => dispatch(fetchGroupUsers(payload)),
     updatePostSet: (payload) => dispatch(updatePostSetRequest(payload)),
     updatePost: (payload) => dispatch(updatePostRequest(payload)),
-    fetchConnections: (payload) => dispatch(fetchConnections(payload)),
     fetchWordpressGUI: (payload) => dispatch(fetchWordpressGUIRequest(payload)),
     createPost: (payload) => dispatch(createPostRequest(payload)),
     goBack: () => dispatch(routerActions.goBack()),

@@ -7,7 +7,7 @@ import { createStructuredSelector } from 'reselect';
 
 import {
   makeSelectConnections,
-} from 'containers/App/selectors';
+} from 'containers/Main/selectors';
 
 import { selectNewMediaItem } from 'containers/PostEditor/selectors';
 

@@ -60,8 +60,6 @@ import {
   UPDATE_POST_REQUEST,
   UPDATE_BUNCH_POST_REQUEST,
   UPDATE_BUNCH_POST_SUCCESS,
-  FETCH_CONNECTIONS,
-  SET_CONNECTIONS,
   CREATE_POST_SET_REQUEST,
   CREATE_POST_SET_SUCCESS,
   // CHECK_USER_OBJECT,
@@ -440,14 +438,6 @@ export function updateBunchPostRequest(posts) {
 
 export function updateBunchPostSuccess() {
   return { type: UPDATE_BUNCH_POST_SUCCESS };
-}
-
-export function fetchConnections(accountId) {
-  return { type: FETCH_CONNECTIONS, accountId };
-}
-
-export function setConnections(connections) {
-  return { type: SET_CONNECTIONS, connections };
 }
 
 export function createPostSetRequest(postSet, edit = true) {

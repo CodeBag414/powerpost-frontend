@@ -12,11 +12,6 @@ const makeSelectChannelType = () => createSelector(
   (connections) => connections.get('channelType')
 );
 
-const makeSelectConnections = () => createSelector(
-  selectConnections,
-  (connections) => connections.get('connections')
-);
-
 const makeSelectDialogShown = () => createSelector(
   selectConnections,
   (connections) => connections.get('dialogShown')
@@ -35,7 +30,6 @@ const makeSelectAccountId = () => createSelector(
 export {
   makeSelectChannelFilter,
   makeSelectChannelType,
-  makeSelectConnections,
   makeSelectDialogShown,
   makeSelectSocialUrls,
   makeSelectAccountId,

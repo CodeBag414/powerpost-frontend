@@ -55,7 +55,6 @@ import {
   SET_POSTS,
   // UPDATE_POST_SUCCESS,
   // UPDATE_POST_SET_SUCCESS,
-  SET_CONNECTIONS,
   CREATE_POST_SET_SUCCESS,
   FETCH_MEDIA_ITEMS_SUCCESS,
   FETCH_MEDIA_ITEMS_ERROR,
@@ -377,8 +376,6 @@ function globalReducer(state = initialState, action) {
     //     })))
     //     : state;
     // }
-    case SET_CONNECTIONS:
-      return state.set('connections', action.connections);
     case CREATE_POST_SET_SUCCESS:
       return state.set('post_set', {
         ...action.postSet,
