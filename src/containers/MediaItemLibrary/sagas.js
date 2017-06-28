@@ -180,8 +180,10 @@ export function* updateMediaItem(action) {
   const data = {
     payload: item,
   };
+  console.log(data);
 
   const results = yield call(putData, `/media_api/media_item/${item.media_item_id}`, data);
+  console.log(results);
   if (results.data.result === 'success') {
     const mediaItems = results.data.media_items;
     yield put({ type: UPDATE_MEDIA_ITEM_SUCCESS, mediaItems });

@@ -77,7 +77,7 @@ class LinkEditor extends Component {
         this.setState({ descriptionValue: nextProps.linkItem.properties.description });
       }
       if (this.state.selectedImage !== nextProps.linkItem.properties.picture) {
-        this.setState({ selectedImage: { url: nextProps.linkItem.properties.picture } });
+        this.setState({ selectedImage: { url: nextProps.linkItem.properties.thumb_url } });
       }
     }
 
@@ -177,7 +177,8 @@ class LinkEditor extends Component {
   render() {
     const { urlContent, linkEditorDialog, closeAllDialog, mediaLibraryContext } = this.props;
     const { url, titleValue, descriptionValue, selectedImage, selectedImageIndex } = this.state;
-    const create = 'create';
+    const create = true;
+    const doNotCreate = false;
 
     return (
       <PPDialog
@@ -255,7 +256,7 @@ class LinkEditor extends Component {
               { mediaLibraryContext &&
                 <Button onClick={() => this.prepareLinkItem(create)} primary style={{ marginRight: '5px' }}>Save & Create Post</Button>
               }
-              <Button onClick={this.prepareLinkItem} primary>Save</Button>
+              <Button onClick={() => this.prepareLinkItem(doNotCreate)} primary>Save</Button>
             </div>
           </FooterWrapper>
         </Wrapper>

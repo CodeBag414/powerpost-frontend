@@ -4,14 +4,13 @@ import PPButton from 'elements/atm.Button';
 import PPAvatar from 'elements/atm.Avatar';
 import PPTooltip from 'elements/atm.Tooltip';
 import withReactRouter from 'elements/hoc.withReactRouter';
-import SubBrandItem from '../SubBrandItem';
 
 import Wrapper from './Wrapper';
 
 const ReactRouterButton = withReactRouter(PPButton);
 const PPTooltipRouter = PPTooltip(ReactRouterButton);
 
-const BrandItem = (props) => {
+const SubBrandItem = (props) => {
   const brand = props.brand;
 
   const thumbURL = (brand && brand.properties.thumb_url) ? brand.properties.thumb_url : '';
@@ -19,8 +18,7 @@ const BrandItem = (props) => {
   const title = brand && brand.title ? brand.title : '';
   const accountID = brand && brand.account_id ? brand.account_id : 'me';
   const brandURL = `/account/${accountID}`;
-  const accessLevel = brand && brand.user_access_level ? brand.user_access_level : '';
-  const role = accessLevel === 'owner' ? accessLevel : `${accessLevel} - Shared`;
+  const role = props.role;
 
   return (
     <Wrapper>
@@ -31,7 +29,7 @@ const BrandItem = (props) => {
         <div className="item">
           <div className="avatar">
             <PPAvatar
-              size={45}
+              size={32}
               image={thumbURL}
               title={title}
               backgroundColor={color}
@@ -85,14 +83,13 @@ const BrandItem = (props) => {
           <i className="fa fa-cog"></i>
         </PPTooltipRouter>
       </div>
-      { brand.subAccounts && brand.subAccounts.length > 0 && <p style={{ marginLeft: '40px', fontWeight: '700' }}>Sub-Brands</p> }
-      { brand.subAccounts && brand.subAccounts.length > 0 && brand.subAccounts.map((subbrand, i) => <SubBrandItem brand={subbrand} key={i} role={role} />)}
     </Wrapper>
   );
 };
 
-BrandItem.propTypes = {
+SubBrandItem.propTypes = {
   brand: React.PropTypes.object,
+  role: React.PropTypes.string,
 };
 
-export default BrandItem;
+export default SubBrandItem;

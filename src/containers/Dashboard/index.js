@@ -77,11 +77,7 @@ const Dashboard = (props) => {
                     ? <BrandItem brand={userOwnAccount} key={'ownaccount'} />
                     : null
                   }
-                  {
-                    brands
-                    ? brands.map((brand, index) => <BrandItem brand={brand} key={index} />)
-                    : null
-                  }
+                  { brands.length > 0 && brands.map((brand, index) => <BrandItem brand={brand} key={index} />) }
                 </div>
               </div>
             </Pane>

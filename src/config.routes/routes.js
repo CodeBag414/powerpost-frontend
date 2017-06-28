@@ -209,26 +209,6 @@ export function createRoutes(store, auth) {
                 importModules.catch(errorLoading);
               },
             },
-            {
-              path: 'shared_streams/:stream_category(/:stream_id)',
-              name: 'Shared Stream',
-              getComponent(nextState, cb) {
-                const importModules = Promise.all([
-                  System.import('containers/PostEditor/reducer'),
-                  System.import('containers/PostEditor/sagas'),
-                  System.import('containers/MediaItemLibrary/PowerStream'),
-                ]);
-                const renderRoute = loadModule(cb);
-
-                importModules.then(([postEditorReducer, postEditorSagas, component]) => {
-                  injectReducer('postEditor', postEditorReducer.default);
-                  injectSagas(postEditorSagas.default);
-                  renderRoute(component);
-                });
-
-                importModules.catch(errorLoading);
-              },
-            },
           ],
         },
         {
@@ -244,6 +224,30 @@ export function createRoutes(store, auth) {
             const renderRoute = loadModule(cb);
 
             importModules.then(([postEditorReducer, postEditorSagas, component]) => {
+              injectReducer('postEditor', postEditorReducer.default);
+              injectSagas(postEditorSagas.default);
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+        {
+          path: '/account(/:account_id)/shared_streams/:stream_category(/:stream_id)',
+          name: 'Shared Stream',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/MediaItemLibrary/reducer'),
+              System.import('containers/MediaItemLibrary/sagas'),
+              System.import('containers/PostEditor/reducer'),
+              System.import('containers/PostEditor/sagas'),
+              System.import('containers/MediaItemLibrary/PowerStream'),
+            ]);
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([mediaLibraryReducer, mediaLibrarySaga, postEditorReducer, postEditorSagas, component]) => {
+              injectReducer('library', mediaLibraryReducer.default);
+              injectSagas(mediaLibrarySaga.default);
               injectReducer('postEditor', postEditorReducer.default);
               injectSagas(postEditorSagas.default);
               renderRoute(component);

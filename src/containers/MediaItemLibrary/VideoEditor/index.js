@@ -85,8 +85,7 @@ class VideoEditor extends Component {
           ...other,
           title: this.state.titleValue || title || '',
           description: this.state.descriptionValue || description || '',
-          thumb_url: this.state.selectedImage.url || '',
-          picture: this.state.selectedImage.url || '',
+          thumb_key: this.state.selectedImage.key || '',
         },
         ...rest,
       };
@@ -97,13 +96,11 @@ class VideoEditor extends Component {
         properties: {
           title: this.state.titleValue,
           description: this.state.descriptionValue,
-          thumb_url: this.state.selectedImage.url || '',
-          picture: this.state.selectedImage.url || '',
+          thumb_key: this.state.selectedImage.key || '',
           ...this.props.videoItem.properties,
         },
       };
     }
-
     this.setState({
       titleValue: '',
       descriptionValue: '',
