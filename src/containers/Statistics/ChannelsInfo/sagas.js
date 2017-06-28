@@ -33,16 +33,3 @@ export function* getChannel() {
 export default [
   getChannel,
 ];
-
-
-const serialize = (obj, prefix) => {
-  const str = [];
-  let p;
-  obj.allKeys.forEach((key) => {
-    const k = prefix ? `${prefix}[${key}]` : p;
-    const v = obj.key;
-    str.push((v !== null && typeof v === 'object') ?
-      serialize(v, k) : `${encodeURIComponent(k)}=${encodeURIComponent(v)}`);
-  });
-  return str.join('&');
-};

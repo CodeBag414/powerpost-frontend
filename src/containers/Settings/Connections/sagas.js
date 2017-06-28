@@ -9,6 +9,7 @@ import {
     getData,
     putData,
     postData,
+    serialize,
 } from 'utils/request';
 
 import { makeSelectSubCallback } from './selectors';
@@ -268,17 +269,3 @@ export default [
   watchWordpress,
   getConnections,
 ];
-
-const serialize = function serialize(obj, prefix) {
-  const str = [];
-  let p;
-  for (p in obj) { // eslint-disable-line no-restricted-syntax
-    if (Object.prototype.hasOwnProperty.call(obj, p)) {
-      const k = prefix ? `${prefix}[${p}]` : p, v = obj[p]; // eslint-disable-line
-      str.push((v !== null && typeof v === 'object') ?
-        serialize(v, k) :
-        `${encodeURIComponent(k)}=${encodeURIComponent(v)}`);
-    }
-  }
-  return str.join('&');
-};

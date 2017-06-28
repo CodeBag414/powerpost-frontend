@@ -53,3 +53,17 @@ export function deleteData(url, isAuthReq = true) {
 
   return axios.delete(requestUrl, headers);
 }
+
+export function serialize(obj, prefix) {
+  const str = [];
+  let p;
+  for (p in obj) { // eslint-disable-line no-restricted-syntax
+    if (Object.prototype.hasOwnProperty.call(obj, p)) {
+      const k = prefix ? `${prefix}[${p}]` : p, v = obj[p]; // eslint-disable-line
+      str.push((v !== null && typeof v === 'object') ?
+        serialize(v, k) :
+        `${encodeURIComponent(k)}=${encodeURIComponent(v)}`);
+    }
+  }
+  return str.join('&');
+}

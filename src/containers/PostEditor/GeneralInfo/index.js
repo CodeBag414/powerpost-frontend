@@ -16,7 +16,7 @@ function handleTitleKeyDown(e) {
 
 function GeneralInfo({ user, postSet, postTitle, handleTitleChange, handleTitleBlur, modal, goBack, location }) {
   const onBack = () => {
-    if (location.state.prevUrl) {
+    if (location.state && location.state.prevUrl) {
       browserHistory.push(location.state.prevUrl);
     } else {
       goBack();

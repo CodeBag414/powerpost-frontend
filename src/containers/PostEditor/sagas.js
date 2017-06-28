@@ -9,6 +9,7 @@ import {
   postData,
   deleteData,
   putData,
+  serialize,
 } from 'utils/request';
 
 import {
@@ -389,17 +390,3 @@ export default [
   fetchWordpressGUISaga,
   createPostSaga,
 ];
-
-const serialize = (obj, prefix) => {
-  const str = [];
-  const keys = Object.keys(obj);
-  for (let i = 0; i < keys.length; i += 1) {
-    const p = keys[i];
-    const k = prefix ? `${prefix}[${p}]` : p;
-    const v = obj[p];
-    str.push((v !== null && typeof v === 'object') ?
-      serialize(v, k) :
-      `${encodeURIComponent(k)}=${encodeURIComponent(v)}`);
-  }
-  return str.join('&');
-};

@@ -1,13 +1,13 @@
 import { takeLatest, takeEvery } from 'redux-saga';
 import { take, call, put, cancel, select, fork } from 'redux-saga/effects';
 import { LOCATION_CHANGE, push } from 'react-router-redux';
-import { find } from 'lodash';
 import { toastr } from 'lib/react-redux-toastr';
 
 import {
   getData,
   postData,
   putData,
+  serialize,
 } from 'utils/request';
 
 import {
@@ -482,18 +482,4 @@ const delay = (millis) => {
     setTimeout(() => resolve(true), millis);
   });
   return promise;
-};
-
-const serialize = (obj, prefix) => {
-  const str = [];
-  const keys = Object.keys(obj);
-  for (let i = 0; i < keys.length; i += 1) {
-    const p = keys[i];
-    const k = prefix ? `${prefix}[${p}]` : p;
-    const v = obj[p];
-    str.push((v !== null && typeof v === 'object') ?
-      serialize(v, k) :
-      `${encodeURIComponent(k)}=${encodeURIComponent(v)}`);
-  }
-  return str.join('&');
 };
