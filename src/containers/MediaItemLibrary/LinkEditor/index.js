@@ -77,7 +77,7 @@ class LinkEditor extends Component {
         this.setState({ descriptionValue: nextProps.linkItem.properties.description });
       }
       if (this.state.selectedImage !== nextProps.linkItem.properties.picture) {
-        this.setState({ selectedImage: { url: nextProps.linkItem.properties.picture } });
+        this.setState({ selectedImage: { url: nextProps.linkItem.properties.thumb_url } });
       }
     }
 
