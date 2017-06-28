@@ -9,7 +9,7 @@ import { takeLatest, delay } from 'redux-saga';
 import { take, call, put, race, select, fork } from 'redux-saga/effects';
 import { browserHistory } from 'react-router';
 import { toastr } from 'lib/react-redux-toastr';
-import { getData, postData, putData } from 'utils/request';
+import { getData, postData, putData, serialize } from 'utils/request';
 import auth from 'utils/auth';
 import { set } from 'utils/localStorage';
 import { makeSelectCurrentAccount } from 'containers/Main/selectors';
@@ -531,21 +531,6 @@ export function* removeUserFromGroupFlow() {
     }
   }
 }
-
-
-const serialize = function serialize(obj, prefix) {
-  const str = [];
-  let p;
-  for (p in obj) { // eslint-disable-line no-restricted-syntax
-    if (Object.prototype.hasOwnProperty.call(obj, p)) {
-      const k = prefix ? `${prefix}[${p}]` : p, v = obj[p]; // eslint-disable-line
-      str.push((v !== null && typeof v === 'object') ?
-        serialize(v, k) :
-        `${encodeURIComponent(k)}=${encodeURIComponent(v)}`);
-    }
-  }
-  return str.join('&');
-};
 
 export function* fetchPostSetsWorker(payload) {
   const data = {
