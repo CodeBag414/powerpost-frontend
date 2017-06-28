@@ -32,7 +32,6 @@ import {
   setMediaItem,
   fetchUrlData,
   clearUrlContent,
-  fetchCollections,
 } from 'containers/PostEditor/actions';
 
 import {
@@ -69,7 +68,6 @@ class Content extends Component {
     filter: PropTypes.string,
     mediaItems: PropTypes.array,
     updatePostSet: PropTypes.func,
-    fetchCollections: PropTypes.func,
     clearUrlContent: PropTypes.func,
     createMediaItem: PropTypes.func,
     updateMediaItem: PropTypes.func,
@@ -102,7 +100,6 @@ class Content extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchCollections(this.props.accountId);
     const { globalMessage } = this.state;
     this.linkifyMessage(globalMessage);
   }
@@ -523,7 +520,6 @@ export function mapDispatchToProps(dispatch) {
     setMediaItem: (mediaItem) => dispatch(setMediaItem(mediaItem)),
     fetchUrlData: (url) => dispatch(fetchUrlData(url)),
     clearUrlContent: () => dispatch(clearUrlContent()),
-    fetchCollections: (accountId) => dispatch(fetchCollections(accountId)),
   };
 }
 
