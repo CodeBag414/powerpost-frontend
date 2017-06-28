@@ -5,6 +5,7 @@ import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { browserHistory } from 'react-router';
 import { find, filter } from 'lodash';
+import styled from 'styled-components';
 
 import { toastr } from 'lib/react-redux-toastr';
 
@@ -12,6 +13,9 @@ import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 
 import Loading from 'components/Loading';
 import CloseableDialog from 'elements/atm.CloseableDialog';
+import MenuItem from 'elements/atm.MenuItem';
+import Menu from 'elements/atm.Menu';
+import withReactRouter from 'elements/hoc.withReactRouter';
 
 import {
   updatePostSetRequest,
@@ -30,11 +34,30 @@ import {
   makeSelectEmailInvited,
 } from '../selectors';
 
+import styles from './styles.scss';
+
 import ErrorWrapper from './ErrorWrapper';
 import Wrapper from './Wrapper';
 import TabBar from './TabBar';
 import PostSetBox from './PostSetBox';
 import InviteForm from './InviteForm';
+
+const ReactRouterMenuItem = withReactRouter(MenuItem);
+
+const SidebarWrapper = styled.div`
+  width: 177px;
+  height: 100vh;
+  position:fixed;
+  border-right: 2px solid #DBDFE0;
+  padding: 5px;
+  padding-top: 15px;
+`;
+
+const ContentWrapper = styled.div`
+  float: right;
+  width: calc(100% - 177px);
+  height: 100%;
+`;
 
 class PowerStreamLayout extends Component {
   static propTypes = {
@@ -104,7 +127,7 @@ class PowerStreamLayout extends Component {
         error: '',
       });
 
-      browserHistory.push(`/account/${accountId}/library/shared_streams/${streamCategory}/${newStreamId}${hash}`);
+      browserHistory.push(`/account/${accountId}/shared_streams/${streamCategory}/${newStreamId}${hash}`);
     }
     fetchStreamPostSets(newStreamId, {
       query_by: 'stream_id',
@@ -122,7 +145,7 @@ class PowerStreamLayout extends Component {
       }, 'powerstream');
     } else {
       replicatePostSet(
-        `/account/${accountId}/library/shared_streams/${streamCategory}/${streamId}`,
+        `/account/${accountId}/shared_streams/${streamCategory}/${streamId}`,
         {
           account_id: accountId,
           post_set_id: postSet.get('post_set_id'),
@@ -165,9 +188,17 @@ class PowerStreamLayout extends Component {
     if (error) {
       return (
         <Wrapper>
-          <ErrorWrapper>
-            { error }
-          </ErrorWrapper>
+          <SidebarWrapper>
+            <Menu style={{ margin: '0 auto', padding: '0', width: '150px' }} selectable>
+              <ReactRouterMenuItem caption="Owned" activeClassName={styles.active} to={`/account/${this.props.accountId}/shared_streams/owned`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important', width: '150px' }} />
+              <ReactRouterMenuItem caption="Subscriptions" activeClassName={styles.active} to={`/account/${this.props.accountId}/shared_streams/subscriptions`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
+            </Menu>
+          </SidebarWrapper>
+          <ContentWrapper>
+            <ErrorWrapper>
+              { error }
+            </ErrorWrapper>
+          </ContentWrapper>
         </Wrapper>
       );
     }
@@ -178,7 +209,7 @@ class PowerStreamLayout extends Component {
 
     const tabs = streams.map((s) => ({
       label: s.title,
-      link: `/account/${accountId}/library/shared_streams/${streamCategory}/${s.stream_id}`,
+      link: `/account/${accountId}/shared_streams/${streamCategory}/${s.stream_id}`,
     }));
     const currentStream = find(streams, { stream_id: streamId });
     const streamName = (currentStream || {}).title;
@@ -187,35 +218,43 @@ class PowerStreamLayout extends Component {
 
     return (
       <Wrapper>
-        <TabBar
-          owned={owned}
-          tabs={tabs}
-          toggleShareDialog={this.toggleShareDialog}
-        />
-        <PostSetBox
-          owned={owned}
-          postSets={postSets.get('data')}
-          streamName={streamName}
-          handlePostSet={this.handlePostSet}
-        />
-        <CloseableDialog
-          active={shareDialogVisible}
-          onEscKeyDown={this.toggleShareDialog}
-          onOverlayClick={this.toggleShareDialog}
-          onClose={this.toggleShareDialog}
-          title="Invite a new subscriber to Stream Name"
-        >
-          <InviteForm
-            handleSubmit={this.sendInvite}
+        <SidebarWrapper>
+          <Menu style={{ margin: '0 auto', padding: '0', width: '150px' }} selectable>
+            <ReactRouterMenuItem caption="Owned" activeClassName={styles.active} to={`/account/${this.props.accountId}/shared_streams/owned`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important', width: '150px' }} />
+            <ReactRouterMenuItem caption="Subscriptions" activeClassName={styles.active} to={`/account/${this.props.accountId}/shared_streams/subscriptions`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
+          </Menu>
+        </SidebarWrapper>
+        <ContentWrapper>
+          <TabBar
+            owned={owned}
+            tabs={tabs}
+            toggleShareDialog={this.toggleShareDialog}
           />
-        </CloseableDialog>
-        { postsetId &&
-          <PostEditor
-            id={postsetId}
-            accountId={accountId}
+          <PostSetBox
+            owned={owned}
+            postSets={postSets.get('data')}
+            streamName={streamName}
+            handlePostSet={this.handlePostSet}
           />
-        }
-        { postSets.get('isFetching') && <Loading /> }
+          <CloseableDialog
+            active={shareDialogVisible}
+            onEscKeyDown={this.toggleShareDialog}
+            onOverlayClick={this.toggleShareDialog}
+            onClose={this.toggleShareDialog}
+            title="Invite a new subscriber to Stream Name"
+          >
+            <InviteForm
+              handleSubmit={this.sendInvite}
+            />
+          </CloseableDialog>
+          { postsetId &&
+            <PostEditor
+              id={postsetId}
+              accountId={accountId}
+            />
+          }
+          { postSets.get('isFetching') && <Loading /> }
+        </ContentWrapper>
       </Wrapper>
     );
   }
