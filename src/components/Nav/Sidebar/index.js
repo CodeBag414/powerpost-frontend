@@ -105,7 +105,7 @@ class Sidebar extends React.Component {
               <ReactRouterMenuItemWithTooltip tooltip="Brands" tooltipPosition="right" isCollapsed style={{ width: '60px' }} isSidebar icon={<i className="fa fa-th-large" />} to={`/account/${this.props.accountId}/brands`} />
             }
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('content_library') > -1 &&
-            <ReactRouterMenuItemWithTooltip tooltip="Content" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-folder" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/library`} />
+            <ReactRouterMenuItemWithTooltip tooltip="Content Hub" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-folder" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/library`} />
             }
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
               <ReactRouterMenuItemWithTooltip tooltip="Status Boards" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-columns" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/boards`} />

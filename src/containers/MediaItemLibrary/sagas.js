@@ -71,12 +71,13 @@ export function* getCollections(action) {
 
   const params = serialize(data);
   const collections = yield call(getData, `/media_api/collections?${params}`);
-
+  console.log(collections);
   yield put({ type: FETCH_COLLECTIONS_SUCCESS, collections });
 
   const activeCollection = yield select(makeSelectActiveCollection());
 
   const mediaItems = yield call(getData, `/media_api/collection/${activeCollection.collection_id}`);
+  console.log(mediaItems);
   if (!mediaItems.data.error) {
     yield put({ type: FETCH_MEDIA_ITEMS_SUCCESS, mediaItems });
   } else {
@@ -438,7 +439,7 @@ export function* createBlogItemWatcher() {
 }
 
 export function* mediaItemSaga() {
-  const watcherA = yield fork(collectionData);
+  //const watcherA = yield fork(collectionData);
   const watcherB = yield fork(linkData);
   const watcherC = yield fork(mediaItem);
   const watcherD = yield fork(searchBing);
@@ -456,7 +457,7 @@ export function* mediaItemSaga() {
 
   yield take(LOCATION_CHANGE);
 
-  yield cancel(watcherA);
+  //yield cancel(watcherA);
   yield cancel(watcherB);
   yield cancel(watcherC);
   yield cancel(watcherD);
@@ -475,6 +476,7 @@ export function* mediaItemSaga() {
 
 export default [
   mediaItemSaga,
+  collectionData,
 ];
 
 const delay = (millis) => {

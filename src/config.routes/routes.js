@@ -72,7 +72,7 @@ export function createRoutes(store, auth) {
       childRoutes: [
         {
           path: '/user/settings',
-          name: 'user settings',
+          name: 'User Settings',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
               System.import('containers/User'),
@@ -123,7 +123,7 @@ export function createRoutes(store, auth) {
         },
         {
           path: 'account(/:account_id)/library',
-          name: 'Library',
+          name: 'Content Hub',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
               System.import('containers/MediaItemLibrary/reducer'),
@@ -142,6 +142,7 @@ export function createRoutes(store, auth) {
             importModules.catch(errorLoading);
           },
           indexRoute: {
+            name: 'Content Hub',
             getComponent(nextState, cb) {
               const importModules = Promise.all([
                   // System.import('../App/views/Main/views/Dashboard/state/reducer'),
@@ -213,9 +214,11 @@ export function createRoutes(store, auth) {
         },
         {
           path: '/account(/:account_id)/calendar',
-          name: 'calendar',
+          name: 'Calendar',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
+              System.import('containers/MediaItemLibrary/reducer'),
+              System.import('containers/MediaItemLibrary/sagas'),
               System.import('containers/PostEditor/reducer'),
               System.import('containers/PostEditor/sagas'),
               System.import('containers/Calendar'),
@@ -223,7 +226,9 @@ export function createRoutes(store, auth) {
 
             const renderRoute = loadModule(cb);
 
-            importModules.then(([postEditorReducer, postEditorSagas, component]) => {
+            importModules.then(([mediaLibraryReducer, mediaLibrarySaga, postEditorReducer, postEditorSagas, component]) => {
+              injectReducer('library', mediaLibraryReducer.default);
+              injectSagas(mediaLibrarySaga.default);
               injectReducer('postEditor', postEditorReducer.default);
               injectSagas(postEditorSagas.default);
               renderRoute(component);
@@ -234,7 +239,7 @@ export function createRoutes(store, auth) {
         },
         {
           path: '/account(/:account_id)/shared_streams/:stream_category(/:stream_id)',
-          name: 'Shared Stream',
+          name: 'Shared Streams',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
               System.import('containers/MediaItemLibrary/reducer'),
@@ -297,7 +302,7 @@ export function createRoutes(store, auth) {
         },
         {
           path: '/account(/:account_id)/boards',
-          name: 'board',
+          name: 'Status Boards',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
               System.import('containers/PostEditor/reducer'),
@@ -318,7 +323,7 @@ export function createRoutes(store, auth) {
         },
         {
           path: '/account(/:account_id)/published',
-          name: 'Published Posts',
+          name: 'Published',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
               System.import('containers/PublishedPosts'),
@@ -334,7 +339,7 @@ export function createRoutes(store, auth) {
         },
         {
           path: '/account(/:account_id)/statistics',
-          name: 'statistics',
+          name: 'Analytics',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
               System.import('containers/Statistics/reducer'),
@@ -375,7 +380,7 @@ export function createRoutes(store, auth) {
         },
         {
           path: '/account(/:account_id)/brands',
-          name: 'brands',
+          name: 'Brands',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
               System.import('containers/Brands/reducer'),
@@ -396,7 +401,7 @@ export function createRoutes(store, auth) {
         },
         {
           path: '/account(/:account_id)/posts',
-          name: 'posts',
+          name: 'Posts',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
               System.import('containers/PostEditor/reducer'),
@@ -417,7 +422,7 @@ export function createRoutes(store, auth) {
         },
         {
           path: '/account(/:account_id)/settings',
-          name: 'settings',
+          name: 'Settings',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
               System.import('containers/Settings/reducer'),
@@ -439,7 +444,7 @@ export function createRoutes(store, auth) {
           childRoutes: [
             {
               path: '/account(/:account_id)/settings/connections',
-              name: 'connections',
+              name: 'Connections',
               getComponent(nextstate, cb) {
                 const importModules = Promise.all([
                   System.import('containers/Settings/Connections/reducer'),

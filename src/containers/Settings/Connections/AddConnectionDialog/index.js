@@ -222,7 +222,7 @@ class AddConnectionDialog extends React.Component {
         channel: 'googleplus',
         sub: true,
         url: this.props.socialUrls ? this.props.socialUrls.google : '',
-      }
+      },
     ];
     const len = ((this.props.subChannel && Object.getOwnPropertyNames(this.props.subChannel)) || []).length;
     if (len !== 0) {
