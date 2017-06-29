@@ -54,7 +54,7 @@ class StatusChooser extends React.Component {
     posts.map((post) => {
       const status = post.get('status');
       if (status === '0') return false;
-      if (status !== '5' && post.get('schedule_time') && moment().diff(moment.unix(post.get('schedule_time'))) < 0) {
+      if (status !== '5' && post.get('schedule_time')) {
         hasScheduledPost = true;
       }
       if (status === '5') {
