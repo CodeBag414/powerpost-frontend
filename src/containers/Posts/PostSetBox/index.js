@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import Dropdown from 'elements/atm.Dropdown';
 import PostEditor from 'containers/PostEditor';
+import Loading from 'components/Loading';
 import ErrorWrapper from '../ErrorWrapper';
 import Wrapper from './Wrapper';
 import PostSetList from './PostSetList';
@@ -21,9 +22,10 @@ const sortByOptions = [
 
 class PostSetBox extends Component {
   static propTypes = {
-    postSets: ImmutablePropTypes.list,
-    postSetsByST: ImmutablePropTypes.map,
+    postSets: ImmutablePropTypes.map,
     accountId: PropTypes.string,
+    fetchPostSets: PropTypes.func,
+    fetchPostSetsByST: PropTypes.func,
   }
 
   state = {
@@ -48,6 +50,13 @@ class PostSetBox extends Component {
   }
 
   handleSortByChange = (sortBy) => {
+    if (this.state.sortBy.value === sortBy.value) return;
+    const { fetchPostSets, fetchPostSetsByST } = this.props;
+    if (sortBy.value === 'schedule_time') {
+      fetchPostSetsByST();
+    } else {
+      fetchPostSets();
+    }
     this.setState({ sortBy });
   }
 
@@ -76,17 +85,69 @@ class PostSetBox extends Component {
 
   render() {
     let { postSets } = this.props;
-    const { accountId, postSetsByST } = this.props;
+    const { accountId } = this.props;
     const { currentPostSetIndex, currentPostStatus, searchText, sortBy } = this.state;
+    const statuses = [
+      { status: 3, statusColor: '#ABE66A', name: 'Ready' },
+      { status: 5, statusColor: '#B171B5', name: 'Review' },
+      { status: 2, statusColor: '#67C5E6', name: 'Draft' },
+      { status: 6, statusColor: '#ACB5B8', name: 'Idea' },
+    ];
+    const heading = (
+      <div className="posts-heading">
+        <StatusSelector
+          activeStatus={currentPostStatus}
+          onChange={this.changePostStatus}
+          statuses={statuses}
+        />
+        <div className="filter-wrapper">
+          <div className="sort_input">
+            <Dropdown
+              value={sortBy}
+              options={sortByOptions}
+              placeholder="Sort By"
+              onChange={this.handleSortByChange}
+            />
+          </div>
+          <div className="search-input">
+            <input placeholder="Search Title and Tags" value={searchText} onChange={(e) => this.onSearch(e.target.value)} />
+            <i className="fa fa-search" />
+          </div>
+        </div>
+      </div>
+    );
+    if (postSets.get('requesting')) {
+      return (
+        <Wrapper>
+          {heading}
+          <ErrorWrapper>
+            <Loading />
+          </ErrorWrapper>
+        </Wrapper>
+      );
+    }
     if (sortBy.value === 'schedule_time') {
-      const postSetsByScheduleTime = postSetsByST.get('data');
+      const postSetsByScheduleTime = postSets.get('data');
+      if (!postSetsByScheduleTime.get('post_when_ready_post_sets')) {
+        return (
+          <Wrapper>
+            {heading}
+            <ErrorWrapper>
+              <Loading />
+            </ErrorWrapper>
+          </Wrapper>
+        );
+      }
       postSets = postSetsByScheduleTime.get('post_when_ready_post_sets')
         .concat(postSetsByScheduleTime.get('scheduled_post_sets'))
         .concat(postSetsByScheduleTime.get('unscheduled_post_sets'));
+    } else {
+      postSets = postSets.getIn(['data', 'post_sets']);
     }
-    if (postSets.isEmpty()) {
+    if (!postSets || postSets.isEmpty()) {
       return (
         <Wrapper>
+          {heading}
           <ErrorWrapper>
             No posts.
           </ErrorWrapper>
@@ -98,39 +159,13 @@ class PostSetBox extends Component {
       .filter((postSet) => parseInt(postSet.get('status'), 10) === parseInt(currentPostStatus, 10))
       .sort((a, b) => b.get(sortBy.value, 0) - a.get(sortBy.value, 0));
     const postsetId = generatedPostSets.getIn([currentPostSetIndex, 'post_set_id']);
-    const statuses = [
-      { status: 3, statusColor: '#ABE66A', name: 'Ready' },
-      { status: 5, statusColor: '#B171B5', name: 'Review' },
-      { status: 2, statusColor: '#67C5E6', name: 'Draft' },
-      { status: 6, statusColor: '#ACB5B8', name: 'Idea' },
-    ];
     statuses.forEach((status, index) =>
       (statuses[index].size = filteredPostSets.filter((postSet) =>
         parseInt(postSet.get('status'), 10) === parseInt(status.status, 10)).size
       ));
     return (
       <Wrapper>
-        <div className="posts-heading">
-          <StatusSelector
-            activeStatus={currentPostStatus}
-            onChange={this.changePostStatus}
-            statuses={statuses}
-          />
-          <div className="filter-wrapper">
-            <div className="sort_input">
-              <Dropdown
-                value={sortBy}
-                options={sortByOptions}
-                placeholder="Sort By"
-                onChange={this.handleSortByChange}
-              />
-            </div>
-            <div className="search-input">
-              <input placeholder="Search Title and Tags" value={searchText} onChange={(e) => this.onSearch(e.target.value)} />
-              <i className="fa fa-search" />
-            </div>
-          </div>
-        </div>
+        {heading}
         <div className="posts-content">
           <div className="post-list-container">
             <PostSetList

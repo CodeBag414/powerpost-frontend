@@ -38,20 +38,12 @@ import {
   REMOVE_USER_FROM_GROUP,
   REMOVE_USER_FROM_GROUP_SUCCESS,
   REMOVE_USER_FROM_GROUP_ERROR,
-  FETCH_POST_SETS,
   SET_POST_SETS,
   DELETE_POST_SET_REQUEST,
   CHANGE_POST_SET_REQUEST,
   FETCH_POST_SET_REQUEST,
   FETCH_POST_SET_SUCCESS,
   FETCH_POST_SET_ERROR,
-  FETCH_POST_SETS_BY_ST_REQUEST,
-  FETCH_POST_SETS_BY_ST_SUCCESS,
-  FETCH_POST_SETS_BY_ST_FAILURE,
-  SET_POST_SETS_BY_ST,
-  FETCH_POST_SETS_BY_SO_REQUEST,
-  FETCH_POST_SETS_BY_SO_SUCCESS,
-  FETCH_POST_SETS_BY_SO_FAILURE,
   UPDATE_POST_SET_REQUEST,
   UPDATE_POST_SET_SUCCESS,
   UPDATE_POST_SET_ERROR,
@@ -67,6 +59,9 @@ import {
   FETCH_MEDIA_ITEMS_SUCCESS,
   FETCH_MEDIA_ITEMS_ERROR,
   CHANGE_POST_SET_SORT_ORDER_REQUEST,
+  FETCH_POST_SETS_REQUEST,
+  FETCH_POST_SETS_SUCCESS,
+  FETCH_POST_SETS_FAILURE,
 } from './constants';
 
 /**
@@ -355,12 +350,30 @@ export function removeUserFromGroupError(payload) {
   };
 }
 
-export function getPostSets(accountId) {
-  return { type: FETCH_POST_SETS, accountId };
+export function fetchPostSetsRequest(accountId) {
+  return {
+    type: FETCH_POST_SETS_REQUEST,
+    accountId,
+    filter: {
+      sort_by: 'creation_time',
+      sort_order: 'DESC',
+      limit: 500,
+      statuses: [1, 2, 3, 4, 5, 6],
+    },
+    action: 'fetchPostSetsRequest',
+  };
+}
+
+export function fetchPostSetsSuccess(postSets) {
+  return { type: FETCH_POST_SETS_SUCCESS, postSets };
 }
 
 export function setPostSets(postSets) {
   return { type: SET_POST_SETS, postSets };
+}
+
+export function fetchPostSetsFailure(error) {
+  return { type: FETCH_POST_SETS_FAILURE, error };
 }
 
 export function deletePostSetRequest(id) {
@@ -449,31 +462,28 @@ export function createPostSetSuccess(postSet, edit) {
 }
 
 export function fetchPostSetsBySTRequest(accountId) {
-  return { type: FETCH_POST_SETS_BY_ST_REQUEST, accountId };
-}
-
-export function fetchPostSetsBySTSuccess(postSets) {
-  return { type: FETCH_POST_SETS_BY_ST_SUCCESS, postSets };
-}
-
-export function setPostSetsByST(postSetsByST) {
-  return { type: SET_POST_SETS_BY_ST, postSetsByST };
-}
-
-export function fetchPostSetsBySTFailure(error) {
-  return { type: FETCH_POST_SETS_BY_ST_FAILURE, error };
+  return {
+    type: FETCH_POST_SETS_REQUEST,
+    accountId,
+    filter: {
+      limit: 500,
+    },
+    endPoint: 'post_sets_by_schedule_time',
+    action: 'fetchPostSetsBySTRequest',
+  };
 }
 
 export function fetchPostSetsBySORequest(accountId) {
-  return { type: FETCH_POST_SETS_BY_SO_REQUEST, accountId };
-}
-
-export function fetchPostSetsBySOSuccess(postSets) {
-  return { type: FETCH_POST_SETS_BY_SO_SUCCESS, postSets };
-}
-
-export function fetchPostSetsBySOFailure(error) {
-  return { type: FETCH_POST_SETS_BY_SO_FAILURE, error };
+  return {
+    type: FETCH_POST_SETS_REQUEST,
+    accountId,
+    filter: {
+      sort_by: 'sort_order',
+      sort_order: 'DESC',
+      limit: 500,
+    },
+    action: 'fetchPostSetsBySORequest',
+  };
 }
 
 export function fetchMediaItems(accountId) {

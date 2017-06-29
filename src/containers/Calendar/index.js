@@ -9,12 +9,12 @@ import { UserCanPostSet } from 'config.routes/UserRoutePermissions';
 import {
   deletePostSetRequest,
   fetchPostSetsBySTRequest,
-  setPostSetsByST,
+  setPostSets,
   updateBunchPostRequest,
 } from 'containers/App/actions';
 
 import {
-  makeSelectPostSetsByST,
+  makeSelectPostSets,
 } from 'containers/App/selectors';
 
 import {
@@ -54,7 +54,7 @@ class Calendar extends React.Component {
     showDeletePopup: false,
   };
 
-  componentDidMount() {
+  componentWillMount() {
     this.loadPostSetsByST();
   }
 
@@ -182,10 +182,9 @@ class Calendar extends React.Component {
   render() {
     const { query, showDeletePopup } = this.state;
     const { postSetsByST, currentAccount, params, location: { hash } } = this.props;
-    if (postSetsByST.get('requesting') && !postSetsByST.get('data')) {
+    if (postSetsByST.get('requesting') || !postSetsByST.getIn(['data', 'scheduled_post_sets'])) {
       return <Loading />;
     }
-
     const scheduledPostSets = this.filterPostSets(postSetsByST.getIn(['data', 'scheduled_post_sets']).toJS());
     const unscheduledPostSets = this.filterPostSets(postSetsByST.getIn(['data', 'unscheduled_post_sets']).toJS());
 
@@ -226,13 +225,13 @@ const mapDispatchToProps = (dispatch) => (
   {
     fetchPostSetsByST: () => dispatch(fetchPostSetsBySTRequest()),
     updateBunchPost: (posts) => dispatch(updateBunchPostRequest(posts)),
-    setPostSetsByST: (postSetsByST) => dispatch(setPostSetsByST(postSetsByST)),
+    setPostSetsByST: (postSets) => dispatch(setPostSets(postSets)),
     deletePostSet: (id) => dispatch(deletePostSetRequest(id)),
   }
 );
 
 const mapStateToProps = createStructuredSelector({
-  postSetsByST: makeSelectPostSetsByST(),
+  postSetsByST: makeSelectPostSets(),
   currentAccount: makeSelectCurrentAccount(),
 });
 

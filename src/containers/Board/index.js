@@ -15,7 +15,7 @@ import { UserCanBoard } from 'config.routes/UserRoutePermissions';
 import PostEditor from 'containers/PostEditor';
 import PostSetsGroup from './PostSetsGroup';
 import { deletePostSetRequest, changePostSetStatusRequest, fetchPostSetsBySORequest, changePostSetSortOrderRequest } from '../App/actions';
-import { makeSelectPostSetsBySO } from '../App/selectors';
+import { makeSelectPostSets } from '../App/selectors';
 import styles from './styles.scss';
 
 class Board extends React.Component {
@@ -167,7 +167,7 @@ export function mapDispatchToProps(dispatch) {
 }
 
 const mapStateToProps = createStructuredSelector({
-  postSets: makeSelectPostSetsBySO(),
+  postSets: makeSelectPostSets(),
 });
 
 export default UserCanBoard(connect(mapStateToProps, mapDispatchToProps)(Board));

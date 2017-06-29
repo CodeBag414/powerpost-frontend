@@ -13,7 +13,7 @@ import { getData, postData, putData, serialize } from 'utils/request';
 import auth from 'utils/auth';
 import { set } from 'utils/localStorage';
 import { makeSelectCurrentAccount } from 'containers/Main/selectors';
-import { makeSelectUser } from './selectors';
+import { makeSelectUser, makeSelectPostSets } from './selectors';
 
 import {
   SENDING_REQUEST,
@@ -38,8 +38,7 @@ import {
   INVITE_EMAIL_TO_GROUP,
   ADD_USER_TO_GROUP,
   REMOVE_USER_FROM_GROUP,
-  SET_POST_SETS,
-  FETCH_POST_SETS,
+  FETCH_POST_SETS_REQUEST,
   DELETE_POST_SET_REQUEST,
   DELETE_POST_SET_SUCCESS,
   CHANGE_POST_SET_REQUEST,
@@ -52,8 +51,6 @@ import {
   UPDATE_POST_REQUEST,
   UPDATE_BUNCH_POST_REQUEST,
   CREATE_POST_SET_REQUEST,
-  FETCH_POST_SETS_BY_ST_REQUEST,
-  FETCH_POST_SETS_BY_SO_REQUEST,
   FETCH_MEDIA_ITEMS_REQUEST,
 } from './constants';
 
@@ -81,19 +78,18 @@ import {
   fetchPostSetRequest,
   fetchPostSetSuccess,
   fetchPostSetError,
-  fetchPostSetsBySTRequest,
-  fetchPostSetsBySTSuccess,
-  fetchPostSetsBySTFailure,
-  fetchPostSetsBySOSuccess,
-  fetchPostSetsBySOFailure,
   updatePostSetSuccess,
   updatePostSetError,
-  getPostSets,
   updateBunchPostSuccess,
   setPosts,
   createPostSetSuccess,
   fetchMediaItemsSuccess,
   fetchMediaItemsFailure,
+  fetchPostSetsSuccess,
+  fetchPostSetsFailure,
+  fetchPostSetsRequest,
+  fetchPostSetsBySTRequest,
+  fetchPostSetsBySORequest,
 } from './actions';
 
 /**
@@ -530,69 +526,25 @@ export function* removeUserFromGroupFlow() {
   }
 }
 
-export function* fetchPostSetsWorker(payload) {
+export function* fetchPostSetsWorker({ accountId, filter, endPoint = 'post_sets' }) {
   const data = {
-    payload: {
-      sort_by: 'creation_time',
-      sort_order: 'DESC',
-      limit: 500,
-      statuses: [1, 2, 3, 4, 5, 6],
-    },
+    payload: filter,
   };
   const params = serialize(data);
-  const requestUrl = `/post_api/post_sets/${payload.accountId}?${params}`;
-  const result = yield call(getData, requestUrl);
-  if (result.data.status === 'success') {
-    const postSets = result.data.post_sets;
-    yield put({ type: SET_POST_SETS, postSets });
+  const currentAccount = yield select(makeSelectCurrentAccount());
+  let id = currentAccount.account_id;
+  if (accountId) {
+    id = accountId;
+  }
+  const requestUrl = `/post_api/${endPoint}/${id}?${params}`;
+  const response = yield call(getData, requestUrl);
+  if (response.data.status === 'success') {
+    // const postSets = response.data.post_sets;
+    // yield put({ type: SET_POST_SETS, postSets });
+    yield put(fetchPostSetsSuccess(response.data));
   } else {
+    yield put(fetchPostSetsFailure(response.data));
     // console.log(result);
-  }
-}
-
-function* fetchPostSetsBySTRequestWorker(payload) {
-  const data = {
-    payload: {
-      limit: 500,
-    },
-  };
-  const params = serialize(data);
-  const currentAccount = yield select(makeSelectCurrentAccount());
-  let id = currentAccount.account_id;
-  if (payload.accountId) {
-    id = payload.accountId;
-  }
-  const requestUrl = `/post_api/post_sets_by_schedule_time/${id}?${params}`;
-
-  const response = yield call(getData, requestUrl);
-  if (response.data.status === 'success') {
-    yield put(fetchPostSetsBySTSuccess(response.data));
-  } else {
-    yield put(fetchPostSetsBySTFailure(response.statusText));
-  }
-}
-
-function* fetchPostSetsBySORequestWorker(payload) {
-  const data = {
-    payload: {
-      sort_by: 'sort_order',
-      sort_order: 'DESC',
-      limit: 500,
-    },
-  };
-  const params = serialize(data);
-  const currentAccount = yield select(makeSelectCurrentAccount());
-  let id = currentAccount.account_id;
-  if (payload.accountId) {
-    id = payload.accountId;
-  }
-  const requestUrl = `/post_api/post_sets/${id}?${params}`;
-
-  const response = yield call(getData, requestUrl);
-  if (response.data.status === 'success') {
-    yield put(fetchPostSetsBySOSuccess(response.data));
-  } else {
-    yield put(fetchPostSetsBySOFailure(response.statusText));
   }
 }
 
@@ -675,8 +627,6 @@ export function* updatePostSetWorker(action) {
     const { data } = response;
     if (data.status === 'success') {
       yield put(updatePostSetSuccess(data.post_set, section));
-      yield put(getPostSets(data.post_set.account_id));
-      yield put(fetchPostSetsBySTRequest());
     } else {
       throw data.message;
     }
@@ -685,16 +635,8 @@ export function* updatePostSetWorker(action) {
   }
 }
 
-export function* fetchPostSets() {
-  yield takeLatest(FETCH_POST_SETS, fetchPostSetsWorker);
-}
-
-export function* fetchPostSetsBySTRequestSaga() {
-  yield takeLatest(FETCH_POST_SETS_BY_ST_REQUEST, fetchPostSetsBySTRequestWorker);
-}
-
-export function* fetchPostSetsBySORequestSaga() {
-  yield takeLatest(FETCH_POST_SETS_BY_SO_REQUEST, fetchPostSetsBySORequestWorker);
+export function* fetchPostSetsSaga() {
+  yield takeLatest(FETCH_POST_SETS_REQUEST, fetchPostSetsWorker);
 }
 
 export function* deletePostSet() {
@@ -805,10 +747,22 @@ function* createPostSetWorker({ postSet, edit }) {
       ...postSet,
     },
   };
-  console.log('in create post set worker');
   const response = yield call(postData, requestUrl, requestData);
-  console.log(response);
   if (response.data.status === 'success') {
+    const currentPostSets = yield select(makeSelectPostSets());
+    const action = currentPostSets.get('action');
+    switch (action) {
+      case 'fetchPostSetsRequestByST':
+        yield put(fetchPostSetsBySTRequest());
+        break;
+      case 'fetchPostSetsRequestBySO':
+        yield put(fetchPostSetsBySORequest());
+        break;
+      case 'fetchPostSetsRequest':
+      default:
+        yield put(fetchPostSetsRequest());
+        break;
+    }
     yield put(createPostSetSuccess(response.data.post_set, edit));
   } else {
     console.log(response);
@@ -816,7 +770,6 @@ function* createPostSetWorker({ postSet, edit }) {
 }
 
 export function* createPostSetSaga() {
-  console.log('initiate create post set saga');
   yield takeLatest(CREATE_POST_SET_REQUEST, createPostSetWorker);
 }
 
@@ -865,14 +818,12 @@ export default [
   inviteEmailToGroupFlow,
   addUserToGroupFlow,
   removeUserFromGroupFlow,
-  fetchPostSets,
+  fetchPostSetsSaga,
   deletePostSet,
   changePostSetStatus,
   fetchPostSetSaga,
   updatePostSetSaga,
   fetchPostsSaga,
-  fetchPostSetsBySTRequestSaga,
-  fetchPostSetsBySORequestSaga,
   updatePostSaga,
   updateBunchPostSaga,
   createPostSetSaga,
