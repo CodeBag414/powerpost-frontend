@@ -220,7 +220,7 @@ export function* createMediaItem(action) {
       },
     };
   }
-
+  console.log(JSON.stringify(data));
   if (url !== '') {
     const res = yield call(postData, url, data);
     if (res.data.result === 'success') {

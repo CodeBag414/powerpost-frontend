@@ -98,7 +98,6 @@ const Preview = ({ item }) => {
               height={'initial'}
               url={item.properties.source_720_url || item.properties.source_url}
               controls
-              playing
             />)
           }
         </div>

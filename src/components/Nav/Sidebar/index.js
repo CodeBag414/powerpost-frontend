@@ -55,11 +55,11 @@ class Sidebar extends React.Component {
               {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
                 <ReactRouterMenuItem caption="Calendar" activeClassName={styles.active} isSidebar icon={<i className="fa fa-calendar" />} to={`/account/${this.props.accountId}/calendar`} />
               }
-              {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('content_library') > -1 &&
-                <ReactRouterMenuItem caption="Shared Streams" activeClassName={styles.active} isSidebar icon={<i className="fa fa-list-alt" />} to={`/account/${this.props.accountId}/shared_streams/owned`} />
-              }
               {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
                 <ReactRouterMenuItem caption="Posts" activeClassName={styles.active} isSidebar icon={<i className="fa fa-send" />} to={`/account/${this.props.accountId}/posts`} />
+              }
+              {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('content_library') > -1 &&
+                <ReactRouterMenuItem caption="Shared Streams" activeClassName={styles.active} isSidebar icon={<i className="fa fa-list-alt" />} to={`/account/${this.props.accountId}/shared_streams/owned`} />
               }
               {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
                 <ReactRouterMenuItem caption="Published" activeClassName={styles.active} isSidebar icon={<i className="fa fa-history" />} to={`/account/${this.props.accountId}/published`} />
@@ -115,6 +115,9 @@ class Sidebar extends React.Component {
             }
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
               <ReactRouterMenuItemWithTooltip tooltip="Posts" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-send" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/posts`} />
+            }
+            { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
+              <ReactRouterMenuItemWithTooltip tooltip="Shared Streams" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-list-alt" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/shared_streams`} />
             }
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
               <ReactRouterMenuItemWithTooltip tooltip="Published" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-history" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/published`} />
