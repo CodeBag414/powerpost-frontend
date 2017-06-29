@@ -29,13 +29,6 @@ import {
   FETCH_PAYMENT_SOURCES_ERROR,
   FETCH_PAYMENT_HISTORY_SUCCESS,
   FETCH_PAYMENT_HISTORY_ERROR,
-  FETCH_POST_SETS_BY_ST_REQUEST,
-  FETCH_POST_SETS_BY_ST_SUCCESS,
-  FETCH_POST_SETS_BY_ST_FAILURE,
-  SET_POST_SETS_BY_ST,
-  FETCH_POST_SETS_BY_SO_REQUEST,
-  FETCH_POST_SETS_BY_SO_SUCCESS,
-  FETCH_POST_SETS_BY_SO_FAILURE,
   FETCH_GROUP_USERS,
   FETCH_GROUP_USERS_SUCCESS,
   FETCH_GROUP_USERS_ERROR,
@@ -54,11 +47,14 @@ import {
   FETCH_POSTS,
   SET_POSTS,
   // UPDATE_POST_SUCCESS,
-  // UPDATE_POST_SET_SUCCESS,
+  UPDATE_POST_SET_SUCCESS,
   CREATE_POST_SET_SUCCESS,
   FETCH_MEDIA_ITEMS_SUCCESS,
   FETCH_MEDIA_ITEMS_ERROR,
   CHANGE_POST_SET_SORT_ORDER_SUCCESS,
+  FETCH_POST_SETS_REQUEST,
+  FETCH_POST_SETS_SUCCESS,
+  FETCH_POST_SETS_FAILURE,
 } from './constants';
 
 // The initial application state
@@ -79,16 +75,11 @@ const initialState = fromJS({
   paymentHistory: {},
   groupUsers: {},
   inviteEmailToGroup: {},
-  postSets: [],
-  postSetsByST: {
-    requesting: true, // As soon as calendar view mounts, it starts loading. Maybe change later..
+  postSets: {
+    requesting: true,
     error: null,
     data: null,
-  },
-  postSetsBySO: {
-    requesting: true, // As soon as calendar view mounts, it starts loading. Maybe change later..
-    error: null,
-    data: null,
+    action: null,
   },
   mediaItmes: [],
 });
@@ -214,32 +205,21 @@ function globalReducer(state = initialState, action) {
           details: null,
           error: action.payload,
         });
-    case FETCH_POST_SETS_BY_ST_REQUEST:
-      return state.setIn(['postSetsByST', 'requesting'], true);
-    case FETCH_POST_SETS_BY_ST_SUCCESS:
-      return state.set('postSetsByST', fromJS({
+    case FETCH_POST_SETS_REQUEST:
+      return state
+        .setIn(['postSets', 'requesting'], true)
+        .updateIn(['postSets'], (postSets) =>
+          postSets.action === action.action
+            ? postSets
+            : postSets.set('action', action.action).set('data', null));
+    case FETCH_POST_SETS_SUCCESS:
+      return state.set('postSets', fromJS({
         requesting: false,
         error: null,
         data: action.postSets,
       }));
-    case FETCH_POST_SETS_BY_ST_FAILURE:
-      return state.set('postSetsByST', fromJS({
-        requesting: false,
-        error: action.error,
-        data: null,
-      }));
-    case SET_POST_SETS_BY_ST:
-      return state.set('postSetsByST', action.postSetsByST);
-    case FETCH_POST_SETS_BY_SO_REQUEST:
-      return state.setIn(['postSetsBySO', 'requesting'], true);
-    case FETCH_POST_SETS_BY_SO_SUCCESS:
-      return state.set('postSetsBySO', fromJS({
-        requesting: false,
-        error: null,
-        data: action.postSets,
-      }));
-    case FETCH_POST_SETS_BY_SO_FAILURE:
-      return state.set('postSetsBySO', fromJS({
+    case FETCH_POST_SETS_FAILURE:
+      return state.set('postSets', fromJS({
         requesting: false,
         error: action.error,
         data: null,
@@ -322,49 +302,58 @@ function globalReducer(state = initialState, action) {
     }
     case SET_POST_SETS:
       return state
-        .set('postSets', fromJS(action.postSets));
+        .set('postSets', action.postSets);
     case DELETE_POST_SET_SUCCESS: {
       return state
         .updateIn(
-          ['postSetsByST', 'data', 'unscheduled_post_sets'],
-          (postSets) => postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
+          ['postSets', 'data', 'unscheduled_post_sets'],
+          (postSets) => postSets && postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
         )
         .updateIn(
-          ['postSetsByST', 'data', 'scheduled_post_sets'],
-          (postSets) => postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
+          ['postSets', 'data', 'scheduled_post_sets'],
+          (postSets) => postSets && postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
         )
         .updateIn(
-          ['postSetsByST', 'data', 'post_when_ready_post_sets'],
-          (postSets) => postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
+          ['postSets', 'data', 'post_when_ready_post_sets'],
+          (postSets) => postSets && postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
         )
-        .updateIn(['postSets'], (postSets) => postSets.filter((postSet) => postSet.get('post_set_id') !== action.id))
-        .updateIn(['postSetsBySO', 'data', 'post_sets'], (postSets) => postSets.filter((postSet) => postSet.get('post_set_id') !== action.id));
+        .updateIn(
+          ['postSets', 'data', 'post_sets'],
+          (postSets) => postSets && postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
+        );
     }
     case CHANGE_POST_SET_STATUS:
       return state
-        .updateIn(['postSetsBySO', 'data', 'post_sets'], (postSets = fromJS([])) => postSets.map((postSet) =>
+        .updateIn(['postSets', 'data', 'post_sets'], (postSets = fromJS([])) => postSets.map((postSet) =>
           postSet.get('post_set_id') !== action.id ? postSet : postSet.set('status', action.status)
         ));
     case CHANGE_POST_SET_SORT_ORDER_SUCCESS:
       return state
-        .updateIn(['postSetsBySO', 'data', 'post_sets'], (postSets = fromJS([])) => postSets.map((postSet) =>
+        .updateIn(['postSets', 'data', 'post_sets'], (postSets = fromJS([])) => postSets.map((postSet) =>
           postSet.get('post_set_id') !== action.id ? postSet : postSet.set('sort_order', action.sort_order)
         ).sort((a, b) => b.get('sort_order') - a.get('sort_order')));
     case FETCH_POSTS:
       return state.set('posts', []);
     case SET_POSTS:
       return state.set('posts', action.posts);
-    // case UPDATE_POST_SUCCESS: {
-    //   const index = state.get('posts').findIndex((post) => post.post.post_id === action.post.post_id);
-    //   return (index > -1) ?
-    //     state.update('posts', (posts) => {
-    //       const reducedPosts = [...posts];
-    //       reducedPosts[index].post = action.post;
-    //       return reducedPosts;
-    //     })
-    //   :
-    //     state;
-    // }
+    case UPDATE_POST_SET_SUCCESS:
+      return state
+        .updateIn(
+          ['postSets', 'data', 'unscheduled_post_sets'],
+          (postSets) => postSets && postSets.map((postSet) => postSet.get('post_set_id') === action.payload.post_set_id ? fromJS(action.payload) : postSet)
+        )
+        .updateIn(
+          ['postSets', 'data', 'scheduled_post_sets'],
+          (postSets) => postSets && postSets.map((postSet) => postSet.get('post_set_id') === action.payload.post_set_id ? fromJS(action.payload) : postSet)
+        )
+        .updateIn(
+          ['postSets', 'data', 'post_when_ready_post_sets'],
+          (postSets) => postSets && postSets.map((postSet) => postSet.get('post_set_id') === action.payload.post_set_id ? fromJS(action.payload) : postSet)
+        )
+        .updateIn(
+          ['postSets', 'data', 'post_sets'],
+          (postSets) => postSets && postSets.map((postSet) => postSet.get('post_set_id') === action.payload.post_set_id ? fromJS(action.payload) : postSet)
+        );
     // case UPDATE_POST_SET_SUCCESS: {
     //   // TODO: Do this for unscheduled_post_sets, post_when_ready_post_sets and state.get('postSets')
     //   const scheduledPostSets = state.getIn(['postSetsByST', 'data', 'scheduled_post_sets']);

@@ -3,10 +3,6 @@ import { take, call, put, cancel } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 
 import { getData, serialize } from 'utils/request';
-import {
-  getPostSets,
-  fetchPostSetsBySTRequest,
-} from 'containers/App/actions';
 
 import {
   setConnections,
@@ -38,8 +34,6 @@ export function* getAccount(action) {
       yield put({ type: FETCH_ACCOUNT_ERROR, account });
     } else {
       yield put({ type: FETCH_ACCOUNT_SUCCESS, account });
-      yield put(getPostSets(accountId));
-      yield put(fetchPostSetsBySTRequest());
     }
   } catch (error) {
     yield put({ type: FETCH_ACCOUNT_ERROR, error });
@@ -85,4 +79,3 @@ export default [
   accountData,
   fetchConnectionsSaga,
 ];
-

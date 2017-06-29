@@ -5,10 +5,13 @@ import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { UserCanAccount } from 'config.routes/UserRoutePermissions';
+import {
+  fetchPostSetsBySTRequest,
+  fetchPostSetsRequest,
+} from 'containers/App/actions';
 
 import {
   makeSelectPostSets,
-  makeSelectPostSetsByST,
   makeSelectPostSet,
 } from 'containers/App/selectors';
 import Loading from 'components/Loading';
@@ -19,8 +22,9 @@ import PostSetBox from './PostSetBox';
 
 class PostsLayout extends Component {
   static propTypes = {
-    postSets: ImmutablePropTypes.list,
-    postSetsByST: ImmutablePropTypes.map,
+    postSets: ImmutablePropTypes.map,
+    fetchPostSets: PropTypes.func,
+    fetchPostSetsByST: PropTypes.func,
     // postSet: ImmutablePropTypes.map,
     accountId: PropTypes.string,
   }
@@ -31,13 +35,15 @@ class PostsLayout extends Component {
   }
 
   componentWillMount() {
+    this.props.fetchPostSets();
   }
 
   render() {
     const {
       postSets,
-      postSetsByST,
       accountId,
+      fetchPostSets,
+      fetchPostSetsByST,
     } = this.props;
     const {
       error,
@@ -65,8 +71,9 @@ class PostsLayout extends Component {
       <Wrapper>
         <PostSetBox
           postSets={postSets}
-          postSetsByST={postSetsByST}
           accountId={accountId}
+          fetchPostSets={fetchPostSets}
+          fetchPostSetsByST={fetchPostSetsByST}
         />
       </Wrapper>
     );
@@ -75,11 +82,13 @@ class PostsLayout extends Component {
 
 const mapStateToProps = createStructuredSelector({
   postSets: makeSelectPostSets(),
-  postSetsByST: makeSelectPostSetsByST(),
   postSet: makeSelectPostSet(),
 });
 
-const mapDispatchToProps = {
-};
-
+const mapDispatchToProps = (dispatch) => (
+  {
+    fetchPostSetsByST: () => dispatch(fetchPostSetsBySTRequest()),
+    fetchPostSets: () => dispatch(fetchPostSetsRequest()),
+  }
+);
 export default connect(mapStateToProps, mapDispatchToProps)(UserCanAccount(PostsLayout));
