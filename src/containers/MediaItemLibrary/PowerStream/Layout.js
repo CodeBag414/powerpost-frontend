@@ -232,7 +232,7 @@ class PowerStreamLayout extends Component {
           />
           <PostSetBox
             owned={owned}
-            postSets={postSets.get('data')}
+            postSets={postSets.get('data').sortBy((ps) => -ps.get('creation_time'))}
             streamName={streamName}
             handlePostSet={this.handlePostSet}
           />
