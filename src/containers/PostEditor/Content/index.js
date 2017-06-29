@@ -175,10 +175,12 @@ class Content extends Component {
 
   handleMessageBlur = (event, message = this.state.globalMessage) => {
     const { updatePostSet, postSet } = this.props;
+    const postType = postSet.getIn(['details', 'post_type']);
     updatePostSet({
       ...postSet.get('details').toJS(),
       id: postSet.getIn(['details', 'post_set_id']),
       message,
+      post_type: postType === 'document' ? 'file' : postType,
     });
   }
 
