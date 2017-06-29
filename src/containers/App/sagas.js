@@ -670,6 +670,9 @@ export function* fetchPostSetWorker(action) {
 export function* updatePostSetWorker(action) {
   const { payload, section } = action;
 
+  /* Modify post type correctly */
+  if (payload.post_type === 'document') payload.post_type = 'file';
+
   try {
     const response = yield call(putData, `/post_api/post_set/${payload.id}`, { payload });
     const { data } = response;
