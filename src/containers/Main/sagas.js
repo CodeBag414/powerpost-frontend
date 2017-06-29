@@ -75,7 +75,10 @@ function* fetchConnectionsWorker({ accountId }) {
 }
 
 export function* fetchConnectionsSaga() {
-  yield takeLatest(FETCH_CONNECTIONS, fetchConnectionsWorker);
+  const watcher = yield takeLatest(FETCH_CONNECTIONS, fetchConnectionsWorker);
+
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
 }
 
 export default [

@@ -71,14 +71,18 @@ class Main extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fetchAccount(this.props.params.account_id);
-    this.props.getPostSetsAction(this.props.params.account_id);
-    this.props.fetchConnections(this.props.params.account_id);
+    if (this.props.params.account_id) {
+      this.props.fetchAccount(this.props.params.account_id);
+      this.props.getPostSetsAction(this.props.params.account_id);
+      this.props.fetchConnections(this.props.params.account_id);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.params.account_id !== this.props.params.account_id) {
+    if (nextProps.params.account_id && nextProps.params.account_id !== this.props.params.account_id) {
       this.props.fetchAccount(nextProps.params.account_id);
+      this.props.getPostSetsAction(nextProps.params.account_id);
+      this.props.fetchConnections(nextProps.params.account_id);
     }
     const { postSet, activeBrand } = nextProps;
     if (postSet && postSet.createSuccess && (!this.props.postSet || this.props.postSet.post_set_id !== postSet.post_set_id)) {
