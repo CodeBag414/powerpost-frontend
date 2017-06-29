@@ -18,6 +18,7 @@ import Menu from 'elements/atm.Menu';
 import withReactRouter from 'elements/hoc.withReactRouter';
 
 import {
+  fetchPostSetRequest,
   updatePostSetRequest,
 } from 'containers/App/actions';
 
@@ -70,6 +71,7 @@ class PowerStreamLayout extends Component {
     postSet: ImmutablePropTypes.map,
     emailInvited: ImmutablePropTypes.map,
     fetchStreamPostSets: PropTypes.func,  // eslint-disable-line
+    fetchPostSet: PropTypes.func,
     updatePostSet: PropTypes.func,
     inviteEmailToStream: PropTypes.func,
     replicatePostSet: PropTypes.func,
@@ -89,7 +91,7 @@ class PowerStreamLayout extends Component {
       this.props.streamId !== nextProps.streamId) {
       this.changeStreamLink(nextProps);
     }
-
+/*
     if (this.props.postSet !== nextProps.postSet &&
       !nextProps.postSet.get('processing')) {
       if (nextProps.postSet.get('error')) {
@@ -98,7 +100,7 @@ class PowerStreamLayout extends Component {
         toastr.success('Success', 'The post has been updated successfully');
       }
     }
-
+*/
     if (this.props.emailInvited !== nextProps.emailInvited &&
       !nextProps.emailInvited.get('processing')) {
       if (!nextProps.emailInvited.get('error')) {
@@ -173,6 +175,7 @@ class PowerStreamLayout extends Component {
 
   render() {
     const {
+      postSet,
       postSets,
       userAccount,
       accountId,
@@ -232,8 +235,10 @@ class PowerStreamLayout extends Component {
           />
           <PostSetBox
             owned={owned}
+            postSet={postSet}
             postSets={postSets.get('data').sortBy((ps) => -ps.get('creation_time'))}
             streamName={streamName}
+            fetchPostSet={this.props.fetchPostSet}
             handlePostSet={this.handlePostSet}
           />
           <CloseableDialog
@@ -267,6 +272,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = {
+  fetchPostSet: fetchPostSetRequest,
   fetchStreamPostSets: fetchStreamPostSetsRequest,
   updatePostSet: updatePostSetRequest,
   inviteEmailToStream: inviteEmailToStreamRequest,

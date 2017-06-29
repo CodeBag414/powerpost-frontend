@@ -5,6 +5,9 @@ import { fromJS } from 'immutable';
 import { combineReducers } from 'redux';
 
 import {
+  FETCH_POST_SET_REQUEST,
+  FETCH_POST_SET_SUCCESS,
+  FETCH_POST_SET_ERROR,
   UPDATE_POST_SET_REQUEST,
   UPDATE_POST_SET_SUCCESS,
   UPDATE_POST_SET_ERROR,
@@ -163,6 +166,17 @@ function mediaLibraryReducer(state = initialState, action) {
       return state
         .setIn(['postSets', 'isFetching'], false)
         .setIn(['postSets', 'error'], 'Fetching Stream Failure');
+    case FETCH_POST_SET_REQUEST:
+      return state
+        .setIn(['postSet', 'processing'], true);
+    case FETCH_POST_SET_SUCCESS:
+      return state
+        .setIn(['postSet', 'processing'], false)
+        .setIn(['postSet', 'data'], fromJS(action.payload));
+    case FETCH_POST_SET_ERROR:
+      return state
+        .setIn(['postSet', 'processing'], false)
+        .setIn(['postSet', 'error'], action.payload);
     case UPDATE_POST_SET_REQUEST:
       return state
         .setIn(['postSet', 'processing'], true);
