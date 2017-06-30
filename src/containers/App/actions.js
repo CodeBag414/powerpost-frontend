@@ -388,24 +388,27 @@ export function changePostSetSortOrderRequest(id, afterId) {
   return { type: CHANGE_POST_SET_SORT_ORDER_REQUEST, id, afterId };
 }
 
-export function fetchPostSetRequest(payload) {
+export function fetchPostSetRequest(payload, section) {
   return {
     type: FETCH_POST_SET_REQUEST,
     payload,
+    section,
   };
 }
 
-export function fetchPostSetSuccess(payload) {
+export function fetchPostSetSuccess(payload, section) {
   return {
     type: FETCH_POST_SET_SUCCESS,
     payload,
+    section,
   };
 }
 
-export function fetchPostSetError(payload) {
+export function fetchPostSetError(payload, section) {
   return {
     type: FETCH_POST_SET_ERROR,
     payload,
+    section,
   };
 }
 
@@ -441,8 +444,8 @@ export function setPosts(posts) {
   return { type: SET_POSTS, posts };
 }
 
-export function updatePostRequest(post) {
-  return { type: UPDATE_POST_REQUEST, post };
+export function updatePostRequest(post, section) {
+  return { type: UPDATE_POST_REQUEST, post, section };
 }
 
 export function updateBunchPostRequest(posts) {

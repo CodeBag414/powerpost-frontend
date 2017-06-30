@@ -65,7 +65,7 @@ class Channels extends Component {
       ...currentPost.toJS(),
       schedule_time: newDate,
     };
-    updatePost(newPost);
+    updatePost(newPost, 'bunch_post');
   }
 
   handleMessageChange = (value) => {
@@ -85,7 +85,7 @@ class Channels extends Component {
         edited: true,
       },
     };
-    updatePost(newPost);
+    updatePost(newPost, 'bunch_post');
   }
 
   handleRemoveSlot = (postToDelete) => {
@@ -94,7 +94,7 @@ class Channels extends Component {
       ...postToDelete.toJS(),
       status: '0',
     };
-    updatePost(newPost);
+    updatePost(newPost, 'bunch_post');
   }
 
   render() {

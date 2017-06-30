@@ -148,9 +148,8 @@ export function* submitPost(post) {
 }
 
 function* submitAllPosts(posts) {
-  for (const key in posts) {
-    const post = posts[key];
-    yield fork(submitPost, post);
+  for (let i = 0; i < posts.length; i += 1) {
+    yield fork(submitPost, posts[i]);
   }
 }
 
@@ -177,9 +176,8 @@ export function* getMediaItem(action) {
     const response = yield call(getData, `/media_api/media_item/${action.mediaItemId}`);
     const { data } = response;
 
-    if (data.result == 'success') {
-      const mediaItem = [data.media_item];
-      yield put({ type: GET_MEDIA_ITEM_SUCCESS, mediaItem });
+    if (data.result === 'success') {
+      yield put({ type: GET_MEDIA_ITEM_SUCCESS, mediaItem: [data.media_item] });
     }
   } catch (error) {
     console.log(error);
@@ -191,7 +189,7 @@ export function* createMediaItem(action) {
   yield put({ type: PROCESS_ITEM });
   let url = '';
   let data = {};
-  
+
   if (mediaItemType === 'link') {
     url = '/media_api/link';
     data = {
@@ -201,11 +199,11 @@ export function* createMediaItem(action) {
     url = '/media_api/files';
     data = {
       payload: {
-        media_items:[{...item.properties}],
-      }
+        media_items: [{ ...item.properties }],
+      },
     };
   }
-  
+
   if (url !== '') {
     const res = yield call(postData, url, data);
     if (res.data.result === 'success') {
@@ -227,16 +225,16 @@ export function* createMediaItem(action) {
 }
 
 export function* updateMediaItem(action) {
- const { mediaItemType, ...item } = action.mediaItem;
- const data = {
-   payload: item,
- };
- 
- const results = yield call(putData, `/media_api/media_item/${item.media_item_id}`, data);
- if (results.data.result === 'success') {
-   const mediaItems = results.data.media_items;
-   yield put({ type: UPDATE_MEDIA_ITEM_SUCCESS, mediaItems });
- }
+  const { ...item } = action.mediaItem;
+  const data = {
+    payload: item,
+  };
+
+  const results = yield call(putData, `/media_api/media_item/${item.media_item_id}`, data);
+  if (results.data.result === 'success') {
+    const mediaItems = results.data.media_items;
+    yield put({ type: UPDATE_MEDIA_ITEM_SUCCESS, mediaItems });
+  }
 }
 
 export function* getCollections(action) {
@@ -336,14 +334,14 @@ export function* submitBunchPostsRequest() {
 
 export function* mediaItem() {
   const watcher = yield takeLatest(CREATE_MEDIA_ITEM, createMediaItem);
-  
+
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
 }
 
 export function* updateMedia() {
   const watcher = yield takeLatest(UPDATE_MEDIA_ITEM, updateMediaItem);
-  
+
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
 }
