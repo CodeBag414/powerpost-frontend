@@ -9,6 +9,7 @@ import {
     IS_LOADING_ACCOUNT,
     SET_CONNECTIONS_LIST,
     SET_CONNECTIONS,
+    SET_PROCESSING,
 } from './constants';
 
 import {
@@ -17,6 +18,7 @@ import {
 
 // The initial application state
 const initialState = fromJS({
+  isProcessing: false,
   menuCollapsed: false,
   activeBrand: {
     account_id: false,
@@ -84,6 +86,9 @@ function dashboardReducer(state = initialState, action) {
         .setIn(['activeBrand', 'connections'], action.connections);
     case SET_CONNECTIONS:
       return state.set('connections', action.connections);
+    case SET_PROCESSING:
+      return state
+        .set('isProcessing', action.processing);
     default:
       return state;
   }

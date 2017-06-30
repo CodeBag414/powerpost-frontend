@@ -37,6 +37,11 @@ const makeSelectConnections = () => createSelector(
     (dashboard) => dashboard.get('connections'),
 );
 
+const makeSelectIsProcessing = () => createSelector(
+    selectDashboard,
+    (dashboard) => dashboard.get('isProcessing')
+);
+
 export {
     makeSelectMenuCollapsed,
     makeSelectCurrentAccount,
@@ -45,4 +50,5 @@ export {
     makeSelectAccountBrands,
     makeSelectUserPermissions,
     makeSelectConnections,
+    makeSelectIsProcessing,
 };

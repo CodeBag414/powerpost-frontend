@@ -62,9 +62,6 @@ class Sidebar extends React.Component {
                 <ReactRouterMenuItem caption="Shared Streams" activeClassName={styles.active} isSidebar icon={<i className="fa fa-list-alt" />} to={`/account/${this.props.accountId}/shared_streams/owned`} />
               }
               {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
-                <ReactRouterMenuItem caption="Published" activeClassName={styles.active} isSidebar icon={<i className="fa fa-history" />} to={`/account/${this.props.accountId}/published`} />
-              }
-              {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
                 <ReactRouterMenuItem caption="Social Feeds" activeClassName={styles.active} isSidebar icon={<i className="fa fa-list-ul" />} to={`/account/${this.props.accountId}/social_feeds`} />
               }
               { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('statistics') > -1 &&
@@ -118,9 +115,6 @@ class Sidebar extends React.Component {
             }
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
               <ReactRouterMenuItemWithTooltip tooltip="Shared Streams" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-list-alt" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/shared_streams`} />
-            }
-            { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
-              <ReactRouterMenuItemWithTooltip tooltip="Published" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-history" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/published`} />
             }
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
               <ReactRouterMenuItemWithTooltip tooltip="Social Feeds" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-list-ul" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/social_feeds`} />

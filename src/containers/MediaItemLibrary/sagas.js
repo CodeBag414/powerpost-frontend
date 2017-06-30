@@ -11,6 +11,10 @@ import {
 } from 'utils/request';
 
 import {
+  setProcessing,
+} from 'containers/Main/actions';
+
+import {
   createPostSetRequest,
 } from 'containers/App/actions';
 
@@ -181,13 +185,15 @@ export function* updateMediaItem(action) {
   const data = {
     payload: item,
   };
-  console.log(data);
+  yield put(setProcessing(true));
 
   const results = yield call(putData, `/media_api/media_item/${item.media_item_id}`, data);
-  console.log(results);
+
   if (results.data.result === 'success') {
     const mediaItems = results.data.media_items;
+    yield put(setProcessing(false));
     yield put({ type: UPDATE_MEDIA_ITEM_SUCCESS, mediaItems });
+
     if (create) {
       const postSet = {
         account_id: mediaItems[0].account_id,
@@ -220,7 +226,8 @@ export function* createMediaItem(action) {
       },
     };
   }
-  console.log(JSON.stringify(data));
+  yield put(setProcessing(true));
+
   if (url !== '') {
     const res = yield call(postData, url, data);
     if (res.data.result === 'success') {
@@ -230,6 +237,7 @@ export function* createMediaItem(action) {
       // } else {
       const mediaItems = res.data.media_items;
       yield put({ type: CREATE_MEDIA_ITEM_SUCCESS, mediaItems });
+      yield put(setProcessing(false));
       if (create) {
         const postSet = {
           account_id: mediaItems[0].account_id,

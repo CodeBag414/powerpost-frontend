@@ -50,6 +50,14 @@ const LinkUrl = styled.div`
   color: #8C9496;
 `;
 
+const IconPlaceholder = styled.i`
+  width: 100%;
+  height: 100%;
+  font-size: 64px;
+  color: #8C9497;
+  margin-top: 50px;
+`;
+
 const DocumentWrapper = styled.div`
   display: flex;
 `;
@@ -114,7 +122,7 @@ const Preview = ({ item }) => {
       {type === 'blog' && renderHTML(item.properties.html)}
       {type === 'document' &&
         <DocumentWrapper>
-          <img src={image} role="presentation" style={{ width: '200px', height: '200px' }} />
+          { image ? <img src={image} role="presentation" style={{ width: '200px', height: '200px' }} /> : <IconPlaceholder className="fa fa-file-o" /> }
           <div style={{ padding: '30px' }}>
             <LinkTitle>{item.properties.title}</LinkTitle>
             <LinkDescription>{item.properties.description}</LinkDescription>

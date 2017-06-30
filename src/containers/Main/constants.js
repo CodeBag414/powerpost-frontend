@@ -12,3 +12,4 @@ export const TOGGLE_MENU = 'main/TOGGLE_MENU';
 export const SET_CONNECTIONS_LIST = 'main/SET_CONNECTIONS_LIST';
 export const FETCH_CONNECTIONS = 'main/FETCH_CONNECTIONS';
 export const SET_CONNECTIONS = 'main/SET_CONNECTIONS';
+export const SET_PROCESSING = 'main/SET_PROCESSING';
