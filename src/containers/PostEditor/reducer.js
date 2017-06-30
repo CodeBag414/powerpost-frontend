@@ -37,11 +37,6 @@ import {
   PROCESS_ITEM_SUCCESS,
   SET_VISIBILITY_FILTER,
   SHOW_ALL,
-  SHOW_BLOGS,
-  SHOW_LINKS,
-  SHOW_IMAGES,
-  SHOW_VIDEOS,
-  SHOW_FILES,
   FETCH_WORDPRESS_GUI_REQUEST,
   FETCH_WORDPRESS_GUI_SUCCESS,
   FETCH_WORDPRESS_GUI_FAILURE,
@@ -128,6 +123,8 @@ function boardReducer(state = initialState, action) {
         .set('postSet', fromJS({
           isFetching: true,
           error: null,
+          [`${action.section}-fetching`]: true,
+          [`${action.section}-error`]: null,
           details: {},
         }));
     case FETCH_POST_SET_SUCCESS:
@@ -135,6 +132,7 @@ function boardReducer(state = initialState, action) {
         .set('postSet', fromJS({
           isFetching: false,
           error: null,
+          [`${action.section}-fetching`]: false,
           details: action.payload,
         }));
     case FETCH_POST_SET_ERROR:
@@ -142,6 +140,8 @@ function boardReducer(state = initialState, action) {
         .set('postSet', fromJS({
           isFetching: false,
           error: action.payload,
+          [`${action.section}-fetching`]: false,
+          [`${action.section}-error`]: fromJS(action.payload),
           details: {},
         }));
     case UPDATE_POST_SET_REQUEST:

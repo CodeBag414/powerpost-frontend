@@ -603,19 +603,17 @@ export function* changePostSetSortOrderRequest(payload) {
   }
 }
 
-export function* fetchPostSetWorker(action) {
-  const { payload } = action;
-
+export function* fetchPostSetWorker({ payload, section }) {
   try {
     const response = yield call(getData, `/post_api/post_set/${payload.id}`);
     const { data } = response;
     if (data.status === 'success') {
-      yield put(fetchPostSetSuccess(data.post_set));
+      yield put(fetchPostSetSuccess(data.post_set, section));
     } else {
       throw data.message;
     }
   } catch (error) {
-    yield put(fetchPostSetError(error));
+    yield put(fetchPostSetError(error, section));
   }
 }
 
@@ -682,7 +680,7 @@ function* fetchPostsWorker({ accountId }) {
   }
 }
 
-function* updatePostRequestWorker({ post }) {
+function* updatePostRequestWorker({ post, section }) {
   const requestUrl = `/post_api/post/${post.post_id}`;
   const requestData = {
     payload: {
@@ -693,8 +691,7 @@ function* updatePostRequestWorker({ post }) {
   const response = yield call(putData, requestUrl, requestData);
   if (response.data.result === 'success') {
     yield put({ type: 'UPDATE_POST_SUCCESS', post: response.data.post });
-    yield put(fetchPostSetRequest({ id: response.data.post.post_set_id }));
-    yield put(fetchPostSetsBySTRequest());
+    yield put(fetchPostSetRequest({ id: response.data.post.post_set_id }, section));
   } else {
     console.log(response);
     yield put({ type: 'UPDATE_POST_FAILURE', payload: response.data });
