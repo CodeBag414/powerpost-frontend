@@ -38,16 +38,12 @@ import {
   REMOVE_USER_FROM_GROUP,
   REMOVE_USER_FROM_GROUP_SUCCESS,
   REMOVE_USER_FROM_GROUP_ERROR,
-  FETCH_POST_SETS,
   SET_POST_SETS,
   DELETE_POST_SET_REQUEST,
   CHANGE_POST_SET_REQUEST,
   FETCH_POST_SET_REQUEST,
   FETCH_POST_SET_SUCCESS,
   FETCH_POST_SET_ERROR,
-  FETCH_POST_SETS_BY_ST_REQUEST,
-  FETCH_POST_SETS_BY_ST_SUCCESS,
-  FETCH_POST_SETS_BY_ST_FAILURE,
   UPDATE_POST_SET_REQUEST,
   UPDATE_POST_SET_SUCCESS,
   UPDATE_POST_SET_ERROR,
@@ -56,14 +52,16 @@ import {
   UPDATE_POST_REQUEST,
   UPDATE_BUNCH_POST_REQUEST,
   UPDATE_BUNCH_POST_SUCCESS,
-  FETCH_CONNECTIONS,
-  SET_CONNECTIONS,
   CREATE_POST_SET_REQUEST,
   CREATE_POST_SET_SUCCESS,
   // CHECK_USER_OBJECT,
   FETCH_MEDIA_ITEMS_REQUEST,
   FETCH_MEDIA_ITEMS_SUCCESS,
   FETCH_MEDIA_ITEMS_ERROR,
+  CHANGE_POST_SET_SORT_ORDER_REQUEST,
+  FETCH_POST_SETS_REQUEST,
+  FETCH_POST_SETS_SUCCESS,
+  FETCH_POST_SETS_FAILURE,
 } from './constants';
 
 /**
@@ -352,12 +350,30 @@ export function removeUserFromGroupError(payload) {
   };
 }
 
-export function getPostSets(accountId) {
-  return { type: FETCH_POST_SETS, accountId };
+export function fetchPostSetsRequest(accountId) {
+  return {
+    type: FETCH_POST_SETS_REQUEST,
+    accountId,
+    filter: {
+      sort_by: 'creation_time',
+      sort_order: 'DESC',
+      limit: 500,
+      statuses: [1, 2, 3, 4, 5, 6],
+    },
+    action: 'fetchPostSetsRequest',
+  };
+}
+
+export function fetchPostSetsSuccess(postSets) {
+  return { type: FETCH_POST_SETS_SUCCESS, postSets };
 }
 
 export function setPostSets(postSets) {
   return { type: SET_POST_SETS, postSets };
+}
+
+export function fetchPostSetsFailure(error) {
+  return { type: FETCH_POST_SETS_FAILURE, error };
 }
 
 export function deletePostSetRequest(id) {
@@ -368,24 +384,31 @@ export function changePostSetStatusRequest(id, status) {
   return { type: CHANGE_POST_SET_REQUEST, id, status };
 }
 
-export function fetchPostSetRequest(payload) {
+export function changePostSetSortOrderRequest(id, afterId) {
+  return { type: CHANGE_POST_SET_SORT_ORDER_REQUEST, id, afterId };
+}
+
+export function fetchPostSetRequest(payload, section) {
   return {
     type: FETCH_POST_SET_REQUEST,
     payload,
+    section,
   };
 }
 
-export function fetchPostSetSuccess(payload) {
+export function fetchPostSetSuccess(payload, section) {
   return {
     type: FETCH_POST_SET_SUCCESS,
     payload,
+    section,
   };
 }
 
-export function fetchPostSetError(payload) {
+export function fetchPostSetError(payload, section) {
   return {
     type: FETCH_POST_SET_ERROR,
     payload,
+    section,
   };
 }
 
@@ -421,8 +444,8 @@ export function setPosts(posts) {
   return { type: SET_POSTS, posts };
 }
 
-export function updatePostRequest(post) {
-  return { type: UPDATE_POST_REQUEST, post };
+export function updatePostRequest(post, section) {
+  return { type: UPDATE_POST_REQUEST, post, section };
 }
 
 export function updateBunchPostRequest(posts) {
@@ -431,14 +454,6 @@ export function updateBunchPostRequest(posts) {
 
 export function updateBunchPostSuccess() {
   return { type: UPDATE_BUNCH_POST_SUCCESS };
-}
-
-export function fetchConnections(accountId) {
-  return { type: FETCH_CONNECTIONS, accountId };
-}
-
-export function setConnections(connections) {
-  return { type: SET_CONNECTIONS, connections };
 }
 
 export function createPostSetRequest(postSet, edit = true) {
@@ -450,15 +465,28 @@ export function createPostSetSuccess(postSet, edit) {
 }
 
 export function fetchPostSetsBySTRequest(accountId) {
-  return { type: FETCH_POST_SETS_BY_ST_REQUEST, accountId };
+  return {
+    type: FETCH_POST_SETS_REQUEST,
+    accountId,
+    filter: {
+      limit: 500,
+    },
+    endPoint: 'post_sets_by_schedule_time',
+    action: 'fetchPostSetsBySTRequest',
+  };
 }
 
-export function fetchPostSetsBySTSuccess(postSets) {
-  return { type: FETCH_POST_SETS_BY_ST_SUCCESS, postSets };
-}
-
-export function fetchPostSetsBySTFailure(error) {
-  return { type: FETCH_POST_SETS_BY_ST_FAILURE, error };
+export function fetchPostSetsBySORequest(accountId) {
+  return {
+    type: FETCH_POST_SETS_REQUEST,
+    accountId,
+    filter: {
+      sort_by: 'sort_order',
+      sort_order: 'DESC',
+      limit: 500,
+    },
+    action: 'fetchPostSetsBySORequest',
+  };
 }
 
 export function fetchMediaItems(accountId) {

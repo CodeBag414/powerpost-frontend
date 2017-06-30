@@ -37,18 +37,15 @@ import {
   PROCESS_ITEM_SUCCESS,
   SET_VISIBILITY_FILTER,
   SHOW_ALL,
-  SHOW_BLOGS,
-  SHOW_LINKS,
-  SHOW_IMAGES,
-  SHOW_VIDEOS,
-  SHOW_FILES,
   FETCH_WORDPRESS_GUI_REQUEST,
   FETCH_WORDPRESS_GUI_SUCCESS,
   FETCH_WORDPRESS_GUI_FAILURE,
   CREATE_POST_REQUEST,
   CREATE_POST_SUCCESS,
   CREATE_POST_FAILURE,
+  SET_WORDPRESS_POST_REQUEST,
   CLEAR_MEDIA_ITEM,
+  GET_MEDIA_ITEM_SUCCESS,
 } from './constants';
 
 const initialState = fromJS({
@@ -126,6 +123,8 @@ function boardReducer(state = initialState, action) {
         .set('postSet', fromJS({
           isFetching: true,
           error: null,
+          [`${action.section}-fetching`]: true,
+          [`${action.section}-error`]: null,
           details: {},
         }));
     case FETCH_POST_SET_SUCCESS:
@@ -133,6 +132,7 @@ function boardReducer(state = initialState, action) {
         .set('postSet', fromJS({
           isFetching: false,
           error: null,
+          [`${action.section}-fetching`]: false,
           details: action.payload,
         }));
     case FETCH_POST_SET_ERROR:
@@ -140,6 +140,8 @@ function boardReducer(state = initialState, action) {
         .set('postSet', fromJS({
           isFetching: false,
           error: action.payload,
+          [`${action.section}-fetching`]: false,
+          [`${action.section}-error`]: fromJS(action.payload),
           details: {},
         }));
     case UPDATE_POST_SET_REQUEST:
@@ -198,6 +200,8 @@ function boardReducer(state = initialState, action) {
     case CLEAR_MEDIA_ITEM:
       return state
         .set('newMediaItem', fromJS({}));
+    case GET_MEDIA_ITEM_SUCCESS:
+      return state.set('newMediaItem', fromJS(action.mediaItem[0]));
     case REMOVE_MEDIA_ITEM:
       return state
         .updateIn(['postSet', 'details'], (postSetDetails) => postSetDetails.set('post_type', 'text'))
@@ -262,6 +266,8 @@ function boardReducer(state = initialState, action) {
       return state
         .setIn(['post', 'processing'], false)
         .setIn(['post', 'error'], fromJS(action.payload));
+    case SET_WORDPRESS_POST_REQUEST:
+      return state.setIn(['post', 'data'], action.payload);
     default: return state;
   }
 }

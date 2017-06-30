@@ -5,6 +5,7 @@ import { makeSelectCurrentAccount } from 'containers/Main/selectors';
 
 import {
   getData,
+  serialize,
 } from 'utils/request';
 
 import {
@@ -44,15 +45,3 @@ export function* connectChannel() {
 export default [
   connectChannel,
 ];
-
-const serialize = (obj, prefix) => {
-  const str = [];
-  let p;
-  obj.allKeys.forEach((key) => {
-    const k = prefix ? `${prefix}[${key}]` : p;
-    const v = obj.key;
-    str.push((v !== null && typeof v === 'object') ?
-      serialize(v, k) : `${encodeURIComponent(k)}=${encodeURIComponent(v)}`);
-  });
-  return str.join('&');
-};

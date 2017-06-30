@@ -7,7 +7,9 @@ import { createStructuredSelector } from 'reselect';
 
 import {
   makeSelectConnections,
-} from 'containers/App/selectors';
+} from 'containers/Main/selectors';
+
+import { selectNewMediaItem } from 'containers/PostEditor/selectors';
 
 import NoContent from './NoContent';
 import ChannelSlots from './ChannelSlots';
@@ -18,9 +20,10 @@ import PostDetails from './PostDetails';
 class Channels extends Component {
 
   static propTypes = {
+    connections: PropTypes.array,
     postSet: ImmutablePropTypes.map,
     posts: PropTypes.array,
-    connections: PropTypes.array,
+    newMediaItem: ImmutablePropTypes.map,
     updatePost: PropTypes.func,
   };
 
@@ -62,7 +65,7 @@ class Channels extends Component {
       ...currentPost.toJS(),
       schedule_time: newDate,
     };
-    updatePost(newPost);
+    updatePost(newPost, 'bunch_post');
   }
 
   handleMessageChange = (value) => {
@@ -82,7 +85,7 @@ class Channels extends Component {
         edited: true,
       },
     };
-    updatePost(newPost);
+    updatePost(newPost, 'bunch_post');
   }
 
   handleRemoveSlot = (postToDelete) => {
@@ -91,17 +94,18 @@ class Channels extends Component {
       ...postToDelete.toJS(),
       status: '0',
     };
-    updatePost(newPost);
+    updatePost(newPost, 'bunch_post');
   }
 
   render() {
-    const { postSet, connections, posts } = this.props;
+    const { postSet, connections, posts, newMediaItem } = this.props;
     const { isDialogShown, currentPost, postMessage, postTime } = this.state;
     const hasContent = posts && Object.keys(posts).length && connections;
     const connection = connections && connections.filter((item) =>
       currentPost && item.connection_id === currentPost.get('connection_id'),
     )[0];
     const isBunchPosting = postSet.get('bunch_post_fetching');
+    const currentMediaItems = (newMediaItem.type) ? [newMediaItem] : postSet.getIn(['details', 'media_items']).toJS();
     return (
       <Wrapper>
         <div className="left">
@@ -143,6 +147,7 @@ class Channels extends Component {
               handleMessageBlur={this.handleMessageBlur}
               handleRemoveSlot={this.handleRemoveSlot}
               handleDateChange={this.handleDateChange}
+              newMediaItem={newMediaItem.toJS()}
             />
           </div>
         :
@@ -150,8 +155,9 @@ class Channels extends Component {
         }
 
         <AddChannelSlotDialog
-          handleDialogToggle={this.handleDialogToggle}
           active={isDialogShown}
+          handleDialogToggle={this.handleDialogToggle}
+          mediaItems={currentMediaItems}
         />
         {isBunchPosting && <div className="overlay" />}
       </Wrapper>
@@ -165,6 +171,7 @@ function mapDispatchToProps() {
 
 const mapStateToProps = createStructuredSelector({
   connections: makeSelectConnections(),
+  newMediaItem: selectNewMediaItem(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Channels);

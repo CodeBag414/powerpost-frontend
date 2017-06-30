@@ -32,7 +32,6 @@ import {
   setMediaItem,
   fetchUrlData,
   clearUrlContent,
-  fetchCollections,
 } from 'containers/PostEditor/actions';
 
 import {
@@ -69,7 +68,6 @@ class Content extends Component {
     filter: PropTypes.string,
     mediaItems: PropTypes.array,
     updatePostSet: PropTypes.func,
-    fetchCollections: PropTypes.func,
     clearUrlContent: PropTypes.func,
     createMediaItem: PropTypes.func,
     updateMediaItem: PropTypes.func,
@@ -102,7 +100,6 @@ class Content extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchCollections(this.props.accountId);
     const { globalMessage } = this.state;
     this.linkifyMessage(globalMessage);
   }
@@ -167,7 +164,7 @@ class Content extends Component {
   }
 
   linkifyMessage = (message) => {
-    const links = linkify.find(message);
+    const links = linkify.find(message || '');
     let urls = [];
     if (links && links.length) {
       urls = links.filter((link) =>
@@ -458,6 +455,17 @@ class Content extends Component {
     });
   }
 
+  convertUrl = () => {
+    const { messageUrls } = this.state;
+    if (!messageUrls.length) return;
+
+    const urlToConvert = messageUrls[0];
+    this.setState({
+      addLinkValue: urlToConvert.href,
+      linkDialog: true,
+    });
+  }
+
   render() {
     const { postComment, deleteComment, comments, user, pending, pushToLibrary, id, accountId } = this.props;
     const { globalMessage, characterLimit, item, messageUrls } = this.state;
@@ -485,6 +493,7 @@ class Content extends Component {
           isProcessing={this.props.isProcessing}
           urls={messageUrls}
           shortenUrl={this.shortenUrl}
+          convertUrl={this.convertUrl}
         />
         <Comments />
         <div className="comment-input">
@@ -502,7 +511,7 @@ class Content extends Component {
         }
         <LinkEditor actions={actions} closeAllDialog={this.closeAllDialog} handleLinkEditorSave={this.handleLinkEditorSave} linkEditorDialog={this.state.linkEditor} urlContent={this.props.urlContent} filePickerKey={this.props.filePickerKey} linkItem={this.state.mediaItem} />
         <ImageEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleImageEditorSave} isOpen={this.state.imageEditor} filePickerKey={this.props.filePickerKey} imageItem={this.state.mediaItem} />
-        <LinkDialog actions={actions} closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue.bind(this)} handleSubmit={this.handleAddLinkSubmit} value={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
+        <LinkDialog actions={actions} closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue.bind(this)} handleSubmit={this.handleAddLinkSubmit} urlValue={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
         <VideoEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleVideoEditorSave.bind(this)} isOpen={this.state.videoEditor} filePickerKey={this.props.filePickerKey} videoItem={this.state.mediaItem} />
         <FileEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave.bind(this)} isOpen={this.state.fileEditor} filePickerKey={this.props.filePickerKey} fileItem={this.state.mediaItem} />
         <MediaLibraryDialog actions={actions} filter={this.props.filter} closeAllDialog={this.closeAllDialog} isOpen={this.state.mediaLibrary} mediaItems={this.props.mediaItems} addToPost={this.addToPost} />
@@ -523,7 +532,6 @@ export function mapDispatchToProps(dispatch) {
     setMediaItem: (mediaItem) => dispatch(setMediaItem(mediaItem)),
     fetchUrlData: (url) => dispatch(fetchUrlData(url)),
     clearUrlContent: () => dispatch(clearUrlContent()),
-    fetchCollections: (accountId) => dispatch(fetchCollections(accountId)),
   };
 }
 

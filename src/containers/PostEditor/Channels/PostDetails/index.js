@@ -20,28 +20,38 @@ function getCreatorURL(url) {
   return url.substr(0, url.substr(0, url.length - 1).lastIndexOf('/') + 1);
 }
 
-function buildPostPreview(postData, postMessage, postTime, connection, mediaItems) {
+function buildPostPreview(postData, postMessage, postTime, connection, mediaItems, newMediaItem) {
   const post = postData.merge({
     message: postMessage,
     schedule_time: postTime,
   });
-  // console.log('PostPreview post.toJS()', postData.toJS());
-  // console.log('PostDetails connection', connection);
   let postToPreview = {};
   let type = '';
   let image = '';
+  let link = {};
   let video = '';
 
-  if (mediaItems && mediaItems.length) {
+  let mediaItem = {};
+
+  /* Set media type & mediaItem */
+  if (newMediaItem.type) {
+    mediaItem = newMediaItem;
+    type = newMediaItem.type;
+  } else if (mediaItems && mediaItems.length) {
+    mediaItem = mediaItems[0];
     type = mediaItems[0].type;
-    if (type === 'image') {
-      image = mediaItems[0].properties.url;
-    }
   } else {
     type = 'status';
   }
 
-  // console.log('mediaItems', image);
+  /* Set media entity */
+  if (type === 'image') {
+    image = mediaItem.properties.url;
+  } else if (type === 'link') {
+    link = mediaItem.properties;
+  } else if (type === 'video') {
+    video = mediaItem.properties;
+  }
 
   switch (connection.channel) {
     case 'facebook':
@@ -51,11 +61,17 @@ function buildPostPreview(postData, postMessage, postTime, connection, mediaItem
           date: new Date(moment.unix(post.get('schedule_time'))),
         },
         type,
-        full_picture: image,
+        full_picture: image || link.picture_url,
+        name: link.title,
+        description: link.description,
+        caption: link.url,
+        source: video.source_url,
       };
       return <FacebookBlock post={postToPreview} connection={connection} isPreview />;
     case 'twitter': {
-      const mediaUrl = type === 'image' && image;
+      // FIXME: Append link at the end of the message instead of the following image
+      const mediaUrl = (type === 'image' && image) || (type === 'link' && link.picture_url);
+      // const mediaUrl = type === 'image' && image;
       const media = [{
         url: mediaUrl,
         media_url: mediaUrl,
@@ -93,7 +109,7 @@ function buildPostPreview(postData, postMessage, postTime, connection, mediaItem
         created_at: new Date(moment.unix(post.get('schedule_time'))),
         image: {
           original: {
-            url: type === 'image' && image,
+            url: (type === 'image' && image) || (type === 'link' && link.picture_url),
           },
         },
         note: post.get('message'),
@@ -113,7 +129,18 @@ function buildPostPreview(postData, postMessage, postTime, connection, mediaItem
   }
 }
 
-function PostDetails({ post, postSet, postMessage, postTime, connection, handleRemoveSlot, handleDateChange, handleMessageChange, handleMessageBlur }) {
+function PostDetails({
+  connection,
+  handleDateChange,
+  handleMessageBlur,
+  handleMessageChange,
+  handleRemoveSlot,
+  newMediaItem,
+  post,
+  postSet,
+  postMessage,
+  postTime,
+}) {
   const minDate = new Date();
   minDate.setDate(minDate.getDate() - 1);
   // console.log('PostDetails postSet', postSet.toJS());
@@ -166,21 +193,22 @@ function PostDetails({ post, postSet, postMessage, postTime, connection, handleR
         Preview Post
       </div>
       <div className="post-preview">
-        {buildPostPreview(post, postMessage, postTime, connection, postSet.getIn(['details', 'media_items']).toJS())}
+        {buildPostPreview(post, postMessage, postTime, connection, postSet.getIn(['details', 'media_items']).toJS(), newMediaItem)}
       </div>
     </Wrapper>
   );
 }
 
 PostDetails.propTypes = {
-  post: ImmutablePropTypes.map,
-  postSet: ImmutablePropTypes.map,
   connection: PropTypes.object,
   handleDateChange: PropTypes.func,
-  handleMessageChange: PropTypes.func,
   handleMessageBlur: PropTypes.func,
+  handleMessageChange: PropTypes.func,
   handleRemoveSlot: PropTypes.func,
+  newMediaItem: PropTypes.object,
+  post: ImmutablePropTypes.map,
   postMessage: PropTypes.string,
+  postSet: ImmutablePropTypes.map,
   postTime: PropTypes.string,
 };
 

@@ -8,6 +8,8 @@ import {
     FETCH_ACCOUNT_SUCCESS,
     FETCH_ACCOUNT_ERROR,
     TOGGLE_MENU,
+    FETCH_CONNECTIONS,
+    SET_CONNECTIONS,
 } from './constants';
 
 export function fetchCurrentAccount(accountId) {
@@ -35,6 +37,20 @@ export function fetchCurrentAccountFail(error) {
   return {
     type: FETCH_ACCOUNT_ERROR,
     error,
+  };
+}
+
+export function fetchConnections(accountId) {
+  return {
+    type: FETCH_CONNECTIONS,
+    accountId,
+  };
+}
+
+export function setConnections(connections) {
+  return {
+    type: SET_CONNECTIONS,
+    connections,
   };
 }
 

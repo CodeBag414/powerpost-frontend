@@ -91,6 +91,7 @@ class MessageEditor extends Component {
       openMediaLibrary,
       urls,
       shortenUrl,
+      convertUrl,
     } = this.props;
     const { menuVisible } = this.state;
     return (
@@ -105,6 +106,8 @@ class MessageEditor extends Component {
           openMediaLibrary={openMediaLibrary}
           urls={urls}
           shortenUrl={shortenUrl}
+          convertUrl={convertUrl}
+          mediaItem={mediaItem}
         />
         <MultiLineInput
           message={message}
@@ -155,6 +158,7 @@ MessageEditor.propTypes = {
   openLinkDialog: PropTypes.func,
   urls: PropTypes.array,
   shortenUrl: PropTypes.func,
+  convertUrl: PropTypes.func,
 };
 
 export default MessageEditor;

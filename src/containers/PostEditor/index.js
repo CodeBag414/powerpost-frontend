@@ -8,6 +8,7 @@ import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { routerActions } from 'react-router-redux';
 import { UserCanPostEdit } from 'config.routes/UserRoutePermissions';
+import { withRouter } from 'react-router';
 
 import {
   deletePostSetRequest,
@@ -15,16 +16,18 @@ import {
   fetchPostSetRequest,
   updatePostSetRequest,
   updatePostRequest,
-  fetchConnections,
 } from 'containers/App/actions';
 
 import {
   makeSelectUser,
   selectGroupUsers,
   makeSelectUserAccount,
-  makeSelectConnections,
   makeSelectFilePickerKey,
 } from 'containers/App/selectors';
+
+import {
+  makeSelectConnections,
+} from 'containers/Main/selectors';
 
 import {
   fetchComments,
@@ -34,6 +37,8 @@ import {
   fetchCollections,
   createMediaItem,
   clearMediaItem,
+  setWordpressPostRequest,
+  getMediaItem,
 } from 'containers/PostEditor/actions';
 
 import {
@@ -67,12 +72,12 @@ class PostEditor extends Component {
     // getAccountTags: PropTypes.func,
     // fetchPostSet: PropTypes.func,
     // fetchGroupUsers: PropTypes.func,
-    // fetchConnections: PropTypes.func,
     accountId: PropTypes.string,
     connections: PropTypes.array,
     clearMediaItem: PropTypes.func,
     createMediaItem: PropTypes.func,
     createPost: PropTypes.func,
+    setWordpressPost: PropTypes.func,
     deletePostSet: PropTypes.func.isRequired,
     // fetchCollections: PropTypes.func,
     fetchWordpressGUI: PropTypes.func,
@@ -87,6 +92,7 @@ class PostEditor extends Component {
     postSet: ImmutablePropTypes.map,
     updatePost: PropTypes.func,
     updatePostSet: PropTypes.func,
+    getMediaItem: PropTypes.func,
     user: PropTypes.shape(),
     userAccount: PropTypes.object,
     wordpressGUI: ImmutablePropTypes.map,
@@ -126,10 +132,13 @@ class PostEditor extends Component {
   }
 
   onDeletePostSet = () => {
-    const { postSet, deletePostSet, goBack } = this.props;
+    const { postSet, deletePostSet, goBack, location } = this.props;
     const id = postSet.getIn(['details', 'post_set_id']);
     deletePostSet(id);
-    goBack();
+
+    if (location && !location.pathname.endsWith('/posts')) {
+      goBack();
+    }
   }
 
   initialize = (props = this.props) => {
@@ -141,7 +150,6 @@ class PostEditor extends Component {
     });
     const payload = { accountId };
     props.fetchGroupUsers(payload);
-    props.fetchConnections(accountId);
     props.fetchCollections(accountId);
   }
 
@@ -289,6 +297,8 @@ class PostEditor extends Component {
                 fetchWordpressGUI={fetchWordpressGUI}
                 createMediaItem={this.props.createMediaItem}
                 clearMediaItem={this.props.clearMediaItem}
+                setWordpressPost={this.props.setWordpressPost}
+                getMediaItem={this.props.getMediaItem}
               />
               <ChannelsPreview
                 connections={connections}
@@ -320,13 +330,14 @@ export function mapDispatchToProps(dispatch) {
     fetchGroupUsers: (payload) => dispatch(fetchGroupUsers(payload)),
     updatePostSet: (payload) => dispatch(updatePostSetRequest(payload)),
     updatePost: (payload) => dispatch(updatePostRequest(payload)),
-    fetchConnections: (payload) => dispatch(fetchConnections(payload)),
     fetchWordpressGUI: (payload) => dispatch(fetchWordpressGUIRequest(payload)),
     createPost: (payload) => dispatch(createPostRequest(payload)),
     goBack: () => dispatch(routerActions.goBack()),
     fetchCollections: (accountId) => dispatch(fetchCollections(accountId)),
     createMediaItem: (mediaItem) => dispatch(createMediaItem(mediaItem)),
     clearMediaItem: () => dispatch(clearMediaItem()),
+    setWordpressPost: (payload) => dispatch(setWordpressPostRequest(payload)),
+    getMediaItem: (mediaItemId) => dispatch(getMediaItem(mediaItemId)),
   };
 }
 
@@ -342,4 +353,4 @@ const mapStateToProps = createStructuredSelector({
   newMediaItem: selectNewMediaItem(),
 });
 
-export default UserCanPostEdit(connect(mapStateToProps, mapDispatchToProps)(PostEditor));
+export default UserCanPostEdit(withRouter(connect(mapStateToProps, mapDispatchToProps)(PostEditor)));

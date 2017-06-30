@@ -25,12 +25,12 @@ import { makeSelectUser,
 
 import { checkUser,
          logout,
-         getPostSets,
          createPostSetRequest,
 } from 'containers/App/actions';
 
 import { toggleMenu,
          fetchCurrentAccount,
+         fetchConnections,
 } from './actions';
 
 import { makeSelectMenuCollapsed,
@@ -57,9 +57,9 @@ class Main extends React.Component {
     fetchAccount: PropTypes.func,
     createPostSet: PropTypes.func,
     postSet: PropTypes.object,
-    getPostSetsAction: PropTypes.func,
     toggleMenuCollapse: PropTypes.func,
     logout: PropTypes.func,
+    fetchConnections: PropTypes.func,
   };
 
   constructor(props) {
@@ -70,12 +70,15 @@ class Main extends React.Component {
 
   componentDidMount() {
     this.props.fetchAccount(this.props.params.account_id);
-    this.props.getPostSetsAction(this.props.params.account_id);
+    if (this.props.params.account_id) {
+      this.props.fetchConnections(this.props.params.account_id);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.params.account_id !== this.props.params.account_id) {
+    if (nextProps.params.account_id && nextProps.params.account_id !== this.props.params.account_id) {
       this.props.fetchAccount(nextProps.params.account_id);
+      this.props.fetchConnections(nextProps.params.account_id);
     }
     const { postSet, activeBrand } = nextProps;
     if (postSet && postSet.createSuccess && (!this.props.postSet || this.props.postSet.post_set_id !== postSet.post_set_id)) {
@@ -111,6 +114,7 @@ class Main extends React.Component {
 
   render() {
     const viewContentStyle = this.props.menuCollapsed ? styles.viewContentCollapsed : styles.viewContentFull;
+    if (!this.props.activeBrand.account_id) return null;
     return (
       <div>
         <Nav
@@ -142,12 +146,12 @@ Main.propTypes = {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    getPostSetsAction: (accountId) => dispatch(getPostSets(accountId)),
     checkUserObject: (user) => dispatch(checkUser(user)),
     toggleMenuCollapse: (isCollapsed) => dispatch(toggleMenu(isCollapsed)),
     logout: () => dispatch(logout()),
     fetchAccount: (accountId) => dispatch(fetchCurrentAccount(accountId)),
     createPostSet: (postSet) => dispatch(createPostSetRequest(postSet)),
+    fetchConnections: (accountId) => dispatch(fetchConnections(accountId)),
   };
 }
 

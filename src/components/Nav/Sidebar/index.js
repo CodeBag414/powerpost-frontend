@@ -24,17 +24,6 @@ class Sidebar extends React.Component {
     this.renderCollapsed = this.renderCollapsed.bind(this);
   }
 
-  shouldComponentUpdate(nextProps) {
-    const isPrevPathAccount = this.props.location.pathname.match('/account/');
-    const isNextPathAccount = nextProps.location.pathname.match('/account/');
-    if (!nextProps.isMenuCollapsed && !isNextPathAccount) {
-      this.props.handleMenuToggle(false);
-    } else if (nextProps.isMenuCollapsed && isNextPathAccount && !isPrevPathAccount) {
-      // this.props.handleMenuToggle(true);
-    }
-    return true;
-  }
-
   renderFull() {
     return (
       <div>
@@ -58,13 +47,16 @@ class Sidebar extends React.Component {
               <ReactRouterMenuItem caption="Brands" activeClassName={styles.active} isSidebar icon={<i className="fa fa-th-large" />} to={`/account/${this.props.accountId}/brands`} />
               }
               {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('content_library') > -1 &&
-                <ReactRouterMenuItem caption="Content" activeClassName={styles.active} isSidebar icon={<i className="fa fa-folder" />} to={`/account/${this.props.accountId}/library`} />
+                <ReactRouterMenuItem caption="Content Hub" activeClassName={styles.active} isSidebar icon={<i className="fa fa-folder" />} to={`/account/${this.props.accountId}/library`} />
               }
               {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
                 <ReactRouterMenuItem caption="Status Boards" activeClassName={styles.active} isSidebar icon={<i className="fa fa-columns" />} to={`/account/${this.props.accountId}/boards`} />
               }
               {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
                 <ReactRouterMenuItem caption="Calendar" activeClassName={styles.active} isSidebar icon={<i className="fa fa-calendar" />} to={`/account/${this.props.accountId}/calendar`} />
+              }
+              {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('content_library') > -1 &&
+                <ReactRouterMenuItem caption="Shared Streams" activeClassName={styles.active} isSidebar icon={<i className="fa fa-list-alt" />} to={`/account/${this.props.accountId}/shared_streams/owned`} />
               }
               {this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
                 <ReactRouterMenuItem caption="Posts" activeClassName={styles.active} isSidebar icon={<i className="fa fa-send" />} to={`/account/${this.props.accountId}/posts`} />

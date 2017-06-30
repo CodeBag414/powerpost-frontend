@@ -14,7 +14,7 @@ function Calendar({ posts, path }) {
     <Wrapper>
       <HeaderWrapper>
         <div className="title">Calendar</div>
-        <div className="description">Go here to get a snapshot of your brand's upcoming posts and plan out your content.</div>
+        <div className="description">{'Go here to get a snapshot of your brand\'s upcoming posts and plan out your content.'}</div>
       </HeaderWrapper>
       <ListWrapper>
         <table>

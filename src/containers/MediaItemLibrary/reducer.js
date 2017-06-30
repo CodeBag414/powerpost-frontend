@@ -5,36 +5,39 @@ import { fromJS } from 'immutable';
 import { combineReducers } from 'redux';
 
 import {
+  FETCH_POST_SET_REQUEST,
+  FETCH_POST_SET_SUCCESS,
+  FETCH_POST_SET_ERROR,
   UPDATE_POST_SET_REQUEST,
   UPDATE_POST_SET_SUCCESS,
   UPDATE_POST_SET_ERROR,
 } from 'containers/App/constants';
 
 import {
-   FETCH_COLLECTIONS_SUCCESS,
-   FETCH_MEDIA_ITEMS_SUCCESS,
-   FETCH_MEDIA_ITEMS_ERROR,
-   MEDIA_ERROR,
-   FETCH_URL_CONTENT_SUCCESS,
-   CLEAR_URL_CONTENT,
-   SEARCH_BING_SUCCESS,
-   FETCH_RSS_FEEDS_SUCCESS,
-   FETCH_RSS_ITEMS_SUCCESS,
-   SET_VISIBILITY_FILTER,
-   SHOW_ALL,
-   SHOW_BLOGS,
-   SHOW_LINKS,
-   SHOW_IMAGES,
-   SHOW_VIDEOS,
-   SET_SEARCH_FILTER,
-   SET_SORT_ORDER,
-   CREATE_MEDIA_ITEM_SUCCESS,
-   DELETE_MEDIA_ITEM_SUCCESS,
-   VIDEO_PROCESSING_DONE,
-   SET_PROCESSING_ITEM,
-   UPDATE_MEDIA_ITEM_SUCCESS,
-   CREATE_RSS_FEED_SUCCESS,
-   SET_ACTIVE_MEDIA_ITEM_ID,
+  FETCH_COLLECTIONS_SUCCESS,
+  FETCH_MEDIA_ITEMS_SUCCESS,
+  FETCH_MEDIA_ITEMS_ERROR,
+  MEDIA_ERROR,
+  FETCH_URL_CONTENT_SUCCESS,
+  CLEAR_URL_CONTENT,
+  SEARCH_BING_SUCCESS,
+  FETCH_RSS_FEEDS_SUCCESS,
+  FETCH_RSS_ITEMS_SUCCESS,
+  SET_VISIBILITY_FILTER,
+  SHOW_ALL,
+  SHOW_BLOGS,
+  SHOW_LINKS,
+  SHOW_IMAGES,
+  SHOW_VIDEOS,
+  SET_SEARCH_FILTER,
+  SET_SORT_ORDER,
+  CREATE_MEDIA_ITEM_SUCCESS,
+  DELETE_MEDIA_ITEM_SUCCESS,
+  VIDEO_PROCESSING_DONE,
+  SET_PROCESSING_ITEM,
+  UPDATE_MEDIA_ITEM_SUCCESS,
+  CREATE_RSS_FEED_SUCCESS,
+  SET_ACTIVE_MEDIA_ITEM_ID,
   FETCH_STREAM_POST_SETS_REQUEST,
   FETCH_STREAM_POST_SETS_SUCCESS,
   FETCH_STREAM_POST_SETS_FAILURE,
@@ -44,6 +47,7 @@ import {
   REPLICATE_POST_SET_REQUEST,
   REPLICATE_POST_SET_SUCCESS,
   REPLICATE_POST_SET_FAILURE,
+  CREATE_BLOG_ITEM_SUCCESS,
 } from './constants';
 
 // The initial application state
@@ -141,12 +145,9 @@ function mediaLibraryReducer(state = initialState, action) {
     case VIDEO_PROCESSING_DONE:
       return state
         .update('mediaItems', (mediaItems) => mediaItems.concat(action.mediaItem));
-    case SET_PROCESSING_ITEM:
-      return state
-        .set('processingItem', action.processingItem);
     case DELETE_MEDIA_ITEM_SUCCESS:
       return state
-        .set('mediaItems', deleteObjectInArray(state.get('mediaItems'), action));
+        .set('mediaItems', state.get('mediaItems').filter((o) => o.media_item_id !== action.id));
     case UPDATE_MEDIA_ITEM_SUCCESS:
       return state
         .set('mediaItems', updateObjectInArray(state.get('mediaItems'), action));
@@ -165,6 +166,17 @@ function mediaLibraryReducer(state = initialState, action) {
       return state
         .setIn(['postSets', 'isFetching'], false)
         .setIn(['postSets', 'error'], 'Fetching Stream Failure');
+    case FETCH_POST_SET_REQUEST:
+      return state
+        .setIn(['postSet', 'processing'], true);
+    case FETCH_POST_SET_SUCCESS:
+      return state
+        .setIn(['postSet', 'processing'], false)
+        .setIn(['postSet', 'data'], fromJS(action.payload));
+    case FETCH_POST_SET_ERROR:
+      return state
+        .setIn(['postSet', 'processing'], false)
+        .setIn(['postSet', 'error'], action.payload);
     case UPDATE_POST_SET_REQUEST:
       return state
         .setIn(['postSet', 'processing'], true);
@@ -198,6 +210,9 @@ function mediaLibraryReducer(state = initialState, action) {
         .updateIn(['postSets', 'data'], (postSets) => postSets.push(fromJS(action.payload)));
     case REPLICATE_POST_SET_FAILURE:
       return state.setIn(['postSets', 'isFetching'], false);
+    case CREATE_BLOG_ITEM_SUCCESS:
+      return state
+        .update('mediaItems', (mediaItems) => mediaItems.concat(action.payload.media_items));
     default:
       return state;
   }

@@ -61,7 +61,7 @@ const PostSetDetail = ({
         </Button>
       </TitleRow>
       <UserAndTime>
-        created by { postSet.get('user_id') }
+        created by { postSet.getIn(['user', 'display_name']) }
       </UserAndTime>
       <Message>
         { postSet.get('message') }

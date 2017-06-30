@@ -9,11 +9,11 @@ import { takeLatest, delay } from 'redux-saga';
 import { take, call, put, race, select, fork } from 'redux-saga/effects';
 import { browserHistory } from 'react-router';
 import { toastr } from 'lib/react-redux-toastr';
-import { getData, postData, putData } from 'utils/request';
+import { getData, postData, putData, serialize } from 'utils/request';
 import auth from 'utils/auth';
 import { set } from 'utils/localStorage';
 import { makeSelectCurrentAccount } from 'containers/Main/selectors';
-import { makeSelectUser } from './selectors';
+import { makeSelectUser, makeSelectPostSets } from './selectors';
 
 import {
   SENDING_REQUEST,
@@ -38,20 +38,19 @@ import {
   INVITE_EMAIL_TO_GROUP,
   ADD_USER_TO_GROUP,
   REMOVE_USER_FROM_GROUP,
-  SET_POST_SETS,
-  FETCH_POST_SETS,
+  FETCH_POST_SETS_REQUEST,
   DELETE_POST_SET_REQUEST,
   DELETE_POST_SET_SUCCESS,
   CHANGE_POST_SET_REQUEST,
   CHANGE_POST_SET_STATUS,
+  CHANGE_POST_SET_SORT_ORDER_REQUEST,
+  CHANGE_POST_SET_SORT_ORDER_SUCCESS,
   FETCH_POST_SET_REQUEST,
   UPDATE_POST_SET_REQUEST,
   FETCH_POSTS,
   UPDATE_POST_REQUEST,
   UPDATE_BUNCH_POST_REQUEST,
-  FETCH_CONNECTIONS,
   CREATE_POST_SET_REQUEST,
-  FETCH_POST_SETS_BY_ST_REQUEST,
   FETCH_MEDIA_ITEMS_REQUEST,
 } from './constants';
 
@@ -79,18 +78,18 @@ import {
   fetchPostSetRequest,
   fetchPostSetSuccess,
   fetchPostSetError,
-  fetchPostSetsBySTRequest,
-  fetchPostSetsBySTSuccess,
-  fetchPostSetsBySTFailure,
   updatePostSetSuccess,
   updatePostSetError,
-  getPostSets,
   updateBunchPostSuccess,
   setPosts,
-  setConnections,
   createPostSetSuccess,
   fetchMediaItemsSuccess,
   fetchMediaItemsFailure,
+  fetchPostSetsSuccess,
+  fetchPostSetsFailure,
+  fetchPostSetsRequest,
+  fetchPostSetsBySTRequest,
+  fetchPostSetsBySORequest,
 } from './actions';
 
 /**
@@ -527,62 +526,25 @@ export function* removeUserFromGroupFlow() {
   }
 }
 
-
-const serialize = function serialize(obj, prefix) {
-  const str = [];
-  let p;
-  for (p in obj) { // eslint-disable-line no-restricted-syntax
-    if (Object.prototype.hasOwnProperty.call(obj, p)) {
-      const k = prefix ? `${prefix}[${p}]` : p, v = obj[p]; // eslint-disable-line
-      str.push((v !== null && typeof v === 'object') ?
-        serialize(v, k) :
-        `${encodeURIComponent(k)}=${encodeURIComponent(v)}`);
-    }
-  }
-  return str.join('&');
-};
-
-export function* fetchPostSetsWorker(payload) {
+export function* fetchPostSetsWorker({ accountId, filter, endPoint = 'post_sets' }) {
   const data = {
-    payload: {
-      sort_by: 'creation_time',
-      sort_order: 'DESC',
-      limit: 500,
-      statuses: [1, 2, 3, 4, 5, 6],
-    },
-  };
-  const params = serialize(data);
-  const requestUrl = `/post_api/post_sets/${payload.accountId}?${params}`;
-  const result = yield call(getData, requestUrl);
-  if (result.data.status === 'success') {
-    const postSets = result.data.post_sets;
-    yield put({ type: SET_POST_SETS, postSets });
-  } else {
-    // console.log(result);
-  }
-}
-
-function* fetchPostSetsBySTRequestWorker(payload) {
-  const data = {
-    payload: {
-      sort_by: 'schedule_time',
-      sort_order: 'DESC',
-      limit: 500,
-    },
+    payload: filter,
   };
   const params = serialize(data);
   const currentAccount = yield select(makeSelectCurrentAccount());
   let id = currentAccount.account_id;
-  if (payload.accountId) {
-    id = payload.accountId;
+  if (accountId) {
+    id = accountId;
   }
-  const requestUrl = `/post_api/post_sets_by_schedule_time/${id}?${params}`;
-
+  const requestUrl = `/post_api/${endPoint}/${id}?${params}`;
   const response = yield call(getData, requestUrl);
   if (response.data.status === 'success') {
-    yield put(fetchPostSetsBySTSuccess(response.data));
+    // const postSets = response.data.post_sets;
+    // yield put({ type: SET_POST_SETS, postSets });
+    yield put(fetchPostSetsSuccess(response.data));
   } else {
-    yield put(fetchPostSetsBySTFailure(response.statusText));
+    yield put(fetchPostSetsFailure(response.data));
+    // console.log(result);
   }
 }
 
@@ -622,32 +584,50 @@ export function* changePostSetRequest(payload) {
   }
 }
 
-export function* fetchPostSetWorker(action) {
-  const { payload } = action;
+export function* changePostSetSortOrderRequest(payload) {
+  const requestUrl = `/post_api/sort_order_after/${payload.id}/${payload.afterId}?`;
+  const requestData = {
+    payload: {
+      post_set_id: payload.id,
+      sort_order_after_id: payload.afterId,
+    },
+  };
+  try {
+    const response = yield call(putData, requestUrl, requestData);
+    const { data } = response;
+    if (data.status === 'success') {
+      yield put({ type: CHANGE_POST_SET_SORT_ORDER_SUCCESS, id: payload.id, sort_order: data.post_set.sort_order });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
 
+export function* fetchPostSetWorker({ payload, section }) {
   try {
     const response = yield call(getData, `/post_api/post_set/${payload.id}`);
     const { data } = response;
     if (data.status === 'success') {
-      yield put(fetchPostSetSuccess(data.post_set));
+      yield put(fetchPostSetSuccess(data.post_set, section));
     } else {
       throw data.message;
     }
   } catch (error) {
-    yield put(fetchPostSetError(error));
+    yield put(fetchPostSetError(error, section));
   }
 }
 
 export function* updatePostSetWorker(action) {
   const { payload, section } = action;
 
+  /* Modify post type correctly */
+  if (payload.post_type === 'document') payload.post_type = 'file';
+
   try {
     const response = yield call(putData, `/post_api/post_set/${payload.id}`, { payload });
     const { data } = response;
     if (data.status === 'success') {
       yield put(updatePostSetSuccess(data.post_set, section));
-      yield put(getPostSets(data.post_set.account_id));
-      yield put(fetchPostSetsBySTRequest());
     } else {
       throw data.message;
     }
@@ -656,12 +636,8 @@ export function* updatePostSetWorker(action) {
   }
 }
 
-export function* fetchPostSets() {
-  yield takeLatest(FETCH_POST_SETS, fetchPostSetsWorker);
-}
-
-export function* fetchPostSetsBySTRequestSaga() {
-  yield takeLatest(FETCH_POST_SETS_BY_ST_REQUEST, fetchPostSetsBySTRequestWorker);
+export function* fetchPostSetsSaga() {
+  yield takeLatest(FETCH_POST_SETS_REQUEST, fetchPostSetsWorker);
 }
 
 export function* deletePostSet() {
@@ -670,6 +646,10 @@ export function* deletePostSet() {
 
 export function* changePostSetStatus() {
   yield takeLatest(CHANGE_POST_SET_REQUEST, changePostSetRequest);
+}
+
+export function* changePostSetSortOrderSaga() {
+  yield takeLatest(CHANGE_POST_SET_SORT_ORDER_REQUEST, changePostSetSortOrderRequest);
 }
 
 export function* fetchPostSetSaga() {
@@ -700,7 +680,7 @@ function* fetchPostsWorker({ accountId }) {
   }
 }
 
-function* updatePostRequestWorker({ post }) {
+function* updatePostRequestWorker({ post, section }) {
   const requestUrl = `/post_api/post/${post.post_id}`;
   const requestData = {
     payload: {
@@ -711,8 +691,7 @@ function* updatePostRequestWorker({ post }) {
   const response = yield call(putData, requestUrl, requestData);
   if (response.data.result === 'success') {
     yield put({ type: 'UPDATE_POST_SUCCESS', post: response.data.post });
-    yield put(fetchPostSetRequest({ id: response.data.post.post_set_id }));
-    yield put(fetchPostSetsBySTRequest());
+    yield put(fetchPostSetRequest({ id: response.data.post.post_set_id }, section));
   } else {
     console.log(response);
     yield put({ type: 'UPDATE_POST_FAILURE', payload: response.data });
@@ -761,26 +740,6 @@ export function* updateBunchPostSaga() {
   yield takeLatest(UPDATE_BUNCH_POST_REQUEST, updateBunchPostRequestWorker);
 }
 
-function* fetchConnectionsWorker({ accountId }) {
-  const data = {
-    payload: {
-      account_id: accountId,
-    },
-  };
-  const params = serialize(data);
-
-  const response = yield call(getData, `/connection_api/connections?${params}`);
-  if (response.data.status === 'success') {
-    yield put(setConnections(response.data.connections));
-  } else {
-    console.log(response);
-  }
-}
-
-export function* fetchConnectionsSaga() {
-  yield takeLatest(FETCH_CONNECTIONS, fetchConnectionsWorker);
-}
-
 function* createPostSetWorker({ postSet, edit }) {
   const requestUrl = '/post_api/post_set';
   const requestData = {
@@ -788,9 +747,22 @@ function* createPostSetWorker({ postSet, edit }) {
       ...postSet,
     },
   };
-
   const response = yield call(postData, requestUrl, requestData);
   if (response.data.status === 'success') {
+    const currentPostSets = yield select(makeSelectPostSets());
+    const action = currentPostSets.get('action');
+    switch (action) {
+      case 'fetchPostSetsRequestByST':
+        yield put(fetchPostSetsBySTRequest());
+        break;
+      case 'fetchPostSetsRequestBySO':
+        yield put(fetchPostSetsBySORequest());
+        break;
+      case 'fetchPostSetsRequest':
+      default:
+        yield put(fetchPostSetsRequest());
+        break;
+    }
     yield put(createPostSetSuccess(response.data.post_set, edit));
   } else {
     console.log(response);
@@ -846,18 +818,17 @@ export default [
   inviteEmailToGroupFlow,
   addUserToGroupFlow,
   removeUserFromGroupFlow,
-  fetchPostSets,
+  fetchPostSetsSaga,
   deletePostSet,
   changePostSetStatus,
   fetchPostSetSaga,
   updatePostSetSaga,
   fetchPostsSaga,
-  fetchPostSetsBySTRequestSaga,
   updatePostSaga,
   updateBunchPostSaga,
-  fetchConnectionsSaga,
   createPostSetSaga,
   fetchMediaItemsSaga,
+  changePostSetSortOrderSaga,
 ];
 
 // Little helper function to abstract going to different pages

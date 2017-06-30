@@ -2,17 +2,18 @@ import { takeLatest, takeEvery } from 'redux-saga';
 import { take, call, put, cancel } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 
-import { getData } from 'utils/request';
+import { getData, serialize } from 'utils/request';
+
 import {
-  getPostSets,
-  fetchPostSetsBySTRequest,
-} from 'containers/App/actions';
+  setConnections,
+} from './actions';
 
 import {
     FETCH_ACCOUNT,
     FETCH_ACCOUNT_SUCCESS,
     FETCH_ACCOUNT_ERROR,
     IS_LOADING_ACCOUNT,
+    FETCH_CONNECTIONS,
 } from './constants';
 
 export function* getAccount(action) {
@@ -33,8 +34,6 @@ export function* getAccount(action) {
       yield put({ type: FETCH_ACCOUNT_ERROR, account });
     } else {
       yield put({ type: FETCH_ACCOUNT_SUCCESS, account });
-      yield put(getPostSets(accountId));
-      yield put(fetchPostSetsBySTRequest());
     }
   } catch (error) {
     yield put({ type: FETCH_ACCOUNT_ERROR, error });
@@ -53,6 +52,30 @@ export function* accountData() {
   yield cancel(watcher);
 }
 
+function* fetchConnectionsWorker({ accountId }) {
+  const data = {
+    payload: {
+      account_id: accountId,
+    },
+  };
+  const params = serialize(data);
+
+  const response = yield call(getData, `/connection_api/connections?${params}`);
+  if (response.data.status === 'success') {
+    yield put(setConnections(response.data.connections));
+  } else {
+    console.log(response);
+  }
+}
+
+export function* fetchConnectionsSaga() {
+  const watcher = yield takeLatest(FETCH_CONNECTIONS, fetchConnectionsWorker);
+
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
 export default [
   accountData,
+  fetchConnectionsSaga,
 ];

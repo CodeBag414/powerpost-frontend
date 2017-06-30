@@ -47,7 +47,7 @@ class Redeem extends Component {
         const token = get(detail, 'token');
         const email = get(detail, 'email');
         const secondaryToken = get(detail, 'secondary_token');
-
+  
         if (detail.api_key && procedure !== 'password_reset') {
           cookie.save('token', detail.api_key, { path: '/' });
         }
@@ -70,7 +70,7 @@ class Redeem extends Component {
             browserHistory.push(`/signup/account?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`);
             break;
           case 'reload_roles':
-            location.href = '/';
+            location.href = '/';    // This skips payment setup flow
             // browserHistory.push('/');
             break;
           case 'password_reset':

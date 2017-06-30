@@ -91,14 +91,16 @@ const Preview = ({ item }) => {
       {type === 'video' &&
         <div>
           <LinkTitle style={{ marginBottom: '10px' }}>{item.properties.filename}</LinkTitle>
-          <VideoPlayer
-            style={{ margin: '0 auto' }}
-            width={'initial'}
-            height={'initial'}
-            url={item.properties.source_url}
-            controls
-            playing
-          />
+          {item.status === '3' ? (<p>Processing video...</p>) : (
+            <VideoPlayer
+              style={{ margin: '0 auto' }}
+              width={'initial'}
+              height={'initial'}
+              url={item.properties.source_720_url || item.properties.source_url}
+              controls
+              playing
+            />)
+          }
         </div>
       }
       {type === 'link' &&

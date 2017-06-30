@@ -23,6 +23,7 @@ import {
   CREATE_POST_REQUEST,
   CREATE_POST_SUCCESS,
   CREATE_POST_FAILURE,
+  SET_WORDPRESS_POST_REQUEST,
   CLEAR_MEDIA_ITEM,
 } from './constants';
 
@@ -157,6 +158,13 @@ export function createPostSuccess(payload) {
 export function createPostFailure(payload) {
   return {
     type: CREATE_POST_FAILURE,
+    payload,
+  };
+}
+
+export function setWordpressPostRequest(payload) {
+  return {
+    type: SET_WORDPRESS_POST_REQUEST,
     payload,
   };
 }

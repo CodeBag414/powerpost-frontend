@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { browserHistory } from 'react-router';
 
 import Wrapper from './Wrapper';
 import Title from './Title';
@@ -13,9 +14,13 @@ function handleTitleKeyDown(e) {
   }
 }
 
-function GeneralInfo({ user, postSet, postTitle, handleTitleChange, handleTitleBlur, modal, goBack }) {
+function GeneralInfo({ user, postSet, postTitle, handleTitleChange, handleTitleBlur, modal, goBack, location }) {
   const onBack = () => {
-    goBack();
+    if (location.state && location.state.prevUrl) {
+      browserHistory.push(location.state.prevUrl);
+    } else {
+      goBack();
+    }
   };
 
   // console.log('user', user);
@@ -52,6 +57,7 @@ GeneralInfo.propTypes = {
   handleTitleBlur: PropTypes.func,
   handleTitleChange: PropTypes.func,
   goBack: PropTypes.func,
+  location: PropTypes.object,
   postSet: PropTypes.object,
   postTitle: PropTypes.string,
   user: PropTypes.shape(),

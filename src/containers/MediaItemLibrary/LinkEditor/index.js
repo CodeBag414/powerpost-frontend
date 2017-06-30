@@ -77,7 +77,7 @@ class LinkEditor extends Component {
         this.setState({ descriptionValue: nextProps.linkItem.properties.description });
       }
       if (this.state.selectedImage !== nextProps.linkItem.properties.picture) {
-        this.setState({ selectedImage: { url: nextProps.linkItem.properties.picture } });
+        this.setState({ selectedImage: { url: nextProps.linkItem.properties.thumb_url } });
       }
     }
 
@@ -127,10 +127,15 @@ class LinkEditor extends Component {
     this.setState({ selectedImage: mediaItem, selectedImageIndex: -1 });
   }
 
-  prepareLinkItem() {
+  prepareLinkItem(create) {
     let imageUrl = '';
     if (this.state.selectedImage.url) {
       imageUrl = this.state.selectedImage.url;
+    }
+
+    let createPost = false;
+    if (create) {
+      createPost = true;
     }
 
     let linkItem = {};
@@ -139,6 +144,7 @@ class LinkEditor extends Component {
 
       linkItem = {
         action: 'update',
+        create: createPost,
         properties: {
           ...properties,
           title: this.state.titleValue,
@@ -150,6 +156,7 @@ class LinkEditor extends Component {
     } else {
       linkItem = {
         action: 'create',
+        create: createPost,
         url: this.props.urlContent.url,
         title: this.state.titleValue,
         description: this.state.descriptionValue,
@@ -164,12 +171,14 @@ class LinkEditor extends Component {
       url: '',
     });
 
-    this.props.handleLinkEditorSave(linkItem);
+    this.props.handleLinkEditorSave(linkItem, create);
   }
 
   render() {
-    const { urlContent, linkEditorDialog, closeAllDialog } = this.props;
+    const { urlContent, linkEditorDialog, closeAllDialog, mediaLibraryContext } = this.props;
     const { url, titleValue, descriptionValue, selectedImage, selectedImageIndex } = this.state;
+    const create = true;
+    const doNotCreate = false;
 
     return (
       <PPDialog
@@ -243,8 +252,11 @@ class LinkEditor extends Component {
                 </div>
               </div>
             }
-            <div className="button-wrapper">
-              <Button onClick={this.prepareLinkItem} primary>Save Content</Button>
+            <div className="button-wrapper" style={{ display: 'inline-block' }}>
+              { mediaLibraryContext &&
+                <Button onClick={() => this.prepareLinkItem(create)} primary style={{ marginRight: '5px' }}>Save & Create Post</Button>
+              }
+              <Button onClick={() => this.prepareLinkItem(doNotCreate)} primary>Save</Button>
             </div>
           </FooterWrapper>
         </Wrapper>

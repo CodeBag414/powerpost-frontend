@@ -56,10 +56,11 @@ const Dashboard = (props) => {
               ? `Hello there ${userInfo.display_name}!`
               : ''
             }
-            {
+            {/*
               accountType === '5'
               ? <a href="https://www.powerpost.digital/pricing/" target="_blank">Upgrade to a Premium Account!</a>
               : null
+              */
             }
           </Header>
         </div>
@@ -76,11 +77,7 @@ const Dashboard = (props) => {
                     ? <BrandItem brand={userOwnAccount} key={'ownaccount'} />
                     : null
                   }
-                  {
-                    brands
-                    ? brands.map((brand, index) => <BrandItem brand={brand} key={index} />)
-                    : null
-                  }
+                  { brands.length > 0 && brands.map((brand, index) => <BrandItem brand={brand} key={index} />) }
                 </div>
               </div>
             </Pane>
