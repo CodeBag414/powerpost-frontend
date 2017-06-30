@@ -600,6 +600,40 @@ export function createRoutes(store, auth) {
       ],
     },
     {
+      path: '/privacy',
+      name: 'Privacy Policy',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          System.import('containers/Privacy'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([component]) => {
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
+    {
+      path: '/terms',
+      name: 'Terms & Conditions',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          System.import('containers/Terms'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([component]) => {
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
+    {
       path: '/signup',
       name: 'signup',
       getComponent(nextState, cb) {

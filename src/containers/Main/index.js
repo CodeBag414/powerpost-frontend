@@ -24,6 +24,10 @@ import { makeSelectUser,
          makeSelectPostSetEdit,
 } from 'containers/App/selectors';
 
+import {
+  makeSelectAccountBrands,
+} from './selectors';
+
 import { checkUser,
          logout,
          createPostSetRequest,
@@ -168,7 +172,7 @@ const mapStateToProps = () => {
   const selectMenuCollapsed = makeSelectMenuCollapsed();
   const selectSharedAccounts = makeSelectSharedAccounts();
   const selectActiveBrand = makeSelectCurrentAccount();
-  const selectSubAccounts = makeSelectSubAccounts();
+  const selectSubAccounts = makeSelectAccountBrands();
   const selectUserAccount = makeSelectUserAccount();
   const selectUserAvatar = makeSelectUserAvatar();
   const selectAccountPermissions = makeSelectAccountPermissions();

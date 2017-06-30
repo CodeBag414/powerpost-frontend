@@ -10,6 +10,10 @@ import {
 } from 'containers/Main/actions';
 
 import {
+  getUser,
+} from 'containers/App/actions';
+
+import {
   makeSelectAccountBrands,
 } from 'containers/Main/selectors';
 
@@ -35,6 +39,7 @@ class Brands extends Component {
     isBrandCreated: PropTypes.bool,
     isBrandDeleted: PropTypes.bool,
     fetchAccount: PropTypes.func,
+    getUser: PropTypes.func,
   }
 
   constructor(props) {
@@ -49,6 +54,7 @@ class Brands extends Component {
     if (this.props.isBrandCreated !== nextProps.isBrandCreated ||
       this.props.isBrandDeleted !== nextProps.isBrandDeleted) {
       this.props.fetchAccount(this.props.userAccount.account_id);
+      this.props.getUser();
     }
   }
 
@@ -84,6 +90,7 @@ class Brands extends Component {
 export function mapDispatchToProps(dispatch) {
   return {
     fetchAccount: (accountId) => dispatch(fetchCurrentAccount(accountId)),
+    getUser: () => dispatch(getUser()),
   };
 }
 

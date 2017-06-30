@@ -13,6 +13,10 @@ import {
 } from './constants';
 
 import {
+  CREATE_BRAND_SUCCESS,
+} from 'containers/Brands/constants';
+
+import {
   VALIDATE_CONNECTIONS_SUCCESS,
 } from '../Settings/Connections/constants';
 
@@ -84,6 +88,10 @@ function dashboardReducer(state = initialState, action) {
     case VALIDATE_CONNECTIONS_SUCCESS:
       return state
         .setIn(['activeBrand', 'connections'], action.connections);
+    case CREATE_BRAND_SUCCESS:
+      console.log(action);
+      return state
+        .updateIn(['activeBrand', 'subAccounts'], (arr) => arr.concat(action.payload.subaccount));
     case SET_CONNECTIONS:
       return state.set('connections', action.connections);
     case SET_PROCESSING:

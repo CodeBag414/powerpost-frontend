@@ -1,10 +1,7 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  margin: 0 50px;
-  border-radius: 4px;
-  background-color: #FFFFFF;
-  padding: 24px;
+
   font-family: Lato;
   flex: 2;
 
