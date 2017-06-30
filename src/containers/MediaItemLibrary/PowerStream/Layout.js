@@ -246,8 +246,8 @@ class PowerStreamLayout extends Component {
             onEscKeyDown={this.toggleShareDialog}
             onOverlayClick={this.toggleShareDialog}
             onClose={this.toggleShareDialog}
-            title="Invite a new subscriber to Stream Name"
           >
+            <span className={styles.inviteDialogTitle}>Invite a new subscriber. The email inserted must be associated with <br />the owner of a premium PowerPost account.</span>
             <InviteForm
               handleSubmit={this.sendInvite}
             />
