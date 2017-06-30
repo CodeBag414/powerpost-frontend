@@ -69,8 +69,8 @@ class Main extends React.Component {
   }
 
   componentDidMount() {
+    this.props.fetchAccount(this.props.params.account_id);
     if (this.props.params.account_id) {
-      this.props.fetchAccount(this.props.params.account_id);
       this.props.fetchConnections(this.props.params.account_id);
     }
   }
