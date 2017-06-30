@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { UserCanConnections } from 'config.routes/UserRoutePermissions';
+
 import {
   makeSelectAccountConnections,
 } from 'containers/Main/selectors';
@@ -99,8 +100,9 @@ class Connections extends React.Component {
 
   removeConnection(connectionId) {
     const connections = this.props.connections.slice();
+    console.log(connections);
     let connectionIndex;
-
+    console.log(connectionId);
     connections.forEach((connection, index) => {
       if (connection.connection_id === connectionId) {
         connectionIndex = index;
@@ -110,6 +112,7 @@ class Connections extends React.Component {
     if (connectionIndex !== undefined) {
       connections.splice(connectionIndex, 1);
     }
+    console.log(connections);
     this.props.removeChannel(connectionId);
     this.props.setConnectionsListShown(connections);
   }

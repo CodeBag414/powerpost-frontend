@@ -7,8 +7,8 @@ import Wrapper from './Wrapper';
 
 function SocialInfo({ url, websiteUrl, title, color, description }) {
   return (
-    <Wrapper>
-      <div className="info-wrapper">
+    <Wrapper className="col-md-4">
+      <div className="info-wrapper" style={{ background: 'white', padding: '24px', borderRadius: '4px' }}>
         <div className="avatar-wrapper">
           <PPAvatar
             size={64}

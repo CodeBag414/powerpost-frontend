@@ -10,6 +10,7 @@ import {
     TOGGLE_MENU,
     FETCH_CONNECTIONS,
     SET_CONNECTIONS,
+    SET_PROCESSING,
 } from './constants';
 
 export function fetchCurrentAccount(accountId) {
@@ -52,6 +53,13 @@ export function setConnections(connections) {
     type: SET_CONNECTIONS,
     connections,
   };
+}
+
+export function setProcessing(processing) {
+  return {
+    type: SET_PROCESSING,
+    processing,
+  }
 }
 
 /**

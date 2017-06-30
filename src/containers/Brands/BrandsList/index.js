@@ -27,7 +27,6 @@ function compare(a, b) {
 
 function BrandsList({ brands, removeBrand }) {
   let brandsList = [];
-
   const sortedBrands = brands.sort(compare);
 
   if ((sortedBrands !== undefined) && (sortedBrands.length > 0)) {

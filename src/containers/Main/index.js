@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { toastr } from 'lib/react-redux-toastr';
 import Nav from 'components/Nav';
+import ProcessingIndicator from 'components/ProcessingIndicator';
 
 import { UserIsAuthenticated } from 'config.routes/UserIsAuthenticated';
 import { makeSelectUser,
@@ -22,6 +23,10 @@ import { makeSelectUser,
          makeSelectPostSet,
          makeSelectPostSetEdit,
 } from 'containers/App/selectors';
+
+import {
+  makeSelectAccountBrands,
+} from './selectors';
 
 import { checkUser,
          logout,
@@ -37,6 +42,7 @@ import { makeSelectMenuCollapsed,
          makeSelectCurrentAccount,
          makeSelectAccountPermissions,
          makeSelectUserPermissions,
+         makeSelectIsProcessing,
 } from './selectors';
 import styles from './styles.scss';
 
@@ -60,6 +66,7 @@ class Main extends React.Component {
     toggleMenuCollapse: PropTypes.func,
     logout: PropTypes.func,
     fetchConnections: PropTypes.func,
+    isProcessing: PropTypes.bool,
   };
 
   constructor(props) {
@@ -113,10 +120,14 @@ class Main extends React.Component {
   }
 
   render() {
-    const viewContentStyle = this.props.menuCollapsed ? styles.viewContentCollapsed : styles.viewContentFull;
+    let viewContentStyle = this.props.menuCollapsed ? styles.viewContentCollapsed : styles.viewContentFull;
+    if (this.props.location.pathname === '/') {
+      viewContentStyle = styles.viewContentDashboard;
+    }
     if (!this.props.activeBrand.account_id) return null;
     return (
       <div>
+        <ProcessingIndicator isProcessing={this.props.isProcessing} />
         <Nav
           accountId={this.props.params.account_id}
           accountPermissions={this.props.accountPermissions}
@@ -131,6 +142,7 @@ class Main extends React.Component {
           user={this.props.user}
           userAccount={this.props.userAccount}
           userPermissions={this.props.userPermissions}
+          routes={this.props.routes}
         />
         <div id="main-panel" className={[viewContentStyle, styles.viewContent].join(' ')}>
           {this.props.children}
@@ -160,13 +172,14 @@ const mapStateToProps = () => {
   const selectMenuCollapsed = makeSelectMenuCollapsed();
   const selectSharedAccounts = makeSelectSharedAccounts();
   const selectActiveBrand = makeSelectCurrentAccount();
-  const selectSubAccounts = makeSelectSubAccounts();
+  const selectSubAccounts = makeSelectAccountBrands();
   const selectUserAccount = makeSelectUserAccount();
   const selectUserAvatar = makeSelectUserAvatar();
   const selectAccountPermissions = makeSelectAccountPermissions();
   const selectUserPermissions = makeSelectUserPermissions();
   const selectPostSet = makeSelectPostSet();
   const selectPostSetEdit = makeSelectPostSetEdit();
+  const selectIsProcessing = makeSelectIsProcessing();
   return (state, ownProps) => ({
     user: selectUser(state),
     menuCollapsed: selectMenuCollapsed(state),
@@ -177,6 +190,7 @@ const mapStateToProps = () => {
     userAvatar: selectUserAvatar(state),
     accountPermissions: selectAccountPermissions(state),
     userPermissions: selectUserPermissions(state),
+    isProcessing: selectIsProcessing(state),
     postSet: selectPostSet(state),
     postSetEdit: selectPostSetEdit(state),
     location: ownProps.location,

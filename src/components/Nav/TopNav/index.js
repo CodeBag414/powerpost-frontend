@@ -153,6 +153,15 @@ const DropdownButton = styled.div`
   }
 `;
 
+const PageTitle = styled.div`
+  display: inline-block;
+  margin-left: 20px;
+  line-height: 60px;
+  font-size: 14px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+`;
+
 class TopNav extends Component {
   constructor(props) {
     super(props);
@@ -204,6 +213,7 @@ class TopNav extends Component {
     const accountColor = this.props.user && this.props.user.properties ? this.props.user.properties.color : '#E7ECEE';
     const accountId = this.props.accountId;
     const startingTitle = isAccountPath ? this.props.activeBrand.title : 'Select Brand';
+    const pathName = this.props.routes[this.props.routes.length-1].name;
     const menuOptions = {
       isOpen: this.state.userMenuOpen,
       close: this.handleRequestClose,
@@ -255,6 +265,7 @@ class TopNav extends Component {
             ))}
           </BrandDropdown>
         }
+        <PageTitle>{pathName}</PageTitle>
         <AvatarWrapper>
           <DropDownMenu {...menuOptions}>
             <ReactRouterMenuItem caption="Dashboard" to={'/'} />
