@@ -84,7 +84,7 @@ const PostSetItem = ({
     />
     <div className="right-box">
       <div className="horizontal-flex">
-        <div className="stream-name">{streamName}</div>
+        {/* <div className="stream-name">{streamName}</div> */}
         <div className="date">{date}</div>
       </div>
       <div className="title">{title}</div>
