@@ -19,12 +19,14 @@ import { makeSelectPostSets, makeSelectMediaItems } from 'containers/App/selecto
 import { makeSelectCurrentAccount } from 'containers/Main/selectors';
 
 import Wrapper from './Wrapper';
+import Header from './Header';
+import BodyWrapper from './BodyWrapper';
 import LeftPane from './LeftPane';
 import RightPane from './RightPane';
 import StatusBoards from './StatusBoards';
 import Calendar from './Calendar';
 import Posts from './Posts';
-import Contents from './Contents';
+import ContentHub from './ContentHub';
 
 class AccountDashboard extends Component {
 
@@ -33,7 +35,8 @@ class AccountDashboard extends Component {
     upcomingPosts: List(),
     lastestMediaItems: List(),
     statusData: {},
-    latestPosts: List(),
+    reviewPosts: List(),
+    draftPosts: List(),
   };
 
   componentDidMount() {
@@ -85,18 +88,21 @@ class AccountDashboard extends Component {
   filterUpcomingPosts = (postSetsResponse) => {
     const currentTimeStamp = moment().unix();
     // TODO: This should be fixed
-    // const allPostSets = postSets.getIn(['data', 'scheduled_post_sets']);
-    const postSets = postSetsResponse.getIn(['data', 'post_sets']) || List();
-    const upcomingPosts = postSets.filter((postSet) => postSet.get('schedule_time') >= currentTimeStamp).takeLast(3);
-    this.setState({ upcomingPosts });
+    const allPostSets = postSetsResponse.getIn(['data', 'scheduled_post_sets']);
+    console.log('%%%%%%%%', postSetsResponse.toJS());
+    // const postSets = postSetsResponse.getIn(['data', 'post_sets']) || List();
+    // const upcomingPosts = postSets.filter((postSet) => postSet.get('schedule_time') >= currentTimeStamp).takeLast(4);
+    // this.setState({ upcomingPosts });
   }
 
   filterPosts = (postSetsResponse) => {
     const postSets = postSetsResponse.getIn(['data', 'post_sets']) || List();
-    const filteredPosts = postSets.filter((postSet) => postSet.get('status') === '2' || postSet.get('status') === '5');
+    const reviewPosts = postSets.filter((postSet) => postSet.get('status') === '5').takeLast(5).reverse();
+    const draftPosts = postSets.filter((postSet) => postSet.get('status') === '2').takeLast(5).reverse();
 
     this.setState({
-      latestPosts: filteredPosts.takeLast(5),
+      reviewPosts,
+      draftPosts,
     });
   }
 
@@ -111,19 +117,35 @@ class AccountDashboard extends Component {
       statusData,
       lastestMediaItems,
       upcomingPosts,
-      latestPosts,
+      reviewPosts,
+      draftPosts,
     } = this.state;
     return (
       <Wrapper>
-        <LeftPane>
-          <StatusBoards data={statusData} path={`/account/${accountId}/boards`} />
-          <Calendar posts={upcomingPosts} path={`/account/${accountId}/calendar`} />
-        </LeftPane>
-        <RightPane>
-          <div className="pane-name">Recent Activity</div>
-          <Posts posts={latestPosts} path={`/account/${accountId}/posts`} />
-          <Contents mediaItems={lastestMediaItems} path={`/account/${accountId}/library`} />
-        </RightPane>
+        <Header>This is the launchpad for your brand’s PowerPost experience.</Header>
+        <BodyWrapper>
+          <LeftPane>
+            <Calendar
+              posts={upcomingPosts}
+              path={`/account/${accountId}/calendar`}
+            />
+            <Posts
+              reviewPosts={reviewPosts}
+              draftPosts={draftPosts}
+              path={`/account/${accountId}/posts`}
+            />
+          </LeftPane>
+          <RightPane>
+            <StatusBoards
+              data={statusData}
+              path={`/account/${accountId}/boards`}
+            />
+            <ContentHub
+              mediaItems={lastestMediaItems}
+              path={`/account/${accountId}/library`}
+            />
+          </RightPane>
+        </BodyWrapper>
       </Wrapper>
     );
   }

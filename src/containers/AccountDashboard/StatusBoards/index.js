@@ -1,62 +1,65 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
 
-import Wrapper from './Wrapper';
+import Card from '../Card';
+
 import Header from './Header';
-import CardWraper from './CardWrapper';
-import StatusItem from './StatusItem';
-import HeaderWrapper from '../HeaderWrapper';
-import GoTo from '../GoTo';
+import ItemWrapper from './ItemWrapper';
+
+const Item = ({ status, count }) => {
+  let iconName = '';
+  let statusName = '';
+  switch (status) {
+    case 'ready':
+      iconName = 'fa-thumbs-o-up';
+      statusName = 'Ready';
+      break;
+    case 'review':
+      iconName = 'fa-check-square-o';
+      statusName = 'Review';
+      break;
+    case 'draft':
+      iconName = 'fa-pencil';
+      statusName = 'Drafts';
+      break;
+    case 'idea':
+      iconName = 'fa-lightbulb-o';
+      statusName = 'Idea';
+      break;
+    default:
+      iconName = '';
+      break;
+  }
+
+  const icon = <i className={`fa ${iconName}`} />;
+
+  return (<ItemWrapper>
+    <div className="icon">{icon}<span>{statusName}</span></div>
+    <div className="text">{count}</div>
+  </ItemWrapper>);
+};
+
+Item.propTypes = {
+  status: PropTypes.string,
+  count: PropTypes.number,
+};
 
 function StatusBoard({ data, path }) {
   return (
-    <Wrapper>
+    <Card
+      title="Status Board"
+      description="Snapshot view of all post by status."
+      link={path}
+    >
       <Header>
-        <HeaderWrapper>
-          <div className="title">Status Boards</div>
-          <div className="description">Check the status of upcoming posts.</div>
-        </HeaderWrapper>
-        <Link to={path}>
-          <GoTo style={{ color: '#E35A88' }}>
-            <span>View All</span><i className="fa fa-chevron-right" />
-          </GoTo>
-        </Link>
+        <p>Status</p>
+        <p>Number of Posts</p>
       </Header>
-      <CardWraper>
-        <StatusItem>
-          <div className="item-wrapper">
-            <div className="icon"><i className="fa fa-thumbs-o-up" /></div>
-            <div className="count">{data.readyPostSets}</div>
-            <div className="status">Ready</div>
-          </div>
-        </StatusItem>
-        <div className="divider" />
-        <StatusItem>
-          <div className="item-wrapper">
-            <div className="icon"><i className="fa fa-check-square-o" /></div>
-            <div className="count">{data.inReviewPostSets}</div>
-            <div className="status">Review</div>
-          </div>
-        </StatusItem>
-        <div className="divider" />
-        <StatusItem>
-          <div className="item-wrapper">
-            <div className="icon"><i className="fa fa-pencil" /></div>
-            <div className="count">{data.draftPostSets}</div>
-            <div className="status">Drafts</div>
-          </div>
-        </StatusItem>
-        <div className="divider" />
-        <StatusItem>
-          <div className="item-wrapper">
-            <div className="icon"><i className="fa fa-lightbulb-o" /></div>
-            <div className="count">{data.ideaPostSets}</div>
-            <div className="status">Ideas</div>
-          </div>
-        </StatusItem>
-      </CardWraper>
-    </Wrapper>
+      <Item status="ready" count={data.readyPostSets} />
+      <Item status="review" count={data.inReviewPostSets} />
+      <Item status="draft" count={data.draftPostSets} />
+      <Item status="idea" count={data.ideaPostSets} />
+    </Card>
   );
 }
 
