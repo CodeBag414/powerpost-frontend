@@ -24,10 +24,6 @@ import { makeSelectUser,
          makeSelectPostSetEdit,
 } from 'containers/App/selectors';
 
-import {
-  makeSelectAccountBrands,
-} from './selectors';
-
 import { checkUser,
          logout,
          createPostSetRequest,
@@ -38,11 +34,13 @@ import { toggleMenu,
          fetchConnections,
 } from './actions';
 
-import { makeSelectMenuCollapsed,
-         makeSelectCurrentAccount,
-         makeSelectAccountPermissions,
-         makeSelectUserPermissions,
-         makeSelectIsProcessing,
+import {
+  makeSelectAccountBrands,
+  makeSelectMenuCollapsed,
+  makeSelectCurrentAccount,
+  makeSelectAccountPermissions,
+  makeSelectUserPermissions,
+  makeSelectIsProcessing,
 } from './selectors';
 import styles from './styles.scss';
 

@@ -14,7 +14,11 @@ import moment from 'moment';
 
 import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 
-import { fetchMediaItems, fetchPostSetsRequest } from 'containers/App/actions';
+import {
+  fetchMediaItems,
+  fetchPostSetsRequest,
+  fetchPostSetsBySTRequest,
+} from 'containers/App/actions';
 import { makeSelectPostSets, makeSelectMediaItems } from 'containers/App/selectors';
 import { makeSelectCurrentAccount } from 'containers/Main/selectors';
 
@@ -89,7 +93,6 @@ class AccountDashboard extends Component {
     const currentTimeStamp = moment().unix();
     // TODO: This should be fixed
     const allPostSets = postSetsResponse.getIn(['data', 'scheduled_post_sets']);
-    console.log('%%%%%%%%', postSetsResponse.toJS());
     // const postSets = postSetsResponse.getIn(['data', 'post_sets']) || List();
     // const upcomingPosts = postSets.filter((postSet) => postSet.get('schedule_time') >= currentTimeStamp).takeLast(4);
     // this.setState({ upcomingPosts });
@@ -162,6 +165,7 @@ AccountDashboard.propTypes = {
 const mapDispatchToProps = (dispatch) => ({
   getMediaItems: (accountId) => dispatch(fetchMediaItems(accountId)),
   fetchPostSets: (accountId) => dispatch(fetchPostSetsRequest(accountId)),
+  fetchPostSetsByST: (accountId) => dispatch(fetchPostSetsBySTRequest(accountId)),
 });
 
 const mapStateToProps = createStructuredSelector({
