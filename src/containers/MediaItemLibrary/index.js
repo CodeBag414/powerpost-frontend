@@ -155,9 +155,10 @@ class Library extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.mediaItems.length !== nextProps.mediaItems.length) {
-      browserHistory.push(this.props.location.pathname);
-    }
+    // not sure what this is for?
+    //if (this.props.mediaItems.length !== nextProps.mediaItems.length) {
+    //  browserHistory.push(this.props.location.pathname);
+    //}
   }
 
   openAddLink() {
@@ -206,7 +207,7 @@ class Library extends React.Component {
       maxFiles: 1,
       imageQuality: 80,
       imageMax: [1200, 1200],
-      services: ['CONVERT', 'COMPUTER', 'WEBCAM', 'VIDEO', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
+      services: ['CONVERT', 'COMPUTER', 'GOOGLE_DRIVE', 'DROPBOX', 'BOX', 'IMAGE_SEARCH'],
       conversions: ['crop', 'filter'],
     };
     const filePickerStoreOptions = {
@@ -457,8 +458,6 @@ class Library extends React.Component {
             <li style={{ position: 'relative', listStyle: 'none', height: '40px' }}><span style={{ backgroundColor: 'white', position: 'absolute', zIndex: '22', lineHeight: '40px', color: '#616669', paddingRight: '10px', fontSize: '12px' }}>Curate</span><HR /></li>
             <ReactRouterMenuItem caption="RSS Feeds" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/RSS`} style={{ color: '#616669', fontWeight: '700', fontSize: '9px !important' }} />
             <ReactRouterMenuItem caption="Search the Web" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/search`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
-            <NormalHR />
-            <ReactRouterMenuItem caption="Outsource Your Content" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/outsource`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
           </Menu>
         </SidebarWrapper>
         <ContentWrapper>

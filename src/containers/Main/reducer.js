@@ -9,7 +9,12 @@ import {
     IS_LOADING_ACCOUNT,
     SET_CONNECTIONS_LIST,
     SET_CONNECTIONS,
+    SET_PROCESSING,
 } from './constants';
+
+import {
+  CREATE_BRAND_SUCCESS,
+} from 'containers/Brands/constants';
 
 import {
   VALIDATE_CONNECTIONS_SUCCESS,
@@ -17,6 +22,7 @@ import {
 
 // The initial application state
 const initialState = fromJS({
+  isProcessing: false,
   menuCollapsed: false,
   activeBrand: {
     account_id: false,
@@ -82,8 +88,15 @@ function dashboardReducer(state = initialState, action) {
     case VALIDATE_CONNECTIONS_SUCCESS:
       return state
         .setIn(['activeBrand', 'connections'], action.connections);
+    case CREATE_BRAND_SUCCESS:
+      console.log(action);
+      return state
+        .updateIn(['activeBrand', 'subAccounts'], (arr) => arr.concat(action.payload.subaccount));
     case SET_CONNECTIONS:
       return state.set('connections', action.connections);
+    case SET_PROCESSING:
+      return state
+        .set('isProcessing', action.processing);
     default:
       return state;
   }

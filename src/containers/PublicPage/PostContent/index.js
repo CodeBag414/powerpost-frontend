@@ -7,11 +7,13 @@ import Wrapper from './Wrapper';
 
 function PostContent({ creationTime, message, mediaItems }) {
   return (
-    <Wrapper>
-      <div className="time">{creationTime}</div>
-      <div className="description">{message}</div>
-      <div className="mediaContent">
-        <MediaItemPreview mediaItems={mediaItems} />
+    <Wrapper className="col-md-8">
+      <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '4px' }}>
+        <div className="time">{creationTime}</div>
+        <div className="description">{message}</div>
+        <div className="mediaContent">
+          <MediaItemPreview mediaItems={mediaItems} />
+        </div>
       </div>
     </Wrapper>
   );

@@ -1,6 +1,7 @@
 import {
   SET_AUTH,
   SET_USER,
+  GET_USER,
   SENDING_REQUEST,
   LOGIN_REQUEST,
   REGISTER_REQUEST,
@@ -458,6 +459,10 @@ export function updateBunchPostSuccess() {
 
 export function createPostSetRequest(postSet, edit = true) {
   return { type: CREATE_POST_SET_REQUEST, postSet, edit };
+}
+
+export function getUser() {
+  return { type: GET_USER };
 }
 
 export function createPostSetSuccess(postSet, edit) {

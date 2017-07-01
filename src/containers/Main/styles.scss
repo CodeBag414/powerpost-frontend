@@ -3,7 +3,7 @@
     position: relative;
     height: calc(100vh - 60px);
     overflow: auto;
-
+    y-overflow: scroll;
     //transition: transform .3s ease-in-out,margin .3s ease-in-out;
 }
 
@@ -13,4 +13,8 @@
 
 .viewContentCollapsed {
     margin-left: 60px;
+}
+
+.viewContentDashboard {
+	margin-left: 0px;
 }

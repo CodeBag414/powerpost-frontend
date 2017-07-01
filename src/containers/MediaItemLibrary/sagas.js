@@ -11,6 +11,10 @@ import {
 } from 'utils/request';
 
 import {
+  setProcessing,
+} from 'containers/Main/actions';
+
+import {
   createPostSetRequest,
 } from 'containers/App/actions';
 
@@ -71,12 +75,13 @@ export function* getCollections(action) {
 
   const params = serialize(data);
   const collections = yield call(getData, `/media_api/collections?${params}`);
-
+  console.log(collections);
   yield put({ type: FETCH_COLLECTIONS_SUCCESS, collections });
 
   const activeCollection = yield select(makeSelectActiveCollection());
 
   const mediaItems = yield call(getData, `/media_api/collection/${activeCollection.collection_id}`);
+  console.log(mediaItems);
   if (!mediaItems.data.error) {
     yield put({ type: FETCH_MEDIA_ITEMS_SUCCESS, mediaItems });
   } else {
@@ -180,13 +185,15 @@ export function* updateMediaItem(action) {
   const data = {
     payload: item,
   };
-  console.log(data);
+  yield put(setProcessing(true));
 
   const results = yield call(putData, `/media_api/media_item/${item.media_item_id}`, data);
-  console.log(results);
+
   if (results.data.result === 'success') {
     const mediaItems = results.data.media_items;
+    yield put(setProcessing(false));
     yield put({ type: UPDATE_MEDIA_ITEM_SUCCESS, mediaItems });
+
     if (create) {
       const postSet = {
         account_id: mediaItems[0].account_id,
@@ -219,6 +226,7 @@ export function* createMediaItem(action) {
       },
     };
   }
+  yield put(setProcessing(true));
 
   if (url !== '') {
     const res = yield call(postData, url, data);
@@ -229,6 +237,7 @@ export function* createMediaItem(action) {
       // } else {
       const mediaItems = res.data.media_items;
       yield put({ type: CREATE_MEDIA_ITEM_SUCCESS, mediaItems });
+      yield put(setProcessing(false));
       if (create) {
         const postSet = {
           account_id: mediaItems[0].account_id,
@@ -438,7 +447,7 @@ export function* createBlogItemWatcher() {
 }
 
 export function* mediaItemSaga() {
-  const watcherA = yield fork(collectionData);
+  //const watcherA = yield fork(collectionData);
   const watcherB = yield fork(linkData);
   const watcherC = yield fork(mediaItem);
   const watcherD = yield fork(searchBing);
@@ -456,7 +465,7 @@ export function* mediaItemSaga() {
 
   yield take(LOCATION_CHANGE);
 
-  yield cancel(watcherA);
+  //yield cancel(watcherA);
   yield cancel(watcherB);
   yield cancel(watcherC);
   yield cancel(watcherD);
@@ -475,6 +484,7 @@ export function* mediaItemSaga() {
 
 export default [
   mediaItemSaga,
+  collectionData,
 ];
 
 const delay = (millis) => {

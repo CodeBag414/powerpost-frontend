@@ -114,7 +114,7 @@ class LinkEditor extends Component {
       maxFiles: 1,
       imageQuality: 80,
       imageMax: [1200, 1200],
-      services: ['COMPUTER', 'WEBCAM', 'VIDEO', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
+      services: ['CONVERT', 'COMPUTER', 'GOOGLE_DRIVE', 'DROPBOX', 'BOX', 'IMAGE_SEARCH'],
       conversions: ['crop', 'filter'],
     };
     function onFail(error) {
@@ -149,7 +149,7 @@ class LinkEditor extends Component {
           ...properties,
           title: this.state.titleValue,
           description: this.state.descriptionValue,
-          picture: imageUrl,
+          thumb_key: this.state.selectedImage.key || '',
         },
         ...rest,
       };
@@ -160,7 +160,7 @@ class LinkEditor extends Component {
         url: this.props.urlContent.url,
         title: this.state.titleValue,
         description: this.state.descriptionValue,
-        picture: imageUrl,
+        thumb_key: this.state.selectedImage.key || '',
       };
     }
     this.setState({

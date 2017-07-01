@@ -39,6 +39,12 @@ class PublicPage extends Component {
         id: params.id,
       });
     }
+    const script = document.createElement('script');
+
+    script.type = 'text/javascript';
+    script.async= true;
+    script.innerHTML = `drift.on('ready', function(api) { api.widget.hide(); });`;
+    this.instance.appendChild(script);
   }
 
   componentWillReceiveProps({ postSet }) {
@@ -67,8 +73,9 @@ class PublicPage extends Component {
 
     return (
       <Wrapper>
-        <div className="header"><img role="presentation" src={logoImg} /></div>
-        <div className="content">
+        <div className="header"><a href="https://www.powerpost.digital"><img role="presentation" src={logoImg} /></a></div>
+        <div className="container" style={{ marginTop: '60px' }}>
+          <div className="row">
           <SocialInfo
             url={thumbUrl}
             websiteUrl={websiteUrl}
@@ -81,8 +88,9 @@ class PublicPage extends Component {
             message={message}
             mediaItems={mediaItems}
           />
-          <SocialTabs />
+          </div>
         </div>
+        <div ref={(el) => (this.instance = el)} />
       </Wrapper>
     );
   }
