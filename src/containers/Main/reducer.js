@@ -74,7 +74,9 @@ function dashboardReducer(state = initialState, action) {
             .setIn(['activeBrand', 'user_access_level'], action.account.data.account.user_access_level)
             .setIn(['activeBrand', 'subAccounts'], action.account.data.account.subaccounts)
             .setIn(['activeBrand', 'connections'], action.account.data.account.connections)
-            .setIn(['activeBrand', 'parentAccount'], action.account.data.account.parent_account);
+            .setIn(['activeBrand', 'parentAccount'], action.account.data.account.parent_account)
+            .setIn(['activeBrand', 'account_streams'], action.account.data.account.account_streams)
+            .setIn(['activeBrand', 'shared_streams'], action.account.data.account.shared_streams);
     case FETCH_ACCOUNT_ERROR:
       return state
             .set('isFetchingAccount', false)

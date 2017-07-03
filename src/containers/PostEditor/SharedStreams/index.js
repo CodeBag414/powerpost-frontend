@@ -7,8 +7,8 @@ import {
   updatePostSetRequest,
 } from 'containers/App/actions';
 import {
-  makeSelectUserAccount,
-} from 'containers/App/selectors';
+  makeSelectCurrentAccount,
+} from 'containers/Main/selectors';
 
 import SharedStreamsComponent from './Component';
 
@@ -32,7 +32,7 @@ SharedStreams.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  userAccount: makeSelectUserAccount(),
+  userAccount: makeSelectCurrentAccount(),
 });
 
 export function mapDispatchToProps(dispatch) {

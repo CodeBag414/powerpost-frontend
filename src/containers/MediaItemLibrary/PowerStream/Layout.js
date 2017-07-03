@@ -131,6 +131,7 @@ class PowerStreamLayout extends Component {
 
       browserHistory.push(`/account/${accountId}/shared_streams/${streamCategory}/${newStreamId}${hash}`);
     }
+
     fetchStreamPostSets(newStreamId, {
       query_by: 'stream_id',
     });
