@@ -34,8 +34,8 @@ const FormWrapper = styled.div`
 const accessLevelOptions = [
   { value: 'admins', label: 'Admin' },
   { value: 'editors', label: 'Editor' },
-  { value: 'viewers', label: 'Viewer' },
   { value: 'reviewers', label: 'Reviewer' },
+  { value: 'viewers', label: 'Viewer' },
 ];
 
 export class Team extends Component {
