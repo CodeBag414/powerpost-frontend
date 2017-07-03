@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import { Link } from 'react-router';
+
+import Card from '../Card';
 
 import Wrapper from './Wrapper';
-import HeaderWrapper from '../HeaderWrapper';
-import GoTo from '../GoTo';
 
 function renderItem(item) {
   const image = (item.getIn(['properties', 'thumb_url'])) ||
@@ -37,32 +36,26 @@ function renderItem(item) {
   return image ? <img role="presentation" src={image} /> : <i className={iconName} />;
 }
 
-function Contents({ mediaItems, path }) {
+function ContentHub({ mediaItems, path }) {
   return (
-    <Wrapper>
-      <HeaderWrapper>
-        <div className="title">Content</div>
-        <div className="description">Upload, curate and create content and organize it all in one place.</div>
-      </HeaderWrapper>
-      <div className="content-wrapper">
+    <Card
+      title="Content Hub"
+      description="Recently added content."
+      link={path}
+    >
+      <Wrapper>
         {mediaItems && mediaItems.map((item) =>
           <div className="item">{renderItem(item)}</div>
         )}
-      </div>
-      <div className="bottom-wrapper">
-        <Link to={path}>
-          <GoTo style={{ color: '#616669' }}>
-            <span>View All</span><i className="fa fa-chevron-right" />
-          </GoTo>
-        </Link>
-      </div>
-    </Wrapper>
+        {mediaItems.count() === 0 && <div className="error">No posts available!</div>}
+      </Wrapper>
+    </Card>
   );
 }
 
-Contents.propTypes = {
+ContentHub.propTypes = {
   mediaItems: ImmutablePropTypes.list,
   path: PropTypes.string,
 };
 
-export default Contents;
+export default ContentHub;

@@ -89,7 +89,6 @@ function dashboardReducer(state = initialState, action) {
       return state
         .setIn(['activeBrand', 'connections'], action.connections);
     case CREATE_BRAND_SUCCESS:
-      console.log(action);
       return state
         .updateIn(['activeBrand', 'subAccounts'], (arr) => arr.concat(action.payload.subaccount));
     case SET_CONNECTIONS:

@@ -1,24 +1,23 @@
 import styled from 'styled-components';
 
-const Wrapper = styled.tr`
+const Wrapper = styled.div`
   display: flex;
   margin: 15px 0;
   align-items: center;
-
-  th.posts {
-    flex: 1;
+  font-weight: 400;
+  padding-left: 10px;
+  div {
+    width: 40px;
+    text-align: right;
+    color: #616669;
+    font-size: 12px;
+  }
+  span {
+    color: #616669;
     font-size: 12px;
     font-weight: bold;
     text-decoration: underline;
-  }
-
-  th.date {
-    font-weight: 400;
-  }
-
-  th.status {
-    flex: 1;
-    text-align: right;
+    padding-left: 30px;
   }
 `;
 

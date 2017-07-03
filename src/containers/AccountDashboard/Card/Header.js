@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 
-const HeaderWrapper = styled.div`
+const Header = styled.div`
   font-family: Lato;
-
   .title {
     color: #424647;
     font-size: 15px;
     font-weight: bold;
   }
+
   .description {
     color: #6F6F6F;
     font-size: 11px;
@@ -16,4 +16,4 @@ const HeaderWrapper = styled.div`
   }
 `;
 
-export default HeaderWrapper;
+export default Header;

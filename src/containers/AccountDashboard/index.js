@@ -14,17 +14,28 @@ import moment from 'moment';
 
 import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 
-import { fetchMediaItems, fetchPostSetsRequest } from 'containers/App/actions';
+import {
+  fetchMediaItems,
+  fetchPostSetsRequest,
+  fetchPostSetsBySTRequest,
+} from 'containers/App/actions';
 import { makeSelectPostSets, makeSelectMediaItems } from 'containers/App/selectors';
 import { makeSelectCurrentAccount } from 'containers/Main/selectors';
 
+import {
+  fetchStatusCountRequest,
+} from './actions';
+import { selectStatusCount } from './selectors';
+
 import Wrapper from './Wrapper';
+import Header from './Header';
+import BodyWrapper from './BodyWrapper';
 import LeftPane from './LeftPane';
 import RightPane from './RightPane';
 import StatusBoards from './StatusBoards';
 import Calendar from './Calendar';
 import Posts from './Posts';
-import Contents from './Contents';
+import ContentHub from './ContentHub';
 
 class AccountDashboard extends Component {
 
@@ -33,25 +44,28 @@ class AccountDashboard extends Component {
     upcomingPosts: List(),
     lastestMediaItems: List(),
     statusData: {},
-    latestPosts: List(),
+    reviewPosts: List(),
+    draftPosts: List(),
   };
 
   componentDidMount() {
     this.props.getMediaItems(this.props.params.account_id);
-    this.props.fetchPostSets(this.props.params.account_id);
+    // this.props.fetchPostSets(this.props.params.account_id);
+    this.props.fetchPostSetsByST(this.props.params.account_id);
+    this.props.fetchStatusCount(this.props.params.account_id);
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.state.accountId !== nextProps.params.account_id) {
       this.setState({ accountId: nextProps.params.account_id }, () => {
         this.props.getMediaItems(nextProps.params.account_id);
-        this.props.fetchPostSets(nextProps.params.account_id);
+        this.props.fetchPostSetsByST(nextProps.params.account_id);
+        this.props.fetchStatusCount(nextProps.params.account_id);
       });
     }
 
-    if (this.props.postSets !== nextProps.postSets) {
-      this.filterPosts(nextProps.postSets);
-      this.filterBoardStatus(nextProps.postSets);
+    if (this.props.statusCount !== nextProps.statusCount) {
+      this.filterBoardStatus(nextProps.statusCount);
     }
 
     if (this.props.mediaItems !== nextProps.mediaItems) {
@@ -60,17 +74,17 @@ class AccountDashboard extends Component {
 
     if (!this.props.postSets.equals(nextProps.postSets)) {
       this.filterUpcomingPosts(nextProps.postSets);
+      // this.filterPosts(nextProps.postSets);
     }
   }
 
   filterBoardStatus = (postSetsResponse) => {
-    const postSets = postSetsResponse.getIn(['data', 'post_sets']) || List();
-    // Following code doesn't work at the moment.
-    // It will be fixed by new introduction of api endpoint for this.
-    const readyPostSets = postSets.filter((postSet) => postSet.get('status') === '3').count() || 0;
-    const inReviewPostSets = postSets.filter((postSet) => postSet.get('status') === '5').count() || 0;
-    const draftPostSets = postSets.filter((postSet) => postSet.get('status') === '2').count() || 0;
-    const ideaPostSets = postSets.filter((postSet) => postSet.get('status') === '6').count() || 0;
+    if (!postSetsResponse) return;
+
+    const readyPostSets = postSetsResponse['3'];
+    const inReviewPostSets = postSetsResponse['5'];
+    const draftPostSets = postSetsResponse['2'];
+    const ideaPostSets = postSetsResponse['6'];
 
     this.setState({
       statusData: {
@@ -84,19 +98,20 @@ class AccountDashboard extends Component {
 
   filterUpcomingPosts = (postSetsResponse) => {
     const currentTimeStamp = moment().unix();
-    // TODO: This should be fixed
-    // const allPostSets = postSets.getIn(['data', 'scheduled_post_sets']);
-    const postSets = postSetsResponse.getIn(['data', 'post_sets']) || List();
-    const upcomingPosts = postSets.filter((postSet) => postSet.get('schedule_time') >= currentTimeStamp).takeLast(3);
+    const allPostSets = postSetsResponse.getIn(['data', 'scheduled_post_sets']) || List();
+    const sortedPosts = allPostSets.sortBy((post) => post.get('schedule_time'));
+    const upcomingPosts = sortedPosts.filter((postSet) => postSet.get('schedule_time') >= currentTimeStamp).take(4);
     this.setState({ upcomingPosts });
   }
 
   filterPosts = (postSetsResponse) => {
     const postSets = postSetsResponse.getIn(['data', 'post_sets']) || List();
-    const filteredPosts = postSets.filter((postSet) => postSet.get('status') === '2' || postSet.get('status') === '5');
+    const reviewPosts = postSets.filter((postSet) => postSet.get('status') === '5').takeLast(5).reverse();
+    const draftPosts = postSets.filter((postSet) => postSet.get('status') === '2').takeLast(5).reverse();
 
     this.setState({
-      latestPosts: filteredPosts.takeLast(5),
+      reviewPosts,
+      draftPosts,
     });
   }
 
@@ -111,19 +126,35 @@ class AccountDashboard extends Component {
       statusData,
       lastestMediaItems,
       upcomingPosts,
-      latestPosts,
+      reviewPosts,
+      draftPosts,
     } = this.state;
     return (
       <Wrapper>
-        <LeftPane>
-          <StatusBoards data={statusData} path={`/account/${accountId}/boards`} />
-          <Calendar posts={upcomingPosts} path={`/account/${accountId}/calendar`} />
-        </LeftPane>
-        <RightPane>
-          <div className="pane-name">Recent Activity</div>
-          <Posts posts={latestPosts} path={`/account/${accountId}/posts`} />
-          <Contents mediaItems={lastestMediaItems} path={`/account/${accountId}/library`} />
-        </RightPane>
+        <Header>This is the launchpad for your brand’s PowerPost experience.</Header>
+        <BodyWrapper>
+          <LeftPane>
+            <Calendar
+              posts={upcomingPosts}
+              path={`/account/${accountId}/calendar`}
+            />
+            <Posts
+              reviewPosts={reviewPosts}
+              draftPosts={draftPosts}
+              path={`/account/${accountId}/posts`}
+            />
+          </LeftPane>
+          <RightPane>
+            <StatusBoards
+              data={statusData}
+              path={`/account/${accountId}/boards`}
+            />
+            <ContentHub
+              mediaItems={lastestMediaItems}
+              path={`/account/${accountId}/library`}
+            />
+          </RightPane>
+        </BodyWrapper>
       </Wrapper>
     );
   }
@@ -131,21 +162,27 @@ class AccountDashboard extends Component {
 
 AccountDashboard.propTypes = {
   getMediaItems: PropTypes.func,
+  fetchPostSetsByST: PropTypes.func,
   fetchPostSets: PropTypes.func,
+  fetchStatusCount: PropTypes.func,
   params: PropTypes.object,
   mediaItems: ImmutablePropTypes.list,
+  statusCount: ImmutablePropTypes.map,
   postSets: ImmutablePropTypes.map,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   getMediaItems: (accountId) => dispatch(fetchMediaItems(accountId)),
   fetchPostSets: (accountId) => dispatch(fetchPostSetsRequest(accountId)),
+  fetchPostSetsByST: (accountId) => dispatch(fetchPostSetsBySTRequest(accountId)),
+  fetchStatusCount: (accountId) => dispatch(fetchStatusCountRequest(accountId)),
 });
 
 const mapStateToProps = createStructuredSelector({
   account: makeSelectCurrentAccount(),
   postSets: makeSelectPostSets(),
   mediaItems: makeSelectMediaItems(),
+  statusCount: selectStatusCount(),
 });
 
 export default UserCanAccount(connect(mapStateToProps, mapDispatchToProps)(AccountDashboard));

@@ -110,11 +110,15 @@ export function createRoutes(store, auth) {
           getComponent(nextState, cb) {
             const importModules = Promise.all([
               System.import('containers/AccountDashboard'),
+              System.import('containers/AccountDashboard/sagas'),
+              System.import('containers/AccountDashboard/reducer'),
             ]);
 
             const renderRoute = loadModule(cb);
 
-            importModules.then(([component]) => {
+            importModules.then(([component, sagas, reducer]) => {
+              injectReducer('accountDashboard', reducer.default);
+              injectSagas(sagas.default);
               renderRoute(component);
             });
 
