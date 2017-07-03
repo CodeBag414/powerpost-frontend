@@ -15,15 +15,16 @@ function Calendar({ posts, path }) {
       link={path}
     >
       <Wrapper>
+        {posts && posts.count() > 0 &&
         <table>
           <tr className="header">
             <th className="preview" colSpan={2}>Preview</th>
             <th className="date">Date</th>
           </tr>
-          {posts && posts.count() > 0 &&
-             posts.map((post) => <Item post={post} />)
-           }
+          {posts.map((post) => <Item post={post} />)}
         </table>
+        }
+        {posts.count() === 0 && <div className="error">No upcoming posts available!</div>}
       </Wrapper>
     </Card>
   );

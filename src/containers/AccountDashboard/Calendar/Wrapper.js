@@ -26,6 +26,16 @@ const Wrapper = styled.div`
       line-height: 30px;
     }
   }
+  .error {
+    color: #6F6F6F;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 10px;
+    font-style: italic;
+    margin-top: 10px;
+    padding: 0;
+    padding-left: 10px;
+  }
 `;
 
 export default Wrapper;

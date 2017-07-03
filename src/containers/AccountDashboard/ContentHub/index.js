@@ -47,6 +47,7 @@ function ContentHub({ mediaItems, path }) {
         {mediaItems && mediaItems.map((item) =>
           <div className="item">{renderItem(item)}</div>
         )}
+        {mediaItems.count() === 0 && <div className="error">No posts available!</div>}
       </Wrapper>
     </Card>
   );

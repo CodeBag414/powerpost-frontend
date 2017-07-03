@@ -20,6 +20,16 @@ const Wrapper = styled.div`
       margin: auto;
     }
   }
+  .error {
+    color: #6F6F6F;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 10px;
+    font-style: italic;
+    margin: 0;
+    padding: 0;
+    padding-left: 10px;
+  }
 `;
 
 export default Wrapper;

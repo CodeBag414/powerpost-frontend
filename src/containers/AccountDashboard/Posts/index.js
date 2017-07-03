@@ -20,11 +20,13 @@ function Posts({ reviewPosts, draftPosts, path }) {
           {reviewPosts && reviewPosts.count() > 0 &&
             reviewPosts.map((post) => <Item post={post} />)
           }
+          {reviewPosts.count() === 0 && <div className="error">No posts available!</div>}
         </Section>
         <Section status="draft">
           {draftPosts && draftPosts.count() > 0 &&
             draftPosts.map((post) => <Item post={post} />)
           }
+          {draftPosts.count() === 0 && <div className="error">No posts available!</div>}
         </Section>
       </Wrapper>
     </Card>

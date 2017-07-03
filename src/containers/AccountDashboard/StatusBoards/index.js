@@ -35,7 +35,7 @@ const Item = ({ status, count }) => {
 
   return (<ItemWrapper>
     <div className="icon">{icon}<span>{statusName}</span></div>
-    <div className="text">{count}</div>
+    <div className="text">{count || '0'}</div>
   </ItemWrapper>);
 };
 
