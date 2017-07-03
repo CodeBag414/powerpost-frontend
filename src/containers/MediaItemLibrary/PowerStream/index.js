@@ -8,8 +8,8 @@ import { createStructuredSelector } from 'reselect';
 import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 
 import {
-  makeSelectUserAccount,
-} from 'containers/App/selectors';
+  makeSelectCurrentAccount,
+} from 'containers/Main/selectors';
 
 import Layout from './Layout';
 
@@ -21,7 +21,6 @@ const PowerStreamContainer = ({
   if (!userAccount) {
     return null;
   }
-
   return (
     <Layout
       hash={hash}
@@ -42,7 +41,7 @@ PowerStreamContainer.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  userAccount: makeSelectUserAccount(),
+  userAccount: makeSelectCurrentAccount(),
 });
 
 export default connect(mapStateToProps)(UserCanAccount(PowerStreamContainer));
