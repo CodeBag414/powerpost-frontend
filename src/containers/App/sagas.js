@@ -284,12 +284,16 @@ export function* updateFlow() {
     // We always listen to `REGISTER_REQUEST` actions
     const request = yield take(UPDATE_REQUEST);
     const data = request.data;
+    const prevUser = yield select(makeSelectUser());
 
     // We call the `authorize` task with the data, telling it that we are registering a user
     // This returns `true` if the registering was successful, `false` if not
 
     try {
       yield call(authorizeUpdate, data);
+      if (prevUser.email.toLowerCase() !== data.email.toLowerCase()) {
+        toastr.success('Success!', 'We have sent a message to the new email address you have entered. Please follow the instructions in the email to validate the change to a new email address.');
+      }
       toastr.success('Success!', 'User setting is updated.');
       yield put({ type: SET_AUTH, newAuthState: true }); // User is logged in (authorized) after being registered
       forwardTo('/dashboard'); // Go to dashboard page

@@ -20,7 +20,7 @@ import Wrapper from './Wrapper';
 import Content from './content';
 import Header from './Header';
 
-class settingsUser extends Component {
+class SettingsUser extends Component {
   static propTypes = {
     user: PropTypes.object,
     userOwnAccount: PropTypes.object,
@@ -251,7 +251,7 @@ class settingsUser extends Component {
                     name="email"
                     floatingLabelText="Email"
                     value={this.state.email}
-                    disabled
+                    onChange={this.handleChange}
                   />
                   <PPTextField
                     type="tel"
@@ -372,5 +372,5 @@ const mapStateToProps = createStructuredSelector({
   filePickerKey: makeSelectFilePickerKey(),
 });
 
-export default (connect(mapStateToProps, mapDispatchToProps)(settingsUser));
+export default (connect(mapStateToProps, mapDispatchToProps)(SettingsUser));
 
