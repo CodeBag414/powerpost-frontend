@@ -22,6 +22,8 @@ const Wrapper = styled.div`
     .filter-wrapper {
       display: flex;
       .sort_input {
+        margin-left: 20px;
+        height: 34px;
         &>div>div:first-child {
           height: 34px;
           line-height: 34px;
@@ -37,6 +39,7 @@ const Wrapper = styled.div`
       .search-input {
         position: relative;
         margin-left: 20px;
+        height: 34px;
         input {
           height: 34px;
           width: 248px;

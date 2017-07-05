@@ -351,7 +351,7 @@ export function removeUserFromGroupError(payload) {
   };
 }
 
-export function fetchPostSetsRequest(accountId) {
+export function fetchPostSetsRequest(accountId, payload) {
   return {
     type: FETCH_POST_SETS_REQUEST,
     accountId,
@@ -360,6 +360,7 @@ export function fetchPostSetsRequest(accountId) {
       sort_order: 'DESC',
       limit: 500,
       statuses: [1, 2, 3, 4, 5, 6],
+      ...payload,
     },
     action: 'fetchPostSetsRequest',
   };
@@ -469,12 +470,13 @@ export function createPostSetSuccess(postSet, edit) {
   return { type: CREATE_POST_SET_SUCCESS, postSet, edit };
 }
 
-export function fetchPostSetsBySTRequest(accountId) {
+export function fetchPostSetsBySTRequest(accountId, payload) {
   return {
     type: FETCH_POST_SETS_REQUEST,
     accountId,
     filter: {
       limit: 500,
+      ...payload,
     },
     endPoint: 'post_sets_by_schedule_time',
     action: 'fetchPostSetsBySTRequest',

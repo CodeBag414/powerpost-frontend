@@ -87,8 +87,8 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = (dispatch) => (
   {
-    fetchPostSetsByST: () => dispatch(fetchPostSetsBySTRequest()),
-    fetchPostSets: () => dispatch(fetchPostSetsRequest()),
+    fetchPostSetsByST: (accountId, payload) => dispatch(fetchPostSetsBySTRequest(accountId, payload)),
+    fetchPostSets: (accountId, payload) => dispatch(fetchPostSetsRequest(accountId, payload)),
   }
 );
 export default connect(mapStateToProps, mapDispatchToProps)(UserCanAccount(PostsLayout));
