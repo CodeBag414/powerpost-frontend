@@ -48,13 +48,14 @@ const ReactRouterMenuItem = withReactRouter(MenuItem);
 const SidebarWrapper = styled.div`
   width: 177px;
   height: 100vh;
-  position:fixed;
+  position: fixed;
   border-right: 2px solid #DBDFE0;
   padding: 5px;
   padding-top: 15px;
 `;
 
 const ContentWrapper = styled.div`
+  position: relative;
   float: right;
   width: calc(100% - 177px);
   height: 100%;
