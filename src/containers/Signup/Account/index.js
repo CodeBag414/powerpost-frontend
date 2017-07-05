@@ -175,7 +175,7 @@ class SignupAccount extends Component {
             onChange={this.onFieldChange}
           />
           <Center style={{ marginTop: '30px' }}><PPButton type="submit" label="Sign Up" primary disabled={this.state.hasError} /></Center>
-          <Center style={{ marginTop: '30px' }}>By clicking Sign Up, I accept PowerPost's&nbsp;<PPLink to="/terms">Licence Terms</PPLink></Center>
+          <Center style={{ marginTop: '30px' }}>By clicking Sign Up, I accept PowerPost's&nbsp;<PPLink target="_blank" to="/terms">Licence Terms</PPLink></Center>
         </form>
       </div>
     );
