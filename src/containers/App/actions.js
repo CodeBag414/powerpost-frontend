@@ -469,12 +469,13 @@ export function createPostSetSuccess(postSet, edit) {
   return { type: CREATE_POST_SET_SUCCESS, postSet, edit };
 }
 
-export function fetchPostSetsBySTRequest(accountId) {
+export function fetchPostSetsBySTRequest(accountId, payload) {
   return {
     type: FETCH_POST_SETS_REQUEST,
     accountId,
     filter: {
       limit: 500,
+      ...payload,
     },
     endPoint: 'post_sets_by_schedule_time',
     action: 'fetchPostSetsBySTRequest',

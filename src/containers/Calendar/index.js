@@ -55,7 +55,7 @@ class Calendar extends React.Component {
   };
 
   componentWillMount() {
-    this.loadPostSetsByST();
+    this.loadPostSetsByST(moment());
   }
 
   onDeletePostSet = () => {
@@ -175,25 +175,38 @@ class Calendar extends React.Component {
     this.setState({ showDeletePopup: false });
   }
 
-  loadPostSetsByST = () => {
-    this.props.fetchPostSetsByST();
+  loadPostSetsByST = (date) => {
+    const { params } = this.props;
+    const startDate = moment(date);
+    startDate.set('date', 1);
+    startDate.subtract((startDate.day() % 7), 'day');
+    const endDate = moment(startDate);
+    endDate.add(35, 'day');
+    this.props.fetchPostSetsByST(params.account_id, {
+      start_time: startDate.unix(),
+      end_time: endDate.unix(),
+    });
   }
 
   render() {
     const { query, showDeletePopup } = this.state;
     const { postSetsByST, currentAccount, params, location: { hash } } = this.props;
-    if (postSetsByST.get('requesting') || !postSetsByST.getIn(['data', 'scheduled_post_sets'])) {
-      return <Loading />;
+    let scheduledPostSets = [];
+    let unscheduledPostSets = [];
+    let loading = false;
+    if (!postSetsByST.get('requesting') && postSetsByST.getIn(['data', 'scheduled_post_sets'])) {
+      scheduledPostSets = this.filterPostSets(postSetsByST.getIn(['data', 'scheduled_post_sets']).toJS());
+      unscheduledPostSets = this.filterPostSets(postSetsByST.getIn(['data', 'unscheduled_post_sets']).toJS());
+    } else {
+      loading = true;
     }
-    const scheduledPostSets = this.filterPostSets(postSetsByST.getIn(['data', 'scheduled_post_sets']).toJS());
-    const unscheduledPostSets = this.filterPostSets(postSetsByST.getIn(['data', 'unscheduled_post_sets']).toJS());
 
     // FIXME: The below can be used later
     // const postWhenReadyPostSets = postSetsByST.getIn(['data', 'post_when_ready_post_sets']).toJS();
 
     const postsetId = hash.startsWith('#postset') ? hash.split('-')[1] : 0;
     return (
-      <Wrapper className={postsetId ? 'modal-open' : ''}>
+      <Wrapper className={`${postsetId ? 'modal-open' : ''} ${loading ? 'disabled' : ''}`}>
         <CalendarSidebar
           postSets={unscheduledPostSets}
           currentAccount={currentAccount}
@@ -207,12 +220,14 @@ class Calendar extends React.Component {
           currentAccount={currentAccount}
           onMoveEvent={this.handleMoveEvent}
           onDeleteEvent={this.handleDeleteEvent}
+          onDateChange={this.loadPostSetsByST}
         />
         <DeletePostSetDialog
           active={showDeletePopup}
           handleDialogToggle={this.hideDeletePopup}
           deletePostSet={this.onDeletePostSet}
         />
+        {loading ? <Loading opacity={0.5} /> : null}
         <div className="post-editor">
           { postsetId ? <PostEditor id={postsetId} accountId={params.account_id} /> : null}
         </div>
@@ -223,7 +238,7 @@ class Calendar extends React.Component {
 
 const mapDispatchToProps = (dispatch) => (
   {
-    fetchPostSetsByST: () => dispatch(fetchPostSetsBySTRequest()),
+    fetchPostSetsByST: (accountId, payload) => dispatch(fetchPostSetsBySTRequest(accountId, payload)),
     updateBunchPost: (posts) => dispatch(updateBunchPostRequest(posts)),
     setPostSetsByST: (postSets) => dispatch(setPostSets(postSets)),
     deletePostSet: (id) => dispatch(deletePostSetRequest(id)),

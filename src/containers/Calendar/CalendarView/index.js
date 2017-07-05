@@ -28,6 +28,7 @@ class CalendarView extends React.Component {
     currentAccount: PropTypes.object,
     onMoveEvent: PropTypes.func,
     onDeleteEvent: PropTypes.func,
+    onDateChange: PropTypes.func,
   };
 
   state = {
@@ -109,7 +110,7 @@ class CalendarView extends React.Component {
 
   render() {
     const { showPopup, popupPosition, currentPostSet } = this.state;
-    const { postSets, onMoveEvent, onDeleteEvent, currentAccount } = this.props;
+    const { postSets, onMoveEvent, onDeleteEvent, currentAccount, onDateChange } = this.props;
 
     const events = postSets.map((postSet) => ({
       postSet,
@@ -127,6 +128,7 @@ class CalendarView extends React.Component {
           components={{
             toolbar: Toolbar,
           }}
+          onNavigate={(date) => onDateChange(moment(date))}
           formats={formats}
           onSelectEvent={(this.eventSelected)}
           eventPropGetter={this.eventPropGetter}

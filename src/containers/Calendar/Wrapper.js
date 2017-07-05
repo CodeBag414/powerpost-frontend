@@ -17,6 +17,10 @@ const Wrapper = styled.div`
       pointer-events: all;
     }
   }
+  &.disabled {
+    opacity: 0.9;
+    pointer-events: none;
+  }
 `;
 
 export default Wrapper;

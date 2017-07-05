@@ -5,8 +5,8 @@ import theme from 'theme';
 
 import Wrapper from './Wrapper';
 
-const Loading = ({ type, color }) => (
-  <Wrapper>
+const Loading = ({ type, color, opacity }) => (
+  <Wrapper opacity={opacity}>
     <ReactLoading type={type || 'spin'} color={color || theme.primaryColor} />
   </Wrapper>
 );
@@ -14,11 +14,13 @@ const Loading = ({ type, color }) => (
 Loading.propTypes = {
   type: PropTypes.string,
   color: PropTypes.string,
+  opacity: PropTypes.number,
 };
 
 Loading.defaultProps = {
   type: '',
   color: '',
+  opacity: 0.9,
 };
 
 export default Loading;
