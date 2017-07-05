@@ -148,8 +148,8 @@ class LinkEditor extends Component {
         properties: {
           ...properties,
           title: this.state.titleValue,
+          picture: imageUrl,
           description: this.state.descriptionValue,
-          thumb_key: this.state.selectedImage.key || '',
         },
         ...rest,
       };
@@ -159,8 +159,8 @@ class LinkEditor extends Component {
         create: createPost,
         url: this.props.urlContent.url,
         title: this.state.titleValue,
+        picture: imageUrl,
         description: this.state.descriptionValue,
-        thumb_key: this.state.selectedImage.key || '',
       };
     }
     this.setState({
@@ -170,7 +170,7 @@ class LinkEditor extends Component {
       selectedImageIndex: -1,
       url: '',
     });
-
+    console.log(linkItem);
     this.props.handleLinkEditorSave(linkItem, create);
   }
 
