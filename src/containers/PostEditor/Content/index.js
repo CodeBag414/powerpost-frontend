@@ -229,9 +229,9 @@ class Content extends Component {
     this.closeAllDialog();
     const { action, ...linkItem } = item;
     filepicker.setKey(filePickerKey);
-    if (linkItem.picture) {
+    const picture = linkItem.picture || linkItem.properties.picture;
+    if (picture) {
       filepicker.storeUrl(`https://process.filestackapi.com/${filePickerKey}/${linkItem.picture}`, (Blob) => {
-        // console.log(Blob);
         linkItem.picture = Blob.url;
         linkItem.picture_key = Blob.key;
         filepicker.storeUrl(
@@ -239,7 +239,6 @@ class Content extends Component {
           (blob) => {
             linkItem.thumb_key = blob.key;
             linkItem.account_id = this.props.accountId;
-            // console.log(linkItem);
             linkItem.mediaItemType = 'link';
             if (action === 'create') {
               this.props.createMediaItem(linkItem);

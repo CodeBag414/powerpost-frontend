@@ -114,7 +114,7 @@ class Sidebar extends React.Component {
               <ReactRouterMenuItemWithTooltip tooltip="Posts" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-send" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/posts`} />
             }
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
-              <ReactRouterMenuItemWithTooltip tooltip="Shared Streams" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-list-alt" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/shared_streams`} />
+              <ReactRouterMenuItemWithTooltip tooltip="Shared Streams" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-list-alt" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/shared_streams/owned`} />
             }
             { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('posts') > -1 &&
               <ReactRouterMenuItemWithTooltip tooltip="Social Feeds" tooltipPosition="right" isCollapsed isSidebar icon={<i className="fa fa-list-ul" />} style={{ width: '60px' }} to={`/account/${this.props.accountId}/social_feeds`} />

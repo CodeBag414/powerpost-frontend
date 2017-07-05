@@ -209,13 +209,6 @@ class AddConnectionDialog extends React.Component {
         sub: true,
         url: this.props.socialUrls ? this.props.socialUrls.pinterest : '',
       },
-      { name: 'Google+ Profile',
-        icon: 'fa fa-google-plus-square',
-        text: 'Log into your Google Plus account to start sharing content',
-        channel: 'googleplus',
-        sub: false,
-        url: this.props.socialUrls ? this.props.socialUrls.google : '',
-      },
       { name: 'Google+ Business Page',
         icon: 'fa fa-google-plus-square',
         text: 'Log into your Google Plus account to start sharing content',
@@ -273,7 +266,7 @@ class AddConnectionDialog extends React.Component {
       <Tabs index={this.state.index} onChange={this.handleTabChange}>
         <Tab label="Social Media" theme={tabTheme}>
           <div className={styles.tabContent}>
-            <p>Lorem ipsum semper. At vitae dictum a lectus scelerisque urna augue mollis nec augue volutpat orci In semper. Vestibulum commodo a.</p>
+            <p>Click on the connect button next to a social media channel below and follow the steps to connect it to your account. You will be able to post content and view stats for the connected channels.</p>
             <hr />
             <div>
               { connectionTypes.map((connection, i) =>
@@ -287,7 +280,7 @@ class AddConnectionDialog extends React.Component {
 
             { this.props.subChannels.length === 0 &&
               <div>
-                <p>Lorem ipsum semper. At vitae dictum a lectus scelerisque urna augue mollis nec augue volutpat orci In semper. Vestibulum commodo a.</p>
+                <p>Insert the URL to a Wordpress site and provide the login credentials of a user who is an admin or owner of the site. Click find blogs to return any blogs associated with the site, then connect to the blogs you want. You will be able to post directly to connected blogs.</p>
                 <hr />
                 <div>
                   <TextField floatingLabelText="Wordpress URL" errorText={this.state.wordpressUrlError} name="wordpressUrl" type="url" value={this.state.wordpressUrl} onChange={this.handleWordpressUrl} />

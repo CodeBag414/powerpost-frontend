@@ -301,9 +301,9 @@ class Library extends React.Component {
     const { action, ...linkItem } = item;
     const filepicker = require('filepicker-js');
     filepicker.setKey(this.props.filePickerKey);
-    if (linkItem.picture) {
+    const picture = linkItem.picture || linkItem.properties.picture;
+    if (picture) {
       filepicker.storeUrl(`https://process.filestackapi.com/${this.props.filePickerKey}/${linkItem.picture}`, (Blob) => {
-        console.log(Blob);
         linkItem.picture = Blob.url;
         linkItem.picture_key = Blob.key;
         filepicker.storeUrl(
@@ -311,7 +311,7 @@ class Library extends React.Component {
            (Blob) => {
              linkItem.thumb_key = Blob.key;
              linkItem.collection_id = this.props.activeCollection.collection_id;
-
+             linkItem.picture = null;
              linkItem.mediaItemType = 'link';
              if (action === 'create') {
                this.props.createMediaItem(linkItem);
