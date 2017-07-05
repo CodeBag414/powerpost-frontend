@@ -351,7 +351,7 @@ export function removeUserFromGroupError(payload) {
   };
 }
 
-export function fetchPostSetsRequest(accountId) {
+export function fetchPostSetsRequest(accountId, payload) {
   return {
     type: FETCH_POST_SETS_REQUEST,
     accountId,
@@ -360,6 +360,7 @@ export function fetchPostSetsRequest(accountId) {
       sort_order: 'DESC',
       limit: 500,
       statuses: [1, 2, 3, 4, 5, 6],
+      ...payload,
     },
     action: 'fetchPostSetsRequest',
   };

@@ -1,9 +1,12 @@
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
+import moment from 'moment';
 import Dropdown from 'elements/atm.Dropdown';
 import PostEditor from 'containers/PostEditor';
 import Loading from 'components/Loading';
+import DateRangePicker from 'components/DateRangePicker';
 import ErrorWrapper from '../ErrorWrapper';
 import Wrapper from './Wrapper';
 import PostSetList from './PostSetList';
@@ -33,6 +36,8 @@ class PostSetBox extends Component {
     currentPostStatus: 3,
     searchText: null,
     sortBy: sortByOptions[0],
+    startDate: moment().startOf('day').subtract(29, 'days'),
+    endDate: moment().endOf('day'),
   }
 
   onSearch = (searchText) => {
@@ -51,13 +56,39 @@ class PostSetBox extends Component {
 
   handleSortByChange = (sortBy) => {
     if (this.state.sortBy.value === sortBy.value) return;
-    const { fetchPostSets, fetchPostSetsByST } = this.props;
+    const { fetchPostSets, fetchPostSetsByST, accountId } = this.props;
+    const { startDate, endDate } = this.state;
     if (sortBy.value === 'schedule_time') {
-      fetchPostSetsByST();
+      fetchPostSetsByST(accountId, {
+        start_time: startDate.unix(),
+        end_time: endDate.unix(),
+      });
     } else {
-      fetchPostSets();
+      fetchPostSets(accountId, {
+        start_time: startDate.unix(),
+        end_time: endDate.unix(),
+      });
     }
     this.setState({ sortBy });
+  }
+
+  handleDateRange = ({ startDate, endDate }) => {
+    if (this.state.startDate.unix() === startDate.unix() && this.state.endDate.unix() === endDate.unix()) return;
+    console.log(endDate.unix(), this.state.endDate.unix());
+    const { sortBy } = this.state;
+    const { fetchPostSets, fetchPostSetsByST, accountId } = this.props;
+    if (sortBy.value === 'schedule_time') {
+      fetchPostSetsByST(accountId, {
+        start_time: startDate.unix(),
+        end_time: endDate.unix(),
+      });
+    } else {
+      fetchPostSets(accountId, {
+        start_time: startDate.unix(),
+        end_time: endDate.unix(),
+      });
+    }
+    this.setState({ startDate, endDate });
   }
 
   filterPostSets = (postSets) => {
@@ -86,7 +117,7 @@ class PostSetBox extends Component {
   render() {
     let { postSets } = this.props;
     const { accountId } = this.props;
-    const { currentPostSetIndex, currentPostStatus, searchText, sortBy } = this.state;
+    const { currentPostSetIndex, currentPostStatus, searchText, sortBy, startDate, endDate } = this.state;
     const statuses = [
       { status: 3, statusColor: '#ABE66A', name: 'Ready' },
       { status: 5, statusColor: '#B171B5', name: 'Review' },
@@ -101,6 +132,9 @@ class PostSetBox extends Component {
           statuses={statuses}
         />
         <div className="filter-wrapper">
+          <DateRangePicker onChange={this.handleDateRange} startDate={startDate} endDate={endDate}>
+            <div>Click Me To Open Picker!</div>
+          </DateRangePicker>
           <div className="sort_input">
             <Dropdown
               value={sortBy}

@@ -22,6 +22,7 @@ import auth from 'utils/auth';
 // import 'sanitize.css/sanitize.css';
 
 import './lib/react-toggle/styles.css';
+import './lib/react-bootstrap-daterangepicker/styles.css';
 import './lib/react-redux-toastr/src/styles/index.scss';
 import './globals.scss';
 
