@@ -47,9 +47,13 @@ class Channels extends Component {
     if (post && post.getIn(['properties', 'edited'])) {
       postMessage = post.get('message');
     } else {
-      const channelName = `message_${post.get('connection_channel')}`;
-      const channelMessages = postSet.getIn(['details', 'properties']).toJS();
-      postMessage = channelMessages[channelName] || postSet.getIn(['details', 'message']);
+      let channelMessage;
+      if (post && post.get('connection_channel')) {
+        const channelName = `message_${post.get('connection_channel')}`;
+        const channelMessages = postSet.getIn(['details', 'properties']).toJS();
+        channelMessage = channelMessages[channelName];
+      }
+      postMessage = channelMessage || postSet.getIn(['details', 'message']);
     }
     return postMessage;
   }
