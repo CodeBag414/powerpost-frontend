@@ -1,18 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import MediaItemPreview from 'components/MediaItemPreview';
+import { fromJS } from "immutable";
+import Preview from 'components/Preview';
 
 import Wrapper from './Wrapper';
 
 function PostContent({ creationTime, message, mediaItems }) {
+  let item;
+  if (mediaItems.length === 0) {
+    item = {type: 'empty'};
+  } else {
+    item = mediaItems.toJS()[0];
+  }
   return (
     <Wrapper className="col-md-8">
       <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '4px' }}>
         <div className="time">{creationTime}</div>
         <div className="description">{message}</div>
         <div className="mediaContent">
-          <MediaItemPreview mediaItems={mediaItems} />
+          <Preview item={item} />
         </div>
       </div>
     </Wrapper>

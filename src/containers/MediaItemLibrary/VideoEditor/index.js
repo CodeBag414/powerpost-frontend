@@ -194,7 +194,7 @@ class VideoEditor extends Component {
               }
               {selectedImage && selectedImage.url &&
                 <div className="cover-image" style={{ textAlign: 'center' }} >
-                  {this.props.videoItem && this.props.videoItem !== '1' ? (<IconPlaceholder className="fa fa-video-camera" />) : (<LargeImageWrapper src={selectedImage.url} />) }
+                  {this.props.videoItem && this.props.videoItem.status !== '1' ? (<IconPlaceholder className="fa fa-video-camera" />) : (<LargeImageWrapper src={selectedImage.url} />) }
                 </div>
               }
               <SimpleButton

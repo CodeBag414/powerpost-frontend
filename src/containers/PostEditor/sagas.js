@@ -13,6 +13,10 @@ import {
 } from 'utils/request';
 
 import {
+  setProcessing,
+} from 'containers/Main/actions';
+
+import {
   makeSelectActiveCollection,
 } from './selectors';
 
@@ -47,6 +51,7 @@ import {
   PROCESS_ITEM_SUCCESS,
   FETCH_WORDPRESS_GUI_REQUEST,
   CREATE_POST_REQUEST,
+  VIDEO_PROCESSING_DONE,
 } from './constants';
 
 import {
@@ -224,6 +229,26 @@ export function* createMediaItem(action) {
   }
 }
 
+export function* pollData(action) {
+  try {
+    yield call(delay, 5000);
+    const id = action.id;
+    const res = yield call(getData, `/media_api/media_item/${id}`);
+    if (res.data.result === 'success') {
+      if (res.data.media_item.status === '1') {
+        const mediaItem = res.data.media_item;
+        //processingItem = false;
+        yield put(setProcessing(false));
+        yield put({ type: VIDEO_PROCESSING_DONE, mediaItem });
+      } else if (res.data.media_item.status === '3') {
+        yield put({ type: VIDEO_PROCESSING, id });
+      }
+    }
+  } catch (error) {
+
+  }
+}
+
 export function* updateMediaItem(action) {
   const { ...item } = action.mediaItem;
   const data = {
@@ -308,6 +333,12 @@ export function* fetchComments() {
   yield cancel(watcher);
 }
 
+export function* watchPollData() {
+  const watcher = yield takeEvery(VIDEO_PROCESSING, pollData);
+  yield take(VIDEO_PROCESSING_DONE);
+  yield cancel(watcher);
+}
+
 export function* postComment() {
   const watcher = yield takeLatest(POST_COMMENT_REQUEST, postCommentRequest);
   yield take(LOCATION_CHANGE);
@@ -387,4 +418,13 @@ export default [
   getItem,
   fetchWordpressGUISaga,
   createPostSaga,
+  watchPollData,
 ];
+
+const delay = (millis) => {
+  const promise = new Promise((resolve) => {
+    setTimeout(() => resolve(true), millis);
+  });
+  return promise;
+};
+

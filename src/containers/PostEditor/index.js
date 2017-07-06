@@ -51,6 +51,7 @@ import {
 import Button from 'elements/atm.Button';
 import DeletePostSetDialog from 'components/DeletePostSetDialog';
 import Loading from 'components/Loading';
+import withReactRouter from 'elements/hoc.withReactRouter';
 
 import Wrapper from './Wrapper';
 import GeneralInfo from './GeneralInfo';
@@ -65,6 +66,8 @@ import ChannelsPreview from './Sidebar/ChannelsPreview';
 import Content from './Content';
 import Channels from './Channels';
 import SharedStreams from './SharedStreams';
+
+const ButtonLink = withReactRouter(Button);
 
 class PostEditor extends Component {
   static propTypes = {
