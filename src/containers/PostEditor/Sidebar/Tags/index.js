@@ -20,7 +20,7 @@ class Tags extends Component {
     updatePostSet: PropTypes.func,
   };
 
-  state = { isExpanded: true };
+  state = { isExpanded: false };
 
   getTags = () => {
     const { postSet } = this.props;

@@ -16,7 +16,7 @@ class ChannelsPreview extends Component {
   };
 
   state = {
-    isExpanded: true,
+    isExpanded: false,
   };
 
   buildChannelList = () => {

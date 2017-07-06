@@ -43,12 +43,18 @@ import {
   makeSelectFilter,
 } from 'containers/PostEditor/selectors';
 
+import PopupBorder from 'components/PopupBorder';
+
 import Wrapper from './Wrapper';
 import MessageEditor from '../MessageEditor';
 import Comments from './Comments';
 import Comment from './Comment';
 import CommentInput from './CommentInput';
 import MediaLibraryDialog from '../MediaLibraryDialog';
+import ChannelsRow from './ChannelsRow';
+import MessageEditorWrapper from './MessageEditorWrapper';
+
+import { CHANNELS } from './constants';
 
 class Content extends Component {
 
@@ -82,12 +88,13 @@ class Content extends Component {
 
   constructor(props) {
     super(props);
-    const globalMessage = !props.postSet.get('details').isEmpty() ? props.postSet.getIn(['details', 'message']) : '';
-    const characterLimit = this.calculateCharacterLimit(globalMessage, {}, false);
+    const message = !props.postSet.get('details').isEmpty() ? props.postSet.getIn(['details', 'message']) : '';
+    const characterLimit = this.calculateCharacterLimit(message, {}, false);
     this.state = {
-      globalMessage,
+      channelIndex: -1,
       characterLimit,
       fileEditor: false,
+      message,
       hasWordPressPost: false,
       imageEditor: false,
       videoEditor: false,
@@ -100,20 +107,20 @@ class Content extends Component {
   }
 
   componentDidMount() {
-    const { globalMessage } = this.state;
-    this.linkifyMessage(globalMessage);
+    const { message } = this.state;
+    this.linkifyMessage(message);
   }
 
   componentWillReceiveProps(nextProps) {
     const { postSet, urlContent } = nextProps;
-    const { messageUrls, globalMessage } = this.state;
+    const { messageUrls, message } = this.state;
 
     if (urlContent !== this.props.urlContent) {
       for (let i = 0; i < messageUrls.length; i += 1) {
         const url = messageUrls[i];
         if (urlContent.original_url === url.href) {
-          const newMessage = globalMessage.replace(url.value, urlContent.short_url);
-          this.setState({ globalMessage: newMessage });
+          const newMessage = message.replace(url.value, urlContent.short_url);
+          this.setState({ message: newMessage });
           this.handleMessageChange(newMessage);
           this.handleMessageBlur(null, newMessage);
           return;
@@ -126,7 +133,7 @@ class Content extends Component {
 
     newMediaItem = newMediaItem.toJS();
     if (this.props.postSet.get('details').isEmpty() || this.props.postSet.getIn(['details', 'post_set_id']) !== postSet.getIn(['details', 'post_set_id'])) {
-      this.setState({ globalMessage: newMessage || '' });
+      this.setState({ message: newMessage || '' });
       this.linkifyMessage(newMessage);
     }
     if (newMediaItem[0]) {
@@ -150,17 +157,17 @@ class Content extends Component {
     });
   }
 
-  calculateCharacterLimit = (globalMessage = this.state.globalMessage, item = this.state.item, hasWordPressPost = this.state.hasWordPressPost) => {
+  calculateCharacterLimit = (message = this.state.message, item = this.state.item, hasWordPressPost = this.state.hasWordPressPost) => {
     let mediaLength = (item && Object.keys(item).length > 0) ? 24 : 0;
     if (hasWordPressPost) mediaLength += 24;
-    return 140 - (globalMessage ? globalMessage.length : 0) - mediaLength;
+    return 140 - (message ? message.length : 0) - mediaLength;
   }
 
   handleMessageChange = (value) => {
-    const globalMessage = value;
-    const characterLimit = this.calculateCharacterLimit(globalMessage);
-    this.setState({ globalMessage, characterLimit });
-    this.linkifyMessage(globalMessage);
+    const message = value;
+    const characterLimit = this.calculateCharacterLimit(message);
+    this.setState({ message, characterLimit });
+    this.linkifyMessage(message);
   }
 
   linkifyMessage = (message) => {
@@ -173,13 +180,31 @@ class Content extends Component {
     this.setState({ messageUrls: urls });
   }
 
-  handleMessageBlur = (event, message = this.state.globalMessage) => {
+  handleMessageBlur = (event, message = this.state.message) => {
+    const { channelIndex } = this.state;
     const { updatePostSet, postSet } = this.props;
-    updatePostSet({
-      ...postSet.get('details').toJS(),
-      id: postSet.getIn(['details', 'post_set_id']),
-      message,
-    });
+    const postDetails = postSet.get('details').toJS();
+    console.log('---', postDetails);
+
+    if (channelIndex > -1) {
+      const channelMessages = postDetails.properties;
+      const channelName = CHANNELS[channelIndex].name;
+      const newChannelMessages = {
+        ...channelMessages,
+        [channelName]: message,
+      };
+      updatePostSet({
+        ...postDetails,
+        id: postDetails.post_set_id,
+        properties: newChannelMessages,
+      });
+    } else {
+      updatePostSet({
+        ...postDetails,
+        id: postDetails.post_set_id,
+        message,
+      });
+    }
   }
 
   openLinkEditor = (linkItem) => {
@@ -465,9 +490,31 @@ class Content extends Component {
     });
   }
 
+  /* Channel selector handler */
+  handleChannelClick = (channelIndex) => {
+    if (channelIndex === this.state.channelIndex) return;
+
+    const { message } = this.state;
+    const { postSet } = this.props;
+    const globalMessage = this.state.channelIndex === -1 ? message : postSet.getIn(['details', 'message']);
+
+    if (channelIndex > -1) {
+      const channelMessages = postSet.getIn(['details', 'properties']).toJS();
+      const channelName = CHANNELS[channelIndex].name;
+      this.setState({
+        message: channelMessages[channelName] || globalMessage,
+      });
+    } else {
+      this.setState({
+        message: globalMessage,
+      });
+    }
+    this.setState({ channelIndex });
+  }
+
   render() {
     const { postComment, deleteComment, comments, user, pending, pushToLibrary, id, accountId } = this.props;
-    const { globalMessage, characterLimit, item, messageUrls } = this.state;
+    const { message, characterLimit, item, messageUrls, channelIndex } = this.state;
     // const { params: { postset_id, account_id } } = this.props;
     const actions = [
       { label: 'close', onClick: this.closeAllDialog },
@@ -475,25 +522,39 @@ class Content extends Component {
 
     return (
       <Wrapper pending={pending}>
-        <MessageEditor
-          message={globalMessage}
-          mediaItem={item}
-          removeMediaItem={this.removeItem}
-          characterLimit={characterLimit}
-          handleMessageChange={this.handleMessageChange}
-          handleMessageBlur={this.handleMessageBlur}
-          openFilePicker={this.openFilePicker}
-          openEditor={this.openEditor}
-          pushToLibrary={pushToLibrary}
-          accountId={accountId}
-          postSetId={id}
-          openLinkDialog={this.openLinkDialog}
-          openMediaLibrary={this.openMediaLibrary}
-          isProcessing={this.props.isProcessing}
-          urls={messageUrls}
-          shortenUrl={this.shortenUrl}
-          convertUrl={this.convertUrl}
+        <ChannelsRow
+          channelIndex={channelIndex}
+          handleChannelClick={this.handleChannelClick}
         />
+        <MessageEditorWrapper>
+          <PopupBorder
+            left={0}
+            top={channelIndex > -1 ? -7 : undefined}
+            arrowRight={channelIndex > -1 ? 6 + (29.44 * (4 - channelIndex)) : undefined}
+            borderColor={channelIndex > -1 ? CHANNELS[channelIndex].color : 'inherit'}
+          >
+            <MessageEditor
+              message={message}
+              mediaItem={item}
+              removeMediaItem={this.removeItem}
+              characterLimit={characterLimit}
+              handleMessageChange={this.handleMessageChange}
+              handleMessageBlur={this.handleMessageBlur}
+              openFilePicker={this.openFilePicker}
+              openEditor={this.openEditor}
+              pushToLibrary={pushToLibrary}
+              accountId={accountId}
+              postSetId={id}
+              openLinkDialog={this.openLinkDialog}
+              openMediaLibrary={this.openMediaLibrary}
+              isProcessing={this.props.isProcessing}
+              urls={messageUrls}
+              shortenUrl={this.shortenUrl}
+              convertUrl={this.convertUrl}
+              currentChannel={channelIndex}
+            />
+          </PopupBorder>
+        </MessageEditorWrapper>
         <Comments />
         <div className="comment-input">
           <CommentInput user={user} postComment={(text) => postComment(id, text)} />

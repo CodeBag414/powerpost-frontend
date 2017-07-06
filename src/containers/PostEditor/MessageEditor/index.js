@@ -92,6 +92,7 @@ class MessageEditor extends Component {
       urls,
       shortenUrl,
       convertUrl,
+      currentChannel,
     } = this.props;
     const { menuVisible } = this.state;
     return (
@@ -108,10 +109,12 @@ class MessageEditor extends Component {
           shortenUrl={shortenUrl}
           convertUrl={convertUrl}
           mediaItem={mediaItem}
+          currentChannel={currentChannel}
         />
         <MultiLineInput
-          message={message}
           handleMessageChange={handleMessageChange}
+          highlightFocus={currentChannel === -1}
+          message={message}
           onBlur={handleMessageBlur}
           placeholder="What do you want to say?"
         />
@@ -159,6 +162,7 @@ MessageEditor.propTypes = {
   urls: PropTypes.array,
   shortenUrl: PropTypes.func,
   convertUrl: PropTypes.func,
+  currentChannel: PropTypes.number,
 };
 
 export default MessageEditor;

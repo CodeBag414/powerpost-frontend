@@ -29,14 +29,29 @@ class Channels extends Component {
 
   constructor(props) {
     super(props);
-    const { posts, postSet } = props;
+
+    const { posts } = props;
     const currentPost = Object.keys(posts).length && posts[Object.keys(posts)[0]][0];
+
     this.state = {
       currentPost,
       isDialogShown: false,
-      postMessage: currentPost && currentPost.getIn(['properties', 'edited']) ? currentPost.get('message') : postSet.getIn(['details', 'message']),
+      postMessage: this.constructPostMessage(currentPost),
       postTime: currentPost && currentPost.get('schedule_time'),
     };
+  }
+
+  constructPostMessage = (post) => {
+    const { postSet } = this.props;
+    let postMessage;
+    if (post && post.getIn(['properties', 'edited'])) {
+      postMessage = post.get('message');
+    } else {
+      const channelName = `message_${post.get('connection_channel')}`;
+      const channelMessages = postSet.getIn(['details', 'properties']).toJS();
+      postMessage = channelMessages[channelName] || postSet.getIn(['details', 'message']);
+    }
+    return postMessage;
   }
 
   handleDialogToggle = () => {
@@ -44,10 +59,9 @@ class Channels extends Component {
   }
 
   handleClickTimestamp = (post) => {
-    const { postSet } = this.props;
     this.setState({
       currentPost: post,
-      postMessage: post.getIn(['properties', 'edited']) ? post.get('message') : postSet.getIn(['details', 'message']),
+      postMessage: this.constructPostMessage(post),
       postTime: post && post.get('schedule_time'),
     });
   }
@@ -77,7 +91,7 @@ class Channels extends Component {
   handleMessageBlur = () => {
     const { updatePost } = this.props;
     const { currentPost, postMessage } = this.state;
-    // console.log('currentPost', currentPost.toJS());
+
     const newPost = {
       ...currentPost.toJS(),
       message: postMessage,
