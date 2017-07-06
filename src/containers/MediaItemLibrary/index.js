@@ -486,9 +486,8 @@ class Library extends React.Component {
           </div>
           <Menu style={{ margin: '0 auto', padding: '0', width: '150px' }} selectable>
             <ReactRouterMenuItem caption="Media Library" to={`/account/${this.props.params.account_id}/library`} style={{ textAlign: 'center' }} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
-            <li style={{ position: 'relative', listStyle: 'none', height: '40px' }}><span style={{ backgroundColor: 'white', position: 'absolute', zIndex: '22', lineHeight: '40px', color: '#616669', paddingRight: '10px', fontSize: '12px' }}>Curate</span><HR /></li>
-            <ReactRouterMenuItem caption="RSS Feeds" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/RSS`} style={{ color: '#616669', fontWeight: '700', fontSize: '9px !important' }} />
             <ReactRouterMenuItem caption="Search the Web" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/search`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
+            <ReactRouterMenuItem caption="RSS Feeds" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/RSS`} style={{ color: '#616669', fontWeight: '700', fontSize: '9px !important' }} />            
           </Menu>
         </SidebarWrapper>
         <ContentWrapper>

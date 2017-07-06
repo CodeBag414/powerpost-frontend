@@ -34,10 +34,10 @@ const MediaNav = (props) => (
       <FilterLink filter={SHOW_VIDEOS}active={props.filter === SHOW_VIDEOS}>Videos</FilterLink>
     </div>
     <div className="col-md-3"style={{ height: '100%'}}>
-      <TextField iconClass="fa fa-search" hintText="Search Title" style={{float: 'left'}} onChange={props.setSearchFilter} />
+      <TextField iconClass="fa fa-search" hintText="Search Title" style={{ float: 'right', marginTop: '25px', height: '39px' }} onChange={props.setSearchFilter} />
     </div>
     <div className="col-md-3">
-      <Dropdown label="Sort By" style={{float: 'right'}} options={sortOptions} onChange={props.setSortOrder} value={find(sortOptions, ['value', props.sortOrder])} />
+      <Dropdown label="" style={{ float: 'left', height: '36px' }} options={sortOptions} placeholder='Sort by...' onChange={props.setSortOrder} value={find(sortOptions, ['value', props.sortOrder])} />
     </div>
   </MediaNavContainer>
 );

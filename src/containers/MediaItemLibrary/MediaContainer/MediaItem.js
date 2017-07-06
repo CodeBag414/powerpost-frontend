@@ -59,6 +59,7 @@ const ImageContainer = styled.div`
   height: calc(252px - 48px + 25px);
   text-align: center;
   line-height: 229px;
+  cursor: pointer;
 `;
 
 const ActionBar = styled.div`
@@ -106,7 +107,7 @@ const MediaItem = (props) => {
   }
   return (
     <Wrapper>
-      <ImageContainer>
+      <ImageContainer onClick={() => props.openPreview(props.mediaItem)}>
         { coverImage || coverImage === '' ? (<CoverImage src={coverImage} />) : (<IconPlaceholder className={`fa ${fa}`} />) }
       </ImageContainer>
       <Footer>

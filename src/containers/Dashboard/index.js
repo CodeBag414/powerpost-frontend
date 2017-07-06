@@ -21,6 +21,7 @@ import {
 import {
   makeSelectUser,
   makeSelectSharedAccounts,
+  makeSelectUserAccount,
 } from 'containers/App/selectors';
 import {
   makeSelectCurrentAccount,
@@ -138,7 +139,7 @@ Dashboard.propTypes = {
 
 const mapStateToProps = createStructuredSelector({
   user: makeSelectUser(),
-  userOwnAccount: makeSelectCurrentAccount(),
+  userOwnAccount: makeSelectUserAccount(),
   brands: makeSelectSharedAccounts(),
 });
 
