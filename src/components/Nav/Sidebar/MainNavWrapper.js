@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const MainNavWrapper = styled.div`
-  width: 216px;
+  width: 185px;
   position: absolute;
   left: 0px;
   height: 100%;

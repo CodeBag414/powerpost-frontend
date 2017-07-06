@@ -101,7 +101,7 @@ class LinkEditor extends Component {
   };
 
   removeCoverImage() {
-    this.setState({ selectedImage: {}, selectedImageIndex: -1 });
+    this.setState({ selectedImage: 'remove', selectedImageIndex: -1 });
   }
 
   openFilePicker() {
@@ -132,7 +132,11 @@ class LinkEditor extends Component {
     if (this.state.selectedImage.url) {
       imageUrl = this.state.selectedImage.url;
     }
-
+    if (this.state.selectedImage === 'remove') {
+      console.log('in remove');
+      imageUrl = 'remove';
+    }
+    console.log(imageUrl);
     let createPost = false;
     if (create) {
       createPost = true;
@@ -254,9 +258,9 @@ class LinkEditor extends Component {
             }
             <div className="button-wrapper" style={{ display: 'inline-block' }}>
               { mediaLibraryContext &&
-                <Button onClick={() => this.prepareLinkItem(create)} primary style={{ marginRight: '5px' }}>Save & Create Post</Button>
+                <Button onClick={() => this.prepareLinkItem(create)} primary style={{ marginRight: '5px', marginBottom: '5px' }}>Save & Create Post</Button>
               }
-              <Button onClick={() => this.prepareLinkItem(doNotCreate)} primary>Save</Button>
+              <Button onClick={() => this.prepareLinkItem(doNotCreate)} style={{ marginBottom: '5px' }} primary>Save</Button>
             </div>
           </FooterWrapper>
         </Wrapper>

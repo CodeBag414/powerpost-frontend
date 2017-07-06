@@ -20,11 +20,11 @@ class AddConnectionDialog extends React.Component {
       channel: '',
       futureChannels: [],
       wordpressUrl: '',
-      wordpressUrlError: '',
+      wordpressUrlError: false,
       wordpressUserName: '',
-      wordpressUserNameError: '',
+      wordpressUserNameError: false,
       wordpressPassword: '',
-      wordpressPasswordError: '',
+      wordpressPasswordError: false,
     };
 
     this.connect = this.connect.bind(this);
@@ -110,25 +110,23 @@ class AddConnectionDialog extends React.Component {
   }
 
   toggleConnection(connection) {
-    const newFutureChannels = [];
+    const currentFutureChannels = this.state.futureChannels;
     let found = false;
-    if (!this.state.futureChannels.length) {
-      newFutureChannels.push(connection);
-      found = true;
-    } else if (this.state.futureChannels.length) {
+    let index = false;
+    if (this.state.futureChannels.length) {
       for (let i = 0; i < this.state.futureChannels.length; i += 1) {
-        if (this.state.futureChannels[i].id !== connection.connection_id) {
-          newFutureChannels.push(this.state.futureChannels[i]);
-        }
-        if (this.state.futureChannels[i].id === connection.connection_id) {
+        if (this.state.futureChannels[i].connection_uid === connection.connection_uid) {
           found = true;
+          index = i;
         }
       }
     }
     if (!found) {
-      newFutureChannels.push(connection);
+      currentFutureChannels.push(connection);
+    } else if (found && index > -1 ) {
+      currentFutureChannels.splice(index, 1);
     }
-    this.setState({ futureChannels: newFutureChannels });
+    this.setState({ futureChannels: currentFutureChannels });
   }
 
   handleTabChange = (index) => {
@@ -242,7 +240,7 @@ class AddConnectionDialog extends React.Component {
               <i className={[channelIcons, styles.icon, this.state.channel].join(' ')} />
               {`${this.titleCase(this.state.channel)} ${subChannelType}`}
             </h1>
-            <p>Lorem ipsum semper. At vitae dictum a lectus scelerisque urna augue mollis nec augue volutpat orci In semper. Vestibulum commodo a.</p>
+            <p>Enable the channels you would like to connect below.</p>
           </div>
           <div>
             <hr />
@@ -293,7 +291,7 @@ class AddConnectionDialog extends React.Component {
                     <TextField floatingLabelText="Wordpress Password" errorText={this.state.wordpressPasswordError} name="wordpressPassword" type="password" value={this.state.wordpressPassword} onChange={this.handleWordpressPassword} />
                   </div>
                 </div>
-                <PPButton label="Fetch Blogs" primary={!this.state.wordpressPasswordError || !this.state.wordpressUrlError || !this.state.wordpressUserNameError} disabled={!this.state.wordpressPasswordError || !this.state.wordpressUrlError || !this.state.wordpressUserNameError} onClick={this.fetchBlogs} />
+                <PPButton label="Fetch Blogs" primary={!this.state.wordpressPasswordError || !this.state.wordpressUrlError || !this.state.wordpressUserNameError} onClick={this.fetchBlogs} />
                 <hr />
               </div>
               }

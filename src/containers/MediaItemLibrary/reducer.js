@@ -141,7 +141,7 @@ function mediaLibraryReducer(state = initialState, action) {
         .set('searchFilter', action.searchFilter);
     case CREATE_MEDIA_ITEM_SUCCESS:
       return state
-        .update('mediaItems', (mediaItems) => mediaItems.concat(action.mediaItems));
+        .update('mediaItems', (mediaItems) => mediaItems.concat(action.mediaItems[0]));
     case VIDEO_PROCESSING_DONE:
       return state
         .update('mediaItems', (mediaItems) => mediaItems.concat(action.mediaItem));

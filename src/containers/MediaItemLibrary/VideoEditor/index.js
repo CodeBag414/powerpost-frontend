@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import filepicker from 'filepicker-js';
+import styled from 'styled-components';
 
 import PPDialog from 'elements/atm.Dialog';
 import TextArea from 'elements/atm.TextArea';
@@ -17,6 +18,13 @@ import HeadingWrapper from './HeadingWrapper';
 import BodyWrapper from './BodyWrapper';
 import FooterWrapper from './FooterWrapper';
 
+const IconPlaceholder = styled.i`
+  width: 100%;
+  height: 100%;
+  font-size: 64px;
+  color: #8C9497;
+  margin-top: 30px;
+`;
 
 class VideoEditor extends Component {
   static propTypes = {
@@ -185,8 +193,8 @@ class VideoEditor extends Component {
                 </div>
               }
               {selectedImage && selectedImage.url &&
-                <div className="cover-image">
-                  <LargeImageWrapper src={selectedImage.url} />
+                <div className="cover-image" style={{ textAlign: 'center' }} >
+                  {this.props.videoItem && this.props.videoItem !== '1' ? (<IconPlaceholder className="fa fa-video-camera" />) : (<LargeImageWrapper src={selectedImage.url} />) }
                 </div>
               }
               <SimpleButton

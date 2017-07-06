@@ -79,8 +79,8 @@ const MediaItem = (props) => {
   const mediaType = props.mediaItem.type;
   const creationTime = props.mediaItem.creation_time;
   const title = props.mediaItem.properties.title || props.mediaItem.properties.filename || props.mediaItem.properties.description;
-  let icon = 'photo';
-  let fa = 'fa-picture-o';
+  let icon = 'description';
+  let fa = 'fa-file-text';
   if (props.mediaItem.type === 'link') {
     fa = 'fa-link';
     icon = 'link';
@@ -90,6 +90,9 @@ const MediaItem = (props) => {
     if (props.mediaItem.status === '3') {
       coverImage = false;
     }
+  } else if (props.mediaItem.type === 'image') {
+    fa = 'fa-picture-o';
+    icon = 'photo';
   } else if (props.mediaItem.type === 'blog' || props.mediaItem.type === 'document') {
     fa = 'fa-file-text';
     icon = 'description';

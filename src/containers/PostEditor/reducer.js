@@ -46,6 +46,7 @@ import {
   SET_WORDPRESS_POST_REQUEST,
   CLEAR_MEDIA_ITEM,
   GET_MEDIA_ITEM_SUCCESS,
+  CLEAR_URL_CONTENT,
 } from './constants';
 
 const initialState = fromJS({
@@ -127,6 +128,9 @@ function boardReducer(state = initialState, action) {
           [`${action.section}-error`]: null,
           details: {},
         }));
+    case CLEAR_URL_CONTENT:
+      return state
+        .set('urlContent', {});
     case FETCH_POST_SET_SUCCESS:
       return state
         .set('postSet', fromJS({
