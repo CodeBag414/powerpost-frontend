@@ -61,10 +61,11 @@ import StatusChooser from './Sidebar/StatusChooser';
 import Tags from './Sidebar/Tags';
 import WordpressSettings from './Sidebar/WordpressSettings';
 import ChannelsPreview from './Sidebar/ChannelsPreview';
+import SharedStream from './Sidebar/SharedStream';
 
 import Content from './Content';
 import Channels from './Channels';
-import SharedStreams from './SharedStreams';
+import TabWrapper from './TabWrapper';
 
 class PostEditor extends Component {
   static propTypes = {
@@ -106,7 +107,7 @@ class PostEditor extends Component {
 
   state = {
     postTitle: '',
-    selectedTab: 'Power Post',
+    selectedTab: 'Content',
     showDeletePopup: false,
   };
 
@@ -224,9 +225,8 @@ class PostEditor extends Component {
     }
 
     const tabs = [
-      { name: 'Power Post', component: <Content postSet={postSet} accountId={this.props.accountId} id={this.props.id} location={this.props.location} params={this.props.params} /> },
-      { name: 'Channels & Times', component: <Channels postSet={postSet} posts={posts} updatePost={updatePost} />, count: totalTimeslots },
-      { name: 'Shared Stream', component: <SharedStreams postSet={postSet} /> },
+      { name: 'Content', component: <Content postSet={postSet} accountId={this.props.accountId} id={this.props.id} location={this.props.location} params={this.props.params} /> },
+      { name: 'Schedule', component: <Channels postSet={postSet} posts={posts} updatePost={updatePost} />, count: totalTimeslots },
     ];
 
     const generalInfo = (
@@ -250,7 +250,7 @@ class PostEditor extends Component {
           <div className="content">
             <div className="main">
               { modal ? null : generalInfo }
-              <div>
+              <TabWrapper>
                 {
                   tabs.map((tab) =>
                     <span
@@ -265,24 +265,20 @@ class PostEditor extends Component {
                     </span>
                   )
                 }
-              </div>
+                <div className="tabs-bottom-border"></div>
+              </TabWrapper>
               {
                 tabs.map((tab) => (tab.name === selectedTab ? tab.component : null))
               }
             </div>
             <Sidebar>
-              <StatusChooser
-                postSet={postSet}
+              <Tags
                 updatePostSet={updatePostSet}
-                userAccount={userAccount}
+                postSet={postSet.get('details')}
               />
-              <Button onClick={this.handleClickDelete} className="button-flat" flat>Delete Post</Button>
-              <UserAssignment
-                isFetching={groupUsers.isFetching || postSet.get('isFetching')}
-                postSet={postSet.get('details').toJS()}
-                assignee={postSet.getIn(['details', 'user_assignments', 0])}
-                users={groupUsers.details ? groupUsers.details.groups_users : []}
-                updatePostSet={updatePostSet}
+              <ChannelsPreview
+                connections={connections}
+                postSet={postSet}
               />
               <WordpressSettings
                 filePickerKey={filePickerKey}
@@ -300,13 +296,23 @@ class PostEditor extends Component {
                 setWordpressPost={this.props.setWordpressPost}
                 getMediaItem={this.props.getMediaItem}
               />
-              <ChannelsPreview
-                connections={connections}
+              <SharedStream
+                accountStreamId={userAccount.account_streams[0].stream_id}
                 postSet={postSet}
-              />
-              <Tags
                 updatePostSet={updatePostSet}
-                postSet={postSet.get('details')}
+              />
+              <StatusChooser
+                postSet={postSet}
+                updatePostSet={updatePostSet}
+                userAccount={userAccount}
+              />
+              <Button onClick={this.handleClickDelete} className="button-flat" flat>Delete Post</Button>
+              <UserAssignment
+                isFetching={groupUsers.isFetching || postSet.get('isFetching')}
+                postSet={postSet.get('details').toJS()}
+                assignee={postSet.getIn(['details', 'user_assignments', 0])}
+                users={groupUsers.details ? groupUsers.details.groups_users : []}
+                updatePostSet={updatePostSet}
               />
             </Sidebar>
           </div>

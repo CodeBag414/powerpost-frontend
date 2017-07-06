@@ -13,7 +13,7 @@ const Wrapper = styled.div`
       border-top: 2px solid #E81C64;
       border-left: 1px solid #DBDFE0;
       border-right: 1px solid #DBDFE0;
-      border-bottom: 1px solid transparent !important;
+      border-bottom: 1px solid #fff !important;
       span {
         display: none;
       }
