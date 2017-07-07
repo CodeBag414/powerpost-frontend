@@ -128,9 +128,10 @@ class StatusChooser extends React.Component {
         <div className="status-chooser-title">Status</div>
         <div className="dropdown-wrapper">
           <Dropdown
-            value={status}
+            small
             options={statusOptions}
             placeholder="Choose Status"
+            value={status}
             onChange={this.handleStatusChange}
           />
         </div>
