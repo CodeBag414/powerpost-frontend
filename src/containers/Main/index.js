@@ -99,6 +99,10 @@ class Main extends React.Component {
         toastr.success('Success', 'The Post is created successfully!');
       }
     }
+
+    if (this.props.location.pathname === '/user/settings') {
+      this.props.toggleMenuCollapse(true);
+    }
   }
 
   handleMenuToggle() {
