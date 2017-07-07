@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export default styled.div`
-  margin-left: 14px;
+  margin-left: 27px;
 
   .status-chooser-title {
     color: #8C9496;
@@ -9,7 +9,7 @@ export default styled.div`
     font-size: 12px;
     font-weight: bold;
     line-height: 15px;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
   }
 
   .dropdown-wrapper {
