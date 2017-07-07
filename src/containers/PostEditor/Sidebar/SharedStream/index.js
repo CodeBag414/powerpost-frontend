@@ -6,7 +6,7 @@ import Toggle from 'react-toggle';
 
 import Heading from 'components/Heading';
 
-import Wrapper from './Wrapper';
+import SectionWrapper from '../SectionWrapper';
 import InnerWrapper from './InnerWrapper';
 
 class SharedStream extends Component {
@@ -58,7 +58,7 @@ class SharedStream extends Component {
   render() {
     const { isExpanded, sharedStreamEnabled } = this.state;
     return (
-      <Wrapper>
+      <SectionWrapper>
         <Heading
           title="Shared Stream"
           icon="list-alt"
@@ -77,7 +77,7 @@ class SharedStream extends Component {
           </InnerWrapper>
         </SmoothCollapse>
         <div style={{ marginTop: '-16px' }} />
-      </Wrapper>
+      </SectionWrapper>
     );
   }
 }

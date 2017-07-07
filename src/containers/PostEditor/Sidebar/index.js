@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Sidebar = styled.div`
-  width: 312px;
+  width: 258px;
   border-left: 1px solid #DBDFE0;
   .button-flat {
     height: 30px;

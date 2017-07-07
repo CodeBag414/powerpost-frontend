@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  margin-top: 24px;
+  margin-top: 6px;
   margin-bottom: 6px;
   font-size: 12px;
   font-weight: bold;

@@ -304,12 +304,12 @@ class PostEditor extends Component {
                 postSet={postSet}
                 updatePostSet={updatePostSet}
               />
+              <Button onClick={this.handleClickDelete} className="button-flat" flat>Delete Post</Button>
               <StatusChooser
                 postSet={postSet}
                 updatePostSet={updatePostSet}
                 userAccount={userAccount}
               />
-              <Button onClick={this.handleClickDelete} className="button-flat" flat>Delete Post</Button>
               <UserAssignment
                 isFetching={groupUsers.isFetching || postSet.get('isFetching')}
                 postSet={postSet.get('details').toJS()}
