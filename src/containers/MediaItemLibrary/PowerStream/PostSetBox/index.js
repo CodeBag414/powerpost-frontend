@@ -36,6 +36,7 @@ class PostSetBox extends Component {
   render() {
     const { owned, postSet, postSets, streamName, handlePostSet } = this.props;
     const { currentPostSetIndex } = this.state;
+    const mediaItems = postSet.getIn(['data', 'media_items']) || [];
 
     if (postSets.isEmpty()) {
       return (
@@ -57,6 +58,7 @@ class PostSetBox extends Component {
         />
         <PostSetDetail
           owned={owned}
+          mediaItems={mediaItems}
           postSet={postSet.get('processing') ?
             postSets.get(currentPostSetIndex) : postSet.get('data')}
           handlePostSet={handlePostSet}

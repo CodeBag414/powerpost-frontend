@@ -59,7 +59,7 @@ export function setProcessing(processing) {
   return {
     type: SET_PROCESSING,
     processing,
-  }
+  };
 }
 
 /**

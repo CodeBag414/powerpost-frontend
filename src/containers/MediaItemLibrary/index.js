@@ -68,6 +68,10 @@ import {
   makeSelectActiveMediaItem,
 } from './selectors';
 
+import {
+  setProcessing,
+} from 'containers/Main/actions';
+
 const DropDownMenu = styled(DropdownMenu)`
  .dd-menu-items {
     z-index: 3333;
@@ -241,6 +245,7 @@ class Library extends React.Component {
     const { action, ...item } = videoItem;
     const filepicker = require('filepicker-js');
     filepicker.setKey(this.props.filePickerKey);
+    this.props.setProcessing(true);
     if (item.picture) {
       filepicker.storeUrl(`https://process.filestackapi.com/${this.props.filePickerKey}/${item.picture}`, (Blob) => {
         console.log(Blob);
@@ -271,6 +276,7 @@ class Library extends React.Component {
     const { action, ...fileItem } = item;
     const filepicker = require('filepicker-js');
     filepicker.setKey(this.props.filePickerKey);
+    this.props.setProcessing(true);
     if (fileItem.picture) {
       filepicker.storeUrl(`https://process.filestackapi.com/${this.props.filePickerKey}/${fileItem.picture}`, (Blob) => {
         console.log(Blob);
@@ -302,24 +308,48 @@ class Library extends React.Component {
     const filepicker = require('filepicker-js');
     filepicker.setKey(this.props.filePickerKey);
     const picture = linkItem.picture || linkItem.properties.picture;
-    if (picture) {
-      filepicker.storeUrl(`https://process.filestackapi.com/${this.props.filePickerKey}/${linkItem.picture}`, (Blob) => {
-        linkItem.picture = Blob.url;
-        linkItem.picture_key = Blob.key;
+    this.props.setProcessing(true);
+    if (picture && picture !== 'remove') {
+      filepicker.storeUrl(`https://process.filestackapi.com/${this.props.filePickerKey}/${picture}`, (Blob) => {
+        if( action === 'update' ) {
+          linkItem.properties.picture = Blob.url;
+          linkItem.properties.picture_key = Blob.key;
+        } else { 
+          linkItem.picture = Blob.url;
+          linkItem.picture_key = Blob.key;
+        }
         filepicker.storeUrl(
-          `https://process.filestackapi.com/${this.props.filePickerKey}/resize=width:300,height:300,fit:clip/${linkItem.picture}`,
+          `https://process.filestackapi.com/${this.props.filePickerKey}/resize=width:300,height:300,fit:clip/${picture}`,
            (Blob) => {
-             linkItem.thumb_key = Blob.key;
              linkItem.collection_id = this.props.activeCollection.collection_id;
-             linkItem.picture = null;
              linkItem.mediaItemType = 'link';
              if (action === 'create') {
-               this.props.createMediaItem(linkItem);
+                linkItem.thumb_key = Blob.key;
+                linkItem.picture = null;
+                this.props.createMediaItem(linkItem);
              } else if (action === 'update') {
+               console.log(linkItem);
+               linkItem.properties.thumb_key = Blob.key;
+               linkItem.properties.picture = null;
                this.props.updateMediaItem(linkItem);
              }
            });
       });
+    } else if (picture === 'remove') {
+      console.log('in remove');
+       linkItem.collection_id = this.props.activeCollection.collection_id;
+       linkItem.mediaItemType = 'link';
+       if (action === 'create') {
+          linkItem.thumb_key = null;
+          linkItem.picture = null;
+          this.props.createMediaItem(linkItem);
+       } else if (action === 'update') {
+         console.log(linkItem);
+         linkItem.properties.thumb_key = null;
+         linkItem.properties.picture_key = null;
+         linkItem.properties.picture = null;
+         this.props.updateMediaItem(linkItem);
+       }
     } else {
       linkItem.mediaItemType = 'link';
       linkItem.collection_id = this.props.activeCollection.collection_id;
@@ -334,6 +364,7 @@ class Library extends React.Component {
   handleImageEditorSave(imageItem) {
     this.setState({ imageEditorDialog: false, imageItem: {} });
     const { action, ...rest } = imageItem;
+    this.props.setProcessing(true);
     if (action === 'update') {
       this.props.updateMediaItem(rest);
     } else if (action === 'create') {
@@ -455,9 +486,8 @@ class Library extends React.Component {
           </div>
           <Menu style={{ margin: '0 auto', padding: '0', width: '150px' }} selectable>
             <ReactRouterMenuItem caption="Media Library" to={`/account/${this.props.params.account_id}/library`} style={{ textAlign: 'center' }} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
-            <li style={{ position: 'relative', listStyle: 'none', height: '40px' }}><span style={{ backgroundColor: 'white', position: 'absolute', zIndex: '22', lineHeight: '40px', color: '#616669', paddingRight: '10px', fontSize: '12px' }}>Curate</span><HR /></li>
-            <ReactRouterMenuItem caption="RSS Feeds" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/RSS`} style={{ color: '#616669', fontWeight: '700', fontSize: '9px !important' }} />
             <ReactRouterMenuItem caption="Search the Web" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/search`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
+            <ReactRouterMenuItem caption="RSS Feeds" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/RSS`} style={{ color: '#616669', fontWeight: '700', fontSize: '9px !important' }} />            
           </Menu>
         </SidebarWrapper>
         <ContentWrapper>
@@ -497,6 +527,7 @@ export function mapDispatchToProps(dispatch) {
     setActiveMediaItemId: (id) => dispatch(setActiveMediaItemId(id)),
     createPostSet: (postSet) => dispatch(createPostSetRequest(postSet)),
     createBlogItem: (payload) => dispatch(createBlogItemRequest(payload)),
+    setProcessing: (processing) => dispatch(setProcessing(processing)),
   };
 }
 

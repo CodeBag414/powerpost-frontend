@@ -133,6 +133,8 @@ class MediaItemLibrary extends React.Component {
       this.props.openVideoEditor(mediaItem);
     } else if (mediaItem.type === 'document') {
       this.props.openFileEditor(mediaItem);
+    } else {
+      this.props.openFileEditor(mediaItem);
     }
   }
   

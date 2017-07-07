@@ -254,23 +254,33 @@ class Content extends Component {
     this.closeAllDialog();
     const { action, ...linkItem } = item;
     filepicker.setKey(filePickerKey);
+    console.log(linkItem);
     const picture = linkItem.picture || linkItem.properties.picture;
     if (picture) {
-      filepicker.storeUrl(`https://process.filestackapi.com/${filePickerKey}/${linkItem.picture}`, (Blob) => {
-        linkItem.picture = Blob.url;
-        linkItem.picture_key = Blob.key;
+      filepicker.storeUrl(`https://process.filestackapi.com/${filePickerKey}/${picture}`, (Blob) => {
+        if( action === 'update' ) {
+          linkItem.properties.picture = Blob.url;
+          linkItem.properties.picture_key = Blob.key;
+        } else { 
+          linkItem.picture = Blob.url;
+          linkItem.picture_key = Blob.key;
+        }
         filepicker.storeUrl(
-          `https://process.filestackapi.com/${filePickerKey}/resize=width:300,height:300,fit:clip/${linkItem.picture}`,
-          (blob) => {
-            linkItem.thumb_key = blob.key;
-            linkItem.account_id = this.props.accountId;
-            linkItem.mediaItemType = 'link';
-            if (action === 'create') {
-              this.props.createMediaItem(linkItem);
-            } else if (action === 'update') {
-              this.props.updateMediaItem(linkItem);
-            }
-          });
+          `https://process.filestackapi.com/${this.props.filePickerKey}/resize=width:300,height:300,fit:clip/${picture}`,
+           (Blob) => {
+             linkItem.account_id = this.props.accountId;
+             linkItem.mediaItemType = 'link';
+             if (action === 'create') {
+                linkItem.thumb_key = Blob.key;
+                linkItem.picture = null;
+                this.props.createMediaItem(linkItem);
+             } else if (action === 'update') {
+               console.log(linkItem);
+               linkItem.properties.thumb_key = Blob.key;
+               linkItem.properties.picture = null;
+               this.props.updateMediaItem(linkItem);
+             }
+           });
       });
     } else {
       linkItem.mediaItemType = 'link';

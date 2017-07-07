@@ -15,7 +15,7 @@ import MainNavWrapper from './MainNavWrapper';
 
 const ReactRouterMenuItem = withReactRouter(PPMenuItem);
 const ReactRouterMenuItemWithTooltip = PPTooltip(ReactRouterMenuItem);
-
+const PPButtonWithTooltip = PPTooltip(PPButton);
 class Sidebar extends React.Component {
   constructor(props) {
     super(props);
@@ -36,7 +36,7 @@ class Sidebar extends React.Component {
                   <span className="button-title">Create Post</span>
                 </div>
               }
-              style={{ margin: '0 auto', display: 'block', marginTop: '10px', width: '200px' }}
+              style={{ margin: '0 auto', display: 'block', marginTop: '10px', width: '170px' }}
               className="new-post-button"
               onClick={this.props.createPostSet}
               primary
@@ -76,7 +76,7 @@ class Sidebar extends React.Component {
               { this.props.userPermissions && Object.values(this.props.userPermissions).indexOf('settings') > -1 &&
                 <ReactRouterMenuItem caption="Settings" activeClassName={styles.active} isSidebar icon={<i className="fa fa-cog" />} to={`/account/${this.props.accountId}/settings`} />
               }
-              <PPMenuItem onClick={this.props.handleMenuToggle} caption="Collapse Menu" isSidebar style={{ position: 'fixed', bottom: '0', marginBottom: '10px' }} icon={<i className="fa fa-compress" />} />
+              <PPMenuItem onClick={this.props.handleMenuToggle} caption="Collapse Menu" isSidebar style={{ position: 'fixed', bottom: '0', marginBottom: '10px', width: '185px' }} icon={<i className="fa fa-compress" />} />
             </PPMenu>
           </MainNavWrapper>
         }
@@ -89,7 +89,9 @@ class Sidebar extends React.Component {
       <div>
         { this.props.location.pathname.match('/account/') &&
         <CollapsedWrapper isCollapsed={this.props.isMenuCollapsed}>
-          <PPButton
+          <PPButtonWithTooltip
+            tooltip="Create a Post"
+            tooltipPosition="right"
             label={<i className="fa fa-plus" />}
             style={{ margin: '0 auto', display: 'block', marginTop: '10px', width: '40px', minWidth: '0px' }}
             className="new-post-button"

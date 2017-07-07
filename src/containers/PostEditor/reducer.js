@@ -46,6 +46,8 @@ import {
   SET_WORDPRESS_POST_REQUEST,
   CLEAR_MEDIA_ITEM,
   GET_MEDIA_ITEM_SUCCESS,
+  CLEAR_URL_CONTENT,
+  VIDEO_PROCESSING_DONE,
 } from './constants';
 
 const initialState = fromJS({
@@ -127,6 +129,9 @@ function boardReducer(state = initialState, action) {
           [`${action.section}-error`]: null,
           details: {},
         }));
+    case CLEAR_URL_CONTENT:
+      return state
+        .set('urlContent', {});
     case FETCH_POST_SET_SUCCESS:
       return state
         .set('postSet', fromJS({
@@ -196,6 +201,12 @@ function boardReducer(state = initialState, action) {
         .updateIn(['postSet', 'details', 'media_items'], (mediaItems) => mediaItems.set(0, fromJS(action.mediaItems[0])))
         .updateIn(['postSet', 'details', 'media_item_ids'], (mediaItemIds) => mediaItemIds.set(0, action.mediaItems[0].media_item_id))
         .set('newMediaItem', fromJS(action.mediaItems[0]));
+    case VIDEO_PROCESSING_DONE:
+      return state
+        .updateIn(['postSet', 'details'], (postSetDetails) => postSetDetails.set('post_type', action.mediaItem.type))
+        .updateIn(['postSet', 'details', 'media_items'], (mediaItems) => mediaItems.set(0, fromJS(action.mediaItem)))
+        .updateIn(['postSet', 'details', 'media_item_ids'], (mediaItemIds) => mediaItemIds.set(0, action.mediaItem.media_item_id))
+        .set('newMediaItem', fromJS(action.mediaItem));
     case CREATE_MEDIA_ITEM_ERROR:
     case CLEAR_MEDIA_ITEM:
       return state

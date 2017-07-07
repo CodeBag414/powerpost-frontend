@@ -226,30 +226,32 @@ export function* createMediaItem(action) {
       },
     };
   }
-  yield put(setProcessing(true));
 
   if (url !== '') {
     const res = yield call(postData, url, data);
     if (res.data.result === 'success') {
-      // if (res.data.media_items[0].status === '3') {
-      //  const id = res.data.media_items[0].media_item_id;
-      //  yield put({ type: VIDEO_PROCESSING, id });
-      // } else {
-      const mediaItems = res.data.media_items;
-      yield put({ type: CREATE_MEDIA_ITEM_SUCCESS, mediaItems });
-      yield put(setProcessing(false));
-      if (create) {
-        const postSet = {
-          account_id: mediaItems[0].account_id,
-          message: '',
-          type: 'text',
-          status: '6',
-          title: '',
-          media_item_ids: [mediaItems[0].media_item_id],
-        };
-        yield put(createPostSetRequest(postSet));
+      if (res.data.media_items[0].status === '3') {
+        yield put(setProcessing(true));
+        const mediaItems = res.data.media_items;
+        const id = res.data.media_items[0].media_item_id;
+        yield put({ type: CREATE_MEDIA_ITEM_SUCCESS, mediaItems });
+        yield put({ type: VIDEO_PROCESSING, id });
+      } else {
+        const mediaItems = res.data.media_items;
+        yield put({ type: CREATE_MEDIA_ITEM_SUCCESS, mediaItems });
+        yield put(setProcessing(false));
+        if (create) {
+          const postSet = {
+            account_id: mediaItems[0].account_id,
+            message: '',
+            type: 'text',
+            status: '6',
+            title: '',
+            media_item_ids: [mediaItems[0].media_item_id],
+          };
+          yield put(createPostSetRequest(postSet));
+        }
       }
-      // }
     }
   }
 }
@@ -265,14 +267,15 @@ export function* pollData(action) {
       if (res.data.media_item.status === '1') {
         const mediaItem = res.data.media_item;
         processingItem = false;
+        yield put(setProcessing(false));
         yield put({ type: VIDEO_PROCESSING_DONE, mediaItem });
-        yield put({ type: SET_PROCESSING_ITEM, processingItem });
+       // yield put({ type: SET_PROCESSING_ITEM, processingItem });
       } else if (res.data.media_item.status === '3') {
         yield put({ type: VIDEO_PROCESSING, id });
       }
     }
   } catch (error) {
-
+      console.log(error);
   }
 }
 
@@ -447,7 +450,6 @@ export function* createBlogItemWatcher() {
 }
 
 export function* mediaItemSaga() {
-  //const watcherA = yield fork(collectionData);
   const watcherB = yield fork(linkData);
   const watcherC = yield fork(mediaItem);
   const watcherD = yield fork(searchBing);
@@ -464,8 +466,6 @@ export function* mediaItemSaga() {
   const watcherO = yield fork(createBlogItemWatcher);
 
   yield take(LOCATION_CHANGE);
-
-  //yield cancel(watcherA);
   yield cancel(watcherB);
   yield cancel(watcherC);
   yield cancel(watcherD);

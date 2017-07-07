@@ -59,6 +59,7 @@ const ImageContainer = styled.div`
   height: calc(252px - 48px + 25px);
   text-align: center;
   line-height: 229px;
+  cursor: pointer;
 `;
 
 const ActionBar = styled.div`
@@ -79,8 +80,8 @@ const MediaItem = (props) => {
   const mediaType = props.mediaItem.type;
   const creationTime = props.mediaItem.creation_time;
   const title = props.mediaItem.properties.title || props.mediaItem.properties.filename || props.mediaItem.properties.description;
-  let icon = 'photo';
-  let fa = 'fa-picture-o';
+  let icon = 'description';
+  let fa = 'fa-file-text';
   if (props.mediaItem.type === 'link') {
     fa = 'fa-link';
     icon = 'link';
@@ -90,6 +91,9 @@ const MediaItem = (props) => {
     if (props.mediaItem.status === '3') {
       coverImage = false;
     }
+  } else if (props.mediaItem.type === 'image') {
+    fa = 'fa-picture-o';
+    icon = 'photo';
   } else if (props.mediaItem.type === 'blog' || props.mediaItem.type === 'document') {
     fa = 'fa-file-text';
     icon = 'description';
@@ -103,7 +107,7 @@ const MediaItem = (props) => {
   }
   return (
     <Wrapper>
-      <ImageContainer>
+      <ImageContainer onClick={() => props.openPreview(props.mediaItem)}>
         { coverImage || coverImage === '' ? (<CoverImage src={coverImage} />) : (<IconPlaceholder className={`fa ${fa}`} />) }
       </ImageContainer>
       <Footer>

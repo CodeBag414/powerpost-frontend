@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import styled from 'styled-components';
 
-import MediaItemPreview from 'components/MediaItemPreview';
+import Preview from 'components/Preview';
 
 import Button from 'elements/atm.Button';
 
@@ -45,33 +45,41 @@ const Message = styled.div`
 const PostSetDetail = ({
   owned,
   postSet,
+  mediaItems,
   handlePostSet,
-}) => (
-  <Wrapper>
-    <Content>
-      <TitleRow>
-        <Title>
-          { postSet.get('title') }
-        </Title>
-        <Button
-          primary
-          onClick={() => handlePostSet(owned, postSet)}
-        >
-          { owned ? 'Remove from Stream' : 'Add to Posts' }
-        </Button>
-      </TitleRow>
-      <UserAndTime>
-        created by { postSet.getIn(['user', 'display_name']) }
-      </UserAndTime>
-      <Message>
-        { postSet.get('message') }
-      </Message>
-      <MediaItemPreview
-        mediaItems={postSet.get('media_items')}
-      />
-    </Content>
-  </Wrapper>
-);
+}) => {
+  let item;
+  if (mediaItems.length === 0) {
+    item = {type: 'empty'};
+  } else {
+    item = mediaItems.toJS()[0];
+  }
+  return (
+    <Wrapper>
+      <Content>
+        <TitleRow>
+          <Title>
+            { postSet.get('title') }
+          </Title>
+          <Button
+            primary
+            onClick={() => handlePostSet(owned, postSet)}
+          >
+            { owned ? 'Remove from Stream' : 'Add to Posts' }
+          </Button>
+        </TitleRow>
+        <UserAndTime>
+          created by { postSet.getIn(['user', 'display_name']) }
+        </UserAndTime>
+        <Message>
+          { postSet.get('message') }
+        </Message>
+        <Preview
+          item={item}
+        />
+      </Content>
+    </Wrapper>);
+};
 
 PostSetDetail.propTypes = {
   owned: PropTypes.bool,

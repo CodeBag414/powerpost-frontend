@@ -59,7 +59,7 @@ class PublicPage extends Component {
         accountDescription: postSet.getIn(['details', 'account', 'properties', 'description']),
         creationTime,
         message: postSet.getIn(['details', 'message']),
-        mediaItems: postSet.getIn(['details', 'media_items']),
+        mediaItems: postSet.getIn(['details', 'media_items']) || [],
       });
     }
   }
@@ -70,7 +70,6 @@ class PublicPage extends Component {
       accountDescription, creationTime, message,
       mediaItems,
     } = this.state;
-
     return (
       <Wrapper>
         <div className="header"><a href="https://www.powerpost.digital"><img role="presentation" src={logoImg} /></a></div>

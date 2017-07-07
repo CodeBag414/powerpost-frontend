@@ -141,10 +141,10 @@ function mediaLibraryReducer(state = initialState, action) {
         .set('searchFilter', action.searchFilter);
     case CREATE_MEDIA_ITEM_SUCCESS:
       return state
-        .update('mediaItems', (mediaItems) => mediaItems.concat(action.mediaItems));
+        .update('mediaItems', (mediaItems) => mediaItems.concat(action.mediaItems[0]));
     case VIDEO_PROCESSING_DONE:
       return state
-        .update('mediaItems', (mediaItems) => mediaItems.concat(action.mediaItem));
+        .set('mediaItems', updateObjectInArrayForVideo(state.get('mediaItems'), action));
     case DELETE_MEDIA_ITEM_SUCCESS:
       return state
         .set('mediaItems', state.get('mediaItems').filter((o) => o.media_item_id !== action.id));
@@ -231,6 +231,21 @@ function updateObjectInArray(array, action) {
     return {
       ...item,
       ...action.mediaItems[0],
+    };
+  });
+}
+
+function updateObjectInArrayForVideo(array, action) {
+  return array.map((item, index) => {
+    if (item.media_item_id !== action.mediaItem.media_item_id) {
+            // This isn't the item we care about - keep it as-is
+      return item;
+    }
+
+        // Otherwise, this is the one we want - return an updated value
+    return {
+      ...item,
+      ...action.mediaItem,
     };
   });
 }

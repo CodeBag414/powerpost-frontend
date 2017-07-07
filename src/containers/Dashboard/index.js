@@ -21,6 +21,7 @@ import {
 import {
   makeSelectUser,
   makeSelectSharedAccounts,
+  makeSelectUserAccount,
 } from 'containers/App/selectors';
 import {
   makeSelectCurrentAccount,
@@ -68,9 +69,9 @@ const Dashboard = (props) => {
         <row>
           <div className="col-md-7">
             <Pane>
-              <h3 className="paneTitle"><i className="fa fa-bolt"></i>My Brands</h3>
+              <h3 className="paneTitle">My Brands</h3>
               <div className="paneContent">
-                <p>Easily jump into a brand to manage its posts.</p>
+                <p>Choose a brand to get started.</p>
                 <div style={{ padding: '10px 0' }}>
                   {
                     accountType === '2' || accountType === '3' || accountType === '4' || accountType === '6' || accountType === '7'
@@ -85,13 +86,14 @@ const Dashboard = (props) => {
 
           <div className="col-md-5">
             <Pane>
-              <h3 className="paneTitle"><i className="fa fa-bolt"></i>My User Settings</h3>
+              <h3 className="paneTitle">My User Information</h3>
               <div className="paneContent">
                 <div className="profileButton">
-                  <p>Go here to manage all of your user info.</p>
+                  <p>Click here to manage your information.</p>
                   <ReactRouterButton
                     className="setting"
-                    label="Go to Settings"
+                    icon={<i className="fa fa-cog" />}
+                    label="Settings"
                     primary
                     to={'/user/settings'}
                   />
@@ -137,7 +139,7 @@ Dashboard.propTypes = {
 
 const mapStateToProps = createStructuredSelector({
   user: makeSelectUser(),
-  userOwnAccount: makeSelectCurrentAccount(),
+  userOwnAccount: makeSelectUserAccount(),
   brands: makeSelectSharedAccounts(),
 });
 
