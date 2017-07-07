@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 export default styled.div`
+  margin-top: 23px;
   position: relative;
-  margin:  25px 0 40px 30px;
 
   .assignee-wrapper {
     display: flex;
@@ -11,10 +11,11 @@ export default styled.div`
   .right-box {
     display: inline-block;
     margin-left: 14px;
-    color: #888888;
+    color: #8C9496;
     .assigned-to {
-      font-size: 1.2rem;
-      line-height: 1.5rem;
+      font-size: 12px;
+      font-weight: bold;
+      line-height: 15px;
     }
     .name {
       margin-top: 2px;

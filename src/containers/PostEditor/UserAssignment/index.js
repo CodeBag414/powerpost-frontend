@@ -12,7 +12,6 @@ import Wrapper from './Wrapper';
 
 class UserAssignment extends Component {
   static propTypes = {
-    isFetching: PropTypes.bool,
     postSet: PropTypes.object,
     assignee: PropTypes.object,
     users: PropTypes.array,

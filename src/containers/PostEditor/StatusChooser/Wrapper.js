@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export default styled.div`
-  margin: 16px 0 0 24px;
+  margin-left: 14px;
 
   .status-chooser-title {
     color: #8C9496;
@@ -13,6 +13,7 @@ export default styled.div`
   }
 
   .dropdown-wrapper {
-    margin-right: 88px;
+    margin-right: 60px;
+    width: 200px;
   }
 `;

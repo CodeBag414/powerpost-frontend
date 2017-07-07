@@ -51,14 +51,11 @@ import {
 import Button from 'elements/atm.Button';
 import DeletePostSetDialog from 'components/DeletePostSetDialog';
 import Loading from 'components/Loading';
-import withReactRouter from 'elements/hoc.withReactRouter';
 
 import Wrapper from './Wrapper';
 import GeneralInfo from './GeneralInfo';
 import TabLink from './TabLink';
 import Sidebar from './Sidebar';
-import UserAssignment from './Sidebar/UserAssignment';
-import StatusChooser from './Sidebar/StatusChooser';
 import Tags from './Sidebar/Tags';
 import WordpressSettings from './Sidebar/WordpressSettings';
 import ChannelsPreview from './Sidebar/ChannelsPreview';
@@ -67,8 +64,6 @@ import SharedStream from './Sidebar/SharedStream';
 import Content from './Content';
 import Channels from './Channels';
 import TabWrapper from './TabWrapper';
-
-const ButtonLink = withReactRouter(Button);
 
 class PostEditor extends Component {
   static propTypes = {
@@ -235,7 +230,7 @@ class PostEditor extends Component {
     const generalInfo = (
       <GeneralInfo
         user={user}
-        postSet={postSet.get('details').toJS()}
+        postSet={postSet}
         postTitle={postTitle}
         location={location}
         handleTitleChange={this.handleTitleChange}
@@ -244,6 +239,9 @@ class PostEditor extends Component {
         handleTitleKeyDown={this.handleTitleKeyDown}
         modal={modal}
         goBack={goBack}
+        updatePostSet={updatePostSet}
+        userAccount={userAccount}
+        groupUsers={groupUsers}
       />
     );
     return (
@@ -305,18 +303,6 @@ class PostEditor extends Component {
                 updatePostSet={updatePostSet}
               />
               <Button onClick={this.handleClickDelete} className="button-flat" flat>Delete Post</Button>
-              <StatusChooser
-                postSet={postSet}
-                updatePostSet={updatePostSet}
-                userAccount={userAccount}
-              />
-              <UserAssignment
-                isFetching={groupUsers.isFetching || postSet.get('isFetching')}
-                postSet={postSet.get('details').toJS()}
-                assignee={postSet.getIn(['details', 'user_assignments', 0])}
-                users={groupUsers.details ? groupUsers.details.groups_users : []}
-                updatePostSet={updatePostSet}
-              />
             </Sidebar>
           </div>
         </div>
