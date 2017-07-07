@@ -28,15 +28,16 @@ const Wrapper = styled.div`
   display: flex;
   color: #888888;
   padding-bottom: 14px;
-  line-height: 25px;
+  line-height: 13px;
   ${borderStyle}
   ${expandStyle}
   .title {
-    font-size: 16px;
+    font-size: 13px;
+    line-height: 15px;
   }
   .icon {
-    font-size: 20px;
-    line-height: 25px;
+    font-size: 16px;
+    line-height: 16px;
     margin-right: 13px;
   }
   .expand-icon {

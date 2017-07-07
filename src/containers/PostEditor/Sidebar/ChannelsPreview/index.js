@@ -6,7 +6,7 @@ import SmoothCollapse from 'react-smooth-collapse';
 import SocialIcon from 'elements/atm.SocialIcon';
 import Heading from 'components/Heading';
 
-import Wrapper from './Wrapper';
+import SectionWrapper from '../SectionWrapper';
 
 class ChannelsPreview extends Component {
 
@@ -51,7 +51,7 @@ class ChannelsPreview extends Component {
   render() {
     const { isExpanded } = this.state;
     return (
-      <Wrapper>
+      <SectionWrapper>
         <Heading
           title="Channels"
           icon="send-o"
@@ -65,7 +65,7 @@ class ChannelsPreview extends Component {
           </div>
         </SmoothCollapse>
         <div style={{ marginTop: '-16px' }} />
-      </Wrapper>
+      </SectionWrapper>
     );
   }
 }

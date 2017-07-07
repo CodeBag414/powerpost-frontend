@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  padding: ${({ modal }) => modal ? '20px 40px' : '0 0 20px'};
+  padding: ${({ modal }) => modal ? '20px 25px 20px 40px' : '0 0 20px'};
   border-bottom: ${({ modal }) => modal ? '1px solid #DBDFE0' : 'none'};
   display: flex;
   justify-content: space-between;

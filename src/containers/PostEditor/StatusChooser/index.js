@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import moment from 'moment';
 
 import { toastr } from 'lib/react-redux-toastr';
 import Dropdown from 'elements/atm.Dropdown';

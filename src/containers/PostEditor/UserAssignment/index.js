@@ -12,7 +12,6 @@ import Wrapper from './Wrapper';
 
 class UserAssignment extends Component {
   static propTypes = {
-    isFetching: PropTypes.bool,
     postSet: PropTypes.object,
     assignee: PropTypes.object,
     users: PropTypes.array,
@@ -68,7 +67,7 @@ class UserAssignment extends Component {
           </div>
         </div>
         { userListVisible &&
-          <Popup top={45}>
+          <Popup top={45} left={-13}>
             <AssignBox
               users={adminsOrEditors}
               assignee={assignee}
