@@ -89,6 +89,7 @@ class Content extends Component {
   constructor(props) {
     super(props);
     const message = !props.postSet.get('details').isEmpty() ? props.postSet.getIn(['details', 'message']) : '';
+    const mediaItems = !props.postSet.get('details').isEmpty() ? props.postSet.getIn(['details', 'media_items']).toJS() : [{}];
     const characterLimit = this.calculateCharacterLimit(message, {}, false);
     this.state = {
       channelIndex: -1,
@@ -101,7 +102,7 @@ class Content extends Component {
       linkEditor: false,
       linkDialog: false,
       mediaItem: {},
-      item: {},
+      item: mediaItems[0] || {},
       urls: [],
     };
   }
