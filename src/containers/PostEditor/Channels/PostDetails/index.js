@@ -51,6 +51,9 @@ function buildPostPreview(postData, postMessage, postTime, connection, mediaItem
     link = mediaItem.properties;
   } else if (type === 'video') {
     video = mediaItem.properties;
+    if (video.source_url && video.source_url.endsWith('avi')) {
+      video.source_url = video.source_720_url;
+    }
   }
 
   switch (connection.channel) {
