@@ -8,7 +8,7 @@ const PLACEHOLDER_STRING = 'Select...';
 
 const DropdownWrapper = styled.div`
   position: relative;
-  font-size: ${(props) => props.small ? '1.2rem' : 'inherit'};
+  font-size: ${(props) => props.small ? '13px' : 'inherit'};
   max-width: 200px;
 `;
 
