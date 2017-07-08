@@ -58,6 +58,14 @@ class Calendar extends React.Component {
     this.loadPostSetsByST(moment());
   }
 
+  componentWillReceiveProps(nextProps) {
+    const nextPostSetId = nextProps.location.hash.startsWith('#postset') ? nextProps.location.hash.split('-')[1] : 0;
+    const postsetId = this.props.location.hash.startsWith('#postset') ? this.props.location.hash.split('-')[1] : 0;
+    if (postsetId && !nextPostSetId) {
+      this.loadPostSetsByST(moment());
+    }
+  }
+
   onDeletePostSet = () => {
     const { deletePostSet, updateBunchPost } = this.props;
     const { postSetToDelete } = this.state;

@@ -17,30 +17,30 @@ const Wrapper = styled.a`
     line-height: 17px;
     margin-left: 10px;
     margin-right: 10px;
-    
+
     &:hover, &:active {
         color: #4A4A4A;
         text-decoration: none;
     }
 `;
 
-const Link = ({ active, children, onClick }) => {
-  return (
-    <Wrapper active={active} href="#"
-       onClick={e => {
-         e.preventDefault();
-         onClick();
-       }}
-    >
-      {children}
-    </Wrapper>
-  );
-};
+const Link = ({ active, children, onClick }) => (
+  <Wrapper
+    active={active}
+    href="#"
+    onClick={(e) => {
+      e.preventDefault();
+      onClick();
+    }}
+  >
+    {children}
+  </Wrapper>
+);
 
 Link.propTypes = {
   active: PropTypes.bool.isRequired,
   children: PropTypes.node.isRequired,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
 };
 
 export default Link;
