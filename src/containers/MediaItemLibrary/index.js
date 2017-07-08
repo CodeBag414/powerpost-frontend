@@ -159,10 +159,10 @@ class Library extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // not sure what this is for?
-    //if (this.props.mediaItems.length !== nextProps.mediaItems.length) {
-    //  browserHistory.push(this.props.location.pathname);
-    //}
+    // If Blog post is created successfully, then the modal view for blog editor will be hidden
+    if (this.props.mediaItems.length !== nextProps.mediaItems.length) {
+      browserHistory.push(this.props.location.pathname);
+    }
   }
 
   openAddLink() {
@@ -248,7 +248,6 @@ class Library extends React.Component {
     this.props.setProcessing(true);
     if (item.picture) {
       filepicker.storeUrl(`https://process.filestackapi.com/${this.props.filePickerKey}/${item.picture}`, (Blob) => {
-        console.log(Blob);
         item.picture = Blob.url;
         item.picture_key = Blob.key;
         filepicker.storeUrl(
@@ -279,7 +278,6 @@ class Library extends React.Component {
     this.props.setProcessing(true);
     if (fileItem.picture) {
       filepicker.storeUrl(`https://process.filestackapi.com/${this.props.filePickerKey}/${fileItem.picture}`, (Blob) => {
-        console.log(Blob);
         fileItem.picture = Blob.url;
         fileItem.picture_key = Blob.key;
         filepicker.storeUrl(
@@ -311,10 +309,10 @@ class Library extends React.Component {
     this.props.setProcessing(true);
     if (picture && picture !== 'remove') {
       filepicker.storeUrl(`https://process.filestackapi.com/${this.props.filePickerKey}/${picture}`, (Blob) => {
-        if( action === 'update' ) {
+        if (action === 'update') {
           linkItem.properties.picture = Blob.url;
           linkItem.properties.picture_key = Blob.key;
-        } else { 
+        } else {
           linkItem.picture = Blob.url;
           linkItem.picture_key = Blob.key;
         }
@@ -324,11 +322,10 @@ class Library extends React.Component {
              linkItem.collection_id = this.props.activeCollection.collection_id;
              linkItem.mediaItemType = 'link';
              if (action === 'create') {
-                linkItem.thumb_key = Blob.key;
-                linkItem.picture = null;
-                this.props.createMediaItem(linkItem);
+               linkItem.thumb_key = Blob.key;
+               linkItem.picture = null;
+               this.props.createMediaItem(linkItem);
              } else if (action === 'update') {
-               console.log(linkItem);
                linkItem.properties.thumb_key = Blob.key;
                linkItem.properties.picture = null;
                this.props.updateMediaItem(linkItem);
@@ -336,15 +333,13 @@ class Library extends React.Component {
            });
       });
     } else if (picture === 'remove') {
-      console.log('in remove');
-       linkItem.collection_id = this.props.activeCollection.collection_id;
-       linkItem.mediaItemType = 'link';
-       if (action === 'create') {
-          linkItem.thumb_key = null;
-          linkItem.picture = null;
-          this.props.createMediaItem(linkItem);
+      linkItem.collection_id = this.props.activeCollection.collection_id;
+      linkItem.mediaItemType = 'link';
+      if (action === 'create') {
+         linkItem.thumb_key = null;
+         linkItem.picture = null;
+         this.props.createMediaItem(linkItem);
        } else if (action === 'update') {
-         console.log(linkItem);
          linkItem.properties.thumb_key = null;
          linkItem.properties.picture_key = null;
          linkItem.properties.picture = null;
@@ -381,9 +376,7 @@ class Library extends React.Component {
   }
 
   handleAddLinkSubmit = () => {
-    console.log('in handle add link submit');
     if (this.state.addLinkValue === '') {
-      console.log('no link value, abort');
       this.setState({ addLinkValueError: 'A link URL is required' });
       return;
     }
@@ -411,7 +404,6 @@ class Library extends React.Component {
               ...mediaItem[0],
             },
           };
-          console.log(mediaItem);
           this.openImageEditor(imageItem);
         });
     } else if (mediaItem[0].mimetype.match('video')) {
@@ -422,10 +414,8 @@ class Library extends React.Component {
           ...mediaItem[0],
         },
       };
-      console.log(mediaItem);
       this.openVideoEditor(videoItem);
     } else {
-      console.log(mediaItem);
       mediaItem[0].collection_id = this.props.activeCollection.collection_id;
       const fileItem = {
         mediaItemType: 'file',
@@ -487,7 +477,7 @@ class Library extends React.Component {
           <Menu style={{ margin: '0 auto', padding: '0', width: '150px' }} selectable>
             <ReactRouterMenuItem caption="Media Library" to={`/account/${this.props.params.account_id}/library`} style={{ textAlign: 'center' }} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
             <ReactRouterMenuItem caption="Search the Web" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/search`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
-            <ReactRouterMenuItem caption="RSS Feeds" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/RSS`} style={{ color: '#616669', fontWeight: '700', fontSize: '9px !important' }} />            
+            <ReactRouterMenuItem caption="RSS Feeds" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/RSS`} style={{ color: '#616669', fontWeight: '700', fontSize: '9px !important' }} />
           </Menu>
         </SidebarWrapper>
         <ContentWrapper>
