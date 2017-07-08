@@ -14,6 +14,6 @@ export default styled.div`
 
   .dropdown-wrapper {
     margin-right: 60px;
-    width: 200px;
+    width: 140px;
   }
 `;
