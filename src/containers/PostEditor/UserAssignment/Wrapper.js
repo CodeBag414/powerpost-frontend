@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 
 export default styled.div`
-  margin-top: 18px;
+  margin-top: 17px;
   position: relative;
 
   .assignee-wrapper {
     display: flex;
+    align-items: flex-end;
     cursor: pointer;
   }
   .right-box {
@@ -13,7 +14,7 @@ export default styled.div`
     margin-left: 14px;
     color: #8C9496;
     .assigned-to {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: bold;
       line-height: 15px;
     }

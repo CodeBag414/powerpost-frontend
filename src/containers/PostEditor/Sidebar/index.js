@@ -1,16 +1,23 @@
 import styled from 'styled-components';
 
 const Sidebar = styled.div`
-  width: 258px;
   border-left: 1px solid #DBDFE0;
+  position: absolute;
+  right: ${(props) => props.expanded ? '0' : '-258px'};
+  top: 0;
+  transition: right .25s;
+  width: 258px;
+  height: 100%;
+
   .button-flat {
-    height: 30px;
-    color: #8C9496 !important;
-    font-size: 12px;
-    line-height: 1;
     border: none;
-    margin-top: 10px;
-    margin-left: 10px;
+    color: #8C9496 !important;
+    float: right;
+    font-size: 12px;
+    height: 30px;
+    line-height: 1;
+    margin-top: 14px;
+    margin-right: 10px;
     &:hover {
       background: inherit !important;
     }

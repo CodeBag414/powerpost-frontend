@@ -60,6 +60,7 @@ import Tags from './Sidebar/Tags';
 import WordpressSettings from './Sidebar/WordpressSettings';
 import ChannelsPreview from './Sidebar/ChannelsPreview';
 import SharedStream from './Sidebar/SharedStream';
+import ExpandCollapseButton from './Sidebar/ExpandCollapseButton';
 
 import Content from './Content';
 import Channels from './Channels';
@@ -87,6 +88,7 @@ class PostEditor extends Component {
     location: PropTypes.object,
     modal: PropTypes.bool,
     newMediaItem: ImmutablePropTypes.map,
+    params: PropTypes.object,
     post: ImmutablePropTypes.map,
     postSet: ImmutablePropTypes.map,
     updatePost: PropTypes.func,
@@ -107,6 +109,7 @@ class PostEditor extends Component {
     postTitle: '',
     selectedTab: 'Content',
     showDeletePopup: false,
+    sidebarExpanded: true,
   };
 
   componentWillMount() {
@@ -154,6 +157,10 @@ class PostEditor extends Component {
 
   handleClickDelete = () => {
     this.setState({ showDeletePopup: true });
+  }
+
+  handleSidebarToggle = () => {
+    this.setState({ sidebarExpanded: !this.state.sidebarExpanded });
   }
 
   handleTitleChange = () => {
@@ -257,7 +264,12 @@ class PostEditor extends Component {
                     <span
                       key={tab.name}
                       className={tab.name === selectedTab ? 'active-link' : ''}
-                      onClick={() => this.setState({ selectedTab: tab.name })}
+                      onClick={() => {
+                        this.setState({
+                          selectedTab: tab.name,
+                          sidebarExpanded: !(tab.name === 'Schedule'),
+                        });
+                      }}
                     >
                       <TabLink
                         label={tab.name}
@@ -272,7 +284,7 @@ class PostEditor extends Component {
                 tabs.map((tab) => (tab.name === selectedTab ? tab.component : null))
               }
             </div>
-            <Sidebar>
+            <Sidebar expanded={this.state.sidebarExpanded}>
               <Tags
                 updatePostSet={updatePostSet}
                 postSet={postSet.get('details')}
@@ -303,6 +315,10 @@ class PostEditor extends Component {
                 updatePostSet={updatePostSet}
               />
               <Button onClick={this.handleClickDelete} className="button-flat" flat>Delete Post</Button>
+              <ExpandCollapseButton
+                sidebarExpanded={this.state.sidebarExpanded}
+                onClick={this.handleSidebarToggle}
+              />
             </Sidebar>
           </div>
         </div>
