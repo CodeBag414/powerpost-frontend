@@ -42,14 +42,22 @@ class Channels extends Component {
   }
 
   constructPostMessage = (post) => {
-    const { postSet } = this.props;
+    const { postSet, connections } = this.props;
     let postMessage;
     if (post && post.getIn(['properties', 'edited'])) {
       postMessage = post.get('message');
     } else {
       let channelMessage;
-      if (post && post.get('connection_channel')) {
-        const channelName = `message_${post.get('connection_channel')}`;
+      if (post) {
+        let channelName = '';
+        if (post.get('connection_channel')) {
+          channelName = `message_${post.get('connection_channel')}`;
+        } else if (post.get('connection_id')) {
+          const connection = connections.filter((item) =>
+            item.connection_id === post.get('connection_id'),
+          )[0];
+          channelName = `message_${connection.channel}`;
+        }
         const channelMessages = postSet.getIn(['details', 'properties']).toJS();
         channelMessage = channelMessages[channelName];
       }
