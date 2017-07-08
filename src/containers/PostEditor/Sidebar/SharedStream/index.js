@@ -20,10 +20,11 @@ class SharedStream extends Component {
     super(props);
 
     const postDetails = props.postSet.get('details');
+    const sharedStreamEnabled = postDetails.get('stream_ids').includes(props.accountStreamId);
 
     this.state = {
-      sharedStreamEnabled: postDetails.get('stream_ids').includes(props.accountStreamId),
-      isExpanded: false,
+      sharedStreamEnabled,
+      isExpanded: sharedStreamEnabled,
     };
   }
 

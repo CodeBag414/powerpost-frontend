@@ -15,4 +15,8 @@ export default styled.div`
     font-size: 12px;
     line-height: 15px;
   }
+
+  .react-toggle-screenreader-only {
+    opacity: 0;
+  }
 `;
