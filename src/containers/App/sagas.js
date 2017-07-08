@@ -13,7 +13,7 @@ import { getData, postData, putData, serialize } from 'utils/request';
 import auth from 'utils/auth';
 import { set } from 'utils/localStorage';
 import { makeSelectCurrentAccount } from 'containers/Main/selectors';
-import { makeSelectUser, makeSelectPostSets } from './selectors';
+import { makeSelectUser } from './selectors';
 
 import {
   SENDING_REQUEST,
@@ -87,9 +87,7 @@ import {
   fetchMediaItemsFailure,
   fetchPostSetsSuccess,
   fetchPostSetsFailure,
-  fetchPostSetsRequest,
   fetchPostSetsBySTRequest,
-  fetchPostSetsBySORequest,
 } from './actions';
 
 /**
@@ -753,20 +751,6 @@ function* createPostSetWorker({ postSet, edit }) {
   };
   const response = yield call(postData, requestUrl, requestData);
   if (response.data.status === 'success') {
-    const currentPostSets = yield select(makeSelectPostSets());
-    const action = currentPostSets.get('action');
-    switch (action) {
-      case 'fetchPostSetsRequestByST':
-        yield put(fetchPostSetsBySTRequest());
-        break;
-      case 'fetchPostSetsRequestBySO':
-        yield put(fetchPostSetsBySORequest());
-        break;
-      case 'fetchPostSetsRequest':
-      default:
-        yield put(fetchPostSetsRequest());
-        break;
-    }
     yield put(createPostSetSuccess(response.data.post_set, edit));
   } else {
     console.log(response);
