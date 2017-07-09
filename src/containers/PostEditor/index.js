@@ -51,24 +51,20 @@ import {
 import Button from 'elements/atm.Button';
 import DeletePostSetDialog from 'components/DeletePostSetDialog';
 import Loading from 'components/Loading';
-import withReactRouter from 'elements/hoc.withReactRouter';
 
 import Wrapper from './Wrapper';
 import GeneralInfo from './GeneralInfo';
 import TabLink from './TabLink';
 import Sidebar from './Sidebar';
-import UserAssignment from './Sidebar/UserAssignment';
-import StatusChooser from './Sidebar/StatusChooser';
 import Tags from './Sidebar/Tags';
 import WordpressSettings from './Sidebar/WordpressSettings';
 import ChannelsPreview from './Sidebar/ChannelsPreview';
 import SharedStream from './Sidebar/SharedStream';
+import ExpandCollapseButton from './Sidebar/ExpandCollapseButton';
 
 import Content from './Content';
 import Channels from './Channels';
 import TabWrapper from './TabWrapper';
-
-const ButtonLink = withReactRouter(Button);
 
 class PostEditor extends Component {
   static propTypes = {
@@ -92,6 +88,7 @@ class PostEditor extends Component {
     location: PropTypes.object,
     modal: PropTypes.bool,
     newMediaItem: ImmutablePropTypes.map,
+    params: PropTypes.object,
     post: ImmutablePropTypes.map,
     postSet: ImmutablePropTypes.map,
     updatePost: PropTypes.func,
@@ -112,6 +109,7 @@ class PostEditor extends Component {
     postTitle: '',
     selectedTab: 'Content',
     showDeletePopup: false,
+    sidebarExpanded: true,
   };
 
   componentWillMount() {
@@ -159,6 +157,10 @@ class PostEditor extends Component {
 
   handleClickDelete = () => {
     this.setState({ showDeletePopup: true });
+  }
+
+  handleSidebarToggle = () => {
+    this.setState({ sidebarExpanded: !this.state.sidebarExpanded });
   }
 
   handleTitleChange = () => {
@@ -235,7 +237,7 @@ class PostEditor extends Component {
     const generalInfo = (
       <GeneralInfo
         user={user}
-        postSet={postSet.get('details').toJS()}
+        postSet={postSet}
         postTitle={postTitle}
         location={location}
         handleTitleChange={this.handleTitleChange}
@@ -244,22 +246,29 @@ class PostEditor extends Component {
         handleTitleKeyDown={this.handleTitleKeyDown}
         modal={modal}
         goBack={goBack}
+        updatePostSet={updatePostSet}
+        userAccount={userAccount}
+        groupUsers={groupUsers}
       />
     );
     return (
       <Wrapper modal={modal}>
-        { modal ? generalInfo : null }
+        { generalInfo }
         <div className="content-wrapper">
           <div className="content">
             <div className="main">
-              { modal ? null : generalInfo }
               <TabWrapper>
                 {
                   tabs.map((tab) =>
                     <span
                       key={tab.name}
                       className={tab.name === selectedTab ? 'active-link' : ''}
-                      onClick={() => this.setState({ selectedTab: tab.name })}
+                      onClick={() => {
+                        this.setState({
+                          selectedTab: tab.name,
+                          sidebarExpanded: !(tab.name === 'Schedule'),
+                        });
+                      }}
                     >
                       <TabLink
                         label={tab.name}
@@ -274,7 +283,7 @@ class PostEditor extends Component {
                 tabs.map((tab) => (tab.name === selectedTab ? tab.component : null))
               }
             </div>
-            <Sidebar>
+            <Sidebar expanded={this.state.sidebarExpanded}>
               <Tags
                 updatePostSet={updatePostSet}
                 postSet={postSet.get('details')}
@@ -304,18 +313,10 @@ class PostEditor extends Component {
                 postSet={postSet}
                 updatePostSet={updatePostSet}
               />
-              <StatusChooser
-                postSet={postSet}
-                updatePostSet={updatePostSet}
-                userAccount={userAccount}
-              />
               <Button onClick={this.handleClickDelete} className="button-flat" flat>Delete Post</Button>
-              <UserAssignment
-                isFetching={groupUsers.isFetching || postSet.get('isFetching')}
-                postSet={postSet.get('details').toJS()}
-                assignee={postSet.getIn(['details', 'user_assignments', 0])}
-                users={groupUsers.details ? groupUsers.details.groups_users : []}
-                updatePostSet={updatePostSet}
+              <ExpandCollapseButton
+                sidebarExpanded={this.state.sidebarExpanded}
+                onClick={this.handleSidebarToggle}
               />
             </Sidebar>
           </div>

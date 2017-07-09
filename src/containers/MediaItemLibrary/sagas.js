@@ -180,8 +180,7 @@ export function* createRSSFeed(action) {
 }
 
 export function* updateMediaItem(action) {
-  const { mediaItemType, create, ...item } = action.mediaItem;
-  const accountId = mediaItem.account_id;
+  const { create, ...item } = action.mediaItem;
   const data = {
     payload: item,
   };
@@ -265,17 +264,16 @@ export function* pollData(action) {
     const res = yield call(getData, `/media_api/media_item/${id}`);
     if (res.data.result === 'success') {
       if (res.data.media_item.status === '1') {
-        const mediaItem = res.data.media_item;
         processingItem = false;
         yield put(setProcessing(false));
-        yield put({ type: VIDEO_PROCESSING_DONE, mediaItem });
+        yield put({ type: VIDEO_PROCESSING_DONE, mediaItem: res.data.media_item });
        // yield put({ type: SET_PROCESSING_ITEM, processingItem });
       } else if (res.data.media_item.status === '3') {
         yield put({ type: VIDEO_PROCESSING, id });
       }
     }
   } catch (error) {
-      console.log(error);
+    console.log(error);
   }
 }
 
@@ -351,7 +349,7 @@ export function* updateMedia() {
 }
 
 export function* errorWatcher() {
-  const watcher = yield takeLatest(MEDIA_ERROR, showError);
+  yield takeLatest(MEDIA_ERROR, showError);
 }
 
 export function* fetchStreamPostSetsWorker({ id, payload }) {

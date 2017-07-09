@@ -428,7 +428,7 @@ export class WordpressSettings extends Component {
           isExpanded={isExpanded}
         />
         <SmoothCollapse expanded={isExpanded}>
-          <div style={{ paddingBottom: '200px' }}>
+          <div style={{ paddingBottom: '200px', paddingTop: '10px' }}>
             <LabelWrapper>Destination</LabelWrapper>
             <Dropdown
               value={destination}

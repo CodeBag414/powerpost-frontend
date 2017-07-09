@@ -2,7 +2,6 @@
  * The reducer takes care of state changes in our app through actions
  */
 import { fromJS } from 'immutable';
-import { combineReducers } from 'redux';
 
 import {
   FETCH_POST_SET_REQUEST,
@@ -25,16 +24,11 @@ import {
   FETCH_RSS_ITEMS_SUCCESS,
   SET_VISIBILITY_FILTER,
   SHOW_ALL,
-  SHOW_BLOGS,
-  SHOW_LINKS,
-  SHOW_IMAGES,
-  SHOW_VIDEOS,
   SET_SEARCH_FILTER,
   SET_SORT_ORDER,
   CREATE_MEDIA_ITEM_SUCCESS,
   DELETE_MEDIA_ITEM_SUCCESS,
   VIDEO_PROCESSING_DONE,
-  SET_PROCESSING_ITEM,
   UPDATE_MEDIA_ITEM_SUCCESS,
   CREATE_RSS_FEED_SUCCESS,
   SET_ACTIVE_MEDIA_ITEM_ID,
@@ -221,7 +215,7 @@ function mediaLibraryReducer(state = initialState, action) {
 export default mediaLibraryReducer;
 
 function updateObjectInArray(array, action) {
-  return array.map((item, index) => {
+  return array.map((item) => {
     if (item.media_item_id !== action.mediaItems[0].media_item_id) {
             // This isn't the item we care about - keep it as-is
       return item;
@@ -236,7 +230,7 @@ function updateObjectInArray(array, action) {
 }
 
 function updateObjectInArrayForVideo(array, action) {
-  return array.map((item, index) => {
+  return array.map((item) => {
     if (item.media_item_id !== action.mediaItem.media_item_id) {
             // This isn't the item we care about - keep it as-is
       return item;
@@ -250,10 +244,11 @@ function updateObjectInArrayForVideo(array, action) {
   });
 }
 
-function deleteObjectInArray(array, action) {
+/* function deleteObjectInArray(array, action) {
   return array.map((item, index) => {
     if (item.media_item_id !== action.id) {
       return item;
     }
   });
 }
+*/

@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   background: white;
   z-index: 10;
   top: ${(props) => props.top}px;
-  left: -10px;
+  left: ${(props) => props.left}px;
   -webkit-filter: drop-shadow(0 1px 5px rgba(60, 92, 129, 0.42));
   filter        : drop-shadow(0 1px 5px rgba(60, 92, 129, 0.42));
   -ms-filter    : "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=1, Color='#383C5C81')";
@@ -33,12 +33,14 @@ const Wrapper = styled.div`
 class Popup extends Component {
   static propTypes = {
     top: PropTypes.number,
+    left: PropTypes.number,
     children: PropTypes.node,
     onOutsideClick: PropTypes.func,
   }
 
   static defaultProps = {
     top: 30,
+    left: -10,
     onOutsideClick: noop,
   }
 
@@ -47,10 +49,10 @@ class Popup extends Component {
   }
 
   render() {
-    const { top } = this.props;
+    const { top, left } = this.props;
 
     return (
-      <Wrapper top={top}>
+      <Wrapper top={top} left={left}>
         {this.props.children}
       </Wrapper>
     );

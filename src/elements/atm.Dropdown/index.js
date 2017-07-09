@@ -8,7 +8,7 @@ const PLACEHOLDER_STRING = 'Select...';
 
 const DropdownWrapper = styled.div`
   position: relative;
-  font-size: ${(props) => props.small ? '1.2rem' : 'inherit'};
+  font-size: ${(props) => props.small ? '13px' : 'inherit'};
   max-width: 200px;
 `;
 
@@ -20,7 +20,7 @@ const DropdownLabel = styled.div`
 const DropdownControl = styled.div`
   position: relative;
   overflow: hidden;
-  height: 36px;
+  height: ${(props) => props.small ? 33 : 36}px;
   background-color: white;
   border: 1px solid;
   border-color: ${(props) => props.isOpen ? '#E52466' : '#C8CED0'};

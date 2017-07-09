@@ -14,7 +14,7 @@ function ChannelsRow({ channelIndex, handleChannelClick }) {
         onClick={() => handleChannelClick(-1)}
       />
       <div className="channels">
-        <span className="channel-heading">Modify</span>
+        <span className="channel-heading">Customize</span>
         { CHANNELS.map((channel, index) => {
           const color = (channelIndex === index) ? CHANNELS[channelIndex].color : undefined;
           return (

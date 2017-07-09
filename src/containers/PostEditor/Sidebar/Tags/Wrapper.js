@@ -13,8 +13,7 @@ function expandedStyle({ expanded }) {
 }
 
 export default styled.div`
-  padding: 29px 24px;
-  border-top: 1px solid #DBDFE0;
+  padding: 24px 24px 10px;
   ${expandedStyle}
   .description {
     margin-bottom: 6px;

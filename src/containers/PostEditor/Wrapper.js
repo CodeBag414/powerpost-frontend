@@ -25,17 +25,19 @@ const Wrapper = styled.div`
   }
   .content-wrapper {
     height: 100%;
+    overflow-x: hidden;
     overflow-y: auto;
-    .content {
-      display: flex;
-      min-height: 100%;
-    }
+  }
+  .content {
+    position: relative;
+    min-height: 100%;
   }
   .main {
-    padding: 40px;
     flex: 1;
+    margin-right: 258px;
     overflow-x: auto;
     overflow-y: hidden;
+    padding: 40px;
   }
 `;
 

@@ -1,18 +1,19 @@
 import styled from 'styled-components';
 
 export default styled.div`
-  margin: 16px 0 0 24px;
+  margin-left: 60px;
 
   .status-chooser-title {
     color: #8C9496;
     font-family: Lato;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: bold;
     line-height: 15px;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
   }
 
   .dropdown-wrapper {
-    margin-right: 88px;
+    margin-right: 60px;
+    width: 140px;
   }
 `;

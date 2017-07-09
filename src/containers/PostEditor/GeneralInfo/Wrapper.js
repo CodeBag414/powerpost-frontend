@@ -1,8 +1,10 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  padding: ${({ modal }) => modal ? '20px 40px' : '0 0 20px'};
-  border-bottom: ${({ modal }) => modal ? '1px solid #DBDFE0' : 'none'};
+  /*padding: ${({ modal }) => modal ? '20px 25px 20px 40px' : '0 0 20px'};*/
+  padding: 20px 25px 20px 40px;
+  /*border-bottom: ${({ modal }) => modal ? '1px solid #DBDFE0' : 'none'};*/
+  border-bottom: 1px solid #DBDFE0;
   display: flex;
   justify-content: space-between;
   align-items: center;

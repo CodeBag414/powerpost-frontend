@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 
-export default styled.div`
-  padding: 29px 24px;
-  border-top: 1px solid #DBDFE0;
+import SectionWrapper from '../SectionWrapper';
+
+const Wrapper = styled(SectionWrapper)`
+  border-bottom: 1px solid #DBDFE0;
 `;
+
+export default Wrapper;

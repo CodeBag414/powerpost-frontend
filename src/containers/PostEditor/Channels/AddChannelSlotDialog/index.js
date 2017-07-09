@@ -38,7 +38,7 @@ class AddChannelSlotDialog extends Component {
   componentWillReceiveProps = (nextProps) => {
     this.setState({
       channels: nextProps.connections
-        .filter((connection) => connection.channel !== 'wordpress')
+        .filter((connection) => connection.channel !== 'wordpress' && connection.status === '1')
         .map((connection) => ({
           checked: false,
           connection: fromJS(connection),
@@ -84,15 +84,20 @@ class AddChannelSlotDialog extends Component {
     const { channels, isPostUponReady, scheduleTimes } = this.state;
     const { submitPosts, postSet, handleDialogToggle } = this.props;
     const posts = [];
+    const globalMessage = postSet.getIn(['details', 'message']);
+    const channelMessages = postSet.getIn(['details', 'properties']).toJS();
     channels.forEach((channel) => {
       if (!channel.checked) return;
+      const channelName = `message_${channel.connection.get('channel')}`;
+      const channelMessage = channelMessages[channelName];
+
       if (isPostUponReady) {
         posts.push({
           connection_id: channel.connection.get('connection_id'),
           status: '5',
           schedule_time: 0,
           post_set_id: postSet.getIn(['details', 'post_set_id']),
-          message: postSet.getIn(['details', 'message']),
+          message: channelMessage || globalMessage,
         });
       } else {
         scheduleTimes.forEach((scheduleTime) => {
@@ -101,7 +106,7 @@ class AddChannelSlotDialog extends Component {
             status: '1',
             schedule_time: scheduleTime / 1000,
             post_set_id: postSet.getIn(['details', 'post_set_id']),
-            message: postSet.getIn(['details', 'message']),
+            message: channelMessage || globalMessage,
           });
         });
       }

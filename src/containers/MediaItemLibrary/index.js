@@ -28,6 +28,14 @@ import withReactRouter from 'elements/hoc.withReactRouter';
 
 import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 
+import {
+  setProcessing,
+} from 'containers/Main/actions';
+
+import {
+  makeSelectIsProcessing,
+} from 'containers/Main/selectors';
+
 import Wrapper from './Wrapper';
 import BlogEditor from './BlogEditor';
 import LinkDialog from './LinkDialog';
@@ -68,14 +76,6 @@ import {
   makeSelectActiveMediaItem,
 } from './selectors';
 
-import {
-  setProcessing,
-} from 'containers/Main/actions';
-
-import {
-  makeSelectIsProcessing,
-} from 'containers/Main/selectors';
-
 const DropDownMenu = styled(DropdownMenu)`
  .dd-menu-items {
     z-index: 3333;
@@ -91,6 +91,7 @@ const DropDownMenu = styled(DropdownMenu)`
   }
 `;
 
+/*
 const HR = styled.hr`
   margin: 0;
   position: absolute;
@@ -102,6 +103,7 @@ const HR = styled.hr`
 const NormalHR = styled.hr`
   border-top: solid 2px #DBDFE0;
 `;
+*/
 
 const ContentWrapper = styled.div`
   float: right;
@@ -149,12 +151,7 @@ class Library extends React.Component {
     this.openAddFile = this.openAddFile.bind(this);
     this.openVideoEditor = this.openVideoEditor.bind(this);
     this.closeAllDialog = this.closeAllDialog.bind(this);
-    this.handleLinkEditorSave = this.handleLinkEditorSave.bind(this);
-    this.handleFileEditorSave = this.handleFileEditorSave.bind(this);
-    this.handleImageEditorSave = this.handleImageEditorSave.bind(this);
     this.handleOpenAddFile = this.handleOpenAddFile.bind(this);
-    this.handleAddLinkValue = this.handleAddLinkValue.bind(this);
-    this.handleVideoEditorSave = this.handleVideoEditorSave.bind(this);
     this.handleAddLinkValueFromDialog = this.handleAddLinkValueFromDialog.bind(this);
   }
 
@@ -254,10 +251,9 @@ class Library extends React.Component {
     this.props.clearUrlContent();
   }
 
-  handleVideoEditorSave(videoItem) {
+  handleVideoEditorSave = (videoItem) => {
     this.setState({ videoEditorDialog: false, videoItem: {} });
     const { action, ...item } = videoItem;
-
     filepicker.setKey(this.props.filePickerKey);
     this.props.setProcessing(true);
     if (item.picture) {
@@ -266,8 +262,8 @@ class Library extends React.Component {
         item.picture_key = Blob.key;
         filepicker.storeUrl(
           `https://process.filestackapi.com/${this.props.filePickerKey}/resize=width:300,height:300,fit:clip/${item.picture}`,
-           (Blob) => {
-             item.thumb_key = Blob.key;
+           (blob) => {
+             item.thumb_key = blob.key;
              item.collection_id = this.props.activeCollection.collection_id;
              item.mediaItemType = 'link';
              if (action === 'create') {
@@ -284,10 +280,9 @@ class Library extends React.Component {
     }
   }
 
-  handleFileEditorSave(item) {
+  handleFileEditorSave = (item) => {
     this.setState({ fileEditorDialog: false, fileItem: {} });
     const { action, ...fileItem } = item;
-
     filepicker.setKey(this.props.filePickerKey);
     this.props.setProcessing(true);
     if (fileItem.picture) {
@@ -296,8 +291,8 @@ class Library extends React.Component {
         fileItem.picture_key = Blob.key;
         filepicker.storeUrl(
           `https://process.filestackapi.com/${this.props.filePickerKey}/resize=width:300,height:300,fit:clip/${fileItem.picture}`,
-           (Blob) => {
-             fileItem.thumb_key = Blob.key;
+           (blob) => {
+             fileItem.thumb_key = blob.key;
              fileItem.collection_id = this.props.activeCollection.collection_id;
              fileItem.mediaItemType = 'link';
              if (action === 'create') {
@@ -314,10 +309,9 @@ class Library extends React.Component {
     }
   }
 
-  handleLinkEditorSave(item) {
+  handleLinkEditorSave = (item) => {
     this.closeAllDialog();
     const { action, ...linkItem } = item;
-
     filepicker.setKey(this.props.filePickerKey);
     const picture = linkItem.picture || linkItem.properties.picture;
     this.props.setProcessing(true);
@@ -332,33 +326,33 @@ class Library extends React.Component {
         }
         filepicker.storeUrl(
           `https://process.filestackapi.com/${this.props.filePickerKey}/resize=width:300,height:300,fit:clip/${picture}`,
-           (Blob) => {
-             linkItem.collection_id = this.props.activeCollection.collection_id;
-             linkItem.mediaItemType = 'link';
-             if (action === 'create') {
-               linkItem.thumb_key = Blob.key;
-               linkItem.picture = null;
-               this.props.createMediaItem(linkItem);
-             } else if (action === 'update') {
-               linkItem.properties.thumb_key = Blob.key;
-               linkItem.properties.picture = null;
-               this.props.updateMediaItem(linkItem);
-             }
-           });
+          (blob) => {
+            linkItem.collection_id = this.props.activeCollection.collection_id;
+            linkItem.mediaItemType = 'link';
+            if (action === 'create') {
+              linkItem.thumb_key = blob.key;
+              linkItem.picture = null;
+              this.props.createMediaItem(linkItem);
+            } else if (action === 'update') {
+              linkItem.properties.thumb_key = blob.key;
+              linkItem.properties.picture = null;
+              this.props.updateMediaItem(linkItem);
+            }
+          });
       });
     } else if (picture === 'remove') {
       linkItem.collection_id = this.props.activeCollection.collection_id;
       linkItem.mediaItemType = 'link';
       if (action === 'create') {
-         linkItem.thumb_key = null;
-         linkItem.picture = null;
-         this.props.createMediaItem(linkItem);
-       } else if (action === 'update') {
-         linkItem.properties.thumb_key = null;
-         linkItem.properties.picture_key = null;
-         linkItem.properties.picture = null;
-         this.props.updateMediaItem(linkItem);
-       }
+        linkItem.thumb_key = null;
+        linkItem.picture = null;
+        this.props.createMediaItem(linkItem);
+      } else if (action === 'update') {
+        linkItem.properties.thumb_key = null;
+        linkItem.properties.picture_key = null;
+        linkItem.properties.picture = null;
+        this.props.updateMediaItem(linkItem);
+      }
     } else {
       linkItem.mediaItemType = 'link';
       linkItem.collection_id = this.props.activeCollection.collection_id;
@@ -370,7 +364,7 @@ class Library extends React.Component {
     }
   }
 
-  handleImageEditorSave(imageItem) {
+  handleImageEditorSave = (imageItem) => {
     this.setState({ imageEditorDialog: false, imageItem: {} });
     const { action, ...rest } = imageItem;
     this.props.setProcessing(true);
@@ -381,7 +375,7 @@ class Library extends React.Component {
     }
   }
 
-  handleAddLinkValue(event) {
+  handleAddLinkValue = (event) => {
     this.setState({ addLinkValue: event.target.value });
   }
 
@@ -394,9 +388,6 @@ class Library extends React.Component {
       this.setState({ addLinkValueError: 'A link URL is required' });
       return;
     }
-    const linkItem = {
-      source: this.state.addLinkValue,
-    };
 
     this.setState({ addLinkValue: '', linkDialog: false, searchDialog: false, rssFeedDialog: false, linkEditorDialog: true });
 
@@ -410,31 +401,31 @@ class Library extends React.Component {
       filepicker.storeUrl(
         `https://process.filestackapi.com/${this.props.filePickerKey}/resize=width:300,height:300,fit:clip/${mediaItem[0].url}`,
         (Blob) => {
-          mediaItem[0].thumb_key = Blob.key;
-          mediaItem[0].collection_id = this.props.activeCollection.collection_id;
           const imageItem = {
             mediaItemType: 'file',
             properties: {
               ...mediaItem[0],
+              thumb_key: Blob.key,
+              collection_id: this.props.activeCollection.collection_id,
             },
           };
           this.openImageEditor(imageItem);
         });
     } else if (mediaItem[0].mimetype.match('video')) {
-      mediaItem[0].collection_id = this.props.activeCollection.collection_id;
       const videoItem = {
         mediaItemType: 'file',
         properties: {
           ...mediaItem[0],
+          collection_id: this.props.activeCollection.collection_id,
         },
       };
       this.openVideoEditor(videoItem);
     } else {
-      mediaItem[0].collection_id = this.props.activeCollection.collection_id;
       const fileItem = {
         mediaItemType: 'file',
         properties: {
           ...mediaItem[0],
+          collection_id: this.props.activeCollection.collection_id,
         },
       };
       this.openFileEditor(fileItem);
@@ -495,20 +486,29 @@ class Library extends React.Component {
             </DropDownMenu>
           </div>
           <Menu style={{ margin: '0 auto', padding: '0', width: '150px' }} selectable>
-            <ReactRouterMenuItem caption="Media Library" to={`/account/${this.props.params.account_id}/library`} style={{ textAlign: 'center' }} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
+            <ReactRouterMenuItem caption="Media Library" to={`/account/${this.props.params.account_id}/library`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
             <ReactRouterMenuItem caption="Search the Web" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/search`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
             <ReactRouterMenuItem caption="RSS Feeds" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/RSS`} style={{ color: '#616669', fontWeight: '700', fontSize: '9px !important' }} />
           </Menu>
         </SidebarWrapper>
         <ContentWrapper>
-          {React.cloneElement(this.props.children, { ...this.props, createPostSet: this.createPostSet, openImageEditor: this.openImageEditor, openLinkEditor: this.openLinkEditor, openVideoEditor: this.openVideoEditor, openFileEditor: this.openFileEditor, openBlogEditor: this.openBlogEditor,
-          handleAddLinkValueFromDialog: this.handleAddLinkValueFromDialog })}
+          {React.cloneElement(this.props.children,
+            { ...this.props,
+              createPostSet: this.createPostSet,
+              openImageEditor: this.openImageEditor,
+              openLinkEditor: this.openLinkEditor,
+              openVideoEditor: this.openVideoEditor,
+              openFileEditor: this.openFileEditor,
+              openBlogEditor: this.openBlogEditor,
+              handleAddLinkValueFromDialog: this.handleAddLinkValueFromDialog,
+            }
+          )}
         </ContentWrapper>
-        <LinkEditor actions={actions} closeAllDialog={this.closeAllDialog} handleLinkEditorSave={this.handleLinkEditorSave.bind(this)} mediaLibraryContext linkEditorDialog={this.state.linkEditorDialog} urlContent={this.props.urlContent} filePickerKey={this.props.filePickerKey} linkItem={this.state.linkItem} />
-        <ImageEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleImageEditorSave.bind(this)} isOpen={this.state.imageEditorDialog} filePickerKey={this.props.filePickerKey} imageItem={this.state.imageItem} />
-        <LinkDialog actions={actions} closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue.bind(this)} handleSubmit={this.handleAddLinkSubmit} value={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
-        <VideoEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleVideoEditorSave.bind(this)} isOpen={this.state.videoEditorDialog} filePickerKey={this.props.filePickerKey} videoItem={this.state.videoItem} />
-        <FileEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave.bind(this)} isOpen={this.state.fileEditorDialog} filePickerKey={this.props.filePickerKey} fileItem={this.state.fileItem} />
+        <LinkEditor actions={actions} closeAllDialog={this.closeAllDialog} handleLinkEditorSave={this.handleLinkEditorSave} mediaLibraryContext linkEditorDialog={this.state.linkEditorDialog} urlContent={this.props.urlContent} filePickerKey={this.props.filePickerKey} linkItem={this.state.linkItem} />
+        <ImageEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleImageEditorSave} isOpen={this.state.imageEditorDialog} filePickerKey={this.props.filePickerKey} imageItem={this.state.imageItem} />
+        <LinkDialog actions={actions} closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue} handleSubmit={this.handleAddLinkSubmit} value={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
+        <VideoEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleVideoEditorSave} isOpen={this.state.videoEditorDialog} filePickerKey={this.props.filePickerKey} videoItem={this.state.videoItem} />
+        <FileEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave} isOpen={this.state.fileEditorDialog} filePickerKey={this.props.filePickerKey} fileItem={this.state.fileItem} />
         <div className="post-editor">
           { postsetId ? <PostEditor id={postsetId} accountId={this.props.params.account_id} location={this.props.location} /> : null}
           { blogEditor ? <BlogEditor filePickerKey={this.props.filePickerKey} location={this.props.location} onCreate={this.createBlogPost}
@@ -558,9 +558,25 @@ const mapStateToProps = createStructuredSelector({
 });
 
 Library.propTypes = {
+  children: PropTypes.node,
   getMediaItems: PropTypes.func,
+  getFeeds: PropTypes.func,
   params: PropTypes.any,
   fetchUrlData: PropTypes.func,
+  filePickerKey: PropTypes.string,
+  clearUrlContent: PropTypes.func,
+  setProcessing: PropTypes.func,
+  createMediaItem: PropTypes.func,
+  updateMediaItem: PropTypes.func,
+  createPostSet: PropTypes.func,
+  createBlogItem: PropTypes.func,
+  urlContent: PropTypes.string,
+  activeCollection: PropTypes.shape({
+    collection_id: PropTypes.string,
+  }),
+  location: PropTypes.shape({
+    pathname: PropTypes.string,
+  }),
 };
 
 export default UserCanAccount(connect(mapStateToProps, mapDispatchToProps)(Library));
