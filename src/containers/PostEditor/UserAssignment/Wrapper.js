@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export default styled.div`
-  margin-top: 17px;
+  margin-top: 14px;
   position: relative;
 
   .assignee-wrapper {

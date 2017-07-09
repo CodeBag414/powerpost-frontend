@@ -253,11 +253,10 @@ class PostEditor extends Component {
     );
     return (
       <Wrapper modal={modal}>
-        { modal ? generalInfo : null }
+        { generalInfo }
         <div className="content-wrapper">
           <div className="content">
             <div className="main">
-              { modal ? null : generalInfo }
               <TabWrapper>
                 {
                   tabs.map((tab) =>
