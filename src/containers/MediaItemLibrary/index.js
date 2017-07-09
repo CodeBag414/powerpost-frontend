@@ -511,8 +511,13 @@ class Library extends React.Component {
         <FileEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave} isOpen={this.state.fileEditorDialog} filePickerKey={this.props.filePickerKey} fileItem={this.state.fileItem} />
         <div className="post-editor">
           { postsetId ? <PostEditor id={postsetId} accountId={this.props.params.account_id} location={this.props.location} /> : null}
-          { blogEditor ? <BlogEditor filePickerKey={this.props.filePickerKey} location={this.props.location} onCreate={this.createBlogPost}
-          onUpdate={this.updateBlogPost} selectedItem={this.state.blogItem} /> : null }
+          { blogEditor ? <BlogEditor
+            filePickerKey={this.props.filePickerKey}
+            location={this.props.location}
+            onCreate={this.createBlogPost}
+            onUpdate={this.updateBlogPost}
+            selectedItem={this.state.blogItem} 
+          /> : null }
           { postsetId ? <PostEditor id={postsetId} accountId={this.props.params.account_id} /> : null}
         </div>
       </Wrapper>
@@ -570,6 +575,7 @@ Library.propTypes = {
   updateMediaItem: PropTypes.func,
   createPostSet: PropTypes.func,
   createBlogItem: PropTypes.func,
+  isProcessing: PropTypes.func,
   urlContent: PropTypes.string,
   activeCollection: PropTypes.shape({
     collection_id: PropTypes.string,
