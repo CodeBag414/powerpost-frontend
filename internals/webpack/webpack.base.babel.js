@@ -88,7 +88,10 @@ module.exports = (options) => ({
     new webpack.NamedModulesPlugin(),
     new webpack.ContextReplacementPlugin(/\.\/locale$/, 'empty-module', false, /js$/),
     new webpack.optimize.UglifyJsPlugin({
-      compress: { warnings: false },
+      compress: {
+        warnings: false,
+        drop_console: true,
+      },
       comments: false,
       sourceMap: true,
       minimize: false,
