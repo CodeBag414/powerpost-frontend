@@ -438,6 +438,7 @@ export function* createBlogItemSaga(action) {
   };
 
   const results = yield call(postData, '/media_api/blog', data);
+  yield put(setProcessing(false));
   if (results.data.result === 'success') {
     yield put(createBlogItemSuccess(results.data));
   } else {

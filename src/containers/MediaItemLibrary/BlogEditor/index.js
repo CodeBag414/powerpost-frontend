@@ -31,14 +31,26 @@ class BlogEditor extends Component {
     location: PropTypes.shape(),
     filePickerKey: PropTypes.string,
     onCreate: PropTypes.func,
+    selectedItem: PropTypes.shape(),
   }
 
   constructor(props) {
     super(props);
 
+    const selectedItem = props.selectedItem;
+
     this.state = {
-      titleValue: '',
-      descriptionValue: '',
+      titleValue: selectedItem === null ? '' : selectedItem.properties.title,
+      descriptionValue: selectedItem === null ? '' : selectedItem.properties.caption,
+      selectedImage: selectedItem === null ?
+      {}
+      :
+        {
+          key: selectedItem.properties.thumb_key,
+          url: selectedItem.properties.thumb_url,
+        },
+      creationTime: selectedItem === null ? 0 : selectedItem.creation_time,
+      content: selectedItem === null ? '' : selectedItem.properties.html,
     };
   }
 
@@ -51,6 +63,8 @@ class BlogEditor extends Component {
   }
 
   onSaveBlog = (e) => {
+    e.preventDefault();
+
     const payload = {
       title: this.state.titleValue,
       caption: this.state.descriptionValue,
@@ -59,6 +73,20 @@ class BlogEditor extends Component {
     };
 
     this.props.onCreate(payload);
+  }
+
+  onUpdateBlog = (e) => {
+    e.preventDefault();
+
+    const payload = {
+      title: this.state.titleValue,
+      caption: this.state.descriptionValue,
+      html: this.state.content,
+      thumb_key: this.state.selectedImage && this.state.selectedImage.key,
+    };
+    const item = this.props.selectedItem;
+    item.properties = payload;
+    this.props.onUpdate(item);
   }
 
   handleInputChange = (name, value) => {
@@ -93,20 +121,21 @@ class BlogEditor extends Component {
   }
 
   render() {
-    const { user } = this.props;
-    const { titleValue, descriptionValue, selectedImage } = this.state;
+    const { user, selectedItem } = this.props;
+    const { titleValue, descriptionValue, selectedImage, creationTime, content } = this.state;
 
     return (
       <Wrapper>
         <GeneralInfo
           blogName={titleValue}
+          creationTime={creationTime}
           user={user}
           onBack={this.onBack}
         />
         <div className="content-wrapper">
           <div className="main">
             <ReactSummernote
-              value=""
+              value={content}
               options={{
                 lang: 'ru-RU',
                 dialogsInBody: true,
@@ -132,8 +161,8 @@ class BlogEditor extends Component {
               />
               <Button
                 primary
-                label="Save Blog"
-                onClick={this.onSaveBlog}
+                label={selectedItem === null ? 'Save Blog' : 'Update Blog'}
+                onClick={selectedItem === null ? this.onSaveBlog : this.onUpdateBlog}
                 style={{ float: 'left', marginTop: '30px', marginLeft: '10px' }}
               />
             </div>

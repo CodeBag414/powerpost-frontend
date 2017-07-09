@@ -72,6 +72,10 @@ import {
   setProcessing,
 } from 'containers/Main/actions';
 
+import {
+  makeSelectIsProcessing,
+} from 'containers/Main/selectors';
+
 const DropDownMenu = styled(DropdownMenu)`
  .dd-menu-items {
     z-index: 3333;
@@ -133,6 +137,7 @@ class Library extends React.Component {
       videoItem: {},
       fileItem: {},
       addMenuOpen: false,
+      blogItem: {},
     };
     this.toggle = this.toggle.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
@@ -159,9 +164,12 @@ class Library extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // If Blog post is created successfully, then the modal view for blog editor will be hidden
-    if (this.props.mediaItems.length !== nextProps.mediaItems.length) {
-      browserHistory.push(this.props.location.pathname);
+    // If Blog post is created or updated successfully, then the modal view for blog editor will be hidden
+
+    if (this.props.isProcessing !== nextProps.isProcessing) {
+      if (!nextProps.isProcessing) {
+        browserHistory.push(this.props.location.pathname);
+      }
     }
   }
 
@@ -171,6 +179,13 @@ class Library extends React.Component {
 
   openAddBlog() {
     const { pathname } = this.props.location;
+    this.setState({ blogItem: null });
+    browserHistory.push(`${pathname}#blog-editor`);
+  }
+
+  openBlogEditor = (mediaItem) => {
+    const { pathname } = this.props.location;
+    this.setState({ blogItem: mediaItem });
     browserHistory.push(`${pathname}#blog-editor`);
   }
 
@@ -201,7 +216,6 @@ class Library extends React.Component {
   }
 
   openAddFile() {
-    const filepicker = require('filepicker-js');
     filepicker.setKey(this.props.filePickerKey);
 
     const filePickerOptions = {
@@ -243,7 +257,7 @@ class Library extends React.Component {
   handleVideoEditorSave(videoItem) {
     this.setState({ videoEditorDialog: false, videoItem: {} });
     const { action, ...item } = videoItem;
-    const filepicker = require('filepicker-js');
+
     filepicker.setKey(this.props.filePickerKey);
     this.props.setProcessing(true);
     if (item.picture) {
@@ -273,7 +287,7 @@ class Library extends React.Component {
   handleFileEditorSave(item) {
     this.setState({ fileEditorDialog: false, fileItem: {} });
     const { action, ...fileItem } = item;
-    const filepicker = require('filepicker-js');
+
     filepicker.setKey(this.props.filePickerKey);
     this.props.setProcessing(true);
     if (fileItem.picture) {
@@ -303,7 +317,7 @@ class Library extends React.Component {
   handleLinkEditorSave(item) {
     this.closeAllDialog();
     const { action, ...linkItem } = item;
-    const filepicker = require('filepicker-js');
+
     filepicker.setKey(this.props.filePickerKey);
     const picture = linkItem.picture || linkItem.properties.picture;
     this.props.setProcessing(true);
@@ -446,7 +460,13 @@ class Library extends React.Component {
   }
 
   createBlogPost = (blogItem) => {
+    this.props.setProcessing(true);
     this.props.createBlogItem(blogItem);
+  }
+
+  updateBlogPost = (blogItem) => {
+    this.props.setProcessing(true);
+    this.props.updateMediaItem(blogItem);
   }
 
   render() {
@@ -481,7 +501,8 @@ class Library extends React.Component {
           </Menu>
         </SidebarWrapper>
         <ContentWrapper>
-          {React.cloneElement(this.props.children, { ...this.props, createPostSet: this.createPostSet, openImageEditor: this.openImageEditor, openLinkEditor: this.openLinkEditor, openVideoEditor: this.openVideoEditor, openFileEditor: this.openFileEditor, handleAddLinkValueFromDialog: this.handleAddLinkValueFromDialog })}
+          {React.cloneElement(this.props.children, { ...this.props, createPostSet: this.createPostSet, openImageEditor: this.openImageEditor, openLinkEditor: this.openLinkEditor, openVideoEditor: this.openVideoEditor, openFileEditor: this.openFileEditor, openBlogEditor: this.openBlogEditor,
+          handleAddLinkValueFromDialog: this.handleAddLinkValueFromDialog })}
         </ContentWrapper>
         <LinkEditor actions={actions} closeAllDialog={this.closeAllDialog} handleLinkEditorSave={this.handleLinkEditorSave.bind(this)} mediaLibraryContext linkEditorDialog={this.state.linkEditorDialog} urlContent={this.props.urlContent} filePickerKey={this.props.filePickerKey} linkItem={this.state.linkItem} />
         <ImageEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleImageEditorSave.bind(this)} isOpen={this.state.imageEditorDialog} filePickerKey={this.props.filePickerKey} imageItem={this.state.imageItem} />
@@ -490,7 +511,8 @@ class Library extends React.Component {
         <FileEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave.bind(this)} isOpen={this.state.fileEditorDialog} filePickerKey={this.props.filePickerKey} fileItem={this.state.fileItem} />
         <div className="post-editor">
           { postsetId ? <PostEditor id={postsetId} accountId={this.props.params.account_id} location={this.props.location} /> : null}
-          { blogEditor ? <BlogEditor filePickerKey={this.props.filePickerKey} location={this.props.location} onCreate={this.createBlogPost} /> : null }
+          { blogEditor ? <BlogEditor filePickerKey={this.props.filePickerKey} location={this.props.location} onCreate={this.createBlogPost}
+          onUpdate={this.updateBlogPost} selectedItem={this.state.blogItem} /> : null }
           { postsetId ? <PostEditor id={postsetId} accountId={this.props.params.account_id} /> : null}
         </div>
       </Wrapper>
@@ -532,6 +554,7 @@ const mapStateToProps = createStructuredSelector({
   filter: makeSelectFilter(),
   processingItem: makeSelectProcessingItem(),
   activeMediaItem: makeSelectActiveMediaItem(),
+  isProcessing: makeSelectIsProcessing(),
 });
 
 Library.propTypes = {

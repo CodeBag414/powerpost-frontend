@@ -6,29 +6,16 @@ import Wrapper from './Wrapper';
 import Title from './Title';
 import Subtitle from './Subtitle';
 
-function handleTitleKeyDown(e) {
-  if (e.keyCode === 13) {
-    e.preventDefault();
-    e.target.blur();
-  }
-}
-
-function GeneralInfo({ user, postSet, blogName, handleTitleChange, handleTitleBlur, closeButtonHidden, onBack }) {
+function GeneralInfo({ user, creationTime, blogName, onBack }) {
   const userName = user.display_name;
-  const creationTime = moment().format('M/DD/YYYY hh:mma');
+  const time = creationTime === 0 ? moment().format('M/DD/YYYY hh:mma') : moment(creationTime * 1000).format('M/DD/YYYY hh:mma');
 
   return (
     <Wrapper>
       <div>
-        <Title
-          onInput={handleTitleChange}
-          onBlur={handleTitleBlur}
-          onKeyDown={handleTitleKeyDown}
-        >
-          {blogName}
-        </Title>
+        <Title>{blogName}</Title>
         <br />
-        <Subtitle>{`Created by ${userName} \u00a0\u00a0 | \u00a0\u00a0 ${creationTime}`}</Subtitle>
+        <Subtitle>{`Created by ${userName} \u00a0\u00a0 | \u00a0\u00a0 ${time}`}</Subtitle>
       </div>
       <button className="back-button" onClick={onBack}>
         ×
@@ -39,11 +26,9 @@ function GeneralInfo({ user, postSet, blogName, handleTitleChange, handleTitleBl
 
 GeneralInfo.propTypes = {
   user: PropTypes.shape(),
-  postSet: PropTypes.object,
   blogName: PropTypes.string,
-  handleTitleChange: PropTypes.func,
-  handleTitleBlur: PropTypes.func,
-  closeButtonHidden: PropTypes.bool,
+  creationTime: PropTypes.number,
+  onBack: PropTypes.func,
 };
 
 export default GeneralInfo;

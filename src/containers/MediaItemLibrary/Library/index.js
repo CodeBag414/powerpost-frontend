@@ -53,9 +53,9 @@ class MediaItemLibrary extends React.Component {
 
     this.state = {
       previewDialog: false,
-      previewItem: {properties: {}},
+      previewItem: { properties: {} },
     };
-    
+
     this.openPreview = this.openPreview.bind(this);
     this.closeAllDialog = this.closeAllDialog.bind(this);
     this.setSearchFilter = this.setSearchFilter.bind(this);
@@ -125,7 +125,9 @@ class MediaItemLibrary extends React.Component {
   }
   
   openEditor(mediaItem) {
-    if(mediaItem.type === 'image') {
+    if (mediaItem.type === 'blog') {
+      this.props.openBlogEditor(mediaItem);
+    } else if (mediaItem.type === 'image') {
       this.props.openImageEditor(mediaItem);
     } else if (mediaItem.type === 'link') {
       this.props.openLinkEditor(mediaItem);
