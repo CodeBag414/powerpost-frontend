@@ -101,10 +101,7 @@ const MediaItem = (props) => {
   if (props.mediaItem.status === 0) {
     return;
   }
-  let EditorLink = <IconButtonTooltip icon="edit" tooltip="Edit" onClick={() => props.openEditor(props.mediaItem)} />;
-  // if (props.mediaItem.type === 'blog') {
-  //   EditorLink = <IconButtonTooltip onClick={() => props.openEditor(props.mediaItem)} icon="edit" tooltip="Edit" />;
-  // }
+  const EditorLink = <IconButtonTooltip icon="edit" tooltip="Edit" onClick={() => props.openEditor(props.mediaItem)} />;
 
   return (
     <Wrapper>

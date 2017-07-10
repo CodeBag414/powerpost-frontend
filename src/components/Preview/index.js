@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import VideoPlayer from 'react-player';
 import styled from 'styled-components';
 import renderHTML from 'react-render-html';
-import Link from 'react-router-redux';
+import { htmlDecode } from 'js-htmlencode';
+
 import Button from 'elements/atm.Button';
 
-import withReactRouter from 'elements/hoc.withReactRouter';
 import Wrapper from './Wrapper';
 
 const Image = styled.img`
@@ -156,7 +156,7 @@ class Preview extends React.Component {
             <LinkDescription>{item.properties.caption}</LinkDescription>
             <Button onClick={this.toggleBlog}>Toggle Blog</Button>
             <BlogContainer toggled={this.state.toggled}>
-              {renderHTML(item.properties.html)}
+              {renderHTML(htmlDecode(item.properties.html))}
             </BlogContainer>
           </div>
         }
