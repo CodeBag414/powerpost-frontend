@@ -14,7 +14,7 @@ const Wrapper = styled.div`
     z-index: 100000;
     border-bottom: 1px solid #DBDFE0;
     height: 60px;
-    padding: 0 12px;
+    padding-right: 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -66,30 +66,8 @@ const Wrapper = styled.div`
     }
 
     .status-selector {
-      font-size: 14px;
       display: flex;
-      .status-item {
-        cursor: pointer;
-        text-align: center;
-        padding: 3px 0;
-        margin: 4px;
-        width: 80px;
-        border-radius: 3px;
-        color: white;
-        transition: color 0.5s, background-color 0.5s;
-        white-space: nowrap;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        &:not(.active-status) {
-          background-color: white !important;
-          color: black;
-        }
-        .status-size {
-          font-size: 10px;
-          padding: 2px;
-        }
-      }
+      height: 100%;
     }
   }
 

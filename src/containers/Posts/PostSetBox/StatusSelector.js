@@ -1,6 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import FaButton from 'elements/atm.FaButton';
+
+const faIcons = {
+  Ready: 'fa-thumbs-o-up',
+  Review: 'fa-check-square-o',
+  Draft: 'fa-pencil',
+  Idea: 'fa-lightbulb-o',
+};
+
 const StatusSelector = ({
   activeStatus,
   onChange,
@@ -9,15 +18,12 @@ const StatusSelector = ({
   <div className="status-selector">
     {
       statuses.map((status) =>
-        <div
-          key={status.status}
-          className={`${parseInt(activeStatus, 10) === status.status ? 'active-status' : ''} status-item`}
+        <FaButton
+          faIcon={faIcons[status.name]}
+          label={status.name}
+          active={parseInt(activeStatus, 10) === status.status}
           onClick={() => onChange(status.status)}
-          style={{ backgroundColor: status.statusColor, border: `2px solid ${status.statusColor}` }}
-        >
-          {status.name}
-          <span className="status-size">{status.size}</span>
-        </div>
+        />
       )
     }
   </div>
