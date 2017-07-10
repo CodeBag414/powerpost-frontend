@@ -27,7 +27,7 @@ class ChannelsPreview extends Component {
     const uniqueChannels = {};
     postSet.getIn(['details', 'posts']).forEach((post) => {
       if (post.get('status') === '0') return;
-      const connection = this.connectionFromId(post.get('connection_id'));
+      const connection = this.connectionFromId(post.get('connection_id')) || {};
       uniqueChannels[connection.channel] = connection;
     });
 
