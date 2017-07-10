@@ -156,11 +156,11 @@ class BlogEditor extends Component {
           </div>
           <div className="right-pane">
             <div className="button-wrapper">
-              <Button
+              {/* <Button
                 label="Create a Post"
-                onClick={this.searchWeb}
+                onClick={this.createPost}
                 style={{ float: 'left', marginTop: '30px', marginLeft: '10px' }}
-              />
+              />*/}
               <Button
                 primary
                 label={selectedItem === null ? 'Save Blog' : 'Update Blog'}
