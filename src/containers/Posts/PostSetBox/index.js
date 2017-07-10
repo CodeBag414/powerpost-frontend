@@ -206,15 +206,16 @@ class PostSetBox extends Component {
         </div>
       </div>
     );
+    const errorWrapper = (
+      <Wrapper>
+        {heading}
+        <ErrorWrapper>
+          No posts.
+        </ErrorWrapper>
+      </Wrapper>
+    );
     if (postSets.get('requesting')) {
-      return (
-        <Wrapper>
-          {heading}
-          <ErrorWrapper>
-            <Loading />
-          </ErrorWrapper>
-        </Wrapper>
-      );
+      return errorWrapper;
     }
     if (sortBy.value === 'schedule_time') {
       const postSetsByScheduleTime = postSets.get('data');
@@ -235,14 +236,7 @@ class PostSetBox extends Component {
       postSets = postSets.getIn(['data', 'post_sets']);
     }
     if (!postSets || postSets.isEmpty()) {
-      return (
-        <Wrapper>
-          {heading}
-          <ErrorWrapper>
-            No posts.
-          </ErrorWrapper>
-        </Wrapper>
-      );
+      return errorWrapper;
     }
     const filteredPostSets = this.filterPostSets(postSets);
     const generatedPostSets = filteredPostSets
@@ -253,6 +247,16 @@ class PostSetBox extends Component {
       (statuses[index].size = filteredPostSets.filter((postSet) =>
         parseInt(postSet.get('status'), 10) === parseInt(status.status, 10)).size
       ));
+    if (!generatedPostSets || generatedPostSets.isEmpty()) {
+      return (
+        <Wrapper>
+          {heading}
+          <ErrorWrapper>
+            No posts.
+          </ErrorWrapper>
+        </Wrapper>
+      );
+    }
     return (
       <Wrapper>
         {heading}
