@@ -121,7 +121,9 @@ class MessageEditor extends Component {
         {isProcessing &&
           <Spinner />
         }
-        {mediaItem.media_item_id && !isProcessing &&
+
+        {/* Media item */}
+        {currentChannel === -1 && mediaItem.media_item_id && !isProcessing &&
         <ItemWrapper>
           <IMenu className="fa fa-ellipsis-h" onClick={this.handleShowPopup} />
             {menuVisible &&
