@@ -140,7 +140,7 @@ class Channels extends Component {
             label={
               <div>
                 <span className="button-plus">+</span>
-                <span className="button-title">Add Channel Slot</span>
+                <span className="button-title">Schedule</span>
               </div>
             }
             className="add-button"

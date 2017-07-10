@@ -1,23 +1,33 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  width: 450px;
+  display: flex;
+  
+  .left-column {
+    width: 350px;
+  }
+
+  .right-column {
+    margin-left: 46px;
+  }
+
   .section-title {
     color: #616669;
     font-family: Lato;
     font-size: 14px;
     line-height: 17px;
     margin-bottom: 13px;
+    &.modify-content {
+      margin-top: 10px;
+    }
+    &.schedule {
+      margin-top: 10px;
+    }
   }
 
   .date-pickers {
-    display: flex;
-    
-    .date-picker {
-      margin-right: 8px;
-    }
-
     .time-picker {
+      margin-top: 13px;
       width: 100px;
     }
   }
@@ -26,16 +36,13 @@ const Wrapper = styled.div`
     color: #616669;
   }
 
-  .modify-content {
-    margin-top: 28px;
-  }
-
   .post-preview-title {
     margin-top: 40px;
   }
 
   .channel-summary {
     margin-bottom: 15px;
+
     i {
       font-size: 32px;
       border-radius: 2px;
@@ -83,10 +90,9 @@ const Wrapper = styled.div`
   }
 
   button {
-    float: right;
-    margin-top: -6px;
+    margin-top: 13px;
+    margin-left: -6px;
     height: 32px;
-    text-align: left;
     color: #8C9496 !important;
     font-family: Lato;
     font-size: 12px;

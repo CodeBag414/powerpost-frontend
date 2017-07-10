@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 const Sidebar = styled.div`
+  background: #fff;
   border-left: 1px solid #DBDFE0;
   position: absolute;
   right: ${(props) => props.expanded ? '0' : '-258px'};

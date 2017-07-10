@@ -151,52 +151,54 @@ function PostDetails({
   const characterCount = 140 - (postMessage ? postMessage.length : 0);
   return (
     <Wrapper>
-      <div className="section-title">
-        Schedule
+      <div className="left-column">
+        <div className="section-title modify-content">
+          Customize Message
+          <LimitIndicator className={characterCount < 0 && 'negative'}>{characterCount}</LimitIndicator>
+        </div>
+        {/* <div className="channel-summary">
+          <i className={connection.channel_icon} />
+          <div className="summary-right">
+            <span className="channel-name">{connection.display_name}</span>
+            <span className="timestamp">
+              {
+                post.get('schedule_time')
+                ? moment.unix(post.get('schedule_time')).format('MMMM D, YYYY [at] hh:mma')
+                : 'Post when ready'
+              }
+            </span>
+          </div>
+        </div> */}
+        <MultiLineInput
+          hasBorder
+          message={postMessage}
+          handleMessageChange={handleMessageChange}
+          onBlur={handleMessageBlur}
+        />
+        <div className="section-title post-preview-title">
+          Preview Post
+        </div>
+        <div className="post-preview">
+          {buildPostPreview(post, postMessage, postTime, connection, postSet.getIn(['details', 'media_items']).toJS(), newMediaItem)}
+        </div>
+      </div>
+      <div className="right-column">
+        <div className="section-title schedule">Schedule</div>
+        {post.get('status') !== '5' ?
+          <div className="date-pickers">
+            <div className="date-picker">
+              <DatePicker minDate={minDate} value={moment.unix(postTime).toDate()} onChange={handleDateChange} />
+            </div>
+            <div className="time-picker">
+              <TimePicker format="ampm" value={moment.unix(postTime).toDate()} onChange={handleDateChange} />
+            </div>
+          </div>
+        :
+          <div className="post-upon-ready-placeholder">This post will be sent when the status is set to Ready.</div>
+        }
         <PPButton className="remove-slot" onClick={() => handleRemoveSlot(post)}>
           Remove Slot
         </PPButton>
-      </div>
-      {post.get('status') !== '5' ?
-        <div className="date-pickers">
-          <div className="date-picker">
-            <DatePicker minDate={minDate} value={moment.unix(postTime).toDate()} onChange={handleDateChange} />
-          </div>
-          <div className="time-picker">
-            <TimePicker format="ampm" value={moment.unix(postTime).toDate()} onChange={handleDateChange} />
-          </div>
-        </div>
-      :
-        <div className="post-upon-ready-placeholder">This post will be sent when the status is set to Ready.</div>
-      }
-      <div className="section-title modify-content">
-        Modify Content
-        <LimitIndicator className={characterCount < 0 && 'negative'}>{characterCount}</LimitIndicator>
-      </div>
-      {/* <div className="channel-summary">
-        <i className={connection.channel_icon} />
-        <div className="summary-right">
-          <span className="channel-name">{connection.display_name}</span>
-          <span className="timestamp">
-            {
-              post.get('schedule_time')
-              ? moment.unix(post.get('schedule_time')).format('MMMM D, YYYY [at] hh:mma')
-              : 'Post when ready'
-            }
-          </span>
-        </div>
-      </div> */}
-      <MultiLineInput
-        hasBorder
-        message={postMessage}
-        handleMessageChange={handleMessageChange}
-        onBlur={handleMessageBlur}
-      />
-      <div className="section-title post-preview-title">
-        Preview Post
-      </div>
-      <div className="post-preview">
-        {buildPostPreview(post, postMessage, postTime, connection, postSet.getIn(['details', 'media_items']).toJS(), newMediaItem)}
       </div>
     </Wrapper>
   );

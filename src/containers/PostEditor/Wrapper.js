@@ -34,7 +34,7 @@ const Wrapper = styled.div`
   }
   .main {
     flex: 1;
-    margin-right: 258px;
+    /*margin-right: 258px;*/
     overflow-x: auto;
     overflow-y: hidden;
     padding: 40px;
