@@ -40,27 +40,44 @@ const Wrapper = styled.div`
         position: relative;
         margin-left: 20px;
         height: 34px;
+        div {
+          width: 190px;
+          vertical-align: middle;
+          display: inline-block;
+          height: 100%;
+          overflow: hidden;
+          transition: width 0.5s;
+          &.inactive {
+            width: 0;
+            transition: width 0.5s;
+          }
+        }
         input {
+          width: 100%;
           height: 34px;
-          width: 248px;
           border: 1px solid #C8CED0;
-          border-radius: 4px;
+          border-top-right-radius: 4px;
+          border-bottom-right-radius: 4px;
           padding: 0 15px 0 40px;
           line-height: 34px;
           outline: none;
           transition: border-color 0.5s;
           font-size: 12px;
+
           &:focus {
             border-color: #E81C64;
           }
         }
         i {
-          position: absolute;
-          left: 15px;
-          width: 20px;
-          height: 16px;
-          top: 9px;
+          vertical-align: middle;
+          padding: 0 10px;
+          font-size: 15px;
+          line-height: 32px;
           color: #ACB5B8;
+          border: solid 1px #ACB5B8;
+          border-top-left-radius: 4px;
+          border-bottom-left-radius: 4px;
+          cursor: pointer;
         }
       }
     }

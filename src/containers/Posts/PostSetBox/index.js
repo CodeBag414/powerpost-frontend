@@ -38,6 +38,7 @@ class PostSetBox extends Component {
     sortBy: sortByOptions[0],
     startDate: moment().startOf('day').subtract(29, 'days'),
     endDate: moment().endOf('day'),
+    searchVisible: false,
   }
 
   onSearch = (searchText) => {
@@ -114,6 +115,12 @@ class PostSetBox extends Component {
     }).filter((postSet) => postSet);
   }
 
+  toggleSearch = () => {
+    this.setState({
+      searchVisible: !this.state.searchVisible,
+    });
+  }
+
   render() {
     let { postSets } = this.props;
     const { accountId } = this.props;
@@ -144,8 +151,14 @@ class PostSetBox extends Component {
             />
           </div>
           <div className="search-input">
-            <input placeholder="Search Title and Tags" value={searchText} onChange={(e) => this.onSearch(e.target.value)} />
-            <i className="fa fa-search" />
+            <i className="fa fa-search" onClick={this.toggleSearch} />
+            <div className={this.state.searchVisible ? '' : 'inactive'}>
+              <input
+                placeholder="Search Title and Tags"
+                value={searchText}
+                onChange={(e) => this.onSearch(e.target.value)}
+              />
+            </div>
           </div>
         </div>
       </div>
