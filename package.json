@@ -230,6 +230,7 @@
     "intl": "1.2.5",
     "invariant": "2.2.2",
     "ip": "1.1.4",
+    "js-htmlencode": "^0.3.0",
     "linkifyjs": "^2.1.4",
     "lodash": "^4.17.4",
     "lodash.debounce": "^4.0.8",

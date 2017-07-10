@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { browserHistory } from 'react-router';
+import { htmlEncode, htmlDecode } from 'js-htmlencode';
 import filepicker from 'filepicker-js';
 import ReactSummernote from 'react-summernote';
 import 'react-summernote/dist/react-summernote.css';
@@ -29,6 +30,8 @@ import GeneralInfo from './GeneralInfo';
 class BlogEditor extends Component {
   static propTypes = {
     location: PropTypes.shape(),
+    user: PropTypes.shape(),
+    onUpdate: PropTypes.func,
     filePickerKey: PropTypes.string,
     onCreate: PropTypes.func,
     selectedItem: PropTypes.shape(),
@@ -59,7 +62,7 @@ class BlogEditor extends Component {
   }
 
   onChange = (content) => {
-    this.setState({ content });
+    this.setState({ content: htmlEncode(content) });
   }
 
   onSaveBlog = (e) => {
@@ -135,9 +138,8 @@ class BlogEditor extends Component {
         <div className="content-wrapper">
           <div className="main">
             <ReactSummernote
-              value={content}
+              value={htmlDecode(content)}
               options={{
-                lang: 'ru-RU',
                 dialogsInBody: true,
                 height: '100vh',
                 toolbar: [
