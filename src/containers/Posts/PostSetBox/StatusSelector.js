@@ -4,10 +4,26 @@ import PropTypes from 'prop-types';
 import FaButton from 'elements/atm.FaButton';
 
 const faIcons = {
-  Ready: 'fa-thumbs-o-up',
-  Review: 'fa-check-square-o',
-  Draft: 'fa-pencil',
-  Idea: 'fa-lightbulb-o',
+  Ready: {
+    icon: 'fa-thumbs-o-up',
+    bgColor: 'rgba(171,230,106,0.5)',
+    fontColor: '#65883E',
+  },
+  Review: {
+    icon: 'fa-check-square-o',
+    bgColor: 'rgba(177,113,181,0.5)',
+    fontColor: '#965B9A',
+  },
+  Draft: {
+    icon: 'fa-pencil',
+    bgColor: 'rgba(103,197,230,0.5)',
+    fontColor: '#428096',
+  },
+  Idea: {
+    icon: 'fa-lightbulb-o',
+    bgColor: '#EFEFEF',
+    fontColor: '#616669',
+  },
 };
 
 const StatusSelector = ({
@@ -19,8 +35,10 @@ const StatusSelector = ({
     {
       statuses.map((status) =>
         <FaButton
-          faIcon={faIcons[status.name]}
+          faIcon={faIcons[status.name].icon}
           label={status.name}
+          bgColor={faIcons[status.name].bgColor}
+          fontColor={faIcons[status.name].fontColor}
           active={parseInt(activeStatus, 10) === status.status}
           onClick={() => onChange(status.status)}
         />

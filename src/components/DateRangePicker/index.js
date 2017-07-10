@@ -39,8 +39,8 @@ class DateRangePickerComponent extends Component {
   render() {
     const { ranges } = this.state;
     const { startDate, endDate } = this.props;
-    const start = startDate.format('YYYY-MM-DD');
-    const end = endDate.format('YYYY-MM-DD');
+    const start = startDate.format('MMM DD');
+    const end = endDate.format('MMM DD');
     let label = `${start} - ${end}`;
     if (start === end) {
       label = start;
