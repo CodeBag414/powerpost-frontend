@@ -81,7 +81,12 @@ export class WordpressSettings extends Component {
       this.props.fetchWordpressGUI({
         connectionId: wordpressPost.get('connection_id'),
       });
-      const properties = wordpressPost.get('properties').toJS();
+
+      const immProperty = wordpressPost.get('properties');
+      let properties = {};
+      if (typeof immProperty === 'object') {
+        properties = wordpressPost.get('properties').toJS();
+      }
       if (properties.featured_image_id) {
         this.props.getMediaItem(properties.featured_image_id);
       }
