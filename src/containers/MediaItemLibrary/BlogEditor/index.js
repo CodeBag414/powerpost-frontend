@@ -141,7 +141,7 @@ class BlogEditor extends Component {
               value={htmlDecode(content)}
               options={{
                 dialogsInBody: true,
-                height: '100vh',
+                height: '70vh',
                 toolbar: [
                   ['fontname', ['fontname', 'fontsize', 'color']],
                   ['font', ['bold', 'italic', 'underline']],
