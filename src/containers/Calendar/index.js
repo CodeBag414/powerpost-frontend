@@ -55,6 +55,8 @@ class Calendar extends React.Component {
   };
 
   componentWillMount() {
+    const postsetId = this.props.location.hash.startsWith('#postset') ? this.props.location.hash.split('-')[1] : 0;
+    if (postsetId) return;
     this.loadPostSetsByST(moment());
   }
 
