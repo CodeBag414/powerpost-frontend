@@ -8,13 +8,14 @@ export default styled.div`
   align-items: center;
   padding-top: 11px;
   cursor: pointer;
+  color: ${props => props.fontColor};
+  background-color: ${props => props.bgColor};
 
   i {
     font-size: 23px;
     margin-bottom: 2px;
   }
   span {
-    color: #ACB5B8;
     font-family: Lato;
     font-size: 8px;
     font-weight: 900;
@@ -26,8 +27,6 @@ export default styled.div`
   ${(props) => props.active && `
     border: 1px solid rgba(103,197,230,0.5);
     opacity: 0.68;
-    background-color:
-    rgba(103,197,230,0.2);
     box-shadow: inset 0 0 8px 0 rgba(103,197,230,0.5);
   `}
 `;

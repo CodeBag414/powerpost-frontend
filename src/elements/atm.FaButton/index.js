@@ -6,11 +6,13 @@ import Wrapper from './Wrapper';
 export default function FaButton({
   faIcon,
   label,
+  bgColor,
+  fontColor,
   active,
   onClick,
 }) {
   return (
-    <Wrapper active={active} onClick={onClick}>
+    <Wrapper active={active} bgColor={bgColor} fontColor={fontColor} onClick={onClick}>
       <i className={`fa ${faIcon}`} />
       <span>{label}</span>
     </Wrapper>
@@ -20,6 +22,8 @@ export default function FaButton({
 FaButton.propTypes = {
   faIcon: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
+  bgColor: PropTypes.string.isRequired,
+  fontColor: PropTypes.string.isRequired,
   active: PropTypes.bool,
   onClick: PropTypes.func.isRequired,
 };
