@@ -209,17 +209,19 @@ function globalReducer(state = initialState, action) {
       return state
         .setIn(['postSets', 'requesting'], true)
         .updateIn(['postSets'], (postSets) =>
-          postSets.action === action.action
+          postSets.get('action') === action.action
             ? postSets
             : postSets.set('action', action.action).set('data', null));
     case FETCH_POST_SETS_SUCCESS:
       return state.set('postSets', fromJS({
+        action: state.getIn(['postSets', 'action']),
         requesting: false,
         error: null,
         data: action.postSets,
       }));
     case FETCH_POST_SETS_FAILURE:
       return state.set('postSets', fromJS({
+        action: state.getIn(['postSets', 'action']),
         requesting: false,
         error: action.error,
         data: null,

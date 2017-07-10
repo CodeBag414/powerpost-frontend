@@ -189,7 +189,7 @@ class Calendar extends React.Component {
     startDate.set('date', 1);
     startDate.subtract((startDate.day() % 7), 'day');
     const endDate = moment(startDate);
-    endDate.add(35, 'day');
+    endDate.add(42, 'day');
     this.props.fetchPostSetsByST(params.account_id, {
       start_time: startDate.unix(),
       end_time: endDate.unix(),
@@ -235,7 +235,7 @@ class Calendar extends React.Component {
           handleDialogToggle={this.hideDeletePopup}
           deletePostSet={this.onDeletePostSet}
         />
-        {loading ? <Loading opacity={0.5} /> : null}
+        {loading ? <Loading opacity={0.5} showIndicator={!postSetsByST.get('data')} /> : null}
         <div className="post-editor">
           { postsetId ? <PostEditor id={postsetId} accountId={params.account_id} /> : null}
         </div>
