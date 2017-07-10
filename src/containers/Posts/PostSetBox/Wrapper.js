@@ -21,20 +21,6 @@ const Wrapper = styled.div`
 
     .filter-wrapper {
       display: flex;
-      .schedule-sub-sort {
-        height: 34px;
-        &>div>div:first-child {
-          height: 34px;
-          line-height: 34px;
-          width: 220px;
-          padding-top: 0;
-          padding-bottom: 0;
-          &>div>span {
-            line-height: 30px;
-            display: block;
-          }
-        }
-      }
       .sort_input {
         margin-left: 20px;
         height: 34px;
