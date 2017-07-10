@@ -23,6 +23,21 @@ const sortByOptions = [
   },
 ];
 
+const scheduleSortSubOptions = [
+  {
+    value: 'schedule_posts',
+    label: 'Show Scheduled Posts',
+  },
+  {
+    value: 'instant_posts',
+    label: 'Show Instant Posts',
+  },
+  {
+    value: 'unscheduled_posts',
+    label: 'Show Unscheduled Posts',
+  },
+];
+
 class PostSetBox extends Component {
   static propTypes = {
     postSets: ImmutablePropTypes.map,
@@ -39,6 +54,7 @@ class PostSetBox extends Component {
     startDate: moment().startOf('day').subtract(29, 'days'),
     endDate: moment().endOf('day'),
     searchVisible: false,
+    scheduleSortSubOption: scheduleSortSubOptions[0],
   }
 
   onSearch = (searchText) => {
@@ -115,6 +131,13 @@ class PostSetBox extends Component {
     }).filter((postSet) => postSet);
   }
 
+  handleScheduleSubSortByChange = (scheduleSortSubOption) => {
+    this.setState({
+      scheduleSortSubOption,
+    });
+    alert('Hey Bart, please reload the posts here.');
+  }
+
   toggleSearch = () => {
     this.setState({
       searchVisible: !this.state.searchVisible,
@@ -124,7 +147,16 @@ class PostSetBox extends Component {
   render() {
     let { postSets } = this.props;
     const { accountId } = this.props;
-    const { currentPostSetIndex, currentPostStatus, searchText, sortBy, startDate, endDate } = this.state;
+    const {
+      currentPostSetIndex,
+      currentPostStatus,
+      searchText,
+      sortBy,
+      startDate,
+      endDate,
+      searchVisible,
+      scheduleSortSubOption,
+    } = this.state;
     const statuses = [
       { status: 3, statusColor: '#ABE66A', name: 'Ready' },
       { status: 5, statusColor: '#B171B5', name: 'Review' },
@@ -139,9 +171,20 @@ class PostSetBox extends Component {
           statuses={statuses}
         />
         <div className="filter-wrapper">
-          <DateRangePicker onChange={this.handleDateRange} startDate={startDate} endDate={endDate}>
-            <div>Click Me To Open Picker!</div>
-          </DateRangePicker>
+          <div className="schedule-sub-sort">
+            {sortBy.value === 'schedule_time' ?
+              <Dropdown
+                value={scheduleSortSubOption}
+                options={scheduleSortSubOptions}
+                placeholder="-"
+                onChange={this.handleScheduleSubSortByChange}
+              />
+              :
+              <DateRangePicker onChange={this.handleDateRange} startDate={startDate} endDate={endDate}>
+                <div>Click Me To Open Picker!</div>
+              </DateRangePicker>
+            }
+          </div>
           <div className="sort_input">
             <Dropdown
               value={sortBy}
@@ -152,7 +195,7 @@ class PostSetBox extends Component {
           </div>
           <div className="search-input">
             <i className="fa fa-search" onClick={this.toggleSearch} />
-            <div className={this.state.searchVisible ? '' : 'inactive'}>
+            <div className={searchVisible ? '' : 'inactive'}>
               <input
                 placeholder="Search Title and Tags"
                 value={searchText}
