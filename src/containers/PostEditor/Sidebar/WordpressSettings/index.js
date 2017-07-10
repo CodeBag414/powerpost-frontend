@@ -6,6 +6,8 @@ import moment from 'moment';
 import filepicker from 'filepicker-js';
 import { find } from 'lodash';
 
+import { toastr } from 'lib/react-redux-toastr';
+
 import Heading from 'components/Heading';
 import MultiLineInput from 'components/MultiLineInput';
 import AutoMultiSelect from 'components/AutoMultiSelect';
@@ -417,7 +419,12 @@ export class WordpressSettings extends Component {
     const minDate = new Date();
     minDate.setDate(minDate.getDate() - 1);
 
-    const disabled = destination.value === '0' || wordpressGUI.get('error');
+    const wordPressError = wordpressGUI.get('error');
+    if (wordPressError) {
+      toastr.error('Error', 'There is something wrong with the Wordpress connection. Please reconnect it.');
+    }
+
+    const disabled = destination.value === '0' || wordPressError;
 
     const actions = [
       { label: 'close', onClick: this.closeAllDialog },
