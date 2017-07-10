@@ -7,6 +7,7 @@ export default styled.div`
   flex-direction: column;
   align-items: center;
   padding-top: 11px;
+  cursor: pointer;
 
   i {
     font-size: 23px;
