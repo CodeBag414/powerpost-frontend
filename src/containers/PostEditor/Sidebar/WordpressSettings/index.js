@@ -419,7 +419,7 @@ export class WordpressSettings extends Component {
     const minDate = new Date();
     minDate.setDate(minDate.getDate() - 1);
 
-    const wordPressError = wordpressGUI.get('error');
+    const wordPressError = destination.value !== '0' && wordpressGUI.get('error');
     if (wordPressError) {
       toastr.error('Error', 'There is something wrong with the Wordpress connection. Please reconnect it.');
     }
