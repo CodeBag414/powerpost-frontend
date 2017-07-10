@@ -84,7 +84,7 @@ export class WordpressSettings extends Component {
 
       const immProperty = wordpressPost.get('properties');
       let properties = {};
-      if (typeof immProperty === 'object') {
+      if (immProperty) {
         properties = wordpressPost.get('properties').toJS();
       }
       if (properties.featured_image_id) {
