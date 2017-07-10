@@ -185,7 +185,6 @@ class Content extends Component {
     const { channelIndex } = this.state;
     const { updatePostSet, postSet } = this.props;
     const postDetails = postSet.get('details').toJS();
-    console.log('---', postDetails);
 
     if (channelIndex > -1) {
       const channelMessages = postDetails.properties;
