@@ -4,14 +4,16 @@ const Wrapper = styled.div`
   padding-top: 40px;
   position: relative;
   display: flex;
-  width: calc(100% - 272px);
+  width: 100%;
   .title {
     color: #888888;
+    display: inline-block;
     font-size: 16px;
     line-height: 19px;
+    vertical-align: middle;
   }
   .add-button {
-    margin-top: 20px;
+    margin-left: 30px;
     color: #ffffff;
     padding: 0 20px;
     .button-plus {
