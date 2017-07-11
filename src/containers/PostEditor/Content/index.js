@@ -261,7 +261,7 @@ class Content extends Component {
         if( action === 'update' ) {
           linkItem.properties.picture = Blob.url;
           linkItem.properties.picture_key = Blob.key;
-        } else { 
+        } else {
           linkItem.picture = Blob.url;
           linkItem.picture_key = Blob.key;
         }
