@@ -2,14 +2,12 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import moment from 'moment';
-import { fromJS } from 'immutable';
 
 import { UserCanPostSet } from 'config.routes/UserRoutePermissions';
 
 import {
   deletePostSetRequest,
   fetchPostSetsBySTRequest,
-  setPostSets,
   updateBunchPostRequest,
 } from 'containers/App/actions';
 
@@ -39,7 +37,6 @@ class Calendar extends React.Component {
     location: PropTypes.object,
     fetchPostSetsByST: PropTypes.func,
     updateBunchPost: PropTypes.func,
-    setPostSetsByST: PropTypes.func,
     deletePostSet: PropTypes.func,
     postSetsByST: PropTypes.any,
     currentAccount: PropTypes.object,
@@ -139,7 +136,7 @@ class Calendar extends React.Component {
 
   handleMoveEvent = ({ event, start }) => {
     const { postSet } = event;
-    const { postSetsByST, updateBunchPost } = this.props;
+    const { updateBunchPost } = this.props;
     const scheduleTime = moment(start).format('X');
     /* eslint-disable no-alert */
     if (moment().diff(moment.unix(postSet.schedule_time)) > 0) { // If the dragged post is in the past
@@ -154,22 +151,7 @@ class Calendar extends React.Component {
       schedule_time: scheduleTime,
     }));
 
-    const newPostSetsByST = postSetsByST.updateIn(['data', 'scheduled_post_sets'], (postSets) => {
-      const index = postSets.findIndex((item) =>
-        (item.get('schedule_time') === postSet.schedule_time) && item.get('post_set_id') === postSet.post_set_id);
-
-      return postSets.set(
-        index,
-        fromJS({
-          ...postSet,
-          schedule_time: scheduleTime,
-          statusPending: true, // Meaning that it is in progress
-        }),
-      );
-    });
-
-    this.props.setPostSetsByST(newPostSetsByST);
-    updateBunchPost(postsToUpdate);
+    updateBunchPost(postsToUpdate, postSet);
   }
 
   handleDeleteEvent = (postSet) => {
@@ -202,13 +184,13 @@ class Calendar extends React.Component {
     let scheduledPostSets = [];
     let unscheduledPostSets = [];
     let loading = false;
-    if (!postSetsByST.get('requesting') && postSetsByST.getIn(['data', 'scheduled_post_sets'])) {
+    if (postSetsByST.getIn(['data', 'scheduled_post_sets'])) {
       scheduledPostSets = this.filterPostSets(postSetsByST.getIn(['data', 'scheduled_post_sets']).toJS());
       unscheduledPostSets = this.filterPostSets(postSetsByST.getIn(['data', 'unscheduled_post_sets']).toJS());
-    } else {
+    }
+    if (postSetsByST.get('requesting')) {
       loading = true;
     }
-
     // FIXME: The below can be used later
     // const postWhenReadyPostSets = postSetsByST.getIn(['data', 'post_when_ready_post_sets']).toJS();
 
@@ -247,8 +229,7 @@ class Calendar extends React.Component {
 const mapDispatchToProps = (dispatch) => (
   {
     fetchPostSetsByST: (accountId, payload) => dispatch(fetchPostSetsBySTRequest(accountId, payload)),
-    updateBunchPost: (posts) => dispatch(updateBunchPostRequest(posts)),
-    setPostSetsByST: (postSets) => dispatch(setPostSets(postSets)),
+    updateBunchPost: (posts, postSet) => dispatch(updateBunchPostRequest(posts, postSet)),
     deletePostSet: (id) => dispatch(deletePostSetRequest(id)),
   }
 );

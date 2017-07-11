@@ -450,12 +450,12 @@ export function updatePostRequest(post, section) {
   return { type: UPDATE_POST_REQUEST, post, section };
 }
 
-export function updateBunchPostRequest(posts) {
-  return { type: UPDATE_BUNCH_POST_REQUEST, posts };
+export function updateBunchPostRequest(posts, postSet) {
+  return { type: UPDATE_BUNCH_POST_REQUEST, posts, postSet };
 }
 
-export function updateBunchPostSuccess() {
-  return { type: UPDATE_BUNCH_POST_SUCCESS };
+export function updateBunchPostSuccess(posts, postSet) {
+  return { type: UPDATE_BUNCH_POST_SUCCESS, posts, postSet };
 }
 
 export function createPostSetRequest(postSet, edit = true) {

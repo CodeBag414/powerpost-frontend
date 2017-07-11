@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 import Logo from './powerpost_logo.png';
 
-const CustomLink = ({ isAccountPath, ...rest }) => (
+const CustomLink = ({ ...rest }) => (
   <Link {...rest}>
     {rest.children}
   </Link>

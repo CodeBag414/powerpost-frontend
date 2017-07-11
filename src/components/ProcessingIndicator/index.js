@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import Wrapper from './Wrapper';
 
 const Indicator = ({ isProcessing }) => {
-
   if (isProcessing) {
     return (
       <Wrapper>
@@ -12,8 +11,11 @@ const Indicator = ({ isProcessing }) => {
       </Wrapper>
     );
   }
-
   return <div></div>;
+};
+
+Indicator.propTypes = {
+  isProcessing: PropTypes.bool,
 };
 
 export default Indicator;

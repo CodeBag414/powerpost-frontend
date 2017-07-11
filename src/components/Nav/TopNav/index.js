@@ -208,12 +208,12 @@ class TopNav extends Component {
   }
 
   render() {
-    const isAccountPath = this.props.location.pathname.includes('/account/');
-    const avatar = this.props.user && this.props.user.properties ? this.props.user.properties.thumb_url : '';
-    const accountColor = this.props.user && this.props.user.properties ? this.props.user.properties.color : '#E7ECEE';
-    const accountId = this.props.accountId;
-    const startingTitle = isAccountPath ? this.props.activeBrand.title : 'Select Brand';
-    const pathName = this.props.routes[this.props.routes.length-1].name;
+    const { location, user, accountId, activeBrand, routes } = this.props;
+    const isAccountPath = location.pathname.includes('/account/');
+    const avatar = user && user.properties ? user.properties.thumb_url : '';
+    const accountColor = user && user.properties ? user.properties.color : '#E7ECEE';
+    const startingTitle = isAccountPath ? activeBrand.title : 'Select Brand';
+    const pathName = routes[routes.length - 1].name;
     const menuOptions = {
       isOpen: this.state.userMenuOpen,
       close: this.handleRequestClose,
@@ -222,7 +222,7 @@ class TopNav extends Component {
           size={40}
           radius={10}
           image={avatar}
-          title={this.props.user.display_name}
+          title={user.display_name}
           backgroundColor={accountColor}
           isClickable={false}
         />
@@ -250,19 +250,19 @@ class TopNav extends Component {
                 <span>{brand.title}</span>
               </SubBrandItemLink>
             )}
-            {(this.props.sharedAccounts.length > 0 && this.props.sharedAccounts.map((brand, i) => {
-              return <BrandItemLink key={i} to={`/account/${brand.account_id}`} isActive={brand.account_id === accountId} >
-                <BrandIcon thumbnail={brand.properties && brand.properties.thumb_url ? brand.properties.thumb_url : null} color={brand.properties && brand.properties.color ? brand.properties.color : '#E52466'} />
-                <span>{brand.title}</span>
-              </BrandItemLink>
-                {brand.subaccounts.length > 0 && brand.subaccounts.map((subbrand, i) => 
-                  <SubBrandItemLink key={i} to={`/account/${subbrand.account_id}`} isActive={subbrand.account_id === accountId}>
-                    <BrandIcon thumbnail={subbrand.properties && subbrand.properties.thumb_url ? subbrand.properties.thumb_url : null} color={subbrand.properties && subbrand.properties.color ? subbrand.properties.color : '#E52466'} />
-                    <span>{subbrand.title}</span>
-                  </SubBrandItemLink>
-                )}
-              }             
-            ))}
+            {
+              (this.props.sharedAccounts.length > 0 && this.props.sharedAccounts.map((brand, index) => (
+                <BrandItemLink key={index} to={`/account/${brand.account_id}`} isActive={brand.account_id === accountId} >
+                  <BrandIcon thumbnail={brand.properties && brand.properties.thumb_url ? brand.properties.thumb_url : null} color={brand.properties && brand.properties.color ? brand.properties.color : '#E52466'} />
+                  <span>{brand.title}</span>
+                  {brand.subaccounts.length > 0 && brand.subaccounts.map((subbrand, i) =>
+                    <SubBrandItemLink key={i} to={`/account/${subbrand.account_id}`} isActive={subbrand.account_id === accountId}>
+                      <BrandIcon thumbnail={subbrand.properties && subbrand.properties.thumb_url ? subbrand.properties.thumb_url : null} color={subbrand.properties && subbrand.properties.color ? subbrand.properties.color : '#E52466'} />
+                      <span>{subbrand.title}</span>
+                    </SubBrandItemLink>
+                  )}
+                </BrandItemLink>
+              )))}
           </BrandDropdown>
         }
         <PageTitle>{pathName}</PageTitle>
@@ -285,6 +285,7 @@ TopNav.propTypes = {
   userAccount: PropTypes.object,
   sharedAccounts: PropTypes.array,
   user: PropTypes.shape(),
+  routes: PropTypes.array,
   activeBrand: PropTypes.shape(),
   logout: PropTypes.func,
 };

@@ -10,15 +10,11 @@ import React from 'react';
 
 import styles from './styles.scss';
 
-class App extends React.Component {
-  render() {
-    return (
-      <div className={styles.app}>
-        {React.Children.toArray(this.props.children)}
-      </div>
-    );
-  }
-}
+const App = ({ children }) => (
+  <div className={styles.app}>
+    {React.Children.toArray(children)}
+  </div>
+);
 
 App.propTypes = {
   children: React.PropTypes.node,
