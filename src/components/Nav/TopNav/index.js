@@ -251,18 +251,31 @@ class TopNav extends Component {
               </SubBrandItemLink>
             )}
             {
-              (this.props.sharedAccounts.length > 0 && this.props.sharedAccounts.map((brand, index) => (
-                <BrandItemLink key={index} to={`/account/${brand.account_id}`} isActive={brand.account_id === accountId} >
-                  <BrandIcon thumbnail={brand.properties && brand.properties.thumb_url ? brand.properties.thumb_url : null} color={brand.properties && brand.properties.color ? brand.properties.color : '#E52466'} />
-                  <span>{brand.title}</span>
+              (this.props.sharedAccounts.length > 0 && 
+                this.props.sharedAccounts.map((brand, index)=> (
+                <div>
+                  <BrandItemLink
+                    key={index}
+                    to={`/account/${brand.account_id}`}
+                    isActive={brand.account_id === accountId}
+                  >
+                    <BrandIcon thumbnail={brand.properties && brand.properties.thumb_url ?  
+                      brand.properties.thumb_url : null} color={brand.properties && brand.properties.color ? brand.properties.color : '#E52466'} />
+                    <span>{brand.title}</span>
+                  </BrandItemLink>
                   {brand.subaccounts.length > 0 && brand.subaccounts.map((subbrand, i) =>
-                    <SubBrandItemLink key={i} to={`/account/${subbrand.account_id}`} isActive={subbrand.account_id === accountId}>
-                      <BrandIcon thumbnail={subbrand.properties && subbrand.properties.thumb_url ? subbrand.properties.thumb_url : null} color={subbrand.properties && subbrand.properties.color ? subbrand.properties.color : '#E52466'} />
+                    <SubBrandItemLink
+                      key={i}
+                      to={`/account/${subbrand.account_id}`}
+                      isActive={subbrand.account_id === accountId}
+                    >
+                      <BrandIcon thumbnail={subbrand.properties && subbrand.properties.thumb_url ?    subbrand.properties.thumb_url : null} color={subbrand.properties &&         
+                        subbrand.properties.color ? subbrand.properties.color : '#E52466'} />
                       <span>{subbrand.title}</span>
-                    </SubBrandItemLink>
-                  )}
-                </BrandItemLink>
-              )))}
+                    </SubBrandItemLink>)
+                  }
+                </div>)))
+              }
           </BrandDropdown>
         }
         <PageTitle>{pathName}</PageTitle>
