@@ -44,6 +44,8 @@ import {
   SET_POST_SETS,
   DELETE_POST_SET_SUCCESS,
   CHANGE_POST_SET_STATUS,
+  UPDATE_BUNCH_POST_REQUEST,
+  UPDATE_BUNCH_POST_SUCCESS,
   FETCH_POSTS,
   SET_POSTS,
   // UPDATE_POST_SUCCESS,
@@ -226,6 +228,24 @@ function globalReducer(state = initialState, action) {
         error: action.error,
         data: null,
       }));
+    case UPDATE_BUNCH_POST_REQUEST:
+      return state
+        .setIn(['postSets', 'requesting'], true);
+    case UPDATE_BUNCH_POST_SUCCESS:
+      return state
+        .updateIn(['postSets', 'data', 'scheduled_post_sets'], (postSets) => {
+          const index = postSets.findIndex((item) =>
+            (item.get('schedule_time') === action.postSet.schedule_time) && item.get('post_set_id') === action.postSet.post_set_id);
+          return postSets.set(
+            index,
+            fromJS({
+              ...action.postSet,
+              posts: action.posts,
+              schedule_time: action.posts[0].schedule_time,
+            }),
+          );
+        })
+        .setIn(['postSets', 'requesting'], false);
     case FETCH_GROUP_USERS:
       return state
         .set('groupUsers', {
