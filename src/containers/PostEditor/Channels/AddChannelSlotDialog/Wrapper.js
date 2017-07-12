@@ -6,7 +6,10 @@ const Wrapper = styled.div`
   width: 700px;
   max-width: 100%;
   border-radius: 4px;
+  max-height: 80vh;
   position: relative;
+  display: flex;
+  flex-direction: column;  
 
   .close-button {
     position: absolute;
@@ -17,19 +20,24 @@ const Wrapper = styled.div`
     cursor: pointer;
   }
 
-  .top-area {
-    padding: 0 40px;
+  .header {
+    padding: 0 40px 20px;
     display: flex;
-    max-height: calc(80vh - 130px);
+  }
+  .content-area {
+    padding: 0 40px;
+    flex: 1;
+    display: flex;
     overflow-y: auto;
-    .left-box {
+  }
+  .left-box {
       flex: 5;
       margin-right: 20px;
     }
-    .right-box {
-      flex: 6;
-    }
+  .right-box {
+    flex: 6;
   }
+
   .title {
     color: #6F6F6F;
     font-size: 20px;
@@ -66,7 +74,7 @@ const Wrapper = styled.div`
     margin-top: 5px;
   }
 
-  .btn-wrapper {
+  .footer {
     margin-top: 30px;
     padding: 0 40px;
     .schedule-selected-channels {

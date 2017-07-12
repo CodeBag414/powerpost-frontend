@@ -30,8 +30,7 @@ const Wrapper = styled.div`
       border: 1px solid #C8CED0;
       border-radius: 2.25px;
       background-color: transparent;
-      width: 14px;
-      height: 14px;
+
       &:after {
         border-color: #E81C64;
       }
