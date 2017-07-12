@@ -127,19 +127,10 @@ class AddChannelSlotDialog extends Component {
       >
         <Wrapper>
           <div className="close-button" onClick={handleDialogToggle}>&#10005;</div>
-          <div className="header">
+          <div className="top-area">
             <div className="left-box">
               <div className="title">Schedule Post</div>
               <div className="sub-title">Select channels, dates and times to publish.</div>
-            </div>
-            <div className="right-box">
-              <div className="post-style" onClick={() => this.setState({ isPostUponReady: !isPostUponReady })}>
-                { isPostUponReady ? 'Schedule Date and Time' : 'Post instantly when ready' }
-              </div>
-            </div>
-          </div>
-          <div className="content-area">
-            <div className="left-box">
               <ChannelsBlock
                 channels={channels}
                 hasImage={hasImage}
@@ -147,28 +138,31 @@ class AddChannelSlotDialog extends Component {
               />
             </div>
             <div className="right-box">
-              { isPostUponReady ?
-                <div className="placeholder-message">
-                  This post will be sent instantly when the status is set to Ready.
-                </div>
-                :
-                <div className="schedules-block">
-                  <SchedulesBlock
-                    onChangeScheduleTimes={this.onChangeScheduleTimes}
-                    scheduleTimes={scheduleTimes}
-                  />
-                </div>
-              }
+              <div className="post-style" onClick={() => this.setState({ isPostUponReady: !isPostUponReady })}>
+                { isPostUponReady ? 'Schedule Date and Time' : 'Post instantly when ready' }
+              </div>
+              <div>
+                { isPostUponReady ?
+                  <div className="placeholder-message">
+                    This post will be sent instantly when the status is set to Ready.
+                  </div>
+                  :
+                  <div className="schedules-block">
+                    <SchedulesBlock
+                      onChangeScheduleTimes={this.onChangeScheduleTimes}
+                      scheduleTimes={scheduleTimes}
+                    />
+                  </div>
+                }
+              </div>
             </div>
           </div>
-          <div className="footer">
-            <PPButton
-              label="Schedule Selected Channels"
-              className="schedule-selected-channels"
-              onClick={this.submitPosts}
-              primary
-            />
-          </div>
+          <PPButton
+            label="Schedule Selected Channels"
+            className="schedule-selected-channels"
+            onClick={this.submitPosts}
+            primary
+          />
         </Wrapper>
       </PPDialog>
     );

@@ -30,7 +30,8 @@ const Wrapper = styled.div`
       border: 1px solid #C8CED0;
       border-radius: 2.25px;
       background-color: transparent;
-
+      width: 14px;
+      height: 14px;
       &:after {
         border-color: #E81C64;
       }
@@ -69,7 +70,6 @@ const Wrapper = styled.div`
           font-size: 13px;
           line-height: 17px;
           font-weight: bold;
-          color: #888888;
         }
         .type {
           font-size: 11px;

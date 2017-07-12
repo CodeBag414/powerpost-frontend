@@ -1,15 +1,14 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  padding: 32px 0 24px;
+  padding: 32px 40px 24px;
   margin: auto;
   width: 700px;
   max-width: 100%;
-  border-radius: 4px;
   max-height: 80vh;
+  border-radius: 4px;
   position: relative;
-  display: flex;
-  flex-direction: column;  
+  overflow-y: auto;
 
   .close-button {
     position: absolute;
@@ -20,24 +19,16 @@ const Wrapper = styled.div`
     cursor: pointer;
   }
 
-  .header {
-    padding: 0 40px 20px;
+  .top-area {
     display: flex;
-  }
-  .content-area {
-    padding: 0 40px;
-    flex: 1;
-    display: flex;
-    overflow-y: auto;
-  }
-  .left-box {
+    .left-box {
       flex: 5;
       margin-right: 20px;
     }
-  .right-box {
-    flex: 6;
+    .right-box {
+      flex: 6;
+    }
   }
-
   .title {
     color: #6F6F6F;
     font-size: 20px;
@@ -74,12 +65,9 @@ const Wrapper = styled.div`
     margin-top: 5px;
   }
 
-  .footer {
+  .schedule-selected-channels {
     margin-top: 30px;
-    padding: 0 40px;
-    .schedule-selected-channels {
-      width: 100%;
-    }
+    width: 100%;
   }
 `;
 
