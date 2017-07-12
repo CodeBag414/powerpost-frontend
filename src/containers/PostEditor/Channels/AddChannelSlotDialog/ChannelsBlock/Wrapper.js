@@ -5,23 +5,14 @@ const Wrapper = styled.div`
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    margin-bottom: 10px;
+
     .instruction {
-      color: #8C9496;
-      font-size: 12px;
-      line-height: 15px;
-      font-weight: bold;
+      color: #616669;
+      font-size: 14px;
+      line-height: 17px;
       margin: 0;
-      margin-right: 23px;
-    }
-    label[data-react-toolbox=checkbox] {
-      [data-react-toolbox=check] {
-        width: 14px;
-        height: 14px;
-        &:after {
-          margin-left: -2px;
-          width: 30px;
-        }
-      }
+      margin-right: 25px;
     }
   }
   label[data-react-toolbox=checkbox] {
@@ -39,8 +30,8 @@ const Wrapper = styled.div`
       border: 1px solid #C8CED0;
       border-radius: 2.25px;
       background-color: transparent;
-      width: 18px;
-      height: 18px;
+      width: 14px;
+      height: 14px;
       &:after {
         border-color: #E81C64;
       }
@@ -64,23 +55,19 @@ const Wrapper = styled.div`
   .channel-wrapper {
     display: flex;
     align-items: center;
-    padding: 11px 0;
-    border-top: 1px solid #DBDFE0;
-    &.top {
-      border-top: none;
-    }
+    padding: 2px 0;
     .content {
-      margin-left: 24px;
+      margin-left: 16px;
       display: flex;
       align-items: center;
       .connection-icon {
-        font-size: 38px;
+        font-size: 25px;
       }
       .connection-description {
-        margin-left: 16px;
-        color: #888888;
+        margin-left: 12px;
+        color: #616669;
         .display-name {
-          font-size: 14px;
+          font-size: 13px;
           line-height: 17px;
           font-weight: bold;
         }

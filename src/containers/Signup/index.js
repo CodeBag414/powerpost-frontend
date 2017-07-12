@@ -81,15 +81,19 @@ class Signup extends Component {
       <Wrapper>
         <LeftPane>
           <img src={imgLogo} alt="Logo" />
-          <div style={{ marginTop: '120px', fontSize: '2rem' }}>PowerPost Business Plan</div>
-          <div style={{ marginTop: '10px', fontSize: '4.5rem' }}>{title}</div>
-          <div style={{ marginTop: '15px', fontSize: '1.5rem' }}>
-            <span style={{ fontSize: '2rem' }}>${parseInt(newPrice)}</span>&nbsp;
-            <span>{term_length}</span>
-          </div>
-          <div style={{ position: 'absolute', left: 0, bottom: 0 }}>Not the plan you want, we've got you covered.&nbsp;
-            <Link to="https://www.powerpost.digital/pricing" target="_blank" style={{ color: 'white', textDecoration: 'underline' }}>View Plans</Link>
-          </div>
+          { price &&
+            <div>
+              <div style={{ marginTop: '120px', fontSize: '2rem' }}>PowerPost Business Plan</div>
+              <div style={{ marginTop: '10px', fontSize: '4.5rem' }}>{title}</div>
+              <div style={{ marginTop: '15px', fontSize: '1.5rem' }}>
+                <span style={{ fontSize: '2rem' }}>${parseInt(newPrice)}</span>&nbsp;
+                <span>{term_length}</span>
+              </div>
+              <div style={{ position: 'absolute', left: 0, bottom: 0 }}>Not the plan you want, we've got you covered.&nbsp;
+                <Link to="https://www.powerpost.digital/pricing" target="_blank" style={{ color: 'white', textDecoration: 'underline' }}>View Plans</Link>
+              </div>
+            </div>
+          }
         </LeftPane>
         <RightPane>
           <Topbar />

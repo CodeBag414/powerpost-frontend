@@ -20,12 +20,8 @@ const Wrapper = styled.div`
       text-align: right;
     }
 
-    &.heading {
-      font-size: 12px;
-    }
-
     &.date-time-picker {
-      margin-top: 8px;
+      margin-top: 18px;
       div[data-react-toolbox=input] {
         padding: 0;
         input {
@@ -34,9 +30,10 @@ const Wrapper = styled.div`
           font-size: 13px;
           line-height: 14px;
           padding: 9px 12px;
+          color: #616669;
         }
       }
-      .close-button {
+      .btn-close-schedule {
         cursor: pointer;
       }
     }
@@ -47,6 +44,9 @@ const Wrapper = styled.div`
     padding: 11px 16px;
     font-size: 11px;
     font-weight: bold;
+    border-radius: 4px;
+    background-color: #F8FAFA;
+    color: #616669;
     cursor: pointer;
   }
 `;

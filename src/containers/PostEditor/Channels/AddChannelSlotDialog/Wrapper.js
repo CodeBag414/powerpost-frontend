@@ -1,67 +1,73 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  padding: 25px 40px 24px 40px;
-  width: 500px;
+  padding: 32px 40px 24px;
+  margin: auto;
+  width: 700px;
   max-width: 100%;
-  display: flex;
-  flex-direction: column;
-  height: 80vh;
+  max-height: 80vh;
+  border-radius: 4px;
   position: relative;
-  .main-content {
-    flex: 1;
-    overflow: auto;
-    margin-top: 20px;
+  overflow-y: auto;
+
+  .close-button {
+    position: absolute;
+    top: 30px;
+    right: 20px;
+    color: #888888;
+    font-size: 18px;
+    cursor: pointer;
   }
 
-  .heading {
+  .top-area {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    .title {
-      color: #6F6F6F;
-      font-size: 20px;
-      line-height: 24px;
+    .left-box {
+      flex: 5;
+      margin-right: 20px;
     }
-    .close-button {
-      color: #888888;
-      font-size: 24px;
-      line-height: 27px;
-      cursor: pointer;
+    .right-box {
+      flex: 6;
     }
   }
-
-  .instruction {
-    color: #8C9496;
+  .title {
+    color: #6F6F6F;
+    font-size: 20px;
+    line-height: 24px;
+  }
+  .sub-title {
+    margin: 5px 0 30px;
     font-size: 12px;
+    color: #8C9496;
     line-height: 15px;
-    margin-top: 11px;
-
-    &.highlighted {
-      color: #333;
-      font-weight: bold;
-    }
   }
 
   .post-style {
+    margin: 5px 0 33px;
+    width: 170px;
+    height: 36px;
+    background-color: #E7ECEE;
+    border: 1px solid #C8CED0;
+    border-radius: 4px;
     color: #616669;
     font-size: 12px;
-    line-height: 15px;
-    text-decoration: underline;
-    margin-top: 11px;
+    line-height: 36px;
     cursor: pointer;
+    text-align: center;
+  }
+  .placeholder-message {
+    color: #8C9496;
+    font-size: 18px;
+    font-style: italic;
+    line-height: 23px;
   }
 
   .schedules-block {
     margin-top: 5px;
   }
 
-  .channels-block {
-    margin-top: 25px;
-  }
-
   .schedule-selected-channels {
-    margin-top: 20px;
+    margin-top: 30px;
+    width: 100%;
   }
 `;
 
