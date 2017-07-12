@@ -1,14 +1,15 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  padding: 32px 40px 24px;
+  padding: 32px 0 24px;
   margin: auto;
   width: 700px;
   max-width: 100%;
-  max-height: 80vh;
   border-radius: 4px;
+  max-height: 80vh;
   position: relative;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;  
 
   .close-button {
     position: absolute;
@@ -19,16 +20,24 @@ const Wrapper = styled.div`
     cursor: pointer;
   }
 
-  .top-area {
+  .header {
+    padding: 0 40px 20px;
     display: flex;
-    .left-box {
+  }
+  .content-area {
+    padding: 0 40px;
+    flex: 1;
+    display: flex;
+    overflow-y: auto;
+  }
+  .left-box {
       flex: 5;
       margin-right: 20px;
     }
-    .right-box {
-      flex: 6;
-    }
+  .right-box {
+    flex: 6;
   }
+
   .title {
     color: #6F6F6F;
     font-size: 20px;
@@ -65,9 +74,12 @@ const Wrapper = styled.div`
     margin-top: 5px;
   }
 
-  .schedule-selected-channels {
+  .footer {
     margin-top: 30px;
-    width: 100%;
+    padding: 0 40px;
+    .schedule-selected-channels {
+      width: 100%;
+    }
   }
 `;
 
