@@ -13,15 +13,15 @@ import styles from './styles.scss';
 
 const PostSetsGroup = ({ status, postSets, statusColor, deletePostSet, onDragStart, onDragEnter, onPostDragEnter, onDrop, dragHover, postStatusId }) =>
   <Droppable types={['post_set']} onDrop={onDrop} onDragEnter={onDragEnter} className={styles.postSets}>
-    <div className={styles.heading}>
+    <div className={styles.heading} onDragEnter={() => onPostDragEnter(-1)}>
       <span className={styles.status}>{status}</span>
       <div className={styles.postSetsCount} style={{ backgroundColor: statusColor }}>{postSets.size}</div>
     </div>
     {
-      postSets.map((postSet) =>
+      postSets.map((postSet, index) =>
         <div
           key={postSet.get('post_set_id')}
-          className={`${styles.postSet} ${postStatusId === postSet.get('post_set_id') && dragHover ? styles.borderBottom : ''}`}
+          className={`${styles.postSet} ${postStatusId === postSet.get('post_set_id') && dragHover ? styles.borderBottom : ''} ${postStatusId === -1 && dragHover && !index ? styles.borderTop : ''}`}
           onDragEnter={() => onPostDragEnter(postSet.get('post_set_id'))}
         >
           <PostSet postSet={postSet} onDragStart={() => onDragStart(postSet)} onDeletePostSet={() => deletePostSet(postSet.get('post_set_id'))} />

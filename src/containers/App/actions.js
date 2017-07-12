@@ -60,6 +60,7 @@ import {
   FETCH_MEDIA_ITEMS_SUCCESS,
   FETCH_MEDIA_ITEMS_ERROR,
   CHANGE_POST_SET_SORT_ORDER_REQUEST,
+  SAVE_POST_SET_SORT_ORDER_REQUEST,
   FETCH_POST_SETS_REQUEST,
   FETCH_POST_SETS_SUCCESS,
   FETCH_POST_SETS_FAILURE,
@@ -388,6 +389,10 @@ export function changePostSetStatusRequest(id, status) {
 
 export function changePostSetSortOrderRequest(id, afterId) {
   return { type: CHANGE_POST_SET_SORT_ORDER_REQUEST, id, afterId };
+}
+
+export function savePostSetSortOrderRequest(id, sortOrder) {
+  return { type: SAVE_POST_SET_SORT_ORDER_REQUEST, id, sortOrder };
 }
 
 export function fetchPostSetRequest(payload, section) {

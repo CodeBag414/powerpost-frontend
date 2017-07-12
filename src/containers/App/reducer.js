@@ -54,6 +54,7 @@ import {
   FETCH_MEDIA_ITEMS_SUCCESS,
   FETCH_MEDIA_ITEMS_ERROR,
   CHANGE_POST_SET_SORT_ORDER_SUCCESS,
+  SAVE_POST_SET_SORT_ORDER_SUCCESS,
   FETCH_POST_SETS_REQUEST,
   FETCH_POST_SETS_SUCCESS,
   FETCH_POST_SETS_FAILURE,
@@ -350,6 +351,7 @@ function globalReducer(state = initialState, action) {
           postSet.get('post_set_id') !== action.id ? postSet : postSet.set('status', action.status)
         ));
     case CHANGE_POST_SET_SORT_ORDER_SUCCESS:
+    case SAVE_POST_SET_SORT_ORDER_SUCCESS:
       return state
         .updateIn(['postSets', 'data', 'post_sets'], (postSets = fromJS([])) => postSets.map((postSet) =>
           postSet.get('post_set_id') !== action.id ? postSet : postSet.set('sort_order', action.sort_order)

@@ -14,7 +14,13 @@ import { UserCanBoard } from 'config.routes/UserRoutePermissions';
 
 import PostEditor from 'containers/PostEditor';
 import PostSetsGroup from './PostSetsGroup';
-import { deletePostSetRequest, changePostSetStatusRequest, fetchPostSetsBySORequest, changePostSetSortOrderRequest } from '../App/actions';
+import {
+  deletePostSetRequest,
+  changePostSetStatusRequest,
+  fetchPostSetsBySORequest,
+  changePostSetSortOrderRequest,
+  savePostSetSortOrderRequest,
+} from '../App/actions';
 import { makeSelectPostSets } from '../App/selectors';
 import styles from './styles.scss';
 
@@ -44,17 +50,26 @@ class Board extends React.Component {
     if (parseInt(dragPostSet.get('status'), 10) === parseInt(moveStatus, 10)) {
       this.setState({ postStatusId });
     } else {
-      this.setState({ postStatusId: null });
+      this.setState({ postStatusId: -1 });
     }
   }
 
   onDrop = (status) => {
-    const { dragPostSet } = this.state;
+    const { dragPostSet, postStatusId } = this.state;
+    const { changePostSetSortOrder, savePostSetSortOrder } = this.props;
     const id = dragPostSet.get('post_set_id');
+    if (postStatusId === -1) {
+      const postSets = this.props.postSets.getIn(['data', 'post_sets'], fromJS([]));
+      const sortOrderArray = postSets.map((postSet) => parseFloat(postSet.get('sort_order'), 10)).toJS();
+      const newSortOrder = Math.max.apply(null, sortOrderArray) + 1;
+      savePostSetSortOrder(id, newSortOrder);
+    }
     if (dragPostSet && (parseInt(dragPostSet.get('status'), 10) !== parseInt(status, 10))) {
       this.props.changePostSetStatusRequest(id, status);
-    } else if (id !== this.state.postStatusId) {
-      this.props.changePostSetSortOrder(id, this.state.postStatusId);
+    } else if (id !== postStatusId) {
+      if (postStatusId !== -1) {
+        changePostSetSortOrder(id, postStatusId);
+      }
     }
     this.setState({ moveStatus: 0, postStatusIndex: null, dragPostSet: null });
   }
@@ -148,6 +163,7 @@ Board.propTypes = {
   deletePostSetAction: PropTypes.func.isRequired,
   changePostSetStatusRequest: PropTypes.func.isRequired,
   changePostSetSortOrder: PropTypes.func.isRequired,
+  savePostSetSortOrder: PropTypes.func.isRequired,
   postSets: ImmutablePropTypes.map.isRequired,
   location: PropTypes.shape({
     hash: PropTypes.string,
@@ -161,6 +177,7 @@ export function mapDispatchToProps(dispatch) {
   return {
     fetchPostSetsBySO: () => dispatch(fetchPostSetsBySORequest()),
     changePostSetSortOrder: (id, afterId) => dispatch(changePostSetSortOrderRequest(id, afterId)),
+    savePostSetSortOrder: (id, sortOrder) => dispatch(savePostSetSortOrderRequest(id, sortOrder)),
     deletePostSetAction: (id) => dispatch(deletePostSetRequest(id)),
     changePostSetStatusRequest: (id, status) => dispatch(changePostSetStatusRequest(id, status)),
   };

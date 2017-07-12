@@ -45,6 +45,8 @@ import {
   CHANGE_POST_SET_STATUS,
   CHANGE_POST_SET_SORT_ORDER_REQUEST,
   CHANGE_POST_SET_SORT_ORDER_SUCCESS,
+  SAVE_POST_SET_SORT_ORDER_REQUEST,
+  SAVE_POST_SET_SORT_ORDER_SUCCESS,
   FETCH_POST_SET_REQUEST,
   UPDATE_POST_SET_REQUEST,
   FETCH_POSTS,
@@ -604,6 +606,25 @@ export function* changePostSetSortOrderRequest(payload) {
   }
 }
 
+export function* savePostSetSortOrderRequest(payload) {
+  const requestUrl = `/post_api/sort_order/${payload.id}/${payload.sortOrder}?`;
+  const requestData = {
+    payload: {
+      post_set_id: payload.id,
+      sort_order: payload.sortOrder,
+    },
+  };
+  try {
+    const response = yield call(putData, requestUrl, requestData);
+    const { data } = response;
+    if (data.status === 'success') {
+      yield put({ type: SAVE_POST_SET_SORT_ORDER_SUCCESS, id: payload.id, sort_order: data.post_set.sort_order });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export function* fetchPostSetWorker({ payload, section }) {
   try {
     const response = yield call(getData, `/post_api/post_set/${payload.id}`);
@@ -651,6 +672,10 @@ export function* changePostSetStatus() {
 
 export function* changePostSetSortOrderSaga() {
   yield takeLatest(CHANGE_POST_SET_SORT_ORDER_REQUEST, changePostSetSortOrderRequest);
+}
+
+export function* savePostSetSortOrderSaga() {
+  yield takeLatest(SAVE_POST_SET_SORT_ORDER_REQUEST, savePostSetSortOrderRequest);
 }
 
 export function* fetchPostSetSaga() {
@@ -815,6 +840,7 @@ export default [
   createPostSetSaga,
   fetchMediaItemsSaga,
   changePostSetSortOrderSaga,
+  savePostSetSortOrderSaga,
 ];
 
 // Little helper function to abstract going to different pages
