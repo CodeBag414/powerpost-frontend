@@ -126,37 +126,35 @@ class AddChannelSlotDialog extends Component {
         onEscKeyDown={handleDialogToggle}
       >
         <Wrapper>
-          <div className="heading">
-            <div className="title">Schedule Post</div>
-            <div className="close-button" onClick={handleDialogToggle}>×</div>
-          </div>
-          <div className="main-content">
-            <div className="instruction">
-              Set the date, time and channels.
-            </div>
-            <div className="post-style" onClick={() => this.setState({ isPostUponReady: !isPostUponReady })}>
-              { isPostUponReady ? 'Schedule Post' : 'Post Instantly Upon Ready' }
-            </div>
-            {
-              isPostUponReady ||
-              <div className="schedules-block">
-                <SchedulesBlock
-                  onChangeScheduleTimes={this.onChangeScheduleTimes}
-                  scheduleTimes={scheduleTimes}
-                />
-              </div>
-            }
-            {isPostUponReady &&
-              <div className="instruction highlighted">
-                This post will be sent instantly when the status is set to Ready.
-              </div>
-            }
-            <div className="channels-block">
+          <div className="close-button" onClick={handleDialogToggle}>&#10005;</div>
+          <div className="top-area">
+            <div className="left-box">
+              <div className="title">Schedule Post</div>
+              <div className="sub-title">Select channels, dates and times to publish.</div>
               <ChannelsBlock
                 channels={channels}
                 hasImage={hasImage}
                 onChangeChannelsState={this.onChangeChannelsState}
               />
+            </div>
+            <div className="right-box">
+              <div className="post-style" onClick={() => this.setState({ isPostUponReady: !isPostUponReady })}>
+                { isPostUponReady ? 'Schedule Date and Time' : 'Post instantly when ready' }
+              </div>
+              <div>
+                { isPostUponReady ?
+                  <div className="placeholder-message">
+                    This post will be sent instantly when the status is set to Ready.
+                  </div>
+                  :
+                  <div className="schedules-block">
+                    <SchedulesBlock
+                      onChangeScheduleTimes={this.onChangeScheduleTimes}
+                      scheduleTimes={scheduleTimes}
+                    />
+                  </div>
+                }
+              </div>
             </div>
           </div>
           <PPButton

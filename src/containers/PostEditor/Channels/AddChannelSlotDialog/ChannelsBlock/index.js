@@ -41,10 +41,10 @@ class ChannelsBlock extends Component {
     return (
       <Wrapper>
         <div className="channels-heading">
-          <div className="instruction">Select Channels</div>
+          <div className="instruction">Channels</div>
           <Checkbox
             checked={selectAll}
-            label="Select All"
+            label="Schedule All"
             className={selectAll ? 'checked' : ''}
             onChange={this.handleSelectAllChange}
           />
@@ -67,7 +67,7 @@ class ChannelsBlock extends Component {
                 </div>
                 <div className="connection-description">
                   <div className="display-name">{ channel.connection.get('display_name') || channel.connection.get('blogName') }</div>
-                  <div className="type">{ this.normalizeType(channel.connection.get('type')) }</div>
+                  {/* <div className="type">{ this.normalizeType(channel.connection.get('type')) }</div> */}
                 </div>
               </div>
             </div>

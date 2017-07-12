@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import DatePicker from 'react-toolbox/lib/date_picker';
 import TimePicker from 'react-toolbox/lib/time_picker';
 import Wrapper from './Wrapper';
@@ -47,21 +48,19 @@ class SchedulesBlock extends Component {
     minDate.setDate(minDate.getDate() - 1);
     return (
       <Wrapper>
-        <div className="controls-wrapper heading">
-          <div className="first">
-            Date
-          </div>
-          <div className="second">
-            Time
-          </div>
-          <div className="action">
-          </div>
+        <div className="controls-wrapper">
+          Dates and Times
         </div>
         {
           scheduleTimes.map((scheduleTime, index) =>
             <div className="controls-wrapper date-time-picker" key={index}>
               <div className="first">
-                <DatePicker minDate={minDate} value={new Date(scheduleTime)} onChange={(date) => this.changeDate(index, date)} />
+                <DatePicker
+                  minDate={minDate}
+                  value={new Date(scheduleTime)}
+                  onChange={(date) => this.changeDate(index, date)}
+                  inputFormat={(date) => moment(date).format('MMMM D, YYYY')}
+                />
               </div>
               <div className="second">
                 <TimePicker format="ampm" value={new Date(scheduleTime)} onChange={(time) => this.changeTime(index, time)} />
@@ -69,7 +68,7 @@ class SchedulesBlock extends Component {
               <div className="action">
                 {
                   index
-                  ? <div className="close-button" onClick={() => this.removeSchedule(index)}>×</div>
+                  ? <div className="btn-close-schedule" onClick={() => this.removeSchedule(index)}>×</div>
                   : null
                 }
               </div>
