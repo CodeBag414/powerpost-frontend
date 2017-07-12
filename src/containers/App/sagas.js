@@ -87,7 +87,6 @@ import {
   fetchMediaItemsFailure,
   fetchPostSetsSuccess,
   fetchPostSetsFailure,
-  fetchPostSetsBySTRequest,
 } from './actions';
 
 /**
@@ -724,10 +723,9 @@ function* updateBunchPosts(posts) {
   }
 }
 
-function* updateBunchPostRequestWorker({ posts }) {
+function* updateBunchPostRequestWorker({ posts, postSet }) {
   yield call(updateBunchPosts, posts);
-  yield put(fetchPostSetsBySTRequest());
-  yield put(updateBunchPostSuccess());
+  yield put(updateBunchPostSuccess(posts, postSet));
 }
 
 export function* fetchPostsSaga() {

@@ -87,6 +87,7 @@ class FileEditor extends Component {
           title: this.state.titleValue || title || '',
           description: this.state.descriptionValue || description || '',
           picture: this.state.selectedImage.url || '',
+          thumb_key: this.state.selectedImage.key || '',
         },
         ...rest,
       };
@@ -98,6 +99,7 @@ class FileEditor extends Component {
           title: this.state.titleValue,
           description: this.state.descriptionValue,
           picture: this.state.selectedImage.url || '',
+          thumb_key: this.state.selectedImage.key || '',
           ...this.props.fileItem.properties,
         },
       };
