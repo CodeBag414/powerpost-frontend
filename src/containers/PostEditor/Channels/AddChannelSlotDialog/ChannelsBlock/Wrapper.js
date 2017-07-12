@@ -70,6 +70,7 @@ const Wrapper = styled.div`
           font-size: 13px;
           line-height: 17px;
           font-weight: bold;
+          color: #888888;
         }
         .type {
           font-size: 11px;

@@ -157,12 +157,14 @@ class AddChannelSlotDialog extends Component {
               </div>
             </div>
           </div>
-          <PPButton
-            label="Schedule Selected Channels"
-            className="schedule-selected-channels"
-            onClick={this.submitPosts}
-            primary
-          />
+          <div className="btn-wrapper">
+            <PPButton
+              label="Schedule Selected Channels"
+              className="schedule-selected-channels"
+              onClick={this.submitPosts}
+              primary
+            />
+          </div>
         </Wrapper>
       </PPDialog>
     );

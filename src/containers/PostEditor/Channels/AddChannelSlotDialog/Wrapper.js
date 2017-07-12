@@ -1,14 +1,12 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  padding: 32px 40px 24px;
+  padding: 32px 0 24px;
   margin: auto;
   width: 700px;
   max-width: 100%;
-  max-height: 80vh;
   border-radius: 4px;
   position: relative;
-  overflow-y: auto;
 
   .close-button {
     position: absolute;
@@ -20,7 +18,10 @@ const Wrapper = styled.div`
   }
 
   .top-area {
+    padding: 0 40px;
     display: flex;
+    max-height: calc(80vh - 130px);
+    overflow-y: auto;
     .left-box {
       flex: 5;
       margin-right: 20px;
@@ -65,9 +66,12 @@ const Wrapper = styled.div`
     margin-top: 5px;
   }
 
-  .schedule-selected-channels {
+  .btn-wrapper {
     margin-top: 30px;
-    width: 100%;
+    padding: 0 40px;
+    .schedule-selected-channels {
+      width: 100%;
+    }
   }
 `;
 
