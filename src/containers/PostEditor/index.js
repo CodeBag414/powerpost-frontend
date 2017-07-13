@@ -33,6 +33,7 @@ import {
   fetchComments,
   fetchAccountTags,
   fetchWordpressGUIRequest,
+  clearPost,
   createPostRequest,
   fetchCollections,
   createMediaItem,
@@ -79,6 +80,7 @@ class PostEditor extends Component {
     accountId: PropTypes.string,
     connections: PropTypes.array,
     clearMediaItem: PropTypes.func,
+    clearPost: PropTypes.func,
     createMediaItem: PropTypes.func,
     createPost: PropTypes.func,
     setWordpressPost: PropTypes.func,
@@ -138,6 +140,10 @@ class PostEditor extends Component {
     if (nextProps.id !== this.props.id) {
       this.initialize(nextProps);
     }
+  }
+
+  componentWillUnmount() {
+    this.props.clearPost();
   }
 
   onDeletePostSet = () => {
@@ -363,6 +369,7 @@ export function mapDispatchToProps(dispatch) {
     updatePostSet: (payload) => dispatch(updatePostSetRequest(payload)),
     updatePost: (payload) => dispatch(updatePostRequest(payload)),
     fetchWordpressGUI: (payload) => dispatch(fetchWordpressGUIRequest(payload)),
+    clearPost: () => dispatch(clearPost()),
     createPost: (payload) => dispatch(createPostRequest(payload)),
     goBack: () => dispatch(routerActions.goBack()),
     fetchCollections: (accountId) => dispatch(fetchCollections(accountId)),

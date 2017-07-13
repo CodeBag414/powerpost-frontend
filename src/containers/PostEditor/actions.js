@@ -20,6 +20,7 @@ import {
   FETCH_WORDPRESS_GUI_REQUEST,
   FETCH_WORDPRESS_GUI_SUCCESS,
   FETCH_WORDPRESS_GUI_FAILURE,
+  CLEAR_POST,
   CREATE_POST_REQUEST,
   CREATE_POST_SUCCESS,
   CREATE_POST_FAILURE,
@@ -140,6 +141,12 @@ export function fetchWordpressGUIFailure(payload) {
   return {
     type: FETCH_WORDPRESS_GUI_FAILURE,
     payload,
+  };
+}
+
+export function clearPost() {
+  return {
+    type: CLEAR_POST,
   };
 }
 

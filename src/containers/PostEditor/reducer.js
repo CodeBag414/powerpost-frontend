@@ -1,4 +1,4 @@
-import { fromJS } from 'immutable';
+import { Map, fromJS } from 'immutable';
 
 import {
   FETCH_POST_SET_REQUEST,
@@ -40,6 +40,7 @@ import {
   FETCH_WORDPRESS_GUI_REQUEST,
   FETCH_WORDPRESS_GUI_SUCCESS,
   FETCH_WORDPRESS_GUI_FAILURE,
+  CLEAR_POST,
   CREATE_POST_REQUEST,
   CREATE_POST_SUCCESS,
   CREATE_POST_FAILURE,
@@ -254,6 +255,9 @@ function boardReducer(state = initialState, action) {
       return state
         .setIn(['wordpressGUI', 'isFetching'], false)
         .setIn(['wordpressGUI', 'error'], fromJS(action.payload));
+    case CLEAR_POST:
+      return state
+        .setIn(['post', 'data'], Map());
     case CREATE_POST_REQUEST:
       return state
         .setIn(['post', 'processing'], true);

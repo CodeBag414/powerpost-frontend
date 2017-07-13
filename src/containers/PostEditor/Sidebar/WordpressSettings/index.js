@@ -383,7 +383,6 @@ export class WordpressSettings extends Component {
 
   render() {
     const {
-      post,
       connections = [],
       wordpressGUI,
       filePickerKey,
