@@ -16,6 +16,9 @@ const Analytics = styled.div`
       }
       width: 220px;
       background-color: white;
+      .empty {
+        padding: 0 20px;
+      }
   }
   .tabContent {
     padding: 0 30px;

@@ -57,7 +57,7 @@ class ChannelsInfo extends React.Component {
     }
     if (nextProps.activeChannel !== activeChannel) {
       fetchChannelInfo(nextProps.activeChannel);
-      this.setState({ subChannel: engagementTabsList[nextProps.activeChannel.getIn(['connection', 'channel'])][0] });
+      this.setState({ subChannel: (engagementTabsList[nextProps.activeChannel.getIn(['connection', 'channel'])] || [''])[0] });
     }
   }
 
@@ -136,7 +136,7 @@ class ChannelsInfo extends React.Component {
 
   renderMain(channel) {
     const engagementTabs = engagementTabsList[channel.channel];
-    if (!engagementTabs) return 'Error Fetching Data';
+    if (!engagementTabs) return (<div className="basicInfo">Error Fetching Data</div>);
     return (
       <div>
         <div className="basicInfo">

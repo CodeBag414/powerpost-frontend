@@ -74,7 +74,7 @@ class Statistics extends React.Component {
     const { channelFilter, channelType } = this.props;
     return connections.filter((connection) => {
       let matched = true;
-      if (connection.status !== '1') {
+      if (connection.status !== '1' || connection.channel === 'wordpress') {
         return false;
       }
 
@@ -119,12 +119,13 @@ class Statistics extends React.Component {
 
   render() {
     const { params, children, connections } = this.props;
+    const filteredConnections = this.getFilteredConnections(connections);
     return (
       <div>
         <ChannelsList
-          connections={this.getFilteredConnections(connections)}
+          connections={filteredConnections}
           accountId={params.account_id}
-          loading={children}
+          loading={filteredConnections.length ? children : null}
           handleDialogToggle={this.handleDialogToggle}
           channels={this.getChannelTypes()}
           setChannelFilter={this.setChannelFilter}

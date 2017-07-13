@@ -8,6 +8,11 @@ import Analytics from './Analytics';
 
 function ChannelsList({ connections, accountId, setChannelFilter, channelFilter, loading }) {
   let connectionsList;
+  const emptyConnect = (
+    <div className="empty">
+      You currently have no connections available for statistics.
+    </div>
+  );
   if ((connections !== undefined) && (connections.length > 0)) {
     connectionsList = [];
     connections.forEach((connection, index) => {
@@ -23,8 +28,9 @@ function ChannelsList({ connections, accountId, setChannelFilter, channelFilter,
         );
       }
     });
+    if (!connectionsList.length) connectionsList = emptyConnect;
   } else {
-    connectionsList = 'You currently have no connections';
+    connectionsList = emptyConnect;
   }
 
   return (
