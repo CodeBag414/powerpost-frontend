@@ -146,6 +146,7 @@ class PostEditor extends Component {
     deletePostSet(id);
 
     if (location && !location.pathname.endsWith('/posts')) {
+      console.log(location);
       goBack();
     }
   }

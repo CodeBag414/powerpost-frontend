@@ -8,7 +8,7 @@ const Wrapper = styled.div`
     opacity: 0;
     transition: opacity 0.3s;
     pointer-events: none;
-    z-index: 10000;
+    z-index: 1000000;
   }
   &.modal-open {
     overflow: hidden;

@@ -32,11 +32,7 @@ function GeneralInfo({
   userAccount,
 }) {
   const onBack = () => {
-    if (location.state && location.state.prevUrl) {
-      browserHistory.push(location.state.prevUrl);
-    } else {
-      goBack();
-    }
+    browserHistory.push(location.pathname);
   };
 
   // console.log('user', user);
