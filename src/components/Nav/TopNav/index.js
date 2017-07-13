@@ -110,7 +110,7 @@ const BrandIcon = styled.div`
 const Wrapper = styled.div`
   position:fixed;
   top: 0;
-  z-index: 10000;
+  z-index: 999999;
   height: 60px;
   right: 0;
   transition: transform .3s ease-in-out, width .3s ease-in-out;
@@ -251,30 +251,34 @@ class TopNav extends Component {
               </SubBrandItemLink>
             )}
             {
-              (this.props.sharedAccounts.length > 0 && 
-                this.props.sharedAccounts.map((brand, index)=> (
-                <div>
-                  <BrandItemLink
-                    key={index}
-                    to={`/account/${brand.account_id}`}
-                    isActive={brand.account_id === accountId}
-                  >
-                    <BrandIcon thumbnail={brand.properties && brand.properties.thumb_url ?  
-                      brand.properties.thumb_url : null} color={brand.properties && brand.properties.color ? brand.properties.color : '#E52466'} />
-                    <span>{brand.title}</span>
-                  </BrandItemLink>
-                  {brand.subaccounts.length > 0 && brand.subaccounts.map((subbrand, i) =>
-                    <SubBrandItemLink
-                      key={i}
-                      to={`/account/${subbrand.account_id}`}
-                      isActive={subbrand.account_id === accountId}
+              (this.props.sharedAccounts.length > 0 &&
+                this.props.sharedAccounts.map((brand, index) => (
+                  <div>
+                    <BrandItemLink
+                      key={index}
+                      to={`/account/${brand.account_id}`}
+                      isActive={brand.account_id === accountId}
                     >
-                      <BrandIcon thumbnail={subbrand.properties && subbrand.properties.thumb_url ?    subbrand.properties.thumb_url : null} color={subbrand.properties &&         
-                        subbrand.properties.color ? subbrand.properties.color : '#E52466'} />
-                      <span>{subbrand.title}</span>
-                    </SubBrandItemLink>)
-                  }
-                </div>)))
+                      <BrandIcon
+                        thumbnail={brand.properties && brand.properties.thumb_url ?
+                        brand.properties.thumb_url : null} color={brand.properties && brand.properties.color ? brand.properties.color : '#E52466'}
+                      />
+                      <span>{brand.title}</span>
+                    </BrandItemLink>
+                    {brand.subaccounts.length > 0 && brand.subaccounts.map((subbrand, i) =>
+                      <SubBrandItemLink
+                        key={i}
+                        to={`/account/${subbrand.account_id}`}
+                        isActive={subbrand.account_id === accountId}
+                      >
+                        <BrandIcon
+                          thumbnail={subbrand.properties && subbrand.properties.thumb_url ? subbrand.properties.thumb_url : null} color={subbrand.properties &&
+                          subbrand.properties.color ? subbrand.properties.color : '#E52466'}
+                        />
+                        <span>{subbrand.title}</span>
+                      </SubBrandItemLink>)
+                    }
+                  </div>)))
               }
           </BrandDropdown>
         }
