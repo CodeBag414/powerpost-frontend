@@ -42,6 +42,19 @@ export function putData(url, data, isAuthReq = true) {
   return axios.put(requestUrl, data, headers);
 }
 
+// Patch Request
+export function patchData(url, data, isAuthReq = true) {
+  const requestUrl = API_URL + url;
+  let headers = {};
+  const key = data.payload.apiKey || (isAuthReq && cookie.load('token'));
+
+  if (key) {
+    headers = { headers: { 'X-API-KEY': key } };
+  }
+
+  return axios.patch(requestUrl, data, headers);
+}
+
 // Delete Request
 export function deleteData(url, isAuthReq = true) {
   const requestUrl = API_URL + url;

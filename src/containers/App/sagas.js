@@ -9,7 +9,7 @@ import { takeLatest, delay } from 'redux-saga';
 import { take, call, put, race, select, fork } from 'redux-saga/effects';
 import { browserHistory } from 'react-router';
 import { toastr } from 'lib/react-redux-toastr';
-import { getData, postData, putData, serialize } from 'utils/request';
+import { getData, postData, putData, patchData, serialize } from 'utils/request';
 import auth from 'utils/auth';
 import { set } from 'utils/localStorage';
 import { makeSelectCurrentAccount } from 'containers/Main/selectors';
@@ -560,7 +560,7 @@ export function* deletePostSetRequest(payload) {
   };
   const requestUrl = `/post_api/post_set/${payload.id}?`;
   try {
-    const response = yield call(putData, requestUrl, requestData);
+    const response = yield call(patchData, requestUrl, requestData);
     const { data } = response;
     if (data.status === 'success') {
       yield put({ type: DELETE_POST_SET_SUCCESS, id: payload.id });
@@ -578,7 +578,7 @@ export function* changePostSetRequest(payload) {
   };
   const requestUrl = `/post_api/post_set/${payload.id}?`;
   try {
-    const response = yield call(putData, requestUrl, requestData);
+    const response = yield call(patchData, requestUrl, requestData);
     const { data } = response;
     if (data.status === 'success') {
       yield put({ type: CHANGE_POST_SET_STATUS, id: payload.id, status: payload.status });
