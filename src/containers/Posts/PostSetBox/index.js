@@ -75,7 +75,6 @@ class PostSetBox extends Component {
 
   handleDateRange = ({ startDate, endDate }) => {
     if (this.state.startDate.unix() === startDate.unix() && this.state.endDate.unix() === endDate.unix()) return;
-    console.log(endDate.unix(), this.state.endDate.unix());
     const { sortBy } = this.state;
     const { fetchPostSets, fetchPostSetsByST, accountId } = this.props;
     if (sortBy.value === 'schedule_time') {

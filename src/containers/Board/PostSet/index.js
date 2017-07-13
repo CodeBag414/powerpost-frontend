@@ -73,7 +73,7 @@ class PostSet extends Component {
             </div>
           </div>
           <div className={styles.title}>
-            {title}
+            {title || 'Untitled Post'}
           </div>
           <div className={styles.description}>
             {description}

@@ -89,7 +89,7 @@ const PostSetItem = ({
     />
     <div className="right-box">
       <div className="horizontal-flex">
-        <div className="title">{title}</div>
+        <div className="title">{title || 'Untitled Post'}</div>
         <div className="date">{date}</div>
       </div>
       <div className="message">{message}</div>
