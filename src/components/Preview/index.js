@@ -95,6 +95,7 @@ class Preview extends React.Component {
 
   render() {
     const { item } = this.props;
+
     const type = item.type;
 
     let image = '';
@@ -177,6 +178,10 @@ class Preview extends React.Component {
 
 Preview.propTypes = {
   item: PropTypes.shape(),
+};
+
+Preview.defaultProps = {
+  item: {},
 };
 
 export default Preview;
