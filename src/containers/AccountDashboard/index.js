@@ -16,7 +16,6 @@ import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 
 import {
   fetchMediaItems,
-  fetchPostSetsRequest,
   fetchPostSetsBySTRequest,
 } from 'containers/App/actions';
 import { makeSelectPostSets, makeSelectMediaItems } from 'containers/App/selectors';
@@ -24,8 +23,12 @@ import { makeSelectCurrentAccount } from 'containers/Main/selectors';
 
 import {
   fetchStatusCountRequest,
+  fetchPostSetsRequest,
 } from './actions';
-import { selectStatusCount } from './selectors';
+import {
+  selectStatusCount,
+  selectPostSets,
+} from './selectors';
 
 import Wrapper from './Wrapper';
 import Header from './Header';
@@ -43,14 +46,19 @@ class AccountDashboard extends Component {
     accountId: this.props.params.account_id,
     upcomingPosts: List(),
     lastestMediaItems: List(),
-    statusData: {},
+    statusData: {
+      readyPostSets: 0,
+      inReviewPostSets: 0,
+      draftPostSets: 0,
+      ideaPostSets: 0,
+    },
     reviewPosts: List(),
     draftPosts: List(),
   };
 
   componentDidMount() {
     this.props.getMediaItems(this.props.params.account_id);
-    // this.props.fetchPostSets(this.props.params.account_id);
+    this.props.fetchPostSets(this.props.params.account_id);
     this.props.fetchPostSetsByST(this.props.params.account_id);
     this.props.fetchStatusCount(this.props.params.account_id);
   }
@@ -72,19 +80,22 @@ class AccountDashboard extends Component {
       this.filterMediaItems(nextProps.mediaItems);
     }
 
+    if (!this.props.postSetsByST.equals(nextProps.postSetsByST)) {
+      this.filterUpcomingPosts(nextProps.postSetsByST);
+    }
+
     if (!this.props.postSets.equals(nextProps.postSets)) {
-      this.filterUpcomingPosts(nextProps.postSets);
-      // this.filterPosts(nextProps.postSets);
+      this.filterPosts(nextProps.postSets);
     }
   }
 
   filterBoardStatus = (postSetsResponse) => {
     if (!postSetsResponse) return;
 
-    const readyPostSets = postSetsResponse['3'];
-    const inReviewPostSets = postSetsResponse['5'];
-    const draftPostSets = postSetsResponse['2'];
-    const ideaPostSets = postSetsResponse['6'];
+    const readyPostSets = postSetsResponse.getIn(['data', '3']);
+    const inReviewPostSets = postSetsResponse.getIn(['data', '5']);
+    const draftPostSets = postSetsResponse.getIn(['data', '2']);
+    const ideaPostSets = postSetsResponse.getIn(['data', '6']);
 
     this.setState({
       statusData: {
@@ -106,8 +117,10 @@ class AccountDashboard extends Component {
 
   filterPosts = (postSetsResponse) => {
     const postSets = postSetsResponse.getIn(['data', 'post_sets']) || List();
-    const reviewPosts = postSets.filter((postSet) => postSet.get('status') === '5').takeLast(5).reverse();
-    const draftPosts = postSets.filter((postSet) => postSet.get('status') === '2').takeLast(5).reverse();
+    const reviewPosts = postSets.filter((postSet) =>
+      postSet.get('status') === '5').take(5).reverse();
+    const draftPosts = postSets.filter((postSet) =>
+      postSet.get('status') === '2').take(5).reverse();
 
     this.setState({
       reviewPosts,
@@ -169,6 +182,7 @@ AccountDashboard.propTypes = {
   mediaItems: ImmutablePropTypes.list,
   statusCount: ImmutablePropTypes.map,
   postSets: ImmutablePropTypes.map,
+  postSetsByST: ImmutablePropTypes.map,
 };
 
 const mapDispatchToProps = (dispatch) => ({
@@ -180,9 +194,10 @@ const mapDispatchToProps = (dispatch) => ({
 
 const mapStateToProps = createStructuredSelector({
   account: makeSelectCurrentAccount(),
-  postSets: makeSelectPostSets(),
+  postSetsByST: makeSelectPostSets(),
   mediaItems: makeSelectMediaItems(),
   statusCount: selectStatusCount(),
+  postSets: selectPostSets(),
 });
 
 export default UserCanAccount(connect(mapStateToProps, mapDispatchToProps)(AccountDashboard));

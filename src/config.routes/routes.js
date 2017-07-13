@@ -165,23 +165,6 @@ export function createRoutes(store, auth) {
           },
           childRoutes: [
             {
-              path: 'blog(/:media_id)',
-              name: 'Create Blog',
-              getComponent(nextState, cb) {
-                const importModules = Promise.all([
-                  System.import('containers/MediaItemLibrary/Blog'),
-                ]);
-
-                const renderRoute = loadModule(cb);
-
-                importModules.then(([component]) => {
-                  renderRoute(component);
-                });
-
-                importModules.catch(errorLoading);
-              },
-            },
-            {
               path: 'search',
               name: 'Search the Web',
               getComponent(nextState, cb) {
