@@ -71,8 +71,8 @@ class PopupMenu extends Component {
       <Wrapper position={popupPosition}>
         <div className="event-popup-close"><i className="fa fa-times" aria-hidden="true" onClick={this.handleClickOutside} /></div>
         {
-          postSet.post_type === 'image' && postSet.media_items.length &&
-            <img className="event-popup-image" src={postSet.media_items[0].properties.source_url} alt="Post" />
+          postSet.media_items.length &&
+            <img className="event-popup-image" src={postSet.media_items[0].properties.thumb_url || postSet.media_items[0].properties.picture} alt="Post" />
         }
         <div className="event-popup-status">
           {getStatusText(postSet)}

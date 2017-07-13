@@ -48,7 +48,7 @@ class PostSet extends Component {
   render() {
     const { postSet, onDeletePostSet, onDragStart } = this.props;
     const { popOver, deleteConfirmPopup } = this.state;
-    const imgSrc = postSet.getIn(['media_items', 0, 'properties', 'source_url']); // TODO: I couldn't get any image.
+    const imgSrc = postSet.getIn(['media_items', 0, 'properties', 'thumb_url']) || postSet.getIn(['media_items', 0, 'properties', 'picture']);
     const hasImage = !!imgSrc;
     const scheduledTime = postSet.getIn(['posts', 0, 'schedule_time']);
     const formattedTime = scheduledTime && moment(scheduledTime * 1000).format('MMM DD - hh:mma');
