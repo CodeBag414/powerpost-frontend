@@ -21,7 +21,7 @@ const Wrapper = styled.div`
   }
 
   .header {
-    padding: 0 40px 20px;
+    padding: 0 40px 30px;
     display: flex;
   }
   .content-area {
@@ -31,9 +31,9 @@ const Wrapper = styled.div`
     overflow-y: auto;
   }
   .left-box {
-      flex: 5;
-      margin-right: 20px;
-    }
+    flex: 5;
+    margin-right: 20px;
+  }
   .right-box {
     flex: 6;
   }
@@ -44,7 +44,7 @@ const Wrapper = styled.div`
     line-height: 24px;
   }
   .sub-title {
-    margin: 5px 0 30px;
+    margin: 5px 0;
     font-size: 12px;
     color: #8C9496;
     line-height: 15px;
