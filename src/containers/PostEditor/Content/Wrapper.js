@@ -15,10 +15,6 @@ const Wrapper = styled.div`
   margin-top: 27px;
   max-width: 450px;
   width: 100%;
-  .comment-input {
-    margin-top: 29px;
-    margin-bottom: 19px;
-  }
 `;
 
 export default Wrapper;

@@ -1,10 +1,12 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
+  display: flex;
+  margin-bottom: 50px;
   padding-top: 40px;
   position: relative;
-  display: flex;
   width: 100%;
+
   .title {
     color: #888888;
     display: inline-block;

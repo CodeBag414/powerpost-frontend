@@ -39,6 +39,8 @@ import {
   clearMediaItem,
   setWordpressPostRequest,
   getMediaItem,
+  postCommentRequest,
+  deleteCommentRequest,
 } from 'containers/PostEditor/actions';
 
 import {
@@ -46,6 +48,7 @@ import {
   selectWordpressGUI,
   selectPost,
   selectNewMediaItem,
+  makeSelectComments,
 } from 'containers/PostEditor/selectors';
 
 import Button from 'elements/atm.Button';
@@ -61,6 +64,7 @@ import WordpressSettings from './Sidebar/WordpressSettings';
 import ChannelsPreview from './Sidebar/ChannelsPreview';
 import SharedStream from './Sidebar/SharedStream';
 import ExpandCollapseButton from './Sidebar/ExpandCollapseButton';
+import Comments from './Comments';
 
 import Content from './Content';
 import Channels from './Channels';
@@ -97,6 +101,9 @@ class PostEditor extends Component {
     user: PropTypes.shape(),
     userAccount: PropTypes.object,
     wordpressGUI: ImmutablePropTypes.map,
+    postComment: PropTypes.func,
+    deleteComment: PropTypes.func,
+    comments: ImmutablePropTypes.list,
   };
 
   static defaultProps = {
@@ -191,6 +198,7 @@ class PostEditor extends Component {
       accountId,
       connections,
       groupUsers,
+      id,
       location,
       modal,
       postSet,
@@ -204,6 +212,9 @@ class PostEditor extends Component {
       wordpressGUI,
       post,
       goBack,
+      postComment,
+      deleteComment,
+      comments,
     } = this.props;
 
     if (postSet.get('isFetching') || postSet.get('details').isEmpty()) {
@@ -282,6 +293,13 @@ class PostEditor extends Component {
               {
                 tabs.map((tab) => (tab.name === selectedTab ? tab.component : null))
               }
+              <Comments
+                comments={comments}
+                deleteComment={deleteComment}
+                postComment={postComment}
+                postSetId={id}
+                user={user}
+              />
             </div>
             <Sidebar expanded={this.state.sidebarExpanded}>
               <Tags
@@ -348,6 +366,8 @@ export function mapDispatchToProps(dispatch) {
     clearMediaItem: () => dispatch(clearMediaItem()),
     setWordpressPost: (payload) => dispatch(setWordpressPostRequest(payload)),
     getMediaItem: (mediaItemId) => dispatch(getMediaItem(mediaItemId)),
+    postComment: (postSetId, text) => dispatch(postCommentRequest({ postSetId, text })),
+    deleteComment: (commentId) => dispatch(deleteCommentRequest(commentId)),
   };
 }
 
@@ -361,6 +381,7 @@ const mapStateToProps = createStructuredSelector({
   post: selectPost(),
   filePickerKey: makeSelectFilePickerKey(),
   newMediaItem: selectNewMediaItem(),
+  comments: makeSelectComments(),
 });
 
 export default UserCanPostEdit(withRouter(connect(mapStateToProps, mapDispatchToProps)(PostEditor)));

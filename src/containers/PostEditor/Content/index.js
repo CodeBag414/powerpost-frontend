@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import { fromJS } from 'immutable';
 import { routerActions } from 'react-router-redux';
 import filepicker from 'filepicker-js';
@@ -19,13 +18,10 @@ import {
 } from 'containers/App/actions';
 
 import {
-  makeSelectUser,
   makeSelectFilePickerKey,
 } from 'containers/App/selectors';
 
 import {
-  postCommentRequest,
-  deleteCommentRequest,
   createMediaItem,
   updateMediaItem,
   removeMediaItem,
@@ -35,7 +31,6 @@ import {
 } from 'containers/PostEditor/actions';
 
 import {
-  makeSelectComments,
   makeSelectVisibleMediaItems,
   makeSelectInProgress,
   makeSelectUrlContent,
@@ -47,9 +42,6 @@ import PopupBorder from 'components/PopupBorder';
 
 import Wrapper from './Wrapper';
 import MessageEditor from '../MessageEditor';
-import Comments from './Comments';
-import Comment from './Comment';
-import CommentInput from './CommentInput';
 import MediaLibraryDialog from '../MediaLibraryDialog';
 import ChannelsRow from './ChannelsRow';
 import MessageEditorWrapper from './MessageEditorWrapper';
@@ -59,10 +51,6 @@ import { CHANNELS } from './constants';
 class Content extends Component {
 
   static propTypes = {
-    postComment: PropTypes.func,
-    deleteComment: PropTypes.func,
-    comments: ImmutablePropTypes.list,
-    user: PropTypes.shape(),
     pending: PropTypes.bool,
     postSet: PropTypes.object,
     accountId: PropTypes.number,
@@ -258,7 +246,7 @@ class Content extends Component {
     const picture = linkItem.picture || linkItem.properties.picture;
     if (picture) {
       filepicker.storeUrl(`https://process.filestackapi.com/${filePickerKey}/${picture}`, (Blob) => {
-        if( action === 'update' ) {
+        if (action === 'update') {
           linkItem.properties.picture = Blob.url;
           linkItem.properties.picture_key = Blob.key;
         } else {
@@ -267,20 +255,20 @@ class Content extends Component {
         }
         filepicker.storeUrl(
           `https://process.filestackapi.com/${this.props.filePickerKey}/resize=width:300,height:300,fit:clip/${picture}`,
-           (Blob) => {
-             linkItem.account_id = this.props.accountId;
-             linkItem.mediaItemType = 'link';
-             if (action === 'create') {
+            (Blob) => {
+              linkItem.account_id = this.props.accountId;
+              linkItem.mediaItemType = 'link';
+              if (action === 'create') {
                 linkItem.thumb_key = Blob.key;
                 linkItem.picture = null;
                 this.props.createMediaItem(linkItem);
-             } else if (action === 'update') {
-               console.log(linkItem);
-               linkItem.properties.thumb_key = Blob.key;
-               linkItem.properties.picture = null;
-               this.props.updateMediaItem(linkItem);
-             }
-           });
+              } else if (action === 'update') {
+                console.log(linkItem);
+                linkItem.properties.thumb_key = Blob.key;
+                linkItem.properties.picture = null;
+                this.props.updateMediaItem(linkItem);
+              }
+            });
       });
     } else {
       linkItem.mediaItemType = 'link';
@@ -523,7 +511,7 @@ class Content extends Component {
   }
 
   render() {
-    const { postComment, deleteComment, comments, user, pending, pushToLibrary, id, accountId } = this.props;
+    const { pending, pushToLibrary, id, accountId } = this.props;
     const { message, characterLimit, item, messageUrls, channelIndex } = this.state;
     // const { params: { postset_id, account_id } } = this.props;
     const actions = [
@@ -565,20 +553,6 @@ class Content extends Component {
             />
           </PopupBorder>
         </MessageEditorWrapper>
-        <Comments />
-        <div className="comment-input">
-          <CommentInput user={user} postComment={(text) => postComment(id, text)} />
-        </div>
-        {
-          comments.map((comment) =>
-            <Comment
-              key={comment.get('comment_id')}
-              comment={comment}
-              removable={user.user_id === comment.getIn(['user', 'user_id'])}
-              remove={deleteComment}
-            />
-          )
-        }
         <LinkEditor actions={actions} closeAllDialog={this.closeAllDialog} handleLinkEditorSave={this.handleLinkEditorSave} linkEditorDialog={this.state.linkEditor} urlContent={this.props.urlContent} filePickerKey={this.props.filePickerKey} linkItem={this.state.mediaItem} />
         <ImageEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleImageEditorSave} isOpen={this.state.imageEditor} filePickerKey={this.props.filePickerKey} imageItem={this.state.mediaItem} />
         <LinkDialog actions={actions} closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue.bind(this)} handleSubmit={this.handleAddLinkSubmit} urlValue={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
@@ -592,8 +566,6 @@ class Content extends Component {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    postComment: (postSetId, text) => dispatch(postCommentRequest({ postSetId, text })),
-    deleteComment: (commentId) => dispatch(deleteCommentRequest(commentId)),
     updatePostSet: (payload) => dispatch(updatePostSetRequest(payload)),
     createMediaItem: (mediaItem) => dispatch(createMediaItem(mediaItem)),
     updateMediaItem: (mediaItem) => dispatch(updateMediaItem(mediaItem)),
@@ -606,8 +578,6 @@ export function mapDispatchToProps(dispatch) {
 }
 
 const mapStateToProps = createStructuredSelector({
-  comments: makeSelectComments(),
-  user: makeSelectUser(),
   pending: makeSelectInProgress(),
   filePickerKey: makeSelectFilePickerKey(),
   urlContent: makeSelectUrlContent(),
