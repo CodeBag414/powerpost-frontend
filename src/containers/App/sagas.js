@@ -290,7 +290,8 @@ export function* updateFlow() {
 
     try {
       yield call(authorizeUpdate, data);
-      if (prevUser.email.toLowerCase() !== data.email.toLowerCase()) {
+
+      if (data.email && prevUser.email.toLowerCase() !== data.email.toLowerCase()) {
         toastr.success('Success!', 'We have sent a message to the new email address you have entered. Please follow the instructions in the email to validate the change to a new email address.');
       }
       toastr.success('Success!', 'User setting is updated.');
