@@ -232,7 +232,10 @@ class PostEditor extends Component {
     let totalTimeslots = 0;
     if (postsArray) {
       postsArray.map((postItem) => {
-        if (postItem.get('status') !== '0' && postItem.get('connection_channel') !== 'wordpress') {
+        const connection = connections && connections.filter((item) =>
+          item.connection_id === postItem.get('connection_id'),
+        )[0];
+        if (postItem.get('status') !== '0' && connection && connection.channel !== 'wordpress') {
           if (!posts[postItem.get('connection_id')]) posts[postItem.get('connection_id')] = [];
           posts[postItem.get('connection_id')].push(postItem);
           totalTimeslots += 1;
