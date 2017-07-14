@@ -17,7 +17,7 @@ const ItemWrapper = styled.div`
     .fa-thumbs-o-up {
       color: #ABE66A;
     }
-    .fa-check-squre {
+    .fa-check-square-o {
       color: #B171B5;
     }
     .fa-pencil {
