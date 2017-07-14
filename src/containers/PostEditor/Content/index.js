@@ -242,7 +242,6 @@ class Content extends Component {
     this.closeAllDialog();
     const { action, ...linkItem } = item;
     filepicker.setKey(filePickerKey);
-    console.log(linkItem);
     const picture = linkItem.picture || linkItem.properties.picture;
     if (picture) {
       filepicker.storeUrl(`https://process.filestackapi.com/${filePickerKey}/${picture}`, (Blob) => {
@@ -255,16 +254,15 @@ class Content extends Component {
         }
         filepicker.storeUrl(
           `https://process.filestackapi.com/${this.props.filePickerKey}/resize=width:300,height:300,fit:clip/${picture}`,
-            (Blob) => {
+            (blob) => {
               linkItem.account_id = this.props.accountId;
               linkItem.mediaItemType = 'link';
               if (action === 'create') {
-                linkItem.thumb_key = Blob.key;
+                linkItem.thumb_key = blob.key;
                 linkItem.picture = null;
                 this.props.createMediaItem(linkItem);
               } else if (action === 'update') {
-                console.log(linkItem);
-                linkItem.properties.thumb_key = Blob.key;
+                linkItem.properties.thumb_key = blob.key;
                 linkItem.properties.picture = null;
                 this.props.updateMediaItem(linkItem);
               }
@@ -306,7 +304,7 @@ class Content extends Component {
     filepicker.pickAndStore(filePickerOptions, filePickerStoreOptions, this.handleOpenFilePicker, onFail);
   }
 
-  handleVideoEditorSave(videoItem) {
+  handleVideoEditorSave = (videoItem) => {
     this.setState({ videoEditor: false, mediaItem: {} });
     const { action, ...item } = videoItem;
     const { filePickerKey } = this.props;
@@ -379,7 +377,7 @@ class Content extends Component {
     }
   }
 
-  handleFileEditorSave(item) {
+  handleFileEditorSave = (item) => {
     this.setState({ fileEditor: false, mediaItem: {} });
     const { action, ...fileItem } = item;
     const { filePickerKey, accountId } = this.props;
@@ -410,11 +408,11 @@ class Content extends Component {
     setTimeout(() => this.handleMessageBlur(), 3000);
   }
 
-  handleAddLinkValue(event) {
+  handleAddLinkValue = (event) => {
     this.setState({ addLinkValue: event.target.value });
   }
 
-  handleAddLinkValueFromDialog(link) {
+  handleAddLinkValueFromDialog = (link) => {
     this.setState({ addLinkValue: link }, () => this.handleAddLinkSubmit());
   }
 
@@ -530,6 +528,7 @@ class Content extends Component {
             top={channelIndex > -1 ? -7 : undefined}
             arrowRight={channelIndex > -1 ? 6 + (29.44 * (4 - channelIndex)) : undefined}
             borderColor={channelIndex > -1 ? CHANNELS[channelIndex].color : 'inherit'}
+            hasArrow={channelIndex > -1}
           >
             <MessageEditor
               message={message}
@@ -555,10 +554,10 @@ class Content extends Component {
         </MessageEditorWrapper>
         <LinkEditor actions={actions} closeAllDialog={this.closeAllDialog} handleLinkEditorSave={this.handleLinkEditorSave} linkEditorDialog={this.state.linkEditor} urlContent={this.props.urlContent} filePickerKey={this.props.filePickerKey} linkItem={this.state.mediaItem} />
         <ImageEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleImageEditorSave} isOpen={this.state.imageEditor} filePickerKey={this.props.filePickerKey} imageItem={this.state.mediaItem} />
-        <LinkDialog actions={actions} closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue.bind(this)} handleSubmit={this.handleAddLinkSubmit} urlValue={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
-        <VideoEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleVideoEditorSave.bind(this)} isOpen={this.state.videoEditor} filePickerKey={this.props.filePickerKey} videoItem={this.state.mediaItem} />
-        <FileEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave.bind(this)} isOpen={this.state.fileEditor} filePickerKey={this.props.filePickerKey} fileItem={this.state.mediaItem} />
-        <MediaLibraryDialog actions={actions} location={this.props.location} params={this.props.params} filter={this.props.filter} closeAllDialog={this.closeAllDialog} isOpen={this.state.mediaLibrary} mediaItems={this.props.mediaItems} addToPost={this.addToPost} />
+        <LinkDialog actions={actions} closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue} handleSubmit={this.handleAddLinkSubmit} urlValue={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
+        <VideoEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleVideoEditorSave} isOpen={this.state.videoEditor} filePickerKey={this.props.filePickerKey} videoItem={this.state.mediaItem} />
+        <FileEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave} isOpen={this.state.fileEditor} filePickerKey={this.props.filePickerKey} fileItem={this.state.mediaItem} />
+        <MediaLibraryDialog actions={actions} filter={this.props.filter} closeAllDialog={this.closeAllDialog} isOpen={this.state.mediaLibrary} mediaItems={this.props.mediaItems} addToPost={this.addToPost} />
       </Wrapper>
     );
   }
