@@ -78,9 +78,6 @@ class CalendarSidebar extends React.Component {
             bgColor="#ACB5B8"
           />
         </div>
-        <div className="cal-sidebar-title">
-          Unscheduled ({postSets.length})
-        </div>
         <div className="cal-sidebar-unscheduled">
           {
             postSets.map((postSet) =>
