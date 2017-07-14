@@ -93,6 +93,12 @@ function buildPostPreview(postData, postMessage, postTime, connection, mediaItem
       return <TwitterBlock post={postToPreview} connection={connection} index="0" isPreview />;
     }
     case 'linkedin': {
+      const content = type === 'image' && {
+        shortenedUrl: 'app.powerpost.digital',
+        submittedImageUrl: image,
+        submittedUrl: 'app.powerpost.digital',
+        title: mediaItem.properties.title,
+      };
       postToPreview = {
         ...post.toJS(),
         timestamp: new Date(moment.unix(post.get('schedule_time'))),
@@ -100,6 +106,7 @@ function buildPostPreview(postData, postMessage, postTime, connection, mediaItem
           companyStatusUpdate: {
             share: {
               comment: post.get('message'),
+              content,
             },
           },
         },

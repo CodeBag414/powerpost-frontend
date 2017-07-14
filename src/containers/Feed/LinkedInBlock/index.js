@@ -1,15 +1,20 @@
-/* eslint-disable react/no-danger */
 /* eslint-disable jsx-a11y/anchor-has-content */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable eqeqeq */
-import React, { PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import Link from 'react-toolbox/lib/link';
 import Linkify from 'react-linkify';
 
+import { extractHostname } from 'utils/url';
+
 import Wrapper from './Wrapper';
 import Header from './Header';
 import Content from './Content';
+import MediaBlock from './MediaBlock';
+import Image from './Image';
+import LinkInfo from './LinkInfo';
 import Footer from './Footer';
 
 moment.updateLocale('en', {
@@ -36,68 +41,85 @@ function getFormattedTime(time) {
   return moment(time).fromNow(true);
 }
 
-function processLinkedinText(post) {
-  let comment = post.updateContent.companyStatusUpdate.share.comment;
-  const shareContent = post.updateContent.companyStatusUpdate.share.content;
+class LinkedInBlock extends Component {
+  static propTypes = {
+    post: PropTypes.object,
+    connection: PropTypes.object,
+    isPreview: PropTypes.bool,
+  };
 
-  if (shareContent && shareContent.shortenedUrl) {
-    const urlComponent = `<a class="ln-url" href="${shareContent.shortenedUrl}" target="_blank">${shareContent.shortenedUrl}</a>`;
-    comment = comment ? `${comment}<br>${urlComponent}` : urlComponent;
-  }
+  state = {
+    width: 0,
+  };
 
-  return comment;
-}
-
-function LinkedInBlock({ post, connection, isPreview }) {
-  const connectionUrl = `//linkedin.com/company-beta/${connection.connection_uid}`;
-  return (
-    <Wrapper>
-      <Header>
-        <a className="ln-header-avatar" href={connectionUrl} target="_blank">
-          <i className="fa fa-linkedin" />
-        </a>
-        <div>
-          <a className="ln-header-channel-name" href={connectionUrl} target="_blank">{connection.display_name}</a>
-          <span>{getFormattedTime(post.timestamp)}</span>
-        </div>
-      </Header>
-      <Content>
-        <Linkify properties={{ target: '_blank' }}>
-          <div className="ln-comment" dangerouslySetInnerHTML={{ __html: processLinkedinText(post) }} />
-        </Linkify>
-      </Content>
-      {!isPreview &&
-        <Footer>
-          <div className="ln-comment-details">
-            <span className="ln-comment-detail">
-              {post.numLikes} {post.numLikes === 1 ? 'Like' : 'Likes'}
-            </span>
-            <span className="ln-comment-dot" />
-            <span className="ln-comment-detail">
-              { post.updateComments ?
-                `${post.updateComments._total} ${post.updateComments._total == 1 ? 'Comment' : 'Comments'}`
-              :
-                '0 Comments'
-              }
-            </span>
-          </div>
-          <Link
-            className="post-view-button"
-            href={`//www.linkedin.com/hp/update/${post.updateKey.substr(post.updateKey.lastIndexOf('-') + 1)}`}
-            target="_blank"
-            label="View"
-            icon="open_in_new"
-          />
-        </Footer>
+  buildMedia = (content) =>
+    <MediaBlock width={this.state.width}>
+      <Image url={content.submittedImageUrl} width={this.state.width}>
+        <img
+          src={content.submittedImageUrl}
+          role="presentation"
+          onLoad={(e) => {
+            this.setState({ width: e.target.naturalWidth });
+          }}
+        />
+      </Image>
+      {(content.title || content.description) &&
+        <LinkInfo width={this.state.width}>
+          <h2 className="link-title">{content.title}</h2>
+          <h3 className="link-desc">{extractHostname(content.submittedUrl)}</h3>
+        </LinkInfo>
       }
-    </Wrapper>
-  );
-}
+    </MediaBlock>
 
-LinkedInBlock.propTypes = {
-  post: PropTypes.object,
-  connection: PropTypes.object,
-  isPreview: PropTypes.bool,
-};
+  render() {
+    const { post, connection, isPreview } = this.props;
+    const connectionUrl = `//linkedin.com/company-beta/${connection.connection_uid}`;
+    const comment = post.updateContent.companyStatusUpdate.share.comment;
+    const shareContent = post.updateContent.companyStatusUpdate.share.content;
+    return (
+      <Wrapper>
+        <Header>
+          <a className="ln-header-avatar" href={connectionUrl} target="_blank">
+            <i className="fa fa-linkedin" />
+          </a>
+          <div>
+            <a className="ln-header-channel-name" href={connectionUrl} target="_blank">{connection.display_name}</a>
+            <span>{getFormattedTime(post.timestamp)}</span>
+          </div>
+        </Header>
+        <Content>
+          <Linkify properties={{ target: '_blank' }}>
+            <div className="ln-comment">{comment}</div>
+          </Linkify>
+          {shareContent && shareContent.shortenedUrl && this.buildMedia(shareContent)}
+        </Content>
+        {!isPreview &&
+          <Footer>
+            <div className="ln-comment-details">
+              <span className="ln-comment-detail">
+                {post.numLikes} {post.numLikes === 1 ? 'Like' : 'Likes'}
+              </span>
+              <span className="ln-comment-dot" />
+              <span className="ln-comment-detail">
+                { post.updateComments ?
+                  `${post.updateComments._total} ${post.updateComments._total == 1 ? 'Comment' : 'Comments'}`
+                :
+                  '0 Comments'
+                }
+              </span>
+            </div>
+            <Link
+              className="post-view-button"
+              href={`//www.linkedin.com/hp/update/${post.updateKey.substr(post.updateKey.lastIndexOf('-') + 1)}`}
+              target="_blank"
+              label="View"
+              icon="open_in_new"
+            />
+          </Footer>
+        }
+      </Wrapper>
+    );
+  }
+}
 
 export default LinkedInBlock;
