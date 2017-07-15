@@ -172,10 +172,15 @@ export function* createRSSFeed(action) {
     },
   };
 
-  const results = yield call(postData, '/feed_api/feed', data);
-  if (results.data.status === 'success') {
-    const feed = results.data.feed;
-    yield put({ type: CREATE_RSS_FEED_SUCCESS, feed });
+  try {
+    const results = yield call(postData, '/feed_api/feed', data);
+    if (results.data.status === 'success') {
+      const feed = results.data.feed;
+      yield put({ type: CREATE_RSS_FEED_SUCCESS, feed });
+      toastr.success('Success!', 'The RSS feed has been added');
+    }
+  } catch (error) {
+    toastr.error('Error!', error.error);
   }
 }
 

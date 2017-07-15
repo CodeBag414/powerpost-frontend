@@ -56,6 +56,7 @@ function* fetchConnectionsWorker({ accountId }) {
   const data = {
     payload: {
       account_id: accountId,
+      status: [1, 3, 5],
     },
   };
   const params = serialize(data);
@@ -63,8 +64,6 @@ function* fetchConnectionsWorker({ accountId }) {
   const response = yield call(getData, `/connection_api/connections?${params}`);
   if (response.data.status === 'success') {
     yield put(setConnections(response.data.connections));
-  } else {
-    console.log(response);
   }
 }
 

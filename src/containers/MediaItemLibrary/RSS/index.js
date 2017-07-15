@@ -63,6 +63,7 @@ class RSS extends Component {
     this.setState({
       rssName: '',
       rssUrl: '',
+      showModal: false,
     });
   }
 

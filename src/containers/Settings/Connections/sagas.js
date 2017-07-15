@@ -127,6 +127,7 @@ export function* createSubChannels(action, dispatch) { // eslint-disable-line no
 
       yield call(postData, requestUrl, apiData);
     }
+    toastr.success('Success!', 'Connections added');
   }
 
   const connectionData = {
@@ -146,8 +147,6 @@ export function* createSubChannels(action, dispatch) { // eslint-disable-line no
   yield put({ type: SET_CONNECTIONS_LIST, connections });
   yield put({ type: TOGGLE_ADD_CONNECTION_DIALOG, shown });
   yield put({ type: CLEAR_SUB_DATA });
-
-  toastr.success('Success!', 'Connections added');
 }
 
 export function* getSubConnections(connection) {
@@ -172,11 +171,17 @@ export function* fetchWordpressBlogs(action, dispatch) { // eslint-disable-line 
   const data = action.data;
 
   const requestUrl = '/connection_api/wordpress_blogs';
-  const result = yield call(postData, requestUrl, data);
 
-  if (result.data.status === 'success') {
-    const subChannels = result.data.blogs;
-    yield put({ type: SET_SUB_CHANNELS, subChannels });
+  try {
+    const result = yield call(postData, requestUrl, data);
+
+    if (result.data.status === 'success') {
+      const subChannels = result.data.blogs;
+      yield put({ type: SET_SUB_CHANNELS, subChannels });
+    }
+  } catch (error) {
+    console.log(error);
+    toastr.error('Error', error.error);
   }
 }
 

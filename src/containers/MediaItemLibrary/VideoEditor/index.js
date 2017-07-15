@@ -197,14 +197,16 @@ class VideoEditor extends Component {
                   {this.props.videoItem && this.props.videoItem.status !== '1' ? (<IconPlaceholder className="fa fa-video-camera" />) : (<LargeImageWrapper src={selectedImage.url} />) }
                 </div>
               }
-              <SimpleButton
-                style={{ fontSize: '13px' }}
-                color={theme.textColor}
-                onClick={this.openFilePicker}
-                noBorder
-              >
-                Upload New Cover Image
-              </SimpleButton>
+              { videoItem.status === '1' &&
+                <SimpleButton
+                  style={{ fontSize: '13px' }}
+                  color={theme.textColor}
+                  onClick={this.openFilePicker}
+                  noBorder
+                >
+                  Upload New Cover Image
+                </SimpleButton>
+              }
             </div>
           </BodyWrapper>
           <FooterWrapper>

@@ -281,7 +281,7 @@ class AddConnectionDialog extends React.Component {
                 <p>Insert the URL to a Wordpress site and provide the login credentials of a user who is an admin or owner of the site. Click find blogs to return any blogs associated with the site, then connect to the blogs you want. You will be able to post directly to connected blogs.</p>
                 <hr />
                 <div>
-                  <TextField floatingLabelText="Wordpress URL" errorText={this.state.wordpressUrlError} name="wordpressUrl" type="url" value={this.state.wordpressUrl} onChange={this.handleWordpressUrl} />
+                  <TextField floatingLabelText="Wordpress URL (Ex: https://www.mywordpresssitecom)" errorText={this.state.wordpressUrlError} name="wordpressUrl" type="url" value={this.state.wordpressUrl} onChange={this.handleWordpressUrl} />
                 </div>
                 <div className="row">
                   <div className="col-md-6">
@@ -291,7 +291,7 @@ class AddConnectionDialog extends React.Component {
                     <TextField floatingLabelText="Wordpress Password" errorText={this.state.wordpressPasswordError} name="wordpressPassword" type="password" value={this.state.wordpressPassword} onChange={this.handleWordpressPassword} />
                   </div>
                 </div>
-                <PPButton label="Fetch Blogs" primary={!this.state.wordpressPasswordError || !this.state.wordpressUrlError || !this.state.wordpressUserNameError} onClick={this.fetchBlogs} />
+                <PPButton label="Find Blogs" primary={!this.state.wordpressPasswordError || !this.state.wordpressUrlError || !this.state.wordpressUserNameError} onClick={this.fetchBlogs} />
                 <hr />
               </div>
               }
