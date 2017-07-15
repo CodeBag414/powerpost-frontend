@@ -59,7 +59,16 @@ function processTwitterText(post) {
 
   if (post.entities.media && post.entities.media.length) {
     post.entities.media.map((media) => {
-      text = text.replace(media.url, `<img class="tw-image" alt="Post" src="${media.media_url}" />`);
+      // For preview blocks only - not supported by twitter API now, so can't show it on social feeds
+      if (media.type === 'video') {
+        text = text.replace(media.url, `
+          <video class="tw-video" preload="metadata" controls>
+            <source src=${media.url} type="video/mp4" />
+          </video>
+        `);
+      } else {
+        text = text.replace(media.url, `<img class="tw-image" alt="Post" src="${media.media_url}" />`);
+      }
       isLarge = true;
       return true;
     });

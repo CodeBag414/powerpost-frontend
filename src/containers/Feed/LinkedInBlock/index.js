@@ -77,7 +77,10 @@ class LinkedInBlock extends Component {
     const comment = post.updateContent.companyStatusUpdate.share.comment;
     const shareContent = post.updateContent.companyStatusUpdate.share.content;
 
-    const url = shareContent.submittedUrl.startsWith('http') ? shareContent.submittedUrl : `http://${shareContent.submittedUrl}`;
+    const url = shareContent &&
+      (shareContent.submittedUrl.startsWith('http')
+        ? shareContent.submittedUrl
+        : `http://${shareContent.submittedUrl}`);
 
     return (
       <Wrapper>

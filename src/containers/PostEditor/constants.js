@@ -1,3 +1,4 @@
+/* Redux constants */
 export const POST_COMMENT_REQUEST = 'POST_COMMENT_REQUEST';
 export const ADD_COMMENT = 'ADD_COMMENT';
 export const FETCH_COMMENTS_REQUEST = 'FETCH_COMMENTS_REQUEST';
@@ -46,3 +47,6 @@ export const CREATE_POST_SUCCESS = 'CREATE_POST_SUCCESS';
 export const CREATE_POST_FAILURE = 'CREATE_POST_FAILURE';
 export const CLEAR_MEDIA_ITEM = 'CLEAR_MEDIA_ITEM';
 export const SET_WORDPRESS_POST_REQUEST = 'SET_WORDPRESS_POST_REQUEST';
+
+/* Other constants */
+export const APP_URL = 'app.powerpost.digital';

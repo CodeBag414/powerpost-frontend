@@ -44,7 +44,7 @@ const Wrapper = styled.div`
     font-size: 12px;
     font-style: italic;
     margin-top: 10px;
-    text-align: center;
+    /*text-align: center;*/
     &.pinterest {
       margin-top: -10px;
     }

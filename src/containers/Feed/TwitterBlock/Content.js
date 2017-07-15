@@ -22,7 +22,7 @@ const Content = styled.div`
     }
   }
 
-  .tw-image {
+  .tw-image, .tw-video {
     display: block;
     max-width: 100%;
     margin-top: 10px;

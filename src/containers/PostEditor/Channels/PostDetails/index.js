@@ -5,6 +5,7 @@ import moment from 'moment';
 import classnames from 'classnames';
 
 import { extractHostname } from 'utils/url';
+import { APP_URL } from 'containers/PostEditor/constants';
 
 import DatePicker from 'elements/atm.DatePicker';
 import TimePicker from 'elements/atm.TimePicker';
@@ -23,7 +24,7 @@ function getCreatorURL(url) {
   return url.substr(0, url.substr(0, url.length - 1).lastIndexOf('/') + 1);
 }
 
-function buildPostPreview(postData, postMessage, postTime, connection, type, mediaItem) {
+function buildPostPreview(postData, postMessage, postTime, connection, type, mediaItem, postSetId) {
   const post = postData.merge({
     message: postMessage,
     schedule_time: postTime,
@@ -61,12 +62,13 @@ function buildPostPreview(postData, postMessage, postTime, connection, type, med
       };
       return <FacebookBlock post={postToPreview} connection={connection} isPreview />;
     case 'twitter': {
-      // FIXME: Append link at the end of the message instead of the following image
-      const mediaUrl = (type === 'image' && image) || (type === 'link' && link.picture_url);
-      // const mediaUrl = type === 'image' && image;
+      const mediaUrl = (type === 'image' && image)
+        || (type === 'link' && link.picture_url)
+        || (type === 'video' && video.source_url);
       const media = [{
         url: mediaUrl,
         media_url: mediaUrl,
+        type, // An extra field for checking type of the media
       }];
       postToPreview = {
         ...post.toJS(),
@@ -85,9 +87,9 @@ function buildPostPreview(postData, postMessage, postTime, connection, type, med
       let content;
       if (type === 'image') {
         content = {
-          shortenedUrl: 'app.powerpost.digital',
+          shortenedUrl: APP_URL,
           submittedImageUrl: image,
-          submittedUrl: 'app.powerpost.digital',
+          submittedUrl: APP_URL,
           title: mediaItem.properties.title,
         };
       } else if (type === 'link') {
@@ -96,6 +98,13 @@ function buildPostPreview(postData, postMessage, postTime, connection, type, med
           submittedImageUrl: link.picture_url,
           submittedUrl: extractHostname(link.link),
           title: mediaItem.properties.title,
+        };
+      } else if (type === 'video') {
+        content = {
+          shortenedUrl: APP_URL,
+          submittedImageUrl: video.thumb_url,
+          submittedUrl: APP_URL,
+          title: video.title,
         };
       }
 
@@ -114,9 +123,14 @@ function buildPostPreview(postData, postMessage, postTime, connection, type, med
       return <LinkedInBlock post={postToPreview} connection={connection} isPreview />;
     }
     case 'pinterest': {
-      const metadata = type === 'link' && {
+      let metadata = type === 'link' && {
         link: {
           site_name: link.link,
+        },
+      };
+      metadata = type === 'video' && {
+        link: {
+          site_name: `http://${APP_URL}/posts/${postSetId}`,
         },
       };
       postToPreview = {
@@ -124,7 +138,7 @@ function buildPostPreview(postData, postMessage, postTime, connection, type, med
         created_at: new Date(moment.unix(post.get('schedule_time'))),
         image: {
           original: {
-            url: (type === 'image' && image) || (type === 'link' && link.picture_url),
+            url: (type === 'image' && image) || (type === 'link' && link.picture_url) || (type === 'video' && video.thumb_url),
           },
         },
         note: post.get('message'),
@@ -198,13 +212,17 @@ function PostDetails({
           Preview Post
         </div>
         <div className="post-preview">
-          {buildPostPreview(post, postMessage, postTime, connection, type, mediaItem)}
+          {buildPostPreview(post, postMessage, postTime, connection, type, mediaItem, postSet.getIn(['details', 'post_set_id']))}
         </div>
         <div className={classnames('post-preview-note', connection && connection.channel)}>
           {connection && connection.channel === 'twitter' && type === 'link' &&
             'NOTE: The URL to the link will be appended to Twitter message.'}
           {connection && connection.channel === 'pinterest' && type === 'link' &&
             'NOTE: When a user clicks on the link\'s image, it will go to its URL.'}
+          {connection && connection.channel === 'pinterest' && type === 'video' &&
+            'NOTE: When a user clicks on the the video cover image, it will go to a page that plays the video.'}
+          {connection && connection.channel === 'linkedin' && type === 'video' &&
+            'NOTE: A link to the video will be appended to the LinkedIn message.'}
         </div>
       </div>
       <div className="right-column">
