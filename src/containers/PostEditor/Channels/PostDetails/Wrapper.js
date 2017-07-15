@@ -4,7 +4,7 @@ const Wrapper = styled.div`
   display: flex;
   
   .left-column {
-    width: 350px;
+    width: 450px;
   }
 
   .right-column {
