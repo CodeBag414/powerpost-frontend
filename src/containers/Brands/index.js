@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { debounce } from 'lodash';
 
 import { UserCanBrands } from 'config.routes/UserRoutePermissions';
 
@@ -47,7 +48,10 @@ class Brands extends Component {
 
     this.state = {
       isDialogShown: false,
+      filteredBrands: props.brands,
     };
+
+    this.filterBrands = debounce(this.filterBrands, 200);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -62,9 +66,21 @@ class Brands extends Component {
     this.setState({ isDialogShown: !this.state.isDialogShown });
   }
 
+  handleSearch = (ev) => {
+    this.filterBrands(ev);
+  }
+
+  filterBrands = (ev) => {
+    const title = ev.target.value;
+    const filteredBrands = this.props.brands.filter((b) => b.title.toLowerCase().indexOf(title.toLowerCase()) > -1);
+    this.setState({
+      filteredBrands,
+    });
+  }
+
   render() {
     const { userAccount, brands } = this.props;
-    const { isDialogShown } = this.state;
+    const { isDialogShown, filteredBrands } = this.state;
 
     const numBrands = userAccount && userAccount.account_access && userAccount.account_access.num_brands;
 
@@ -72,11 +88,12 @@ class Brands extends Component {
       <Wrapper>
         <Header
           handleDialogToggle={this.handleDialogToggle}
+          handleSearch={this.handleSearch}
           brandLimit={numBrands}
           numBrands={brands.length}
         />
         <BrandsList
-          brands={brands}
+          brands={filteredBrands}
         />
         <AddBrandDialog
           handleDialogToggle={this.handleDialogToggle}
