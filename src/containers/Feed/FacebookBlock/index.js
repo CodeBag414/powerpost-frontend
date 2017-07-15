@@ -60,7 +60,7 @@ class FacebookBlock extends Component {
             </video>
           }
 
-          { post.type === 'link' &&
+          { (post.type === 'link' || post.type === 'document' || post.type === 'file') &&
             <div className="fb-link">
               <img src={post.full_picture} alt="link" />
               <div className="fb-link-content">

@@ -33,6 +33,7 @@ function buildPostPreview(postData, postMessage, postTime, connection, type, med
   let image = '';
   let link = {};
   let video = '';
+  let file = {};
 
   /* Set media entity */
   if (type === 'image') {
@@ -44,6 +45,8 @@ function buildPostPreview(postData, postMessage, postTime, connection, type, med
     if (video.source_url && video.source_url.endsWith('avi')) {
       video.source_url = video.source_720_url;
     }
+  } else if (type === 'document' || type === 'file') {
+    file = mediaItem.properties;
   }
 
   switch (connection.channel) {
@@ -54,17 +57,18 @@ function buildPostPreview(postData, postMessage, postTime, connection, type, med
           date: new Date(moment.unix(post.get('schedule_time'))),
         },
         type,
-        full_picture: image || link.picture_url,
-        name: link.title,
-        description: link.description,
-        caption: link.url,
+        full_picture: image || link.picture_url || file.picture,
+        name: link.title || file.title,
+        description: link.description || file.description,
+        caption: link.url || ((type === 'document' || type === 'file') && APP_URL),
         source: video.source_url,
       };
       return <FacebookBlock post={postToPreview} connection={connection} isPreview />;
     case 'twitter': {
       const mediaUrl = (type === 'image' && image)
         || (type === 'link' && link.picture_url)
-        || (type === 'video' && video.source_url);
+        || (type === 'video' && video.source_url)
+        || ((type === 'document' || type === 'file') && file.picture);
       const media = [{
         url: mediaUrl,
         media_url: mediaUrl,
@@ -106,6 +110,13 @@ function buildPostPreview(postData, postMessage, postTime, connection, type, med
           submittedUrl: APP_URL,
           title: video.title,
         };
+      } else if (type === 'document' || type === 'file') {
+        content = {
+          shortenedUrl: `${APP_URL}/posts/${postSetId}`,
+          submittedImageUrl: file.picture,
+          submittedUrl: `${APP_URL}/posts/${postSetId}`,
+          title: file.title,
+        };
       }
 
       postToPreview = {
@@ -133,12 +144,17 @@ function buildPostPreview(postData, postMessage, postTime, connection, type, med
           site_name: `http://${APP_URL}/posts/${postSetId}`,
         },
       };
+      metadata = (type === 'document' || type === 'file') && {
+        link: {
+          site_name: `http://${APP_URL}/posts/${postSetId}`,
+        },
+      };
       postToPreview = {
         ...post.toJS(),
         created_at: new Date(moment.unix(post.get('schedule_time'))),
         image: {
           original: {
-            url: (type === 'image' && image) || (type === 'link' && link.picture_url) || (type === 'video' && video.thumb_url),
+            url: (type === 'image' && image) || (type === 'link' && link.picture_url) || (type === 'video' && video.thumb_url) || ((type === 'document' || type === 'file') && file.picture),
           },
         },
         note: post.get('message'),
@@ -193,6 +209,7 @@ function PostDetails({
   minDate.setDate(minDate.getDate() - 1);
   // console.log('PostDetails postSet', postSet.toJS());
   const { type, mediaItem } = getMediaTypeAndItem(newMediaItem, postSet.getIn(['details', 'media_items']).toJS());
+  const postSetId = postSet.getIn(['details', 'post_set_id']);
 
   const characterCount = 140 - (postMessage ? postMessage.length : 0);
   return (
@@ -212,15 +229,27 @@ function PostDetails({
           Preview Post
         </div>
         <div className="post-preview">
-          {buildPostPreview(post, postMessage, postTime, connection, type, mediaItem, postSet.getIn(['details', 'post_set_id']))}
+          {buildPostPreview(post, postMessage, postTime, connection, type, mediaItem, postSetId)}
         </div>
         <div className={classnames('post-preview-note', connection && connection.channel)}>
           {connection && connection.channel === 'twitter' && type === 'link' &&
             'NOTE: The URL to the link will be appended to Twitter message.'}
+          {connection && connection.channel === 'twitter' && (type === 'document' || type === 'file') &&
+            <div>
+              NOTE: The URL to the file will be appended to Twitter message. It will go to
+              <a href={`http://${APP_URL}/posts/${postSetId}`} target="_blank"> {APP_URL}/posts/{postSetId}</a>.
+            </div>
+          }
           {connection && connection.channel === 'pinterest' && type === 'link' &&
             'NOTE: When a user clicks on the link\'s image, it will go to its URL.'}
           {connection && connection.channel === 'pinterest' && type === 'video' &&
             'NOTE: When a user clicks on the the video cover image, it will go to a page that plays the video.'}
+          {connection && connection.channel === 'pinterest' && (type === 'document' || type === 'file') &&
+            <div>
+              NOTE: When a user clicks on the file&#39;s image, it will go to
+              <a href={`http://${APP_URL}/posts/${postSetId}`} target="_blank"> {APP_URL}/posts/{postSetId}</a>.
+            </div>
+          }
           {connection && connection.channel === 'linkedin' && type === 'video' &&
             'NOTE: A link to the video will be appended to the LinkedIn message.'}
         </div>
