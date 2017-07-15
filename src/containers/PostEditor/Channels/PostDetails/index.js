@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import moment from 'moment';
+import classnames from 'classnames';
+
+import { extractHostname } from 'utils/url';
 
 import DatePicker from 'elements/atm.DatePicker';
 import TimePicker from 'elements/atm.TimePicker';
@@ -20,29 +23,15 @@ function getCreatorURL(url) {
   return url.substr(0, url.substr(0, url.length - 1).lastIndexOf('/') + 1);
 }
 
-function buildPostPreview(postData, postMessage, postTime, connection, mediaItems, newMediaItem) {
+function buildPostPreview(postData, postMessage, postTime, connection, type, mediaItem) {
   const post = postData.merge({
     message: postMessage,
     schedule_time: postTime,
   });
   let postToPreview = {};
-  let type = '';
   let image = '';
   let link = {};
   let video = '';
-
-  let mediaItem = {};
-
-  /* Set media type & mediaItem */
-  if (newMediaItem.type) {
-    mediaItem = newMediaItem;
-    type = newMediaItem.type;
-  } else if (mediaItems && mediaItems.length) {
-    mediaItem = mediaItems[0];
-    type = mediaItems[0].type;
-  } else {
-    type = 'status';
-  }
 
   /* Set media entity */
   if (type === 'image') {
@@ -93,12 +82,23 @@ function buildPostPreview(postData, postMessage, postTime, connection, mediaItem
       return <TwitterBlock post={postToPreview} connection={connection} index="0" isPreview />;
     }
     case 'linkedin': {
-      const content = type === 'image' && {
-        shortenedUrl: 'app.powerpost.digital',
-        submittedImageUrl: image,
-        submittedUrl: 'app.powerpost.digital',
-        title: mediaItem.properties.title,
-      };
+      let content;
+      if (type === 'image') {
+        content = {
+          shortenedUrl: 'app.powerpost.digital',
+          submittedImageUrl: image,
+          submittedUrl: 'app.powerpost.digital',
+          title: mediaItem.properties.title,
+        };
+      } else if (type === 'link') {
+        content = {
+          shortenedUrl: extractHostname(link.link),
+          submittedImageUrl: link.picture_url,
+          submittedUrl: extractHostname(link.link),
+          title: mediaItem.properties.title,
+        };
+      }
+
       postToPreview = {
         ...post.toJS(),
         timestamp: new Date(moment.unix(post.get('schedule_time'))),
@@ -114,6 +114,11 @@ function buildPostPreview(postData, postMessage, postTime, connection, mediaItem
       return <LinkedInBlock post={postToPreview} connection={connection} isPreview />;
     }
     case 'pinterest': {
+      const metadata = type === 'link' && {
+        link: {
+          site_name: link.link,
+        },
+      };
       postToPreview = {
         ...post.toJS(),
         created_at: new Date(moment.unix(post.get('schedule_time'))),
@@ -131,12 +136,31 @@ function buildPostPreview(postData, postMessage, postTime, connection, mediaItem
           name: connection.properties.board_data.name,
           url: connection.properties.board_data.url,
         },
+        metadata,
       };
       return <PinterestBlock post={postToPreview} isPreview />;
     }
     default:
       return null;
   }
+}
+
+function getMediaTypeAndItem(newMediaItem, mediaItems) {
+  let mediaItem = {};
+  let type;
+
+  /* Set media type & mediaItem */
+  if (newMediaItem.type) {
+    mediaItem = newMediaItem;
+    type = newMediaItem.type;
+  } else if (mediaItems && mediaItems.length) {
+    mediaItem = mediaItems[0];
+    type = mediaItems[0].type;
+  } else {
+    type = 'status';
+  }
+
+  return { type, mediaItem };
 }
 
 function PostDetails({
@@ -154,6 +178,7 @@ function PostDetails({
   const minDate = new Date();
   minDate.setDate(minDate.getDate() - 1);
   // console.log('PostDetails postSet', postSet.toJS());
+  const { type, mediaItem } = getMediaTypeAndItem(newMediaItem, postSet.getIn(['details', 'media_items']).toJS());
 
   const characterCount = 140 - (postMessage ? postMessage.length : 0);
   return (
@@ -163,19 +188,6 @@ function PostDetails({
           Customize Message
           <LimitIndicator className={characterCount < 0 && 'negative'}>{characterCount}</LimitIndicator>
         </div>
-        {/* <div className="channel-summary">
-          <i className={connection.channel_icon} />
-          <div className="summary-right">
-            <span className="channel-name">{connection.display_name}</span>
-            <span className="timestamp">
-              {
-                post.get('schedule_time')
-                ? moment.unix(post.get('schedule_time')).format('MMMM D, YYYY [at] hh:mma')
-                : 'Post when ready'
-              }
-            </span>
-          </div>
-        </div> */}
         <MultiLineInput
           hasBorder
           message={postMessage}
@@ -186,7 +198,13 @@ function PostDetails({
           Preview Post
         </div>
         <div className="post-preview">
-          {buildPostPreview(post, postMessage, postTime, connection, postSet.getIn(['details', 'media_items']).toJS(), newMediaItem)}
+          {buildPostPreview(post, postMessage, postTime, connection, type, mediaItem)}
+        </div>
+        <div className={classnames('post-preview-note', connection && connection.channel)}>
+          {connection && connection.channel === 'twitter' && type === 'link' &&
+            'NOTE: The URL to the link will be appended to Twitter message.'}
+          {connection && connection.channel === 'pinterest' && type === 'link' &&
+            'NOTE: When a user clicks on the link\'s image, it will go to its URL.'}
         </div>
       </div>
       <div className="right-column">

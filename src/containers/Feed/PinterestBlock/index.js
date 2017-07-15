@@ -13,10 +13,19 @@ function getFormattedTime(time) {
 }
 
 function PinterestBlock({ post, isPreview }) {
+  let url = '#';
+  if (post.image.original.url && post.metadata && post.metadata.link) {
+    url = post.metadata.link.site_name.startsWith('http') ? post.metadata.link.site_name : `http://${post.metadata.link.site_name}`;
+  }
   return (
     <Wrapper>
       {post.image.original.url &&
-        <img src={post.image.original.url} alt="Pin" />
+        (post.metadata.link ?
+          <a href={url} target="_blank">
+            <img src={post.image.original.url} alt="Pin" />
+          </a>
+        :
+          <img src={post.image.original.url} alt="Pin" />)
       }
       <Content>
         <Linkify properties={{ target: '_blank' }}>

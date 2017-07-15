@@ -63,7 +63,7 @@ class LinkedInBlock extends Component {
           }}
         />
       </Image>
-      {(content.title || content.description) &&
+      {(content.title || content.description) && // meaning that it is a LINK
         <LinkInfo width={this.state.width}>
           <h2 className="link-title">{content.title}</h2>
           <h3 className="link-desc">{extractHostname(content.submittedUrl)}</h3>
@@ -76,6 +76,9 @@ class LinkedInBlock extends Component {
     const connectionUrl = `//linkedin.com/company-beta/${connection.connection_uid}`;
     const comment = post.updateContent.companyStatusUpdate.share.comment;
     const shareContent = post.updateContent.companyStatusUpdate.share.content;
+
+    const url = shareContent.submittedUrl.startsWith('http') ? shareContent.submittedUrl : `http://${shareContent.submittedUrl}`;
+
     return (
       <Wrapper>
         <Header>
@@ -91,7 +94,14 @@ class LinkedInBlock extends Component {
           <Linkify properties={{ target: '_blank' }}>
             <div className="ln-comment">{comment}</div>
           </Linkify>
-          {shareContent && shareContent.shortenedUrl && this.buildMedia(shareContent)}
+          {shareContent && shareContent.shortenedUrl &&
+            (shareContent.title || shareContent.description ?
+              <a href={url} target="_blank">
+                {this.buildMedia(shareContent)}
+              </a>
+            :
+              this.buildMedia(shareContent))
+          }
         </Content>
         {!isPreview &&
           <Footer>

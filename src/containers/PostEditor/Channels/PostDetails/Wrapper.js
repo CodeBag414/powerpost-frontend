@@ -40,6 +40,16 @@ const Wrapper = styled.div`
     margin-top: 40px;
   }
 
+  .post-preview-note {
+    font-size: 12px;
+    font-style: italic;
+    margin-top: 10px;
+    text-align: center;
+    &.pinterest {
+      margin-top: -10px;
+    }
+  }
+
   .channel-summary {
     margin-bottom: 15px;
 
