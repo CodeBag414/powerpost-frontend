@@ -29,7 +29,7 @@ class FacebookBlock extends Component {
 
   render() {
     const { post, connection, isPreview } = this.props;
-    const connectionUrl = `//www.facebook.com/${connection.connection_uid}`;
+    const connectionUrl = connection.connection_uid ? `//www.facebook.com/${connection.connection_uid}` : null;
     return (
       <Wrapper>
         <Header>

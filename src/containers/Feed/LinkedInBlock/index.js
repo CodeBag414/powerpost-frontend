@@ -73,7 +73,7 @@ class LinkedInBlock extends Component {
 
   render() {
     const { post, connection, isPreview } = this.props;
-    const connectionUrl = `//linkedin.com/company-beta/${connection.connection_uid}`;
+    const connectionUrl = connection.connection_uid ? `//linkedin.com/company-beta/${connection.connection_uid}` : null;
     const comment = post.updateContent.companyStatusUpdate.share.comment;
     const shareContent = post.updateContent.companyStatusUpdate.share.content;
 

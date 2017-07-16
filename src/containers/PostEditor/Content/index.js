@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { fromJS } from 'immutable';
+import { Map, fromJS } from 'immutable';
 import { routerActions } from 'react-router-redux';
 import filepicker from 'filepicker-js';
 import * as linkify from 'linkifyjs';
@@ -12,6 +12,9 @@ import FileEditor from 'containers/MediaItemLibrary/FileEditor';
 import VideoEditor from 'containers/MediaItemLibrary/VideoEditor';
 import LinkDialog from 'containers/MediaItemLibrary/LinkDialog';
 import ImageEditor from 'containers/MediaItemLibrary/ImageEditor';
+
+import { getMediaTypeAndItem } from 'containers/PostEditor/Channels/PostDetails';
+import PostPreview from 'containers/PostEditor/Channels/PostDetails/PostPreview';
 
 import {
   updatePostSetRequest,
@@ -509,12 +512,30 @@ class Content extends Component {
   }
 
   render() {
-    const { pending, pushToLibrary, id, accountId } = this.props;
+    const { pending, pushToLibrary, id, accountId, postSet } = this.props;
     const { message, characterLimit, item, messageUrls, channelIndex } = this.state;
     // const { params: { postset_id, account_id } } = this.props;
     const actions = [
       { label: 'close', onClick: this.closeAllDialog },
     ];
+
+    let previewConnection;
+    const previewPostTime = new Date().getTime() / 1000;
+    const previewPostData = Map();
+    const { type, mediaItem } = getMediaTypeAndItem(this.state.item, postSet);
+    if (channelIndex > -1) {
+      previewConnection = {
+        channel: CHANNELS[channelIndex].name.substr(8),
+        channel_icon: CHANNELS[channelIndex].icon,
+        display_name: 'Display Name',
+        parent_display_name: 'username',
+        properties: {
+          board_data: {
+            name: 'Board Name',
+          },
+        },
+      };
+    }
 
     return (
       <Wrapper pending={pending}>
@@ -552,6 +573,19 @@ class Content extends Component {
             />
           </PopupBorder>
         </MessageEditorWrapper>
+        {channelIndex > -1 &&
+          <PostPreview
+            marginBottom
+            className="bottom-margin"
+            connection={previewConnection}
+            mediaItem={mediaItem}
+            post={previewPostData}
+            postMessage={message}
+            postSetId={postSet.getIn(['details', 'post_set_id'])}
+            postTime={previewPostTime}
+            type={type}
+          />
+        }
         <LinkEditor actions={actions} closeAllDialog={this.closeAllDialog} handleLinkEditorSave={this.handleLinkEditorSave} linkEditorDialog={this.state.linkEditor} urlContent={this.props.urlContent} filePickerKey={this.props.filePickerKey} linkItem={this.state.mediaItem} />
         <ImageEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleImageEditorSave} isOpen={this.state.imageEditor} filePickerKey={this.props.filePickerKey} imageItem={this.state.mediaItem} />
         <LinkDialog actions={actions} closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue} handleSubmit={this.handleAddLinkSubmit} urlValue={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
