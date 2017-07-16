@@ -4,7 +4,7 @@ const Content = styled.div`
   margin-top: 10px;
 
   a {
-    text-decoration: none;
+    text-decoration: none !important;
   }
 `;
 

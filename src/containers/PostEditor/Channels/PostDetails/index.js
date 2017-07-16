@@ -34,6 +34,7 @@ function buildPostPreview(postData, postMessage, postTime, connection, type, med
   let link = {};
   let video = '';
   let file = {};
+  let blog = {};
 
   /* Set media entity */
   if (type === 'image') {
@@ -47,6 +48,8 @@ function buildPostPreview(postData, postMessage, postTime, connection, type, med
     }
   } else if (type === 'document' || type === 'file') {
     file = mediaItem.properties;
+  } else if (type === 'blog') {
+    blog = mediaItem.properties;
   }
 
   switch (connection.channel) {
@@ -57,10 +60,10 @@ function buildPostPreview(postData, postMessage, postTime, connection, type, med
           date: new Date(moment.unix(post.get('schedule_time'))),
         },
         type,
-        full_picture: image || link.picture_url || file.picture,
-        name: link.title || file.title,
-        description: link.description || file.description,
-        caption: link.url || ((type === 'document' || type === 'file') && APP_URL),
+        full_picture: image || link.picture_url || file.picture || blog.thumb_url,
+        name: link.title || file.title || blog.title,
+        description: link.description || file.description || blog.caption,
+        caption: link.url || ((type === 'document' || type === 'file') && APP_URL) || (type === 'blog' && APP_URL),
         source: video.source_url,
       };
       return <FacebookBlock post={postToPreview} connection={connection} isPreview />;
@@ -68,7 +71,8 @@ function buildPostPreview(postData, postMessage, postTime, connection, type, med
       const mediaUrl = (type === 'image' && image)
         || (type === 'link' && link.picture_url)
         || (type === 'video' && video.source_url)
-        || ((type === 'document' || type === 'file') && file.picture);
+        || ((type === 'document' || type === 'file') && file.picture)
+        || (type === 'blog' && blog.thumb_url);
       const media = [{
         url: mediaUrl,
         media_url: mediaUrl,
@@ -117,6 +121,13 @@ function buildPostPreview(postData, postMessage, postTime, connection, type, med
           submittedUrl: `${APP_URL}/posts/${postSetId}`,
           title: file.title,
         };
+      } else if (type === 'blog') {
+        content = {
+          shortenedUrl: `${APP_URL}/posts/${postSetId}`,
+          submittedImageUrl: blog.thumb_url,
+          submittedUrl: `${APP_URL}/posts/${postSetId}`,
+          title: blog.title,
+        };
       }
 
       postToPreview = {
@@ -139,12 +150,7 @@ function buildPostPreview(postData, postMessage, postTime, connection, type, med
           site_name: link.link,
         },
       };
-      metadata = type === 'video' && {
-        link: {
-          site_name: `http://${APP_URL}/posts/${postSetId}`,
-        },
-      };
-      metadata = (type === 'document' || type === 'file') && {
+      metadata = (type === 'video' || type === 'document' || type === 'file' || type === 'blog') && {
         link: {
           site_name: `http://${APP_URL}/posts/${postSetId}`,
         },
@@ -154,7 +160,11 @@ function buildPostPreview(postData, postMessage, postTime, connection, type, med
         created_at: new Date(moment.unix(post.get('schedule_time'))),
         image: {
           original: {
-            url: (type === 'image' && image) || (type === 'link' && link.picture_url) || (type === 'video' && video.thumb_url) || ((type === 'document' || type === 'file') && file.picture),
+            url: (type === 'image' && image) ||
+              (type === 'link' && link.picture_url) ||
+              (type === 'video' && video.thumb_url) ||
+              ((type === 'document' || type === 'file') && file.picture) ||
+              (type === 'blog' && blog.thumb_url),
           },
         },
         note: post.get('message'),
@@ -240,6 +250,12 @@ function PostDetails({
               <a href={`http://${APP_URL}/posts/${postSetId}`} target="_blank"> {APP_URL}/posts/{postSetId}</a>.
             </div>
           }
+          {connection && connection.channel === 'twitter' && type === 'blog' &&
+            <div>
+              NOTE: The URL to the blog will be appended to Twitter message. It will go to
+              <a href={`http://${APP_URL}/posts/${postSetId}`} target="_blank"> {APP_URL}/posts/{postSetId}</a>.
+            </div>
+          }
           {connection && connection.channel === 'pinterest' && type === 'link' &&
             'NOTE: When a user clicks on the link\'s image, it will go to its URL.'}
           {connection && connection.channel === 'pinterest' && type === 'video' &&
@@ -247,6 +263,12 @@ function PostDetails({
           {connection && connection.channel === 'pinterest' && (type === 'document' || type === 'file') &&
             <div>
               NOTE: When a user clicks on the file&#39;s image, it will go to
+              <a href={`http://${APP_URL}/posts/${postSetId}`} target="_blank"> {APP_URL}/posts/{postSetId}</a>.
+            </div>
+          }
+          {connection && connection.channel === 'pinterest' && type === 'blog' &&
+            <div>
+              NOTE: When a user clicks on the blog&#39;s image, it will go to
               <a href={`http://${APP_URL}/posts/${postSetId}`} target="_blank"> {APP_URL}/posts/{postSetId}</a>.
             </div>
           }
