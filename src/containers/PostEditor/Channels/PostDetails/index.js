@@ -109,9 +109,9 @@ function buildPostPreview(postData, postMessage, postTime, connection, type, med
         };
       } else if (type === 'video') {
         content = {
-          shortenedUrl: APP_URL,
+          shortenedUrl: `${APP_URL}/posts/${postSetId}`,
           submittedImageUrl: video.thumb_url,
-          submittedUrl: APP_URL,
+          submittedUrl: `${APP_URL}/posts/${postSetId}`,
           title: video.title,
         };
       } else if (type === 'document' || type === 'file') {
