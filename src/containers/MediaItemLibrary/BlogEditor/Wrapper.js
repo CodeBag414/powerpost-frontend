@@ -6,7 +6,7 @@ const Wrapper = styled.div`
   top: 0;
   bottom: 0;
   right: 0;
-  z-index: 10001;
+  z-index: 999999;
   background: #fff;
 
   .content-wrapper {
