@@ -2,7 +2,8 @@ import styled from 'styled-components';
 
 export const UploadButtonWrapper = styled.div`
   margin-top: 7px;
-  width: 240px;
+  width: 100%;
+  max-width: 240px;
   display: flex;
   justify-content: space-between;
   a {
@@ -17,7 +18,8 @@ export const UploadButtonWrapper = styled.div`
 `;
 
 export default styled.div`
-  width: 240px;
+  width: 100%;
+  max-width: 240px;
   height: 150px;
   background: url(${(props) => props.url});
   background-position: center;

@@ -525,7 +525,7 @@ export class WordpressSettings extends Component {
                 placeholder="Choose Author"
                 onChange={this.handleAuthorChange}
               />
-              <LabelWrapper />
+              <LabelWrapper>&nbsp;</LabelWrapper>
               <Checkbox
                 checked={allowComments}
                 disabled={disabled}

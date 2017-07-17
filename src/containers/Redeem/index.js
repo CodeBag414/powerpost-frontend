@@ -80,7 +80,7 @@ class Redeem extends Component {
           case 'stream_invite': {
             const accountId = get(detail, 'account_id');
             const streamId = get(detail, 'stream.stream_id');
-            browserHistory.push(`/account/${accountId}/library/shared_streams/subscriptions/${streamId}`);
+            browserHistory.push(`/account/${accountId}/shared_streams/subscriptions/${streamId}`);
             break;
           }
           default: { // activation
