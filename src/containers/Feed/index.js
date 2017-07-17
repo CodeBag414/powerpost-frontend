@@ -13,6 +13,7 @@ import FacebookBlock from './FacebookBlock';
 import TwitterBlock from './TwitterBlock';
 import LinkedInBlock from './LinkedInBlock';
 import PinterestBlock from './PinterestBlock';
+import GooglePlusBlock from './GooglePlusBlock';
 
 import {
   fetchSocialFeed,
@@ -89,6 +90,9 @@ class Feed extends Component {
       case 'pinterest':
         url = feed[0].board.url;
         break;
+      case 'google':
+        url = feed[0].actor.url;
+        break;
       default:
         break;
     }
@@ -128,6 +132,8 @@ class Feed extends Component {
         return (<LinkedInBlock key={post.updateKey} post={post} connection={connection} />);
       case 'pinterest':
         return (<PinterestBlock key={post.id} post={post} connection={connection} />);
+      case 'google':
+        return (<GooglePlusBlock key={post.id} post={post} connection={connection} />);
       default:
         return '';
     }
