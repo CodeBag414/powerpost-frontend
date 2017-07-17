@@ -23,6 +23,10 @@ const permissionDetails = {
     wordpressSettings: ['post_edit', 'hidden'],
     sharedStream: ['post_edit', 'disabled'],
     deletePostButton: ['post_delete', 'hidden'],
+    Idea: ['post_edit', 'hidden'],
+    Draft: ['post_edit', 'hidden'],
+    Ready: [['post_edit', 'post_review'], 'hidden'],
+    Review: [['post_edit', 'post_review'], 'hidden'],
   },
   mainNav: {
     createPost: ['post_edit', 'hidden'],
@@ -45,10 +49,18 @@ const permissionDetails = {
   },
   statusBoards: {
     deleteEllipsesMenu: ['post_delete', 'hidden'],
+    Idea: ['post_edit', 'hidden'],
+    Draft: ['post_edit', 'hidden'],
+    Ready: [['post_edit', 'post_review'], 'hidden'],
+    Review: [['post_edit', 'post_review'], 'hidden'],
   },
   calendar: {
     deleteButton: ['post_delete', 'hidden'],
     editButton: ['post_edit', 'hidden'],
+    Idea: ['post_edit', 'hidden'],
+    Draft: ['post_edit', 'hidden'],
+    Ready: [['post_edit', 'post_review'], 'hidden'],
+    Review: [['post_edit', 'post_review'], 'hidden'],
   },
   team: {
     inviteNewMember: ['team_edit', 'hidden'],
@@ -59,6 +71,12 @@ const permissionDetails = {
     removeFromStream: ['post_edit', 'hidden'],
     addPost: ['post_edit', 'hidden'],
   },
+  posts: {
+    Idea: ['post_edit', 'hidden'],
+    Draft: ['post_edit', 'hidden'],
+    Ready: [['post_edit', 'post_review'], 'hidden'],
+    Review: [['post_edit', 'post_review'], 'hidden'],
+  },
 };
 
 export const getClassesByPermission = (permissions = {}, field) => {
@@ -67,6 +85,9 @@ export const getClassesByPermission = (permissions = {}, field) => {
 
   const permissionList = _.get(permissionDetails, field, []);
   const [permission, className] = permissionList;
+  if (permission instanceof Array) {
+    return permission.filter((permissionItem) => permissionsNormalized.indexOf(permissionItem) !== -1).length ? '' : className;
+  }
   return permissionsNormalized.indexOf(permission) === -1 ? className : '';
 };
 

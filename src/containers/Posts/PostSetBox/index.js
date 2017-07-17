@@ -29,6 +29,7 @@ class PostSetBox extends Component {
     accountId: PropTypes.string,
     fetchPostSets: PropTypes.func,
     fetchPostSetsByST: PropTypes.func,
+    permissionClasses: PropTypes.object,
   }
 
   state = {
@@ -122,7 +123,7 @@ class PostSetBox extends Component {
 
   render() {
     let { postSets } = this.props;
-    const { accountId } = this.props;
+    const { accountId, permissionClasses } = this.props;
     const {
       currentPostSetIndex,
       currentPostStatus,
@@ -144,6 +145,7 @@ class PostSetBox extends Component {
           activeStatus={currentPostStatus}
           onChange={this.changePostStatus}
           statuses={statuses}
+          permissionClasses={permissionClasses}
         />
         <div className="filter-wrapper">
           <DateRangePicker onChange={this.handleDateRange} startDate={startDate} endDate={endDate}>

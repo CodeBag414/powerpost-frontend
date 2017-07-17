@@ -11,8 +11,8 @@ import { Droppable } from 'react-drag-and-drop';
 import PostSet from '../PostSet';
 import styles from './styles.scss';
 
-const PostSetsGroup = ({ status, postSets, statusColor, deletePostSet, onDragStart, onDragEnter, onPostDragEnter, onDrop, dragHover, postStatusId, permissionClasses }) =>
-  <Droppable types={['post_set']} onDrop={onDrop} onDragEnter={onDragEnter} className={styles.postSets}>
+const PostSetsGroup = ({ status, postSets, statusColor, deletePostSet, onDragStart, onDragEnter, onPostDragEnter, onDrop, dragHover, postStatusId, permissionClasses, className }) =>
+  <Droppable types={['post_set']} onDrop={onDrop} onDragEnter={onDragEnter} className={`${styles.postSets} ${className}`}>
     <div className={styles.heading} onDragEnter={() => onPostDragEnter(-1)}>
       <span className={styles.status}>{status}</span>
       <div className={styles.postSetsCount} style={{ backgroundColor: statusColor }}>{postSets.size}</div>
@@ -47,6 +47,7 @@ PostSetsGroup.propTypes = {
   onDrop: PropTypes.func.isRequired,
   dragHover: PropTypes.bool.isRequired,
   permissionClasses: PropTypes.object,
+  className: PropTypes.string,
 };
 
 export default PostSetsGroup;

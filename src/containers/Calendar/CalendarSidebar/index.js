@@ -14,6 +14,7 @@ class CalendarSidebar extends React.Component {
     onSearch: PropTypes.func,
     onToggleFilter: PropTypes.func,
     onDelete: PropTypes.func,
+    permissionClasses: PropTypes.object,
   };
 
   state = {
@@ -22,6 +23,20 @@ class CalendarSidebar extends React.Component {
     showDraft: true,
     showIdea: true,
   };
+
+  componentWillMount() {
+    const { permissionClasses, onToggleFilter } = this.props;
+    const newState = {};
+    ['Ready', 'Review', 'Draft', 'Idea'].forEach((status) => {
+      if (permissionClasses[status] === 'hidden') {
+        newState[`show${status}`] = false;
+      } else {
+        newState[`show${status}`] = true;
+      }
+      onToggleFilter(`show${status}`, newState[`show${status}`]);
+    });
+    this.setState(newState);
+  }
 
   handleChangeCheckbox = (value, event) => {
     const { onToggleFilter } = this.props;
@@ -34,7 +49,7 @@ class CalendarSidebar extends React.Component {
 
   render() {
     const { showReady, showReview, showDraft, showIdea } = this.state;
-    const { postSets, currentAccount, query, onSearch, onDelete } = this.props;
+    const { postSets, currentAccount, query, onSearch, onDelete, permissionClasses } = this.props;
     return (
       <Wrapper>
         <div className="cal-sidebar-search">
@@ -52,6 +67,7 @@ class CalendarSidebar extends React.Component {
             onChange={this.handleChangeCheckbox}
             marginBottom={13}
             bgColor="#ABE66A"
+            className={`pp-checkbox ${permissionClasses.Ready}`}
           />
           <Checkbox
             checked={showReview}
@@ -60,6 +76,7 @@ class CalendarSidebar extends React.Component {
             onChange={this.handleChangeCheckbox}
             marginBottom={13}
             bgColor="#B171B5"
+            className={`pp-checkbox ${permissionClasses.Review}`}
           />
           <Checkbox
             checked={showDraft}
@@ -68,6 +85,7 @@ class CalendarSidebar extends React.Component {
             onChange={this.handleChangeCheckbox}
             marginBottom={13}
             bgColor="#67C5E6"
+            className={`pp-checkbox ${permissionClasses.Draft}`}
           />
           <Checkbox
             checked={showIdea}
@@ -76,6 +94,7 @@ class CalendarSidebar extends React.Component {
             onChange={this.handleChangeCheckbox}
             marginBottom={13}
             bgColor="#ACB5B8"
+            className={`pp-checkbox ${permissionClasses.Idea}`}
           />
         </div>
         <div className="cal-sidebar-unscheduled">

@@ -20,6 +20,7 @@ class StatusChooser extends React.Component {
     postSet: ImmutablePropTypes.map,
     updatePostSet: PropTypes.func,
     userAccount: PropTypes.object,
+    permissionClasses: PropTypes.object,
   };
 
   constructor(props) {
@@ -123,13 +124,15 @@ class StatusChooser extends React.Component {
 
   render() {
     const { status } = this.state;
+    const { permissionClasses } = this.props;
+    const options = statusOptions.filter((statusOption) => permissionClasses[statusOption.label] !== 'hidden');
     return (
       <Wrapper>
         <div className="status-chooser-title">Status</div>
         <div className="dropdown-wrapper">
           <Dropdown
             small
-            options={statusOptions}
+            options={options}
             placeholder="Choose Status"
             value={status}
             onChange={this.handleStatusChange}

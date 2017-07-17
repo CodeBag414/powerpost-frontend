@@ -208,6 +208,7 @@ class Calendar extends React.Component {
           onSearch={this.handleSearch}
           onToggleFilter={this.handleToggleFilter}
           onDelete={this.handleDeleteEvent}
+          permissionClasses={permissionClasses}
         />
         <CalendarView
           postSets={scheduledPostSets}

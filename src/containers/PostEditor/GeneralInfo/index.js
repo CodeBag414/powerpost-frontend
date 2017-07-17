@@ -71,6 +71,7 @@ function GeneralInfo({
           postSet={postSet}
           updatePostSet={updatePostSet}
           userAccount={userAccount}
+          permissionClasses={permissionClasses}
         />
         {
           modal ? (

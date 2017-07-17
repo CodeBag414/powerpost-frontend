@@ -110,6 +110,8 @@ class Board extends React.Component {
     ];
     const { deletePostSetAction, params, location: { hash }, userAccount } = this.props;
     const { moveStatus, searchText, postStatusId } = this.state;
+    const { permissions } = userAccount.user_access;
+    const permissionClasses = getClassesByPage(permissions, 'statusBoards');
     const postSets = this.props.postSets.getIn(['data', 'post_sets'], fromJS([]));
     const filterPostSets = this.filterPostSets(postSets);
     const postSetsGroups = groups.map((group) => {
@@ -120,11 +122,10 @@ class Board extends React.Component {
         postSets: sets,
         statusColor,
         status_id: status,
+        className: permissionClasses[name],
       };
     });
     const postsetId = hash.startsWith('#postset') ? hash.split('-')[1] : 0;
-    const { permissions } = userAccount.user_access;
-    const permissionClasses = getClassesByPage(permissions, 'statusBoards');
     return (
       <div className={`${styles.board} ${postsetId ? styles.modalOpen : ''}`}>
         <div className={styles['board-header']}>
@@ -149,6 +150,7 @@ class Board extends React.Component {
                 onDrop={() => this.onDrop(postSetsGroup.status_id)}
                 permissionClasses={permissionClasses}
                 dragHover={postSetsGroup.status_id === moveStatus}
+                className={postSetsGroup.className}
               />
             )
           }

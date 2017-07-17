@@ -10,9 +10,10 @@ export default function FaButton({
   fontColor,
   active,
   onClick,
+  className,
 }) {
   return (
-    <Wrapper active={active} bgColor={bgColor} fontColor={fontColor} onClick={onClick}>
+    <Wrapper active={active} bgColor={bgColor} fontColor={fontColor} onClick={onClick} className={className}>
       <i className={`fa ${faIcon}`} />
       <span>{label}</span>
     </Wrapper>
@@ -26,6 +27,7 @@ FaButton.propTypes = {
   fontColor: PropTypes.string.isRequired,
   active: PropTypes.bool,
   onClick: PropTypes.func.isRequired,
+  className: PropTypes.string,
 };
 
 FaButton.defaultProps = {

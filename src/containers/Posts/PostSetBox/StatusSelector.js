@@ -30,6 +30,7 @@ const StatusSelector = ({
   activeStatus,
   onChange,
   statuses,
+  permissionClasses,
 }) => (
   <div className="status-selector">
     {
@@ -41,6 +42,7 @@ const StatusSelector = ({
           fontColor={faIcons[status.name].fontColor}
           active={parseInt(activeStatus, 10) === status.status}
           onClick={() => onChange(status.status)}
+          className={permissionClasses[status.name]}
         />
       )
     }
@@ -51,6 +53,7 @@ StatusSelector.propTypes = {
   activeStatus: PropTypes.bool,
   onChange: PropTypes.func,
   statuses: PropTypes.array,
+  permissionClasses: PropTypes.object,
 };
 
 export default StatusSelector;
