@@ -14,6 +14,7 @@ class PostSetBox extends Component {
     postSet: ImmutablePropTypes.map,
     postSets: ImmutablePropTypes.list,
     streamName: PropTypes.string,
+    fetchingPostSets: PropTypes.bool,
     fetchPostSet: PropTypes.func,
     handlePostSet: PropTypes.func,
     permissionClasses: PropTypes.object,
@@ -23,8 +24,14 @@ class PostSetBox extends Component {
     currentPostSetIndex: 0,
   }
 
-  handleSelectPostSet = (index) => {
-    const { postSets, fetchPostSet } = this.props;
+  componentWillReceiveProps(nextProps) {
+    if (this.props.fetchingPostSets && !nextProps.fetchingPostSets && !nextProps.postSets.isEmpty()) {
+      this.handleSelectPostSet(0, nextProps);
+    }
+  }
+
+  handleSelectPostSet = (index, props = this.props) => {
+    const { postSets, fetchPostSet } = props;
 
     fetchPostSet({
       id: postSets.get(index).get('post_set_id'),

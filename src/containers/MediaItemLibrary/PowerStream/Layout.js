@@ -247,6 +247,7 @@ class PowerStreamLayout extends Component {
             postSet={postSet}
             postSets={postSets.get('data').sortBy((ps) => -ps.get('creation_time'))}
             streamName={streamName}
+            fetchingPostSets={postSets.get('isFetching')}
             fetchPostSet={this.props.fetchPostSet}
             handlePostSet={this.handlePostSet}
             permissionClasses={permissionClasses}
