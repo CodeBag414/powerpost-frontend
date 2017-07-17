@@ -59,6 +59,10 @@ console.error = (() => {
 /* eslint-enable no-console */
 /* eslint-enable prefer-template */
 
+if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+  location.href = `https:${window.location.href.substring(window.location.protocol.length)}`;
+}
+
 ReactDOM.render(
   <MuiThemeProvider>
     <ThemeProvider theme={PPTheme}>

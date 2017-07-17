@@ -54,11 +54,7 @@ const addProdMiddlewares = (app, options) => {
   app.use(publicPath, express.static(outputPath));
 
   app.get('*', (req, res) => {
-    if (!req.secure) {
-      return res.redirect(`https://beta.powerpost.digital${req.url}`);
-    }
-
-    return res.sendFile(path.resolve(outputPath, 'index.html'))
+    return res.sendFile(path.resolve(outputPath, 'index.html'));
   });
 };
 
