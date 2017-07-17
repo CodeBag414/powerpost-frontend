@@ -20,13 +20,22 @@ class SharedStream extends Component {
   constructor(props) {
     super(props);
 
-    const postDetails = props.postSet.get('details');
-    const sharedStreamEnabled = postDetails.get('stream_ids').includes(props.accountStreamId);
+    const sharedStreamEnabled = props.postSet.getIn(['details', 'stream_ids']).includes(props.accountStreamId);
 
     this.state = {
       sharedStreamEnabled,
       isExpanded: sharedStreamEnabled,
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.postSet.getIn(['details', 'post_set_id']) !== this.props.postSet.getIn(['details', 'post_set_id'])) {
+      const sharedStreamEnabled = nextProps.postSet.getIn(['details', 'stream_ids']).includes(nextProps.accountStreamId);
+      this.setState({
+        sharedStreamEnabled,
+        isExpanded: sharedStreamEnabled,
+      });
+    }
   }
 
   expand = (isExpanded) => {
@@ -73,7 +82,7 @@ class SharedStream extends Component {
           <InnerWrapper className={permissionClasses.sharedStream}>
             <span className="toggle-label">Include this post in this brand&#39;s shared stream?</span>
             <Toggle
-              defaultChecked={sharedStreamEnabled}
+              checked={sharedStreamEnabled}
               icons={false}
               onChange={this.toggleSharedStream}
             />
