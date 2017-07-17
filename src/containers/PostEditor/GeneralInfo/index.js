@@ -35,6 +35,7 @@ function GeneralInfo({
   const onBack = () => {
     browserHistory.push(location.pathname);
   };
+  const hasPrevUrl = location.state && location.state.prevUrl;
 
   // console.log('user', user);
   // console.log('postSet', postSet);
@@ -73,7 +74,7 @@ function GeneralInfo({
         />
         {
           modal ? (
-            <div className="back-button" onClick={onBack}>
+            <div className="back-button" onClick={hasPrevUrl ? goBack : onBack}>
               ×
             </div>
           ) : null
