@@ -10,7 +10,6 @@ import { connect } from 'react-redux';
 import { fromJS } from 'immutable';
 import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import { UserCanBoard } from 'config.routes/UserRoutePermissions';
 import { getClassesByPage } from 'utils/permissionClass';
 import PostEditor from 'containers/PostEditor';
 import PostSetsGroup from './PostSetsGroup';
@@ -194,4 +193,4 @@ const mapStateToProps = createStructuredSelector({
   userAccount: makeSelectUserAccount(),
 });
 
-export default UserCanBoard(connect(mapStateToProps, mapDispatchToProps)(Board));
+export default connect(mapStateToProps, mapDispatchToProps)(Board);

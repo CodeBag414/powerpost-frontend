@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import moment from 'moment';
 
-import { UserCanPostSet } from 'config.routes/UserRoutePermissions';
 import { getClassesByPage } from 'utils/permissionClass';
 import {
   deletePostSetRequest,
@@ -246,4 +245,4 @@ const mapStateToProps = createStructuredSelector({
   userAccount: makeSelectUserAccount(),
 });
 
-export default UserCanPostSet(connect(mapStateToProps, mapDispatchToProps)(Calendar));
+export default connect(mapStateToProps, mapDispatchToProps)(Calendar);

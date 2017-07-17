@@ -4,7 +4,6 @@ import { createStructuredSelector } from 'reselect';
 import { find } from 'lodash';
 import styled from 'styled-components';
 
-import { UserCanTeam } from 'config.routes/UserRoutePermissions';
 import { getClassesByPage } from 'utils/permissionClass';
 import {
   fetchGroupUsers,
@@ -238,4 +237,4 @@ export const mapDispatchToProps = (dispatch) => ({
   inviteEmailToGroupRequest: (payload) => dispatch(inviteEmailToGroup(payload)),
 });
 
-export default UserCanTeam(connect(mapStateToProps, mapDispatchToProps)(Team));
+export default connect(mapStateToProps, mapDispatchToProps)(Team);

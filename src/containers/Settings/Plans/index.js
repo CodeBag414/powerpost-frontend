@@ -6,7 +6,6 @@ import cookie from 'react-cookie';
 import { browserHistory } from 'react-router';
 
 import { toastr } from 'lib/react-redux-toastr';
-import { UserCanTeam } from 'config.routes/UserRoutePermissions';
 
 import {
   createPaymentSource,
@@ -146,7 +145,7 @@ export class Plans extends Component {
   }
 
   cancelPlan = () => {
-    const { userAccount, subscriptions: { details, error } } = this.props;
+    const { userAccount, subscriptions: { details } } = this.props;
 
     this.props.cancelSubscription({ accountId: userAccount.account_id, planId: details.plan.id });
     this.toggleCancelPlan();
@@ -258,4 +257,4 @@ export const mapDispatchToProps = (dispatch) => ({
   cancelSubscription: (payload) => dispatch(cancelSubscription(payload)),
 });
 
-export default UserCanTeam(connect(mapStateToProps, mapDispatchToProps)(Plans));
+export default connect(mapStateToProps, mapDispatchToProps)(Plans);

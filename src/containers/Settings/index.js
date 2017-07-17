@@ -5,33 +5,27 @@
  */
 
 import React from 'react';
-import { UserCanSettings } from 'config.routes/UserRoutePermissions';
+import PropTypes from 'prop-types';
 import TabLink from 'elements/atm.TabLink';
+import styles from './styles.scss';
 
-
-class Settings extends React.Component {
-
-  render() {
-    const styles = require('./styles.scss');
-    return (
-      <div>
-        <div className={styles.settingsBar}>
-          <TabLink to={`/account/${this.props.params.account_id}/settings/profile`} label="Profile" />
-          <TabLink to={`/account/${this.props.params.account_id}/settings/team`} label="Team" />
-          <TabLink to={`/account/${this.props.params.account_id}/settings/plans`} label="Plans" />
-          <TabLink to={`/account/${this.props.params.account_id}/settings/connections`} label="Connections" />
-        </div>
-        <div className={styles.settingsContent}>
-          { this.props.children }
-        </div>
-      </div>
-    );
-  }
-}
+const Settings = ({ params, children }) => (
+  <div>
+    <div className={styles.settingsBar}>
+      <TabLink to={`/account/${params.account_id}/settings/profile`} label="Profile" />
+      <TabLink to={`/account/${params.account_id}/settings/team`} label="Team" />
+      <TabLink to={`/account/${params.account_id}/settings/plans`} label="Plans" />
+      <TabLink to={`/account/${params.account_id}/settings/connections`} label="Connections" />
+    </div>
+    <div className={styles.settingsContent}>
+      {children}
+    </div>
+  </div>
+);
 
 Settings.propTypes = {
-  params: React.PropTypes.object,
-  children: React.PropTypes.any,
+  params: PropTypes.object,
+  children: PropTypes.node,
 };
 
-export default UserCanSettings(Settings);
+export default Settings;

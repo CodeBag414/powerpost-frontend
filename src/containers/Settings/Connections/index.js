@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { UserCanConnections } from 'config.routes/UserRoutePermissions';
 
 import {
   makeSelectAccountConnections,
@@ -201,4 +200,4 @@ const mapStateToProps = createStructuredSelector({
   subChannels: makeSelectSubChannels(),
 });
 
-export default UserCanConnections(connect(mapStateToProps, mapDispatchToProps)(Connections));
+export default connect(mapStateToProps, mapDispatchToProps)(Connections);

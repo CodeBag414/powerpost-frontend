@@ -3,24 +3,20 @@
  *
  *
  */
- 
+
 import React, { PropTypes } from 'react';
 
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import * as dialogs from 'react-toolbox-dialogs'
-import { UserCanAccount } from 'config.routes/UserRoutePermissions';
-import { routerActions } from 'react-router-redux'
+import * as dialogs from 'react-toolbox-dialogs';
+import { routerActions } from 'react-router-redux';
+import filepicker from 'filepicker-js';
+import {
+  makeSelectFilePickerKey,
+} from 'containers/App/selectors';
 
-import { 
+import {
   fetchCollections,
-  fetchUrlData,
-  clearUrlContent,
-  createMediaItem,
-  searchWeb,
-  getFeeds,
-  getRSSItems,
-  createFeed,
   setVisibilityFilter,
   setSearchFilter,
   deleteMediaItem,
@@ -28,19 +24,12 @@ import {
 } from '../actions';
 
 import {
-  makeSelectUrlContent,
   makeSelectActiveCollection,
   makeSelectMediaItems,
   makeSelectSearchResults,
-  makeSelectFeeds,
-  makeSelectRSSItems,
   makeSelectFilter,
   makeSelectProcessingItem,
 } from '../selectors';
-
-import {
-  makeSelectFilePickerKey,
-} from 'containers/App/selectors';
 
 import MediaNav from '../MediaNav';
 import MediaContainer from '../MediaContainer';
@@ -64,89 +53,107 @@ class MediaItemLibrary extends React.Component {
   }
 
   componentDidMount() {
-    this.props.setSearchFilter("");
-    //this.props.getMediaItems(this.props.params.account_id);
+    this.props.setSearchFilter('');
+    // this.props.getMediaItems(this.props.params.account_id);
   }
 
-  
-  openPreview(item) {
-    this.setState({ previewDialog: true, previewItem: item });
-  }
-  
-  async onConfirmDelete(id) {
+  async onConfirmDelete(id, deleteMediaItemAction) {
     const result = await dialogs.confirm('Delete', 'Are you sure you want to delete this item?');
     console.log(result + id);
     if (result) {
-      this.props.deleteMediaItem(id);
-    } else {
-      return;
+      deleteMediaItemAction(id);
     }
   }
-  
-  closeAllDialog() {
-    this.setState({ 
-      previewDialog: false,
-      previewItem: {properties: {}},
-    });
-  }
-  
-  handleLinkEditorSave(linkItem) {
-    this.setState({ linkEditorDialog: false });
-    const filepicker = require('filepicker-js');
-    filepicker.setKey(this.props.filePickerKey);
-    if(linkItem.picture) {
-      filepicker.storeUrl('https://process.filestackapi.com/' + this.props.filePickerKey + '/' + linkItem.picture, (Blob) => {
-        console.log(Blob);
-        linkItem.picture = Blob.url;
-        linkItem.picture_key = Blob.key;
-        filepicker.storeUrl(
-          'https://process.filestackapi.com/' + this.props.filePickerKey + '/resize=width:300,height:300,fit:clip/' + linkItem.picture,
-           (Blob) => {
-            linkItem.thumb_key = Blob.key;
-            linkItem.collection_id = this.props.activeCollection.collection_id;
-            console.log(linkItem);
-            linkItem.mediaItemType="link";
-            this.props.createMediaItem(linkItem);
-          });
-      });
-    } else {
-      linkItem.mediaItemType="link";
-      this.props.createMediaItem(linkItem);
-    }
-  }
-  
+
   setSearchFilter(event) {
     this.props.setSearchFilter(event.target.value);
   }
-  
+
   setSortOrder(event) {
     this.setState({ sortOrder: event.value });
-    this.props.setSortOrder(event.value)
+    this.props.setSortOrder(event.value);
   }
-  
+
+  openPreview(item) {
+    this.setState({ previewDialog: true, previewItem: item });
+  }
+
   openEditor(mediaItem) {
+    const { openBlogEditor, openImageEditor, openLinkEditor, openVideoEditor, openFileEditor } = this.props;
     if (mediaItem.type === 'blog') {
-      this.props.openBlogEditor(mediaItem);
+      openBlogEditor(mediaItem);
     } else if (mediaItem.type === 'image') {
-      this.props.openImageEditor(mediaItem);
+      openImageEditor(mediaItem);
     } else if (mediaItem.type === 'link') {
-      this.props.openLinkEditor(mediaItem);
+      openLinkEditor(mediaItem);
     } else if (mediaItem.type === 'video') {
-      this.props.openVideoEditor(mediaItem);
+      openVideoEditor(mediaItem);
     } else if (mediaItem.type === 'document') {
-      this.props.openFileEditor(mediaItem);
+      openFileEditor(mediaItem);
     } else {
-      this.props.openFileEditor(mediaItem);
+      openFileEditor(mediaItem);
     }
   }
-  
+
+  closeAllDialog() {
+    this.setState({
+      previewDialog: false,
+      previewItem: { properties: {} },
+    });
+  }
+
+  handleLinkEditorSave(linkItem) {
+    this.setState({ linkEditorDialog: false });
+    filepicker.setKey(this.props.filePickerKey);
+    if (linkItem.picture) {
+      filepicker.storeUrl(`https://process.filestackapi.com/${this.props.filePickerKey}/${linkItem.picture}`, (Blob) => {
+        console.log(Blob);
+        filepicker.storeUrl(
+          `https://process.filestackapi.com/${this.props.filePickerKey}/resize=width:300,height:300,fit:clip/${Blob.url}`,
+          (blob) => {
+            this.props.createMediaItem({
+              ...linkItem,
+              picture: Blob.url,
+              picture_key: Blob.key,
+              thumb_key: blob.key,
+              collection_id: this.props.activeCollection.collection_id,
+              mediaItemType: 'link',
+            });
+          });
+      });
+    } else {
+      this.props.createMediaItem({
+        ...linkItem,
+        mediaItemType: 'link',
+      });
+    }
+  }
+
   render() {
     return (
       <Wrapper>
-        <MediaNav filter={this.props.filter} setSortOrder={this.setSortOrder} setSearchFilter={this.setSearchFilter} openAddFile={this.openAddFile} openAddRSS={this.openAddRSS} openAddLink={this.openAddLink} openAddBlog={this.openAddBlog} openSearch={this.openSearch} 
-        sortOrder={this.state.sortOrder} />
-        <MediaContainer createPostSet={this.props.createPostSet} pushToEditor={this.props.pushToEditor} query={this.props.location.query} processingItem={this.props.processingItem} mediaItems={this.props.mediaItems} onConfirmDelete={this.onConfirmDelete.bind(this)} openPreview={this.openPreview} openEditor={this.openEditor} />
-        <PreviewDialog 
+        <MediaNav
+          filter={this.props.filter}
+          setSortOrder={this.setSortOrder}
+          setSearchFilter={this.setSearchFilter}
+          openAddFile={this.openAddFile}
+          openAddRSS={this.openAddRSS}
+          openAddLink={this.openAddLink}
+          openAddBlog={this.openAddBlog}
+          openSearch={this.openSearch}
+          sortOrder={this.state.sortOrder}
+        />
+        <MediaContainer
+          createPostSet={this.props.createPostSet}
+          pushToEditor={this.props.pushToEditor}
+          query={this.props.location.query}
+          processingItem={this.props.processingItem}
+          mediaItems={this.props.mediaItems}
+          onConfirmDelete={(id) => this.onConfirmDelete(id, this.props.deleteMediaItem)}
+          openPreview={this.openPreview}
+          openEditor={this.openEditor}
+        />
+        <PreviewDialog
           createPostSet={this.props.createPostSet}
           closeAllDialog={this.closeAllDialog}
           previewDialog={this.state.previewDialog}
@@ -178,9 +185,23 @@ const mapStateToProps = createStructuredSelector({
 });
 
 MediaItemLibrary.propTypes = {
-  getMediaItems: PropTypes.func,
-  params: PropTypes.any,
-  fetchUrlData: PropTypes.func,
+  setSearchFilter: PropTypes.func,
+  deleteMediaItem: PropTypes.func,
+  setSortOrder: PropTypes.func,
+  openBlogEditor: PropTypes.func,
+  openImageEditor: PropTypes.func,
+  openLinkEditor: PropTypes.func,
+  openVideoEditor: PropTypes.func,
+  openFileEditor: PropTypes.func,
+  filePickerKey: PropTypes.string,
+  createMediaItem: PropTypes.func,
+  activeCollection: PropTypes.object,
+  filter: PropTypes.string,
+  createPostSet: PropTypes.func,
+  pushToEditor: PropTypes.func,
+  location: PropTypes.object,
+  processingItem: PropTypes.func,
+  mediaItems: PropTypes.array,
 };
 
-export default UserCanAccount(connect(mapStateToProps, mapDispatchToProps)(MediaItemLibrary));
+export default connect(mapStateToProps, mapDispatchToProps)(MediaItemLibrary);

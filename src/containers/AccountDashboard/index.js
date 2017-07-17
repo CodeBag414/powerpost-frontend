@@ -12,8 +12,6 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import moment from 'moment';
 
-import { UserCanAccount } from 'config.routes/UserRoutePermissions';
-
 import {
   fetchMediaItems,
   fetchPostSetsBySTRequest,
@@ -200,4 +198,4 @@ const mapStateToProps = createStructuredSelector({
   postSets: selectPostSets(),
 });
 
-export default UserCanAccount(connect(mapStateToProps, mapDispatchToProps)(AccountDashboard));
+export default connect(mapStateToProps, mapDispatchToProps)(AccountDashboard);

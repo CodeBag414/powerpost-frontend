@@ -10,7 +10,6 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { browserHistory } from 'react-router';
 
-import { UserCanStatistics } from 'config.routes/UserRoutePermissions';
 import {
     makeSelectAccountConnections,
 } from 'containers/Main/selectors';
@@ -156,4 +155,4 @@ const mapStateToProps = createStructuredSelector({
   accountId: makeSelectAccountId(),
 });
 
-export default UserCanStatistics(connect(mapStateToProps, mapDispatchToProps)(Statistics));
+export default connect(mapStateToProps, mapDispatchToProps)(Statistics);

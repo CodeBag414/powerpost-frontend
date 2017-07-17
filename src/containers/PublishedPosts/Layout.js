@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 import {
   fetchPostSetsRequest,
   createPostSetRequest,
@@ -97,4 +96,4 @@ const mapDispatchToProps = (dispatch) => (
   }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserCanAccount(PublishedPostsLayout));
+export default connect(mapStateToProps, mapDispatchToProps)(PublishedPostsLayout);

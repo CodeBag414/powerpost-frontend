@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import Link from 'react-toolbox/lib/link';
 
-import { UserCanAccount } from 'config.routes/UserRoutePermissions';
-
 import loadingImage from 'assets/images/loading_circle.gif';
 
 import Wrapper from './Wrapper';
@@ -171,4 +169,4 @@ const mapStateToProps = createStructuredSelector({
   connection: makeSelectConnection(),
 });
 
-export default UserCanAccount(connect(mapStateToProps, mapDispatchToProps)(Feed));
+export default connect(mapStateToProps, mapDispatchToProps)(Feed);

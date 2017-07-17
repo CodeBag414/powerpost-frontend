@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { routerActions } from 'react-router-redux';
-import { UserCanPostEdit } from 'config.routes/UserRoutePermissions';
 import { withRouter } from 'react-router';
 import { getClassesByPage } from 'utils/permissionClass';
 import {
@@ -403,4 +402,4 @@ const mapStateToProps = createStructuredSelector({
   comments: makeSelectComments(),
 });
 
-export default UserCanPostEdit(withRouter(connect(mapStateToProps, mapDispatchToProps)(PostEditor)));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostEditor));

@@ -5,7 +5,6 @@ import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { getClassesByPage } from 'utils/permissionClass';
-import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 import {
   fetchPostSetsBySTRequest,
   fetchPostSetsRequest,
@@ -98,4 +97,4 @@ const mapDispatchToProps = (dispatch) => (
     fetchPostSets: (accountId, payload) => dispatch(fetchPostSetsRequest(accountId, payload)),
   }
 );
-export default connect(mapStateToProps, mapDispatchToProps)(UserCanAccount(PostsLayout));
+export default connect(mapStateToProps, mapDispatchToProps)(PostsLayout);

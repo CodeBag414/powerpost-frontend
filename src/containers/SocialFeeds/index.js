@@ -1,12 +1,11 @@
 /*
  * Social Feeds View
  *
- * 
+ *
  */
 
 import React from 'react';
-import { UserCanSettings } from 'config.routes/UserRoutePermissions';
-import TabLink from 'elements/atm.TabLink';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import styled from 'styled-components';
@@ -53,37 +52,40 @@ const Content = styled.div`
     float: right;
 `;
 
-class SocialFeeds extends React.Component {
-
-    render() {
-        return (
-            <div>
-                <Sidebar>
-                {this.props.connections &&
-                    this.props.connections.map((connection) =>
-                      connection.channel !== 'wordpress' &&
-                        <ReactRouterMenuItem
-                          key={connection.connection_id + Date.now()}
-                          caption={connection.display_name}
-                          title={connection.display_name}
-                          isSidebar
-                          icon={<i className={connection.channel_icon} />}
-                          to={`/account/${this.props.params.account_id}/social_feeds/feed/${connection.connection_id}`}
-                          selected={this.props.location.pathname.match(`/feed/${connection.connection_id}`) != null}
-                        />
-                    )
-                    }
-                </Sidebar>
-                <Content>
-                    { this.props.children }
-                    {!this.props.children && <div style={{textAlign: 'center', marginTop: '50px'}}><p>Choose a connected social channel to view it's native feed here.</p></div> }
-                </Content>
-            </div>
+const SocialFeeds = ({ connections, params, location, children }) => (
+  <div>
+    <Sidebar>
+      {
+        connections &&
+        connections.map((connection) =>
+          connection.channel !== 'wordpress' &&
+            <ReactRouterMenuItem
+              key={connection.connection_id + Date.now()}
+              caption={connection.display_name}
+              title={connection.display_name}
+              isSidebar
+              icon={<i className={connection.channel_icon} />}
+              to={`/account/${params.account_id}/social_feeds/feed/${connection.connection_id}`}
+              selected={location.pathname.match(`/feed/${connection.connection_id}`) != null}
+            />
         )
-    }
-}
+      }
+    </Sidebar>
+    <Content>
+      {children}
+      {!children && <div style={{ textAlign: 'center', marginTop: '50px' }}><p>{"Choose a connected social channel to view it's native feed here."}</p></div> }
+    </Content>
+  </div>
+);
 
-export function mapDispatchToProps(dispatch) {
+SocialFeeds.propTypes = {
+  connections: PropTypes.array,
+  params: PropTypes.object,
+  location: PropTypes.object,
+  children: PropTypes.node,
+};
+
+export function mapDispatchToProps(/* dispatch */) {
   return {
 
   };
@@ -93,4 +95,4 @@ const mapStateToProps = createStructuredSelector({
   connections: makeSelectAccountConnections(),
 });
 
-export default UserCanSettings(connect(mapStateToProps, mapDispatchToProps)(SocialFeeds));
+export default connect(mapStateToProps, mapDispatchToProps)(SocialFeeds);

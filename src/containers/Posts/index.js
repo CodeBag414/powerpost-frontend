@@ -5,8 +5,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import { UserCanAccount } from 'config.routes/UserRoutePermissions';
-
 import {
   makeSelectUserAccount,
 } from 'containers/App/selectors';
@@ -40,4 +38,4 @@ const mapStateToProps = createStructuredSelector({
   userAccount: makeSelectUserAccount(),
 });
 
-export default connect(mapStateToProps)(UserCanAccount(PostsContainer));
+export default connect(mapStateToProps)(PostsContainer);

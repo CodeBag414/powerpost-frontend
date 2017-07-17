@@ -7,7 +7,6 @@ import { browserHistory } from 'react-router';
 import { find, filter } from 'lodash';
 import styled from 'styled-components';
 
-import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 import { getClassesByPage } from 'utils/permissionClass';
 import Loading from 'components/Loading';
 import CloseableDialog from 'elements/atm.CloseableDialog';
@@ -291,4 +290,4 @@ const mapDispatchToProps = {
   replicatePostSet: replicatePostSetRequest,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserCanAccount(PowerStreamLayout));
+export default connect(mapStateToProps, mapDispatchToProps)(PowerStreamLayout);

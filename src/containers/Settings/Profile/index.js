@@ -11,7 +11,6 @@ import PPTextField from 'elements/atm.TextField';
 import PPTextArea from 'elements/atm.TextArea';
 import PPAvatar from 'elements/atm.Avatar';
 import PPButton from 'elements/atm.Button';
-import { UserCanTeam } from 'config.routes/UserRoutePermissions';
 
 import { makeSelectFilePickerKey } from 'containers/App/selectors';
 import { makeSelectCurrentAccount } from 'containers/Main/selectors';
@@ -209,4 +208,4 @@ const mapStateToProps = createStructuredSelector({
   filePickerKey: makeSelectFilePickerKey(),
 });
 
-export default UserCanTeam(connect(mapStateToProps, mapDispatchToProps)(Profile));
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

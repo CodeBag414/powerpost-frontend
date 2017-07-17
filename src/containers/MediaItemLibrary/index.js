@@ -26,8 +26,6 @@ import MenuItem from 'elements/atm.MenuItem';
 import Menu from 'elements/atm.Menu';
 import withReactRouter from 'elements/hoc.withReactRouter';
 
-import { UserCanAccount } from 'config.routes/UserRoutePermissions';
-
 import {
   setProcessing,
 } from 'containers/Main/actions';
@@ -516,7 +514,7 @@ class Library extends React.Component {
             location={this.props.location}
             onCreate={this.createBlogPost}
             onUpdate={this.updateBlogPost}
-            selectedItem={this.state.blogItem} 
+            selectedItem={this.state.blogItem}
           /> : null }
           { postsetId ? <PostEditor id={postsetId} accountId={this.props.params.account_id} /> : null}
         </div>
@@ -585,4 +583,4 @@ Library.propTypes = {
   }),
 };
 
-export default UserCanAccount(connect(mapStateToProps, mapDispatchToProps)(Library));
+export default connect(mapStateToProps, mapDispatchToProps)(Library);

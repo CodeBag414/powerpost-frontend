@@ -16,16 +16,10 @@ import PPButton from 'elements/atm.Button';
 import PPAvatar from 'elements/atm.Avatar';
 import withReactRouter from 'elements/hoc.withReactRouter';
 import {
-  UserCanAccount,
-} from 'config.routes/UserRoutePermissions';
-import {
   makeSelectUser,
   makeSelectSharedAccounts,
   makeSelectUserAccount,
 } from 'containers/App/selectors';
-import {
-  makeSelectCurrentAccount,
-} from 'containers/Main/selectors';
 
 import Background from './Background';
 import BrandItem from './BrandItem';
@@ -143,5 +137,4 @@ const mapStateToProps = createStructuredSelector({
   brands: makeSelectSharedAccounts(),
 });
 
-export default UserCanAccount(connect(mapStateToProps)(Dashboard));
-
+export default connect(mapStateToProps)(Dashboard);

@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { debounce } from 'lodash';
 
-import { UserCanBrands } from 'config.routes/UserRoutePermissions';
 import { getClassesByPage } from 'utils/permissionClass';
 
 import {
@@ -122,4 +121,4 @@ const mapStateToProps = createStructuredSelector({
   isBrandDeleted: makeSelectBrandDeleted(),
 });
 
-export default UserCanBrands(connect(mapStateToProps, mapDispatchToProps)(Brands));
+export default connect(mapStateToProps, mapDispatchToProps)(Brands);
