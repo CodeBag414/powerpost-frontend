@@ -47,6 +47,9 @@ class ImageEditor extends Component {
     if (nextProps.imageItem.properties && nextProps.imageItem.properties.url && !this.state.selectedImage) {
       this.setState({ selectedImage: nextProps.imageItem.properties.url });
     }
+    if (nextProps.isOpen) {
+      this.props.setProcessing(false);
+    }
     if (!nextProps.isOpen) {
       this.setState({
         selectedImage: '',

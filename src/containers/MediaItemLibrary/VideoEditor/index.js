@@ -10,6 +10,10 @@ import FontIcon from 'elements/atm.FontIcon';
 import Button from 'elements/atm.Button';
 import SimpleButton from 'elements/atm.SimpleButton';
 
+import {
+  setProcessing,
+} from 'containers/Main/actions';
+
 import theme from 'theme';
 
 import Wrapper from './Wrapper';
@@ -63,6 +67,9 @@ class VideoEditor extends Component {
     }
     if (nextProps.videoItem.properties && nextProps.videoItem.properties.thumb_url) {
       this.setState({ selectedImage: { url: nextProps.videoItem.properties.thumb_url } });
+    }
+    if (nextProps.isOpen) {
+      this.props.setProcessing(false);
     }
     if (!nextProps.isOpen) {
       this.setState({

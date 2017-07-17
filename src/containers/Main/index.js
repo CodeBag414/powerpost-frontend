@@ -14,6 +14,7 @@ import { toastr } from 'lib/react-redux-toastr';
 import Nav from 'components/Nav';
 import ProcessingIndicator from 'components/ProcessingIndicator';
 import { getClassesByPage } from 'utils/permissionClass';
+import cookie from 'react-cookie';
 
 import { UserIsAuthenticated } from 'config.routes/UserIsAuthenticated';
 import { makeSelectUser,
@@ -75,6 +76,16 @@ class Main extends React.Component {
   }
 
   componentDidMount() {
+    let isCollapsed = cookie.load('is_menu_open');
+    if (isCollapsed === 'false') {
+      isCollapsed = false;
+    } else if (isCollapsed === 'true') {
+      isCollapsed = true;
+    } else {
+      isCollapsed = false;
+    }
+
+    this.props.toggleMenuCollapse(isCollapsed);
     this.props.fetchAccount(this.props.params.account_id);
     if (this.props.params.account_id) {
       this.props.fetchConnections(this.props.params.account_id);

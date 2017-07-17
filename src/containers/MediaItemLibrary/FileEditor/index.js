@@ -26,6 +26,7 @@ class FileEditor extends Component {
     filePickerKey: PropTypes.string,
     handleSave: PropTypes.func,
     closeAllDialog: PropTypes.func,
+    setProcessing: PropTypes.func,
   }
 
   constructor(props) {
@@ -56,6 +57,9 @@ class FileEditor extends Component {
     }
     if (nextProps.fileItem.properties && nextProps.fileItem.properties.picture) {
       this.setState({ selectedImage: { url: nextProps.fileItem.properties.picture } });
+    }
+    if (nextProps.isOpen) {
+      this.props.setProcessing(false);
     }
     if (!nextProps.isOpen) {
       this.setState({

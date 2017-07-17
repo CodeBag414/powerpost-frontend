@@ -2,6 +2,7 @@ import {
     CHECK_USER_OBJECT,
     // CHECK_CURRENT_ACCOUNT,
 } from 'containers/App/constants';
+import cookie from 'react-cookie';
 
 import {
     FETCH_ACCOUNT,
@@ -21,6 +22,8 @@ export function fetchCurrentAccount(accountId) {
 }
 
 export function toggleMenu(collapsed) {
+  cookie.save('is_menu_open', collapsed, { path: '/' });
+
   return {
     type: TOGGLE_MENU,
     collapsed,

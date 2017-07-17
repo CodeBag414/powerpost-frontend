@@ -223,6 +223,7 @@ export function* createMediaItem(action) {
         const mediaItems = res.data.media_items;
         yield put({ type: CREATE_MEDIA_ITEM_SUCCESS, mediaItems });
         yield put({ type: PROCESS_ITEM_SUCCESS });
+        yield put(setProcessing(false));
       }
     } else {
       yield put({ type: CREATE_MEDIA_ITEM_ERROR });

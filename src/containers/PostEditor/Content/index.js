@@ -17,6 +17,10 @@ import { getMediaTypeAndItem } from 'containers/PostEditor/Channels/PostDetails'
 import PostPreview from 'containers/PostEditor/Channels/PostDetails/PostPreview';
 
 import {
+  setProcessing,
+} from 'containers/Main/actions';
+
+import {
   updatePostSetRequest,
 } from 'containers/App/actions';
 
@@ -72,6 +76,7 @@ class Content extends Component {
     removeMediaItem: PropTypes.func,
     setMediaItem: PropTypes.func,
     permissionClasses: PropTypes.object,
+    setProcessing: PropTypes.func,
   };
 
   static defaultProps = {
@@ -244,6 +249,7 @@ class Content extends Component {
   handleLinkEditorSave = (item) => {
     const { filePickerKey } = this.props;
     this.closeAllDialog();
+    this.props.setProcessing(true);
     const { action, ...linkItem } = item;
     filepicker.setKey(filePickerKey);
     const picture = linkItem.picture || linkItem.properties.picture;
@@ -310,6 +316,7 @@ class Content extends Component {
 
   handleVideoEditorSave = (videoItem) => {
     this.setState({ videoEditor: false, mediaItem: {} });
+    this.props.setProcessing(true);
     const { action, ...item } = videoItem;
     const { filePickerKey } = this.props;
     filepicker.setKey(filePickerKey);
@@ -342,7 +349,7 @@ class Content extends Component {
   handleOpenFilePicker = (mediaItem) => {
     const { filePickerKey, accountId } = this.props;
     filepicker.setKey(filePickerKey);
-
+    this.props.setProcessing(true);
     if (mediaItem[0].mimetype.match('image')) {
       filepicker.storeUrl(
         `https://process.filestackapi.com/${filePickerKey}/resize=width:300,height:300,fit:clip/${mediaItem[0].url}`,
@@ -383,6 +390,7 @@ class Content extends Component {
 
   handleFileEditorSave = (item) => {
     this.setState({ fileEditor: false, mediaItem: {} });
+    this.props.setProcessing(true);
     const { action, ...fileItem } = item;
     const { filePickerKey, accountId } = this.props;
     filepicker.setKey(filePickerKey);
@@ -589,10 +597,10 @@ class Content extends Component {
           />
         }
         <LinkEditor actions={actions} closeAllDialog={this.closeAllDialog} handleLinkEditorSave={this.handleLinkEditorSave} linkEditorDialog={this.state.linkEditor} urlContent={this.props.urlContent} filePickerKey={this.props.filePickerKey} linkItem={this.state.mediaItem} />
-        <ImageEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleImageEditorSave} isOpen={this.state.imageEditor} filePickerKey={this.props.filePickerKey} imageItem={this.state.mediaItem} />
-        <LinkDialog actions={actions} closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue} handleSubmit={this.handleAddLinkSubmit} urlValue={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
-        <VideoEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleVideoEditorSave} isOpen={this.state.videoEditor} filePickerKey={this.props.filePickerKey} videoItem={this.state.mediaItem} />
-        <FileEditor actions={actions} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave} isOpen={this.state.fileEditor} filePickerKey={this.props.filePickerKey} fileItem={this.state.mediaItem} />
+        <ImageEditor actions={actions} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleImageEditorSave} isOpen={this.state.imageEditor} filePickerKey={this.props.filePickerKey} imageItem={this.state.mediaItem} />
+        <LinkDialog actions={actions} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue} handleSubmit={this.handleAddLinkSubmit} urlValue={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
+        <VideoEditor actions={actions} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleVideoEditorSave} isOpen={this.state.videoEditor} filePickerKey={this.props.filePickerKey} videoItem={this.state.mediaItem} />
+        <FileEditor actions={actions} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave} isOpen={this.state.fileEditor} filePickerKey={this.props.filePickerKey} fileItem={this.state.mediaItem} />
         <MediaLibraryDialog actions={actions} filter={this.props.filter} closeAllDialog={this.closeAllDialog} isOpen={this.state.mediaLibrary} mediaItems={this.props.mediaItems} addToPost={this.addToPost} />
       </Wrapper>
     );
@@ -609,6 +617,7 @@ export function mapDispatchToProps(dispatch) {
     setMediaItem: (mediaItem) => dispatch(setMediaItem(mediaItem)),
     fetchUrlData: (url) => dispatch(fetchUrlData(url)),
     clearUrlContent: () => dispatch(clearUrlContent()),
+    setProcessing: (processing) => dispatch(setProcessing(processing)),
   };
 }
 
