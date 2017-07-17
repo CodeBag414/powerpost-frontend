@@ -51,7 +51,7 @@ const Content = styled.div`
       color: white;
       background-color: rgba(0,0,0,0.54);
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 300;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
