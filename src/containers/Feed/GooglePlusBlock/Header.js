@@ -6,10 +6,15 @@ const Header = styled.div`
   align-items: center;
   margin: 16px;
 
-  .gp-header-avatar img {
-    width: 36px;
-    margin-right: 8px;
-    border-radius: 50%;
+  .gp-header-avatar {
+    img {
+      width: 36px;
+      margin-right: 8px;
+      border-radius: 50%;
+    }
+    i {
+      color: #d34836;
+    }
   }
   a {
     color: rgba(0,0,0,0.87);
@@ -28,6 +33,7 @@ const Header = styled.div`
     }
   }
   .public {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 14px;
     line-height: 18px;
     font-weight: 500;

@@ -2,6 +2,8 @@
 import React, { Component, PropTypes } from 'react';
 import moment from 'moment';
 
+import { extractHostname } from 'utils/url';
+
 import SocialIcon from 'elements/atm.SocialIcon';
 
 import Wrapper from './Wrapper';
@@ -27,14 +29,18 @@ class GooglePlusBlock extends Component {
 
   render() {
     const { post, connection, isPreview } = this.props;
-    const connectionUrl = `//plus.google.com/${connection.connection_uid}`;
+    const connectionUrl = connection.connection_uid ? `//plus.google.com/${connection.connection_uid}` : null;
     const attachment = post.attachments[0] || {};
     const type = attachment.objectType;
     let domain;
-    if (type === 'article' || type === 'file' || type === 'blog') {
+    if ((type === 'article' || type === 'link') || (type === 'document' || type === 'file') || type === 'blog') {
       const arr1 = attachment.url.split('www.');
-      const arr2 = arr1[1].split('/');
-      domain = arr2[0];
+      if (arr1[1]) {
+        const arr2 = arr1[1].split('/');
+        domain = arr2[0];
+      } else {
+        domain = extractHostname(attachment.url);
+      }
     }
 
     return (
@@ -48,7 +54,7 @@ class GooglePlusBlock extends Component {
                 <SocialIcon icon={connection.channel_icon} />
               }
             </a>
-            <a href={connectionUrl}><strong>{ post.actor.displayName }</strong></a>
+            <a href={connectionUrl} target="_blank"><strong>{ post.actor.displayName }</strong></a>
             <div className="right-arrow">
               <svg viewBox="0 0 48 48" height="100%" width="100%">
                 <path d="M20 14l10 10-10 10z"></path>
@@ -68,12 +74,12 @@ class GooglePlusBlock extends Component {
           }
 
           { type === 'video' &&
-            <video poster={attachment.media_source} preload="metadata" onMouseEnter={this.onMouseEnterVideo} onMouseLeave={this.onMouseLeaveVideo}>
+            <video poster={attachment.url} preload="metadata" onMouseEnter={this.onMouseEnterVideo} onMouseLeave={this.onMouseLeaveVideo}>
               <source src={attachment.media_source} />
             </video>
           }
 
-          { (type === 'article' || type === 'file' || type === 'blog') &&
+          { ((type === 'article' || type === 'link') || (type === 'document' || type === 'file') || type === 'blog') &&
             <div className="gp-link">
               <div className="divider" />
               <a href={attachment.url} target="_blank">

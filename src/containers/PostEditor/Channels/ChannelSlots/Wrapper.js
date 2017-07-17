@@ -30,7 +30,7 @@ const Wrapper = styled.div`
     .wordpress-icon-color {
       color: #464646;
     }
-    .google-icon-color {
+    .google-icon-color, .fa-google-plus-square {
       color: #d34836;
     }
 

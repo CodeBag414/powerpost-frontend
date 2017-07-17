@@ -11,6 +11,7 @@ import FacebookBlock from 'containers/Feed/FacebookBlock';
 import TwitterBlock from 'containers/Feed/TwitterBlock';
 import LinkedInBlock from 'containers/Feed/LinkedInBlock';
 import PinterestBlock from 'containers/Feed/PinterestBlock';
+import GooglePlusBlock from 'containers/Feed/GooglePlusBlock';
 
 import PostPreviewWrapper from './PostPreviewWrapper';
 
@@ -176,6 +177,33 @@ function buildPostPreview(postData, postMessage, postTime, connection, type, med
         metadata,
       };
       return <PinterestBlock post={postToPreview} isPreview />;
+    }
+    case 'google': {
+      const attachment = {
+        objectType: type,
+        media_source: (type === 'image' && image) ||
+          (type === 'link' && link.picture_url) ||
+          (type === 'video' && video.source_url) ||
+          ((type === 'document' || type === 'file') && file.picture) ||
+          (type === 'blog' && blog.thumb_url),
+        displayName: (type === 'link' && link.title) ||
+          ((type === 'document' || type === 'file') && file.title) ||
+          (type === 'blog' && blog.title),
+        url: (type === 'link' && link.link) ||
+          (type === 'video' && video.thumb_url) ||
+          ((type === 'document' || type === 'file' || type === 'blog') && `http://${APP_URL}/posts/${postSetId}`),
+      };
+      postToPreview = {
+        ...post.toJS(),
+        actor: {
+          displayName: connection.display_name,
+          image: null, // FIXME: not supported by API
+        },
+        attachments: [attachment],
+        content: post.get('message'),
+        updated: new Date(),
+      };
+      return <GooglePlusBlock post={postToPreview} connection={connection} isPreview />
     }
     default:
       return null;
