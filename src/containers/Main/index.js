@@ -142,7 +142,7 @@ class Main extends React.Component {
       viewContentStyle = styles.viewContentDashboard;
     }
     if (!this.props.activeBrand.account_id) return null;
-    const permissionClasses = getClassesByPage(userPermissions, 'mainNav');
+    const permissionClasses = getClassesByPage(activeBrand.user_access.permissions, 'mainNav');
     return (
       <div>
         <ProcessingIndicator isProcessing={this.props.isProcessing} />
