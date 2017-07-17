@@ -78,7 +78,7 @@ class Calendar extends React.Component {
         ...post,
         status: 0,
       }));
-      updateBunchPost(postsToDelete);
+      updateBunchPost(postsToDelete, postSetToDelete);
     }
 
     if (id) {

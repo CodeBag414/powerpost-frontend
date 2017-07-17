@@ -243,6 +243,9 @@ function globalReducer(state = initialState, action) {
               ...action.postSet,
               posts: action.posts,
               schedule_time: action.posts[0].schedule_time,
+              status: (action.posts && action.posts.length && action.posts.every((post) => post.status === 0))
+                ? '0'
+                : action.postSet.status,
             }),
           );
         })
