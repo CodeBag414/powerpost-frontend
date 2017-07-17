@@ -9,9 +9,9 @@ import LimitIndicator from './LimitIndicator';
 
 const TooltipToolbarButton = Tooltip(ToolbarButton);
 
-function MessageToolbar({ characterLimit, openFilePicker, openLinkDialog, openMediaLibrary, urls, shortenUrl, convertUrl, mediaItem, currentChannel }) {
+function MessageToolbar({ characterLimit, openFilePicker, openLinkDialog, openMediaLibrary, urls, shortenUrl, convertUrl, mediaItem, currentChannel, permissionClasses }) {
   return (
-    <Wrapper currentChannel={currentChannel}>
+    <Wrapper currentChannel={currentChannel} className={permissionClasses.addContentControl}>
       {currentChannel === -1 ?
         <div>
           <TooltipToolbarButton tooltip="Open Content Library" tooltipDelay={200} width={30} marginLeft={12} onClick={openMediaLibrary}><i className="fa fa-folder-o" /></TooltipToolbarButton>
@@ -59,6 +59,7 @@ MessageToolbar.propTypes = {
   convertUrl: PropTypes.func,
   mediaItem: PropTypes.shape(),
   currentChannel: PropTypes.number,
+  permissionClasses: PropTypes.object,
 };
 
 export default MessageToolbar;

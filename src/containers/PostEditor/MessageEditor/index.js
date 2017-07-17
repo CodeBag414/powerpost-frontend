@@ -44,7 +44,7 @@ const MenuItemCaption = styled.div`
 const ItemWrapper = styled.div`
   position: relative;
   padding: 5px;
-  
+
 `;
 
 const IMenu = styled.i`
@@ -93,6 +93,7 @@ class MessageEditor extends Component {
       shortenUrl,
       convertUrl,
       currentChannel,
+      permissionClasses,
     } = this.props;
     const { menuVisible } = this.state;
     return (
@@ -110,6 +111,7 @@ class MessageEditor extends Component {
           convertUrl={convertUrl}
           mediaItem={mediaItem}
           currentChannel={currentChannel}
+          permissionClasses={permissionClasses}
         />
         <MultiLineInput
           handleMessageChange={handleMessageChange}
@@ -125,19 +127,19 @@ class MessageEditor extends Component {
         {/* Media item */}
         {currentChannel === -1 && mediaItem.media_item_id && !isProcessing &&
         <ItemWrapper>
-          <IMenu className="fa fa-ellipsis-h" onClick={this.handleShowPopup} />
-            {menuVisible &&
-              <Popup onOutsideClick={this.handleHidePopup}>
-                <CustomMenuItem onClick={removeMediaItem} >
-                  <i className="fa fa-trash" />
-                  <MenuItemCaption>Remove</MenuItemCaption>
-                </CustomMenuItem>
-                <CustomMenuItem onClick={() => openEditor(mediaItem)}>
-                  <i className="fa fa-edit" />
-                  <MenuItemCaption>Edit</MenuItemCaption>
-                </CustomMenuItem>
-              </Popup>
-            }
+          <IMenu className={`fa fa-ellipsis-h ${permissionClasses.addContentControl}`} onClick={this.handleShowPopup} />
+          {menuVisible &&
+            <Popup onOutsideClick={this.handleHidePopup}>
+              <CustomMenuItem onClick={removeMediaItem} >
+                <i className="fa fa-trash" />
+                <MenuItemCaption>Remove</MenuItemCaption>
+              </CustomMenuItem>
+              <CustomMenuItem onClick={() => openEditor(mediaItem)}>
+                <i className="fa fa-edit" />
+                <MenuItemCaption>Edit</MenuItemCaption>
+              </CustomMenuItem>
+            </Popup>
+          }
           <Preview item={mediaItem} />
         </ItemWrapper>
         }
@@ -165,6 +167,7 @@ MessageEditor.propTypes = {
   shortenUrl: PropTypes.func,
   convertUrl: PropTypes.func,
   currentChannel: PropTypes.number,
+  permissionClasses: PropTypes.object,
 };
 
 export default MessageEditor;

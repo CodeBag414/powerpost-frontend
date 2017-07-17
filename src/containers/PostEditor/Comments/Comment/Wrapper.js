@@ -4,7 +4,7 @@ const Wrapper = styled.div`
   display: flex;
   align-items: flex-start;
   padding: 0 11px;
-  margin-bottom: 22px;
+  margin: 11px 0;
   .comment-content {
     flex: 1;
     margin-left: 11px;

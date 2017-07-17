@@ -7,7 +7,7 @@ import moment from 'moment';
 
 import PPButton from 'elements/atm.Button';
 
-function ChannelSlotTimestamp({ post, currentPost, handleClickTimestamp, handleRemoveSlot }) {
+function ChannelSlotTimestamp({ post, currentPost, handleClickTimestamp, handleRemoveSlot, permissionClasses }) {
   return (
     <div className="slot-timestamp">
       <PPButton className={currentPost === post && 'active'} onClick={() => handleClickTimestamp(post)}>
@@ -17,7 +17,7 @@ function ChannelSlotTimestamp({ post, currentPost, handleClickTimestamp, handleR
           : 'Post when ready'
         }
       </PPButton>
-      <i className="fa fa-trash" onClick={() => handleRemoveSlot(post)} />
+      <i className={`fa fa-trash ${permissionClasses.timeSlotDelete}`} onClick={() => handleRemoveSlot(post)} />
     </div>
   );
 }
@@ -27,6 +27,7 @@ ChannelSlotTimestamp.propTypes = {
   currentPost: ImmutablePropTypes.map,
   handleClickTimestamp: PropTypes.func,
   handleRemoveSlot: PropTypes.func,
+  permissionClasses: PropTypes.object,
 };
 
 export default ChannelSlotTimestamp;

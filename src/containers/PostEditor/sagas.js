@@ -2,6 +2,7 @@ import { takeLatest, takeEvery } from 'redux-saga';
 import { take, call, put, cancel, select, fork } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import moment from 'moment';
+import _ from 'lodash';
 import { makeSelectUser } from 'containers/App/selectors';
 
 import {
@@ -277,7 +278,7 @@ export function* getCollections(action) {
 
   const activeCollection = yield select(makeSelectActiveCollection());
 
-  const mediaItems = yield call(getData, `/media_api/collection/${activeCollection.collection_id}`);
+  const mediaItems = yield call(getData, `/media_api/collection/${_.get(activeCollection, 'collection_id', -1)}`);
   if (!mediaItems.data.error) {
     yield put({ type: FETCH_MEDIA_ITEMS_SUCCESS, mediaItems });
   } else {
@@ -427,4 +428,3 @@ const delay = (millis) => {
   });
   return promise;
 };
-

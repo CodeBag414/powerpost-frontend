@@ -11,7 +11,7 @@ import { Droppable } from 'react-drag-and-drop';
 import PostSet from '../PostSet';
 import styles from './styles.scss';
 
-const PostSetsGroup = ({ status, postSets, statusColor, deletePostSet, onDragStart, onDragEnter, onPostDragEnter, onDrop, dragHover, postStatusId }) =>
+const PostSetsGroup = ({ status, postSets, statusColor, deletePostSet, onDragStart, onDragEnter, onPostDragEnter, onDrop, dragHover, postStatusId, permissionClasses }) =>
   <Droppable types={['post_set']} onDrop={onDrop} onDragEnter={onDragEnter} className={styles.postSets}>
     <div className={styles.heading} onDragEnter={() => onPostDragEnter(-1)}>
       <span className={styles.status}>{status}</span>
@@ -24,7 +24,7 @@ const PostSetsGroup = ({ status, postSets, statusColor, deletePostSet, onDragSta
           className={`${styles.postSet} ${postStatusId === postSet.get('post_set_id') && dragHover ? styles.borderBottom : ''} ${postStatusId === -1 && dragHover && !index ? styles.borderTop : ''}`}
           onDragEnter={() => onPostDragEnter(postSet.get('post_set_id'))}
         >
-          <PostSet postSet={postSet} onDragStart={() => onDragStart(postSet)} onDeletePostSet={() => deletePostSet(postSet.get('post_set_id'))} />
+          <PostSet postSet={postSet} onDragStart={() => onDragStart(postSet)} permissionClasses={permissionClasses} onDeletePostSet={() => deletePostSet(postSet.get('post_set_id'))} />
         </div>
       )
     }
@@ -46,6 +46,7 @@ PostSetsGroup.propTypes = {
   onPostDragEnter: PropTypes.func.isRequired,
   onDrop: PropTypes.func.isRequired,
   dragHover: PropTypes.bool.isRequired,
+  permissionClasses: PropTypes.object,
 };
 
 export default PostSetsGroup;

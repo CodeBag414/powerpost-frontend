@@ -45,6 +45,7 @@ export class WordpressSettings extends Component {
     clearMediaItem: PropTypes.func,
     setWordpressPost: PropTypes.func,
     getMediaItem: PropTypes.func,
+    permissionClasses: PropTypes.object,
   };
 
   constructor(props) {
@@ -386,6 +387,7 @@ export class WordpressSettings extends Component {
       connections = [],
       wordpressGUI,
       filePickerKey,
+      permissionClasses,
     } = this.props;
 
     const {
@@ -430,7 +432,7 @@ export class WordpressSettings extends Component {
     ];
 
     return (
-      <Wrapper>
+      <Wrapper className={permissionClasses.wordpressSettings}>
         <Heading
           title="Wordpress Settings"
           icon="file-text-o"

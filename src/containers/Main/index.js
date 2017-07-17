@@ -13,12 +13,12 @@ import { browserHistory } from 'react-router';
 import { toastr } from 'lib/react-redux-toastr';
 import Nav from 'components/Nav';
 import ProcessingIndicator from 'components/ProcessingIndicator';
+import { getClassesByPage } from 'utils/permissionClass';
 
 import { UserIsAuthenticated } from 'config.routes/UserIsAuthenticated';
 import { makeSelectUser,
          makeSelectUserAccount,
          makeSelectSharedAccounts,
-         makeSelectSubAccounts,
          makeSelectUserAvatar,
          makeSelectPostSet,
          makeSelectPostSetEdit,
@@ -65,6 +65,7 @@ class Main extends React.Component {
     logout: PropTypes.func,
     fetchConnections: PropTypes.func,
     isProcessing: PropTypes.bool,
+    routes: PropTypes.any,
   };
 
   constructor(props) {
@@ -122,29 +123,45 @@ class Main extends React.Component {
   }
 
   render() {
+    const {
+      location,
+      params,
+      accountPermissions,
+      activeBrand,
+      menuCollapsed,
+      logout: logoutOnNav,
+      sharedAccounts,
+      subAccounts,
+      user,
+      userAccount,
+      userPermissions,
+      routes,
+    } = this.props;
     let viewContentStyle = this.props.menuCollapsed ? styles.viewContentCollapsed : styles.viewContentFull;
-    if (this.props.location.pathname === '/') {
+    if (location.pathname === '/') {
       viewContentStyle = styles.viewContentDashboard;
     }
     if (!this.props.activeBrand.account_id) return null;
+    const permissionClasses = getClassesByPage(userPermissions, 'mainNav');
     return (
       <div>
         <ProcessingIndicator isProcessing={this.props.isProcessing} />
         <Nav
-          accountId={this.props.params.account_id}
-          accountPermissions={this.props.accountPermissions}
-          activeBrand={this.props.activeBrand}
+          accountId={params.account_id}
+          accountPermissions={accountPermissions}
+          activeBrand={activeBrand}
           createPostSet={this.createPostSet}
           handleMenuToggle={this.handleMenuToggle}
-          isMenuCollapsed={this.props.menuCollapsed}
-          location={this.props.location}
-          logout={this.props.logout}
-          sharedAccounts={this.props.sharedAccounts}
-          subAccounts={this.props.subAccounts}
-          user={this.props.user}
-          userAccount={this.props.userAccount}
-          userPermissions={this.props.userPermissions}
-          routes={this.props.routes}
+          isMenuCollapsed={menuCollapsed}
+          location={location}
+          logout={logoutOnNav}
+          sharedAccounts={sharedAccounts}
+          subAccounts={subAccounts}
+          user={user}
+          userAccount={userAccount}
+          userPermissions={userPermissions}
+          permissionClasses={permissionClasses}
+          routes={routes}
         />
         <div id="main-panel" className={[viewContentStyle, styles.viewContent].join(' ')}>
           {this.props.children}

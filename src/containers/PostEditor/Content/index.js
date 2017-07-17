@@ -71,6 +71,7 @@ class Content extends Component {
     fetchUrlData: PropTypes.func,
     removeMediaItem: PropTypes.func,
     setMediaItem: PropTypes.func,
+    permissionClasses: PropTypes.object,
   };
 
   static defaultProps = {
@@ -512,7 +513,7 @@ class Content extends Component {
   }
 
   render() {
-    const { pending, pushToLibrary, id, accountId, postSet } = this.props;
+    const { pending, pushToLibrary, id, accountId, postSet, permissionClasses } = this.props;
     const { message, characterLimit, item, messageUrls, channelIndex } = this.state;
     // const { params: { postset_id, account_id } } = this.props;
     const actions = [
@@ -543,7 +544,7 @@ class Content extends Component {
           channelIndex={channelIndex}
           handleChannelClick={this.handleChannelClick}
         />
-        <MessageEditorWrapper>
+        <MessageEditorWrapper className={permissionClasses.message}>
           <PopupBorder
             left={0}
             top={channelIndex > -1 ? -7 : undefined}
@@ -570,6 +571,7 @@ class Content extends Component {
               shortenUrl={this.shortenUrl}
               convertUrl={this.convertUrl}
               currentChannel={channelIndex}
+              permissionClasses={permissionClasses}
             />
           </PopupBorder>
         </MessageEditorWrapper>

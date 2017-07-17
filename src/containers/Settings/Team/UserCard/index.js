@@ -28,6 +28,7 @@ export class UserCard extends Component {
     accessLevels: PropTypes.array,
     addUserToGroupRequest: PropTypes.func,
     removeUserFromGroupRequest: PropTypes.func,
+    permissionClasses: PropTypes.object,
   }
 
   constructor(props) {
@@ -70,7 +71,7 @@ export class UserCard extends Component {
   }
 
   render() {
-    const { processing, accessLevels, name, email, thumbnail } = this.props;
+    const { processing, accessLevels, name, email, thumbnail, permissionClasses } = this.props;
     const { accessLevel, removeModalVisible } = this.state;
 
     return (
@@ -81,7 +82,7 @@ export class UserCard extends Component {
         <div className="detail-pane">
           <div className="name">{name}</div>
           <div className="email">{email}</div>
-          <div className="dropdown-wrapper">
+          <div className={`dropdown-wrapper ${permissionClasses.roleDropdown}`}>
             <Dropdown
               value={accessLevel}
               options={accessLevels}
@@ -89,7 +90,7 @@ export class UserCard extends Component {
               onChange={this.onAccessLevelChange}
             />
           </div>
-          <div className="menu-wrapper">
+          <div className={`menu-wrapper ${permissionClasses.deleteMember}`}>
             <IconMenu icon="more_horizontal" position="topLeft" menuRipple>
               <MenuItem className="remove-member" caption="Remove Member" onClick={this.toggleRemoveModal} />
             </IconMenu>

@@ -1,4 +1,5 @@
 import { Map, fromJS } from 'immutable';
+import _ from 'lodash';
 
 import {
   FETCH_POST_SET_REQUEST,
@@ -229,11 +230,11 @@ function boardReducer(state = initialState, action) {
         .set('urlContent', action.urlData);
     case FETCH_COLLECTIONS_SUCCESS:
       return state
-        .set('collections', action.collections.data.collections)
-        .set('activeCollection', action.collections.data.collections.map((coll) => (coll.parent_collection_id == null) && coll)[0]);
+        .set('collections', _.get(action, 'collections.data.collections', []))
+        .set('activeCollection', _.get(action, 'collections.data.collections', []).map((coll) => (coll.parent_collection_id == null) && coll)[0]);
     case FETCH_MEDIA_ITEMS_SUCCESS:
       return state
-        .set('mediaItems', action.mediaItems.data.collection.media_items.filter((t) => t.status !== '0'));
+        .set('mediaItems', _.get(action, 'mediaItems.data.collections', []).filter((t) => t.status !== '0'));
     case FETCH_MEDIA_ITEMS_ERROR:
       return state
         .set('error', action.mediaItems.data.message);

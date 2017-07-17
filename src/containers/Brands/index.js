@@ -5,6 +5,7 @@ import { createStructuredSelector } from 'reselect';
 import { debounce } from 'lodash';
 
 import { UserCanBrands } from 'config.routes/UserRoutePermissions';
+import { getClassesByPage } from 'utils/permissionClass';
 
 import {
   fetchCurrentAccount,
@@ -83,7 +84,8 @@ class Brands extends Component {
     const { isDialogShown, filteredBrands } = this.state;
 
     const numBrands = userAccount && userAccount.account_access && userAccount.account_access.num_brands;
-
+    const { permissions } = userAccount.user_access;
+    const permissionClasses = getClassesByPage(permissions, 'brands');
     return (
       <Wrapper>
         <Header
@@ -91,9 +93,11 @@ class Brands extends Component {
           handleSearch={this.handleSearch}
           brandLimit={numBrands}
           numBrands={brands.length}
+          permissionClasses={permissionClasses}
         />
         <BrandsList
           brands={filteredBrands}
+          permissionClasses={permissionClasses}
         />
         <AddBrandDialog
           handleDialogToggle={this.handleDialogToggle}

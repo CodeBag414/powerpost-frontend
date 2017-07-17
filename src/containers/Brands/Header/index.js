@@ -7,7 +7,7 @@ import PPSearch from 'elements/atm.Search';
 import Wrapper from './Wrapper';
 import Status from './Status';
 
-function Header({ handleDialogToggle, handleSearch, brandLimit, numBrands }) {
+function Header({ handleDialogToggle, handleSearch, brandLimit, numBrands, permissionClasses }) {
   return (
     <Wrapper>
       <div>
@@ -15,6 +15,7 @@ function Header({ handleDialogToggle, handleSearch, brandLimit, numBrands }) {
           label="Add New Brand"
           onClick={handleDialogToggle}
           primary
+          className={permissionClasses.addNewBrandButton}
         />
         <Status>{brandLimit - numBrands} of {brandLimit} Brands Remaining</Status>
       </div>
@@ -31,6 +32,7 @@ Header.propTypes = {
   handleSearch: PropTypes.func,
   brandLimit: PropTypes.number,
   numBrands: PropTypes.number,
+  permissionClasses: PropTypes.object,
 };
 
 export default Header;

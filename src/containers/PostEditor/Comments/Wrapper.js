@@ -5,7 +5,7 @@ const Wrapper = styled.div`
 
   .comment-input {
     margin-top: 29px;
-    margin-bottom: 19px;
+    margin-bottom: 8px;
   }
 `;
 

@@ -7,10 +7,8 @@ import { browserHistory } from 'react-router';
 import { find, filter } from 'lodash';
 import styled from 'styled-components';
 
-import { toastr } from 'lib/react-redux-toastr';
-
 import { UserCanAccount } from 'config.routes/UserRoutePermissions';
-
+import { getClassesByPage } from 'utils/permissionClass';
 import Loading from 'components/Loading';
 import CloseableDialog from 'elements/atm.CloseableDialog';
 import MenuItem from 'elements/atm.MenuItem';
@@ -21,6 +19,10 @@ import {
   fetchPostSetRequest,
   updatePostSetRequest,
 } from 'containers/App/actions';
+
+import {
+  makeSelectUserAccount,
+} from 'containers/App/selectors';
 
 import PostEditor from 'containers/PostEditor';
 
@@ -76,6 +78,7 @@ class PowerStreamLayout extends Component {
     updatePostSet: PropTypes.func,
     inviteEmailToStream: PropTypes.func,
     replicatePostSet: PropTypes.func,
+    userAccountForPermission: PropTypes.object,
   }
 
   state = {
@@ -180,6 +183,7 @@ class PowerStreamLayout extends Component {
       postSet,
       postSets,
       userAccount,
+      userAccountForPermission,
       accountId,
       streamCategory,
       streamId,
@@ -189,6 +193,9 @@ class PowerStreamLayout extends Component {
       error,
       shareDialogVisible,
     } = this.state;
+
+    const { permissions } = userAccountForPermission.user_access;
+    const permissionClasses = getClassesByPage(permissions, 'sharedStreams');
 
     if (error) {
       return (
@@ -242,6 +249,7 @@ class PowerStreamLayout extends Component {
             streamName={streamName}
             fetchPostSet={this.props.fetchPostSet}
             handlePostSet={this.handlePostSet}
+            permissionClasses={permissionClasses}
           />
           <CloseableDialog
             active={shareDialogVisible}
@@ -271,6 +279,7 @@ const mapStateToProps = createStructuredSelector({
   postSets: makeSelectPostSets(),
   postSet: makeSelectPostSet(),
   emailInvited: makeSelectEmailInvited(),
+  userAccountForPermission: makeSelectUserAccount(),
 });
 
 const mapDispatchToProps = {

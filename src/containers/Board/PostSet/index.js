@@ -46,7 +46,7 @@ class PostSet extends Component {
   }
 
   render() {
-    const { postSet, onDeletePostSet, onDragStart } = this.props;
+    const { postSet, onDeletePostSet, onDragStart, permissionClasses } = this.props;
     const { popOver, deleteConfirmPopup } = this.state;
     const imgSrc = postSet.getIn(['media_items', 0, 'properties', 'thumb_url']) || postSet.getIn(['media_items', 0, 'properties', 'picture']);
     const hasImage = !!imgSrc;
@@ -64,7 +64,7 @@ class PostSet extends Component {
             <div className={[styles.scheduleTime, scheduledTime ? null : styles.notScheduled].join(' ')}>
               {formattedTime || 'Not Scheduled'}
             </div>
-            <div className={styles.ellipsis} onClick={this.showPopover} >
+            <div className={`${styles.ellipsis} ${permissionClasses.deleteEllipsesMenu}`} onClick={this.showPopover} >
               <i className="fa fa-ellipsis-h" />
               <MenuPopover
                 onDeletePostSet={() => this.showDeleteConfirm(true)}
@@ -95,6 +95,7 @@ PostSet.propTypes = {
   }).isRequired,
   onDragStart: PropTypes.func.isRequired,
   onDeletePostSet: PropTypes.func.isRequired,
+  permissionClasses: PropTypes.object,
 };
 
 export default enhanceWithClickOutside(PostSet);

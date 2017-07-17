@@ -9,7 +9,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import { routerActions } from 'react-router-redux';
 import { UserCanPostEdit } from 'config.routes/UserRoutePermissions';
 import { withRouter } from 'react-router';
-
+import { getClassesByPage } from 'utils/permissionClass';
 import {
   deletePostSetRequest,
   fetchGroupUsers,
@@ -250,9 +250,12 @@ class PostEditor extends Component {
       });
     }
 
+    const { permissions } = userAccount.user_access;
+    const permissionClasses = getClassesByPage(permissions, 'postEditor');
+
     const tabs = [
-      { name: 'Content', component: <Content postSet={postSet} accountId={this.props.accountId} id={this.props.id} location={this.props.location} params={this.props.params} /> },
-      { name: 'Schedule', component: <Channels postSet={postSet} posts={posts} updatePost={updatePost} />, count: totalTimeslots },
+      { name: 'Content', component: <Content postSet={postSet} permissionClasses={permissionClasses} accountId={this.props.accountId} id={this.props.id} location={this.props.location} params={this.props.params} /> },
+      { name: 'Schedule', component: <Channels postSet={postSet} permissionClasses={permissionClasses} posts={posts} updatePost={updatePost} />, count: totalTimeslots },
     ];
 
     const generalInfo = (
@@ -270,6 +273,7 @@ class PostEditor extends Component {
         updatePostSet={updatePostSet}
         userAccount={userAccount}
         groupUsers={groupUsers}
+        permissionClasses={permissionClasses}
       />
     );
     return (
@@ -309,12 +313,14 @@ class PostEditor extends Component {
                 postComment={postComment}
                 postSetId={id}
                 user={user}
+                permissionClasses={permissionClasses}
               />
             </div>
             <Sidebar expanded={this.state.sidebarExpanded}>
               <Tags
                 updatePostSet={updatePostSet}
                 postSet={postSet.get('details')}
+                permissionClasses={permissionClasses}
               />
               <ChannelsPreview
                 connections={connections}
@@ -335,13 +341,15 @@ class PostEditor extends Component {
                 clearMediaItem={this.props.clearMediaItem}
                 setWordpressPost={this.props.setWordpressPost}
                 getMediaItem={this.props.getMediaItem}
+                permissionClasses={permissionClasses}
               />
               <SharedStream
                 accountStreamId={userAccount.account_streams[0].stream_id}
                 postSet={postSet}
                 updatePostSet={updatePostSet}
+                permissionClasses={permissionClasses}
               />
-              <Button onClick={this.handleClickDelete} className="button-flat" flat>Delete Post</Button>
+              <Button onClick={this.handleClickDelete} className={`button-flat ${permissionClasses.deletePostButton}`} flat>Delete Post</Button>
               <ExpandCollapseButton
                 sidebarExpanded={this.state.sidebarExpanded}
                 onClick={this.handleSidebarToggle}

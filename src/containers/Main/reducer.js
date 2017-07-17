@@ -3,6 +3,10 @@
  */
 import { fromJS } from 'immutable';
 import {
+  CREATE_BRAND_SUCCESS,
+} from 'containers/Brands/constants';
+
+import {
     FETCH_ACCOUNT_SUCCESS,
     FETCH_ACCOUNT_ERROR,
     TOGGLE_MENU,
@@ -11,10 +15,6 @@ import {
     SET_CONNECTIONS,
     SET_PROCESSING,
 } from './constants';
-
-import {
-  CREATE_BRAND_SUCCESS,
-} from 'containers/Brands/constants';
 
 import {
   VALIDATE_CONNECTIONS_SUCCESS,

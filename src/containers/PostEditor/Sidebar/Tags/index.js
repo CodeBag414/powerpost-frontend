@@ -18,6 +18,7 @@ class Tags extends Component {
     accountTags: ImmutablePropTypes.map,
     postSet: ImmutablePropTypes.map,
     updatePostSet: PropTypes.func,
+    permissionClasses: PropTypes.object,
   };
 
   state = { isExpanded: false };
@@ -43,12 +44,12 @@ class Tags extends Component {
   }
 
   render() {
-    const { accountTags } = this.props;
+    const { accountTags, permissionClasses } = this.props;
     const { isExpanded } = this.state;
     const tags = this.getTags();
 
     return (
-      <Wrapper expanded={isExpanded}>
+      <Wrapper expanded={isExpanded} className={permissionClasses.tags}>
         <Heading
           title="Tags"
           icon="tags"

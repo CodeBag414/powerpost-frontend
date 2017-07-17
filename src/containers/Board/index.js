@@ -11,7 +11,7 @@ import { fromJS } from 'immutable';
 import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { UserCanBoard } from 'config.routes/UserRoutePermissions';
-
+import { getClassesByPage } from 'utils/permissionClass';
 import PostEditor from 'containers/PostEditor';
 import PostSetsGroup from './PostSetsGroup';
 import {
@@ -21,7 +21,7 @@ import {
   changePostSetSortOrderRequest,
   savePostSetSortOrderRequest,
 } from '../App/actions';
-import { makeSelectPostSets } from '../App/selectors';
+import { makeSelectPostSets, makeSelectUserAccount } from '../App/selectors';
 import styles from './styles.scss';
 
 class Board extends React.Component {
@@ -108,7 +108,7 @@ class Board extends React.Component {
       { status: 2, statusColor: '#67C5E6', name: 'Draft' },
       { status: 6, statusColor: '#ACB5B8', name: 'Idea' },
     ];
-    const { deletePostSetAction, params, location: { hash } } = this.props;
+    const { deletePostSetAction, params, location: { hash }, userAccount } = this.props;
     const { moveStatus, searchText, postStatusId } = this.state;
     const postSets = this.props.postSets.getIn(['data', 'post_sets'], fromJS([]));
     const filterPostSets = this.filterPostSets(postSets);
@@ -123,6 +123,8 @@ class Board extends React.Component {
       };
     });
     const postsetId = hash.startsWith('#postset') ? hash.split('-')[1] : 0;
+    const { permissions } = userAccount.user_access;
+    const permissionClasses = getClassesByPage(permissions, 'statusBoards');
     return (
       <div className={`${styles.board} ${postsetId ? styles.modalOpen : ''}`}>
         <div className={styles['board-header']}>
@@ -145,6 +147,7 @@ class Board extends React.Component {
                 onPostDragEnter={this.onPostDragEnter}
                 onDragStart={this.onDragStart}
                 onDrop={() => this.onDrop(postSetsGroup.status_id)}
+                permissionClasses={permissionClasses}
                 dragHover={postSetsGroup.status_id === moveStatus}
               />
             )
@@ -168,6 +171,7 @@ Board.propTypes = {
   location: PropTypes.shape({
     hash: PropTypes.string,
   }),
+  userAccount: PropTypes.object,
   params: PropTypes.shape({
     account_id: PropTypes.string,
   }),
@@ -185,6 +189,7 @@ export function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   postSets: makeSelectPostSets(),
+  userAccount: makeSelectUserAccount(),
 });
 
 export default UserCanBoard(connect(mapStateToProps, mapDispatchToProps)(Board));

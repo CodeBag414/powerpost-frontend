@@ -25,6 +25,7 @@ class Channels extends Component {
     posts: PropTypes.array,
     newMediaItem: ImmutablePropTypes.map,
     updatePost: PropTypes.func,
+    permissionClasses: PropTypes.object,
   };
 
   constructor(props) {
@@ -124,7 +125,7 @@ class Channels extends Component {
   }
 
   render() {
-    const { postSet, connections, posts, newMediaItem } = this.props;
+    const { postSet, connections, posts, newMediaItem, permissionClasses } = this.props;
     const { isDialogShown, currentPost, postMessage, postTime } = this.state;
     const hasContent = posts && Object.keys(posts).length && connections;
     const connection = connections && connections.filter((item) =>
@@ -135,7 +136,7 @@ class Channels extends Component {
     return (
       <Wrapper>
         <div className="left">
-          <div className="title">Where to Post?</div>
+          <div className={`title ${permissionClasses.postScheduleButton}`}>Where to Post?</div>
           <PPButton
             label={
               <div>
@@ -143,7 +144,7 @@ class Channels extends Component {
                 <span className="button-title">Schedule</span>
               </div>
             }
-            className="add-button"
+            className={`add-button ${permissionClasses.postScheduleButton}`}
             onClick={this.handleDialogToggle}
             primary
           />
@@ -155,6 +156,7 @@ class Channels extends Component {
                 handleClickTimestamp={this.handleClickTimestamp}
                 handleRemoveSlot={this.handleRemoveSlot}
                 currentPost={this.state.currentPost}
+                permissionClasses={permissionClasses}
               />
             : <NoContent />
             }
@@ -174,6 +176,7 @@ class Channels extends Component {
               handleRemoveSlot={this.handleRemoveSlot}
               handleDateChange={this.handleDateChange}
               newMediaItem={newMediaItem.toJS()}
+              permissionClasses={permissionClasses}
             />
           </div>
         :

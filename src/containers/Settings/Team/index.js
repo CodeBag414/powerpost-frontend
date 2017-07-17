@@ -5,7 +5,7 @@ import { find } from 'lodash';
 import styled from 'styled-components';
 
 import { UserCanTeam } from 'config.routes/UserRoutePermissions';
-
+import { getClassesByPage } from 'utils/permissionClass';
 import {
   fetchGroupUsers,
   inviteEmailToGroup,
@@ -71,7 +71,7 @@ export class Team extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { groupUsers, inviteEmailToGroup } = nextProps;
+    const { groupUsers, inviteEmailToGroup: inviteEmailToGroupAction } = nextProps;
     if (this.props.groupUsers !== groupUsers) {
       if (!groupUsers.isFecthing && groupUsers.details) {
         const newAccessLevels = accessLevelOptions.map((l) => {
@@ -86,8 +86,8 @@ export class Team extends Component {
           accessLevels: newAccessLevels,
         });
       }
-    } else if (this.props.inviteEmailToGroup !== inviteEmailToGroup) {
-      if (!inviteEmailToGroup.isFetching && !inviteEmailToGroup.error) { // Succeeded
+    } else if (this.props.inviteEmailToGroup !== inviteEmailToGroupAction) {
+      if (!inviteEmailToGroupAction.isFetching && !inviteEmailToGroupAction.error) { // Succeeded
         this.setState({
           inviteModalVisible: false,
           email: {
@@ -141,17 +141,18 @@ export class Team extends Component {
   }
 
   render() {
-    const { userAccount, groupUsers, inviteEmailToGroup } = this.props;
+    const { userAccount, groupUsers, inviteEmailToGroup: inviteEmailToGroupAction } = this.props;
     const { inviteModalVisible, email, accessLevel, accessLevels } = this.state;
 
     if (groupUsers.isFetching || !groupUsers.details) {
       return <Loading />;
     }
     const remainingText = `${userAccount.num_users - groupUsers.details.groups_users.length} of ${userAccount.num_users} Users Remaining for this Plan`;
-
+    const { permissions } = userAccount.user_access;
+    const permissionClasses = getClassesByPage(permissions, 'team');
     return (
       <Wrapper>
-        <div className="top-row">
+        <div className={`top-row ${permissionClasses.inviteNewMember}`}>
           <Button label="Invite New Member" primary onClick={this.toggleModal} />
           <span>{remainingText}</span>
         </div>
@@ -165,6 +166,7 @@ export class Team extends Component {
             thumbnail={u.properties.thumb_url}
             processing={u.processing}
             accessLevels={accessLevels}
+            permissionClasses={permissionClasses}
           />
         )}
 
@@ -217,7 +219,7 @@ export class Team extends Component {
                 <Button label="Send Invite" primary onClick={this.sendInvite} disabled={email.error || !accessLevel} />
               </div>
             </div>
-            { inviteEmailToGroup.isFetching && <Loading /> }
+            { inviteEmailToGroupAction.isFetching && <Loading /> }
           </FormWrapper>
         </CloseableDialog>
       </Wrapper>

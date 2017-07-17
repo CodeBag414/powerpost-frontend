@@ -8,11 +8,11 @@ import Wrapper from './Wrapper';
 import Comment from './Comment';
 import CommentInput from './CommentInput';
 
-function Comments({ comments, deleteComment, postComment, postSetId, user }) {
+function Comments({ comments, deleteComment, postComment, postSetId, user, permissionClasses }) {
   return (
     <Wrapper>
       <Heading title="Comments" border />
-      <div className="comment-input">
+      <div className={`comment-input ${permissionClasses.commentsControl}`}>
         <CommentInput user={user} postComment={(text) => postComment(postSetId, text)} />
       </div>
       {
@@ -22,6 +22,7 @@ function Comments({ comments, deleteComment, postComment, postSetId, user }) {
             comment={comment}
             removable={user.user_id === comment.getIn(['user', 'user_id'])}
             remove={deleteComment}
+            permissionClasses={permissionClasses}
           />
         )
       }
@@ -35,6 +36,7 @@ Comments.propTypes = {
   postComment: PropTypes.func,
   postSetId: PropTypes.string,
   user: PropTypes.shape(),
+  permissionClasses: PropTypes.shape(),
 };
 
 export default Comments;

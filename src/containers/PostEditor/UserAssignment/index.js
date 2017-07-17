@@ -16,6 +16,7 @@ class UserAssignment extends Component {
     assignee: PropTypes.object,
     users: PropTypes.array,
     updatePostSet: PropTypes.func,
+    className: PropTypes.string,
   }
 
   static defaultProps = {
@@ -49,13 +50,12 @@ class UserAssignment extends Component {
 
   render() {
     const { userListVisible } = this.state;
-    const { assignee, users } = this.props;
+    const { assignee, users, className } = this.props;
 
     const adminsOrEditors = filter(users, (u) => u.title === 'admins' || u.title === 'editors');
     const name = assignee.getIn(['user', 'display_name']);
-
     return (
-      <Wrapper>
+      <Wrapper className={className}>
         <div className="assignee-wrapper" onClick={this.toggleUserList}>
           { assignee.get('user_id') ?
             <Avatar image={assignee.getIn(['user', 'properties', 'thumb_url'])} title={name} backgroundColor="green" size={33} isClickable={false} /> :

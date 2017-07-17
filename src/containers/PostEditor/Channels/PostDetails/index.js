@@ -42,6 +42,7 @@ function PostDetails({
   postSet,
   postMessage,
   postTime,
+  permissionClasses,
 }) {
   const minDate = new Date();
   minDate.setDate(minDate.getDate() - 1);
@@ -62,6 +63,7 @@ function PostDetails({
           message={postMessage}
           handleMessageChange={handleMessageChange}
           onBlur={handleMessageBlur}
+          className={permissionClasses.timeSlotMessage}
         />
         <PostPreview
           mediaItem={mediaItem}
@@ -75,9 +77,9 @@ function PostDetails({
         />
       </div>
       <div className="right-column">
-        <div className="section-title schedule">Schedule</div>
+        <div className={`section-title schedule ${permissionClasses.timeSlotSchedule}`}>Schedule</div>
         {post.get('status') !== '5' ?
-          <div className="date-pickers">
+          <div className={`date-pickers ${permissionClasses.timeSlotSchedule}`}>
             <div className="date-picker">
               <DatePicker minDate={minDate} value={moment.unix(postTime).toDate()} onChange={handleDateChange} />
             </div>
@@ -86,9 +88,9 @@ function PostDetails({
             </div>
           </div>
         :
-          <div className="post-upon-ready-placeholder">This post will be sent when the status is set to Ready.</div>
+          <div className={`post-upon-ready-placeholder ${permissionClasses.timeSlotSchedule}`}>This post will be sent when the status is set to Ready.</div>
         }
-        <PPButton className="remove-slot" onClick={() => handleRemoveSlot(post)}>
+        <PPButton className={`remove-slot ${permissionClasses.timeSlotDelete}`} onClick={() => handleRemoveSlot(post)}>
           Remove Slot
         </PPButton>
       </div>
@@ -107,6 +109,7 @@ PostDetails.propTypes = {
   postMessage: PropTypes.string,
   postSet: ImmutablePropTypes.map,
   postTime: PropTypes.string,
+  permissionClasses: PropTypes.object,
 };
 
 export default PostDetails;

@@ -32,7 +32,7 @@ const CustomMenuItem = styled(MenuItem)`
   }
 
   &:hover {
-    background: #E81C64 !important; 
+    background: #E81C64 !important;
     i {
       color: white !important;
     }
@@ -65,6 +65,7 @@ class BrandsListItem extends Component {
 
   static propTypes = {
     brand: PropTypes.object,
+    permissionClasses: PropTypes.object,
   }
 
   constructor(props) {
@@ -93,7 +94,7 @@ class BrandsListItem extends Component {
     this.setState({ isPopupShown: false });
   }
 
-  BrandNavMenu = (brandURL) => (
+  BrandNavMenu = (brandURL, permissionClasses) => (
     <Popup onOutsideClick={this.hidePopup}>
       <BrandRouterMenuItem to={`${brandURL}/settings/connections`}>
         <i className="fa fa-paper-plane"></i><BrandMenuItemCaption>Posts</BrandMenuItemCaption>
@@ -107,15 +108,15 @@ class BrandsListItem extends Component {
       <BrandRouterMenuItem to={`${brandURL}/settings`} >
         <i className="fa fa-gear"></i><BrandMenuItemCaption>Settings</BrandMenuItemCaption>
       </BrandRouterMenuItem>
-      <MenuDivider />
-      <CustomMenuItem onClick={this.deleteBrand} >
+      {permissionClasses.brandItemDelete === 'hidden' ? null : <MenuDivider className={permissionClasses.brandItemDelete} />}
+      <CustomMenuItem onClick={this.deleteBrand} className={permissionClasses.brandItemDelete}>
         <i className="fa fa-trash"></i><BrandMenuItemCaption>Delete</BrandMenuItemCaption>
       </CustomMenuItem>
     </Popup>
     );
 
   render() {
-    const brand = this.props.brand;
+    const { brand, permissionClasses } = this.props;
 
     const thumbnailImageKey = (brand && brand.properties && brand.properties.thumbnail_image_key) ? brand.properties.thumbnail_image_key : '';
     const thumbURL = `https://s3.amazonaws.com/powerpost/${thumbnailImageKey}`;
@@ -130,13 +131,13 @@ class BrandsListItem extends Component {
       <Wrapper>
         <Link to={`${brandURL}`}>
           <BrandImage color={brandColor}>
-            {thumbnailImageKey !== '' ? <img src={thumbURL} /> : <p>{shortTitle}</p>}
+            {thumbnailImageKey !== '' ? <img src={thumbURL} role="presentation" /> : <p>{shortTitle}</p>}
           </BrandImage>
         </Link>
         <BrandTitle>
           <Link to={`${brandURL}`}>{ title }</Link>
         </BrandTitle>
-        <OptionMenu onClick={this.showPopup} ><FontIcon value="more_horiz" />{this.state.isPopupShown && this.BrandNavMenu(brandURL)}</OptionMenu>
+        <OptionMenu onClick={this.showPopup} ><FontIcon value="more_horiz" />{this.state.isPopupShown && this.BrandNavMenu(brandURL, permissionClasses)}</OptionMenu>
         <DeleteBrandDialog
           active={this.state.isDialogShown}
           handleDialogToggle={this.handleDialogToggle}

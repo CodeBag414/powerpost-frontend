@@ -30,6 +30,7 @@ function GeneralInfo({
   updatePostSet,
   user,
   userAccount,
+  permissionClasses,
 }) {
   const onBack = () => {
     browserHistory.push(location.pathname);
@@ -45,10 +46,11 @@ function GeneralInfo({
     <Wrapper modal={modal}>
       <div>
         <Title
-          contentEditable
+          contentEditable={permissionClasses.title.indexOf('disabled') === -1 && permissionClasses.title.indexOf('read-only') === -1}
           onInput={handleTitleChange}
           onBlur={handleTitleBlur}
           onKeyDown={handleTitleKeyDown}
+          className={permissionClasses.title}
         >
           {postTitle}
         </Title>
@@ -62,6 +64,7 @@ function GeneralInfo({
           assignee={postSet.getIn(['details', 'user_assignments', 0])}
           users={groupUsers.details ? groupUsers.details.groups_users : []}
           updatePostSet={updatePostSet}
+          className={permissionClasses.assignedTo}
         />
         <StatusChooser
           postSet={postSet}
@@ -92,6 +95,7 @@ GeneralInfo.propTypes = {
   updatePostSet: PropTypes.func,
   user: PropTypes.shape(),
   userAccount: PropTypes.object,
+  permissionClasses: PropTypes.object,
 };
 
 export default GeneralInfo;

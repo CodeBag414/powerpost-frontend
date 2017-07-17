@@ -25,16 +25,13 @@ function compare(a, b) {
   return 0;
 }
 
-function BrandsList({ brands, removeBrand }) {
-  let brandsList = [];
+function BrandsList({ brands, removeBrand, permissionClasses }) {
   const sortedBrands = brands.sort(compare);
-
+  let brandsList;
   if ((sortedBrands !== undefined) && (sortedBrands.length > 0)) {
-    sortedBrands.map((brand, index) => {
-      brandsList.push(
-        <BrandsListItem key={index} brand={brand} remove={removeBrand} />
-                );
-    });
+    brandsList = sortedBrands.map((brand, index) =>
+      <BrandsListItem key={index} brand={brand} remove={removeBrand} permissionClasses={permissionClasses} />
+    );
   } else {
     brandsList = <TextWrapper>You currently have no brands.</TextWrapper>;
   }
@@ -49,6 +46,7 @@ function BrandsList({ brands, removeBrand }) {
 BrandsList.propTypes = {
   brands: PropTypes.array,
   removeBrand: PropTypes.func,
+  permissionClasses: PropTypes.object,
 };
 
 export default BrandsList;

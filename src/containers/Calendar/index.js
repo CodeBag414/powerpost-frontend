@@ -4,7 +4,7 @@ import { createStructuredSelector } from 'reselect';
 import moment from 'moment';
 
 import { UserCanPostSet } from 'config.routes/UserRoutePermissions';
-
+import { getClassesByPage } from 'utils/permissionClass';
 import {
   deletePostSetRequest,
   fetchPostSetsBySTRequest,
@@ -13,6 +13,7 @@ import {
 
 import {
   makeSelectPostSets,
+  makeSelectUserAccount,
 } from 'containers/App/selectors';
 
 import {
@@ -43,6 +44,7 @@ class Calendar extends React.Component {
     params: PropTypes.shape({
       account_id: PropTypes.string,
     }),
+    userAccount: PropTypes.object,
   };
 
   state = {
@@ -180,7 +182,7 @@ class Calendar extends React.Component {
 
   render() {
     const { query, showDeletePopup } = this.state;
-    const { postSetsByST, currentAccount, params, location: { hash } } = this.props;
+    const { postSetsByST, currentAccount, params, location: { hash }, userAccount } = this.props;
     let scheduledPostSets = [];
     let unscheduledPostSets = [];
     let loading = false;
@@ -195,6 +197,8 @@ class Calendar extends React.Component {
     // const postWhenReadyPostSets = postSetsByST.getIn(['data', 'post_when_ready_post_sets']).toJS();
 
     const postsetId = hash.startsWith('#postset') ? hash.split('-')[1] : 0;
+    const { permissions } = userAccount.user_access;
+    const permissionClasses = getClassesByPage(permissions, 'calendar');
     return (
       <Wrapper className={`${postsetId ? 'modal-open' : ''} ${loading ? 'disabled' : ''}`}>
         <CalendarSidebar
@@ -211,6 +215,7 @@ class Calendar extends React.Component {
           onMoveEvent={this.handleMoveEvent}
           onDeleteEvent={this.handleDeleteEvent}
           onDateChange={this.loadPostSetsByST}
+          permissionClasses={permissionClasses}
         />
         <DeletePostSetDialog
           active={showDeletePopup}
@@ -237,6 +242,7 @@ const mapDispatchToProps = (dispatch) => (
 const mapStateToProps = createStructuredSelector({
   postSetsByST: makeSelectPostSets(),
   currentAccount: makeSelectCurrentAccount(),
+  userAccount: makeSelectUserAccount(),
 });
 
 export default UserCanPostSet(connect(mapStateToProps, mapDispatchToProps)(Calendar));

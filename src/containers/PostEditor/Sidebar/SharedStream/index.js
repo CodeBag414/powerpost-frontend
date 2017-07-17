@@ -14,6 +14,7 @@ class SharedStream extends Component {
     accountStreamId: PropTypes.string,
     postSet: ImmutablePropTypes.map,
     updatePostSet: PropTypes.func,
+    permissionClasses: PropTypes.object,
   };
 
   constructor(props) {
@@ -58,6 +59,7 @@ class SharedStream extends Component {
 
   render() {
     const { isExpanded, sharedStreamEnabled } = this.state;
+    const { permissionClasses } = this.props;
     return (
       <Wrapper>
         <Heading
@@ -68,7 +70,7 @@ class SharedStream extends Component {
           isExpanded={isExpanded}
         />
         <SmoothCollapse expanded={isExpanded}>
-          <InnerWrapper>
+          <InnerWrapper className={permissionClasses.sharedStream}>
             <span className="toggle-label">Include this post in this brand&#39;s shared stream?</span>
             <Toggle
               defaultChecked={sharedStreamEnabled}

@@ -29,6 +29,7 @@ class PopupMenu extends Component {
     currentAccount: PropTypes.object,
     popupPosition: PropTypes.object,
     onDelete: PropTypes.func,
+    permissionClasses: PropTypes.object,
   };
 
   handleClickOutside = (e) => {
@@ -65,7 +66,7 @@ class PopupMenu extends Component {
   }
 
   render() {
-    const { postSet, popupPosition } = this.props;
+    const { postSet, popupPosition, permissionClasses } = this.props;
     const channelCount = postSet.posts.length;
     return (
       <Wrapper position={popupPosition}>
@@ -84,8 +85,8 @@ class PopupMenu extends Component {
         <div className="event-popup-bottom">
           {postSet.tags && this.buildTags(postSet)}
           <div className="event-popup-buttons">
-            <Button onClick={this.handleClickDelete} className="event-popup-flat" flat>Delete Post</Button>
-            <Button onClick={this.handleClickEdit} className="event-popup-primary" primary>Edit</Button>
+            <Button onClick={this.handleClickDelete} className={`event-popup-flat ${permissionClasses.deleteButton}`} flat>Delete Post</Button>
+            <Button onClick={this.handleClickEdit} className="event-popup-primary" primary>{permissionClasses.editButton === 'hidden' ? 'View' : 'Edit'}</Button>
           </div>
         </div>
       </Wrapper>

@@ -24,6 +24,7 @@ class Comment extends Component {
     comment: PropTypes.shape(),
     removable: PropTypes.bool,
     remove: PropTypes.func,
+    permissionClasses: PropTypes.shape(),
   }
 
   state = { popOver: false };
@@ -48,7 +49,7 @@ class Comment extends Component {
   }
 
   render() {
-    const { comment, removable } = this.props;
+    const { comment, removable, permissionClasses } = this.props;
     const { popOver } = this.state;
     const avatarUrl = comment.getIn(['user', 'properties', 'thumb_url']);
     const avatarClr = comment.getIn(['user', 'properties', 'color']);
@@ -76,7 +77,7 @@ class Comment extends Component {
         </div>
         {
           removable &&
-          <div className="ellipsis" onClick={this.showPopover} >
+          <div className={`ellipsis ${permissionClasses.commentsDelete}`} onClick={this.showPopover} >
             <i className="fa fa-ellipsis-h" />
             <MenuPopover
               onDelete={(e) => this.remove(comment.get('comment_id'), e)}

@@ -16,6 +16,7 @@ class PostSetBox extends Component {
     streamName: PropTypes.string,
     fetchPostSet: PropTypes.func,
     handlePostSet: PropTypes.func,
+    permissionClasses: PropTypes.object,
   }
 
   state = {
@@ -34,7 +35,7 @@ class PostSetBox extends Component {
   }
 
   render() {
-    const { owned, postSet, postSets, streamName, handlePostSet } = this.props;
+    const { owned, postSet, postSets, streamName, handlePostSet, permissionClasses } = this.props;
     const { currentPostSetIndex } = this.state;
     const mediaItems = postSet.getIn(['data', 'media_items']) || [];
 
@@ -62,6 +63,7 @@ class PostSetBox extends Component {
           postSet={postSet.get('processing') ?
             postSets.get(currentPostSetIndex) : postSet.get('data')}
           handlePostSet={handlePostSet}
+          permissionClasses={permissionClasses}
         />
       </Wrapper>
     );

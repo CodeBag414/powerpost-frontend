@@ -46,11 +46,12 @@ const PostSetDetail = ({
   owned,
   postSet,
   mediaItems,
+  permissionClasses,
   handlePostSet,
 }) => {
   let item;
   if (mediaItems.length === 0) {
-    item = {type: 'empty'};
+    item = { type: 'empty' };
   } else {
     item = mediaItems.toJS()[0];
   }
@@ -64,6 +65,7 @@ const PostSetDetail = ({
           <Button
             primary
             onClick={() => handlePostSet(owned, postSet)}
+            className={owned ? permissionClasses.removeFromStream : permissionClasses.addPost}
           >
             { owned ? 'Remove from Stream' : 'Add to Posts' }
           </Button>
@@ -85,6 +87,8 @@ PostSetDetail.propTypes = {
   owned: PropTypes.bool,
   postSet: ImmutablePropTypes.map,
   handlePostSet: PropTypes.func,
+  permissionClasses: PropTypes.object,
+  mediaItems: PropTypes.array,
 };
 
 PostSetDetail.defaultProps = {

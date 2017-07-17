@@ -53,7 +53,7 @@ class ChannelSlots extends React.Component {
   }
 
   render() {
-    const { posts, connections, handleClickTimestamp, handleRemoveSlot, currentPost } = this.props;
+    const { posts, connections, handleClickTimestamp, handleRemoveSlot, currentPost, permissionClasses } = this.props;
     return (
       <Wrapper>
         {
@@ -72,6 +72,7 @@ class ChannelSlots extends React.Component {
                 handleClickTimestamp={handleClickTimestamp}
                 handleRemoveSlot={handleRemoveSlot}
                 currentPost={currentPost}
+                permissionClasses={permissionClasses}
               />
             );
           })
@@ -87,6 +88,7 @@ ChannelSlots.propTypes = {
   connections: PropTypes.array,
   handleClickTimestamp: PropTypes.func,
   handleRemoveSlot: PropTypes.func,
+  permissionClasses: PropTypes.object,
 };
 
 export default ChannelSlots;

@@ -8,12 +8,12 @@
 
 import React from 'react';
 
-import styles from './styles.scss';
+import Wrapper from './Wrapper';
 
 const App = ({ children }) => (
-  <div className={styles.app}>
+  <Wrapper>
     {React.Children.toArray(children)}
-  </div>
+  </Wrapper>
 );
 
 App.propTypes = {
