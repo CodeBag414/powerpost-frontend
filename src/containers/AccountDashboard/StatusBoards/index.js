@@ -20,7 +20,7 @@ const Item = ({ status, count }) => {
       break;
     case 'draft':
       iconName = 'fa-pencil';
-      statusName = 'Drafts';
+      statusName = 'Draft';
       break;
     case 'idea':
       iconName = 'fa-lightbulb-o';
