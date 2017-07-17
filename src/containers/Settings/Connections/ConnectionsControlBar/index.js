@@ -2,9 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import PPButton from 'elements/atm.Button';
-import MenuItem from 'material-ui/MenuItem';
-import PPSelectField from 'elements/atm.SelectField';
 import PPButtonInput from 'elements/atm.ButtonInput';
+import Dropdown from 'elements/atm.Dropdown';
+import TextField from 'elements/atm.TextField';
+
+import theme from './theme.scss';
 
 const styles = require('./styles.scss');
 
@@ -19,14 +21,14 @@ class ConnectionsControlBar extends React.Component {
     this.props.setChannelFilter(e);
   }
 
-  setChannelType(event, index, value) {
-    this.props.setChannelType(value);
+  setChannelType(object) {
+    this.props.setChannelType(object.value);
   }
 
   render() {
-    const channelTypes = [<MenuItem value="" primaryText="All Channels" key="" style={{textTransform: 'capitalize'}} />];
+    const channelTypes = [{ value: "", label: 'All Channels' }];
     this.props.channels.forEach((channel) => {
-      channelTypes.push(<MenuItem value={channel} primaryText={channel} key={channel} style={{textTransform: 'capitalize'}}/>);
+      channelTypes.push({ value: channel, label: channel });
     });
 
     return (
@@ -44,19 +46,12 @@ class ConnectionsControlBar extends React.Component {
         <div
           className={['col-xs-12', 'col-sm-6', 'col-md-3', 'col-lg-3', styles.noLeftPadding].join(' ')}
         >
-          <div className={[styles.filterBlock, styles.channelTypeBlock].join(' ')}>
-            <PPSelectField onChange={this.setChannelType} value={this.props.channelType} underlineShow={false} style={{textTransform: 'capitalize'}}>
-              { channelTypes }
-            </PPSelectField>
-          </div>
+          <Dropdown label="" styles={{ textTransform: 'capitalize', height: '36px', marginTop: '-13px' }} placeholder="Filter by Channel" options={channelTypes} onChange={this.setChannelType} value={this.props.channelType} />
         </div>
         <div
           className={['col-xs-12', 'col-sm-6', 'col-md-3', 'col-lg-3', styles.noLeftPadding].join(' ')}
         >
-          <PPButtonInput
-            value={this.props.channelFilter} type="text" hint="Search" icon="search"
-            onChange={this.setChannelFilter}
-          />
+          <TextField iconClass="fa fa-search" hintText="Search" style={{ float: 'right', marginTop: '12px', height: '36px' }} onChange={this.setChannelFilter} />
         </div>
       </div>
     );

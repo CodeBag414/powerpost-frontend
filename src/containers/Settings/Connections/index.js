@@ -77,7 +77,7 @@ class Connections extends React.Component {
       }
 
       if (this.props.channelType) {
-        matched = matched && (connection.channel === this.props.channelType);
+        matched = matched && (connection.channel === this.props.channelType || this.props.channelType === 'All Channels');
       }
 
       return matched;

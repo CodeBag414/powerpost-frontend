@@ -25,9 +25,11 @@
     text-align: center;
     i {
         font-size: 15px !important;
+        line-height: 34px;
+        vertical-align: middle;
     }
     span {
-        font-size: 15px !important;
+        font-size: 0px !important;
     }
 }
 .selected {

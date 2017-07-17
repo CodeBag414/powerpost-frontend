@@ -230,7 +230,7 @@ class Dropdown extends React.Component {
     const menu = this.state.isOpen ? <DropdownMenu>{this.buildMenu()}</DropdownMenu> : null;
 
     return (
-      <DropdownWrapper small={small}>
+      <DropdownWrapper small={small} style={this.props.styles}>
         {this.props.label !== undefined && <DropdownLabel>{this.props.label}</DropdownLabel>}
         <DropdownControl isOpen={this.state.isOpen} onMouseDown={this.handleMouseDown.bind(this)} onTouchEnd={this.handleMouseDown.bind(this)} small={small} color={this.state.selected.color}>
           {value}
