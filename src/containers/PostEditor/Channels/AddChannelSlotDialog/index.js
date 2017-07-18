@@ -36,17 +36,18 @@ class AddChannelSlotDialog extends Component {
   };
 
   componentWillReceiveProps = (nextProps) => {
-    if (this.state.channels.length) return;
-    this.setState({
-      channels: nextProps.connections
-        .filter((connection) => connection.channel !== 'wordpress' && connection.status === '1')
-        .map((connection) => ({
-          checked: false,
-          connection: fromJS(connection),
-        })),
-      isPostUponReady: false,
-      scheduleTimes: [new Date().getTime() + 300000],
-    });
+    if (!this.state.channels.length) {
+      this.setState({
+        channels: nextProps.connections
+          .filter((connection) => connection.channel !== 'wordpress' && connection.status === '1')
+          .map((connection) => ({
+            checked: false,
+            connection: fromJS(connection),
+          })),
+        isPostUponReady: false,
+        scheduleTimes: [new Date().getTime() + 300000],
+      });
+    }
   }
 
   onChangeScheduleTimes = (scheduleTimes) => {
