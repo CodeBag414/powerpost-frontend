@@ -55,6 +55,14 @@ import MessageEditorWrapper from './MessageEditorWrapper';
 
 import { CHANNELS } from './constants';
 
+function getHasWordPressPost(postSet) {
+  postSet.getIn(['details', 'posts']).some((post) => {
+    if (post.get('status') === '0') return false;
+    if (post.get('connection_channel') === 'wordpress') return true;
+    return false;
+  });
+}
+
 class Content extends Component {
 
   static propTypes = {
@@ -86,14 +94,15 @@ class Content extends Component {
   constructor(props) {
     super(props);
     const message = !props.postSet.get('details').isEmpty() ? props.postSet.getIn(['details', 'message']) : '';
-    const mediaItems = !props.postSet.get('details').isEmpty() ? props.postSet.getIn(['details', 'media_items']).toJS() : [{}];
-    const characterLimit = this.calculateCharacterLimit(message, {}, false);
+    const mediaItems = !props.postSet.get('details').isEmpty() ? props.postSet.getIn(['details', 'media_items']).toJS() : [];
+    const hasWordPressPost = !props.postSet.get('details').isEmpty() && getHasWordPressPost(props.postSet);
+    const characterLimit = this.calculateCharacterLimit(message, mediaItems[0] || [], false);
     this.state = {
       channelIndex: -1,
       characterLimit,
       fileEditor: false,
       message,
-      hasWordPressPost: false,
+      hasWordPressPost,
       imageEditor: false,
       videoEditor: false,
       linkEditor: false,
@@ -143,11 +152,7 @@ class Content extends Component {
       this.setState({ item: {} });
     }
 
-    const hasWordPressPost = postSet.getIn(['details', 'posts']).some((post) => {
-      if (post.get('status') === '0') return false;
-      if (post.get('connection_channel') === 'wordpress') return true;
-      return false;
-    });
+    const hasWordPressPost = getHasWordPressPost(postSet);
 
     this.setState({
       characterLimit: this.calculateCharacterLimit(newMessage, newMediaItem[0], hasWordPressPost),
