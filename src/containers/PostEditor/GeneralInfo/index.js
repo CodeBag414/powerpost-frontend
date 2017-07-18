@@ -19,7 +19,6 @@ function handleTitleKeyDown(e) {
 }
 
 function GeneralInfo({
-  goBack,
   groupUsers,
   handleTitleChange,
   handleTitleBlur,
@@ -35,10 +34,7 @@ function GeneralInfo({
   const onBack = () => {
     browserHistory.push(location.pathname);
   };
-  const hasPrevUrl = location.state && location.state.prevUrl;
 
-  // console.log('user', user);
-  // console.log('postSet', postSet);
   const postSetObject = postSet.get('details').toJS();
   if (!postSetObject.post_set_id) return null;
   const userName = postSetObject.user_id === user.user_id ? user.display_name : postSetObject.user.display_name;
@@ -75,7 +71,7 @@ function GeneralInfo({
         />
         {
           modal ? (
-            <div className="back-button" onClick={hasPrevUrl ? goBack : onBack}>
+            <div className="back-button" onClick={onBack}>
               ×
             </div>
           ) : null
@@ -88,7 +84,6 @@ function GeneralInfo({
 GeneralInfo.propTypes = {
   handleTitleBlur: PropTypes.func,
   handleTitleChange: PropTypes.func,
-  goBack: PropTypes.func,
   groupUsers: PropTypes.object,
   location: PropTypes.object,
   postSet: PropTypes.object,

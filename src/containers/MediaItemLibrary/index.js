@@ -160,7 +160,7 @@ class Library extends React.Component {
     // If Blog post is created or updated successfully, then the modal view for blog editor will be hidden
 
     if (this.props.isProcessing !== nextProps.isProcessing) {
-      if (!nextProps.isProcessing) {
+      if (!nextProps.isProcessing && !nextProps.location.hash.startsWith('#postset')) {
         browserHistory.push(this.props.location.pathname);
       }
     }
