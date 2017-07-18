@@ -38,18 +38,4 @@
     flex-direction: row;
     height: 100%;
   }
-  .postEditor {
-    background-color: white;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
-    z-index: 1000000;
-  }
-  &.modalOpen {
-    overflow: hidden;
-    .postEditor {
-      opacity: 1;
-      pointer-events: all;
-    }
-  }
 }

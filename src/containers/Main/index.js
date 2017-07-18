@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { toastr } from 'lib/react-redux-toastr';
 import Nav from 'components/Nav';
+import PostEditor from 'containers/PostEditor';
 import ProcessingIndicator from 'components/ProcessingIndicator';
 import { getClassesByPage } from 'utils/permissionClass';
 import cookie from 'react-cookie';
@@ -97,16 +98,10 @@ class Main extends React.Component {
       this.props.fetchAccount(nextProps.params.account_id);
       this.props.fetchConnections(nextProps.params.account_id);
     }
-    const { postSet, activeBrand } = nextProps;
+    const { postSet } = nextProps;
     if (postSet && postSet.createSuccess && (!this.props.postSet || this.props.postSet.post_set_id !== postSet.post_set_id)) {
-      // FIXME: In case we need to show popup on any page
-      // browserHistory.push(`/account/${this.props.location.pathname}#postset-${postSet.post_set_id}`);
       if (nextProps.postSetEdit) {
-        browserHistory.push({
-          pathname: `/account/${activeBrand.account_id}/calendar`,
-          hash: `#postset-${postSet.post_set_id}`,
-          state: { prevUrl: window.location.href },
-        });
+        browserHistory.push(`${this.props.location.pathname}#postset-${postSet.post_set_id}`);
       } else {
         toastr.success('Success', 'The Post is created successfully!');
       }
@@ -147,6 +142,7 @@ class Main extends React.Component {
       userAccount,
       userPermissions,
       routes,
+      location: { hash },
     } = this.props;
     let viewContentStyle = this.props.menuCollapsed ? styles.viewContentCollapsed : styles.viewContentFull;
     if (location.pathname === '/') {
@@ -154,8 +150,10 @@ class Main extends React.Component {
     }
     if (!this.props.activeBrand.account_id) return null;
     const permissionClasses = getClassesByPage(activeBrand.user_access.permissions, 'mainNav');
+
+    const postsetId = hash.startsWith('#postset') ? hash.split('-')[1] : 0;
     return (
-      <div>
+      <div className={postsetId ? styles.modalOpen : ''}>
         <ProcessingIndicator isProcessing={this.props.isProcessing} />
         <Nav
           accountId={params.account_id}
@@ -176,6 +174,9 @@ class Main extends React.Component {
         />
         <div id="main-panel" className={[viewContentStyle, styles.viewContent].join(' ')}>
           {this.props.children}
+        </div>
+        <div className={styles.postEditor}>
+          { postsetId ? <PostEditor id={postsetId} accountId={params.account_id} /> : null}
         </div>
       </div>
     );

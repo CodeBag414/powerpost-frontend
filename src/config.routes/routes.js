@@ -30,14 +30,18 @@ export function createRoutes(store, auth) {
           System.import('containers/Main/actions'),
           System.import('containers/Main/reducer'),
           System.import('containers/Main/sagas'),
+          System.import('containers/PostEditor/reducer'),
+          System.import('containers/PostEditor/sagas'),
           System.import('containers/Main'),
         ]);
 
         const renderRoute = loadModule(cb);
 
-        importModules.then(([actions, reducer, sagas, component]) => {
+        importModules.then(([actions, reducer, sagas, postEditorReducer, postEditorSagas, component]) => {
           injectReducer('main', reducer.default);
           injectSagas(sagas.default);
+          injectReducer('postEditor', postEditorReducer.default);
+          injectSagas(postEditorSagas.default);
 
           renderRoute(component);
           if (auth.loggedIn()) {
@@ -206,18 +210,14 @@ export function createRoutes(store, auth) {
             const importModules = Promise.all([
               System.import('containers/MediaItemLibrary/reducer'),
               System.import('containers/MediaItemLibrary/sagas'),
-              System.import('containers/PostEditor/reducer'),
-              System.import('containers/PostEditor/sagas'),
               System.import('containers/Calendar'),
             ]);
 
             const renderRoute = loadModule(cb);
 
-            importModules.then(([mediaLibraryReducer, mediaLibrarySaga, postEditorReducer, postEditorSagas, component]) => {
+            importModules.then(([mediaLibraryReducer, mediaLibrarySaga, component]) => {
               injectReducer('library', mediaLibraryReducer.default);
               injectSagas(mediaLibrarySaga.default);
-              injectReducer('postEditor', postEditorReducer.default);
-              injectSagas(postEditorSagas.default);
               renderRoute(component);
             });
 
@@ -231,17 +231,13 @@ export function createRoutes(store, auth) {
             const importModules = Promise.all([
               System.import('containers/MediaItemLibrary/reducer'),
               System.import('containers/MediaItemLibrary/sagas'),
-              System.import('containers/PostEditor/reducer'),
-              System.import('containers/PostEditor/sagas'),
               System.import('containers/MediaItemLibrary/PowerStream'),
             ]);
             const renderRoute = loadModule(cb);
 
-            importModules.then(([mediaLibraryReducer, mediaLibrarySaga, postEditorReducer, postEditorSagas, component]) => {
+            importModules.then(([mediaLibraryReducer, mediaLibrarySaga, component]) => {
               injectReducer('library', mediaLibraryReducer.default);
               injectSagas(mediaLibrarySaga.default);
-              injectReducer('postEditor', postEditorReducer.default);
-              injectSagas(postEditorSagas.default);
               renderRoute(component);
             });
 
@@ -292,16 +288,12 @@ export function createRoutes(store, auth) {
           name: 'Status Boards',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
-              System.import('containers/PostEditor/reducer'),
-              System.import('containers/PostEditor/sagas'),
               System.import('containers/Board'),
             ]);
 
             const renderRoute = loadModule(cb);
 
-            importModules.then(([reducer, sagas, component]) => {
-              injectReducer('postEditor', reducer.default);
-              injectSagas(sagas.default);
+            importModules.then(([component]) => {
               renderRoute(component);
             });
 
@@ -391,16 +383,12 @@ export function createRoutes(store, auth) {
           name: 'Posts',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
-              System.import('containers/PostEditor/reducer'),
-              System.import('containers/PostEditor/sagas'),
               System.import('containers/Posts'),
             ]);
 
             const renderRoute = loadModule(cb);
 
-            importModules.then(([reducer, sagas, component]) => {
-              injectReducer('postEditor', reducer.default);
-              injectSagas(sagas.default);
+            importModules.then(([component]) => {
               renderRoute(component);
             });
 

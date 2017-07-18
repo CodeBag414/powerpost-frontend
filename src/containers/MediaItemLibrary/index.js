@@ -12,8 +12,6 @@ import { createStructuredSelector } from 'reselect';
 import { browserHistory } from 'react-router';
 import DropdownMenu from 'react-dd-menu';
 
-import PostEditor from 'containers/PostEditor';
-
 import {
   createPostSetRequest,
 } from 'containers/App/actions';
@@ -460,7 +458,6 @@ class Library extends React.Component {
 
   render() {
     const { location: { hash } } = this.props;
-    const postsetId = hash.startsWith('#postset') ? hash.split('-')[1] : 0;
     const blogEditor = hash.startsWith('#blog-editor');
 
     const actions = [
@@ -508,7 +505,6 @@ class Library extends React.Component {
         <VideoEditor actions={actions} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleVideoEditorSave} isOpen={this.state.videoEditorDialog} filePickerKey={this.props.filePickerKey} videoItem={this.state.videoItem} />
         <FileEditor actions={actions} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave} isOpen={this.state.fileEditorDialog} filePickerKey={this.props.filePickerKey} fileItem={this.state.fileItem} />
         <div className="post-editor">
-          { postsetId ? <PostEditor id={postsetId} accountId={this.props.params.account_id} location={this.props.location} /> : null}
           { blogEditor ? <BlogEditor
             filePickerKey={this.props.filePickerKey}
             location={this.props.location}
@@ -516,7 +512,6 @@ class Library extends React.Component {
             onUpdate={this.updateBlogPost}
             selectedItem={this.state.blogItem}
           /> : null }
-          { postsetId ? <PostEditor id={postsetId} accountId={this.props.params.account_id} /> : null}
         </div>
       </Wrapper>
     );

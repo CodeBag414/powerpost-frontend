@@ -18,7 +18,6 @@ import {
   makeSelectCurrentAccount,
 } from 'containers/Main/selectors';
 
-import PostEditor from 'containers/PostEditor';
 import DeletePostSetDialog from 'components/DeletePostSetDialog';
 import Loading from 'components/Loading';
 
@@ -192,7 +191,7 @@ class Calendar extends React.Component {
 
   render() {
     const { query, showDeletePopup } = this.state;
-    const { postSetsByST, currentAccount, params, location: { hash } } = this.props;
+    const { postSetsByST, currentAccount } = this.props;
     let scheduledPostSets = [];
     let unscheduledPostSets = [];
     let loading = false;
@@ -206,11 +205,10 @@ class Calendar extends React.Component {
     // FIXME: The below can be used later
     // const postWhenReadyPostSets = postSetsByST.getIn(['data', 'post_when_ready_post_sets']).toJS();
 
-    const postsetId = hash.startsWith('#postset') ? hash.split('-')[1] : 0;
     const { permissions } = currentAccount.user_access;
     const permissionClasses = getClassesByPage(permissions, 'calendar');
     return (
-      <Wrapper className={`${postsetId ? 'modal-open' : ''} ${loading ? 'disabled' : ''}`}>
+      <Wrapper className={loading ? 'disabled' : ''}>
         <CalendarSidebar
           postSets={unscheduledPostSets}
           currentAccount={currentAccount}
@@ -234,9 +232,6 @@ class Calendar extends React.Component {
           deletePostSet={this.onDeletePostSet}
         />
         {loading ? <Loading opacity={0.5} showIndicator={!postSetsByST.get('data')} /> : null}
-        <div className="post-editor">
-          { postsetId ? <PostEditor id={postsetId} accountId={params.account_id} /> : null}
-        </div>
       </Wrapper>
     );
   }

@@ -11,7 +11,6 @@ import { fromJS } from 'immutable';
 import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { getClassesByPage } from 'utils/permissionClass';
-import PostEditor from 'containers/PostEditor';
 import PostSetsGroup from './PostSetsGroup';
 import {
   deletePostSetRequest,
@@ -110,7 +109,7 @@ class Board extends React.Component {
       { status: 2, statusColor: '#67C5E6', name: 'Draft' },
       { status: 6, statusColor: '#ACB5B8', name: 'Idea' },
     ];
-    const { deletePostSetAction, params, location: { hash }, activeBrand } = this.props;
+    const { deletePostSetAction, activeBrand } = this.props;
     const { moveStatus, searchText, postStatusId } = this.state;
     const { permissions } = activeBrand.user_access;
     const permissionClasses = getClassesByPage(permissions, 'statusBoards');
@@ -127,9 +126,8 @@ class Board extends React.Component {
         className: permissionClasses[name],
       };
     });
-    const postsetId = hash.startsWith('#postset') ? hash.split('-')[1] : 0;
     return (
-      <div className={`${styles.board} ${postsetId ? styles.modalOpen : ''}`}>
+      <div className={styles.board}>
         <div className={styles['board-header']}>
           <div className={styles['search-input']}>
             <input placeholder="Search Title and Tags" value={searchText} onChange={(e) => this.onSearch(e.target.value)} />
@@ -157,9 +155,6 @@ class Board extends React.Component {
             )
           }
         </div>
-        <div className={styles.postEditor}>
-          { postsetId ? <PostEditor id={postsetId} accountId={params.account_id} /> : null}
-        </div>
       </div>
     );
   }
@@ -172,13 +167,7 @@ Board.propTypes = {
   changePostSetSortOrder: PropTypes.func.isRequired,
   savePostSetSortOrder: PropTypes.func.isRequired,
   postSets: ImmutablePropTypes.map.isRequired,
-  location: PropTypes.shape({
-    hash: PropTypes.string,
-  }),
   activeBrand: PropTypes.object,
-  params: PropTypes.shape({
-    account_id: PropTypes.string,
-  }),
 };
 
 export function mapDispatchToProps(dispatch) {
