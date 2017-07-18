@@ -36,7 +36,7 @@ class AddChannelSlotDialog extends Component {
   };
 
   componentWillReceiveProps = (nextProps) => {
-    if (!this.state.channels.length) {
+    if (!this.state.channels.length || !this.props.active) {
       this.setState({
         channels: nextProps.connections
           .filter((connection) => connection.channel !== 'wordpress' && connection.status === '1')
