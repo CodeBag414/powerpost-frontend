@@ -20,6 +20,7 @@ const PPMenuItem = (props) => {
 };
 
 PPMenuItem.propTypes = {
+  isCollapsed: PropTypes.bool,
   isSidebar: PropTypes.bool,
   rest: PropTypes.any,
 };

@@ -45,6 +45,9 @@ const Sidebar = styled.div`
       &.linkedin-icon-color {
         color: ${(props) => props.theme.linkedinColor} !important;
       }
+      &.fa-google-plus-square {
+        color: ${(props) => props.theme.googleColor} !important;
+      }
    }
 `;
 

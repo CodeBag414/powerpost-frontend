@@ -6,7 +6,7 @@ const theme = {
   linkedinColor: '#0274B3',
   facebookColor: '#3B5998',
   twitterColor: '#1DA1F2',
-  googleColor: '#d34836',
+  googleColor: '#DB4437',
 };
 
 export default theme;
