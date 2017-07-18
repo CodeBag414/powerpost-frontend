@@ -244,7 +244,8 @@ class PowerStreamLayout extends Component {
           <PostSetBox
             owned={owned}
             postSet={postSet}
-            postSets={postSets.get('data').sortBy((ps) => -ps.get('creation_time'))}
+            postSets={postSets.get('data').sortBy((ps) => -ps.get('creation_time'))
+              .filter((p) => p.get('status') === '3')}
             streamName={streamName}
             fetchingPostSets={postSets.get('isFetching')}
             fetchPostSet={this.props.fetchPostSet}

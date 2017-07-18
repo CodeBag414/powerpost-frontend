@@ -59,7 +59,7 @@ class PostSetBox extends Component {
     return (
       <Wrapper>
         <PostSetList
-          postSets={postSets.filter((p) => p.get('status') === '3')}
+          postSets={postSets}
           streamName={streamName}
           currentPostSetIndex={currentPostSetIndex}
           handleSelectPostSet={this.handleSelectPostSet}
