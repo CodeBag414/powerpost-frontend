@@ -93,13 +93,14 @@ class Calendar extends React.Component {
       const titleMatch = !query || (postSet.title && postSet.title.toLowerCase().indexOf(queryLowerCase) !== -1);
       let tagsMatch = !query;
       if (postSet.tags) {
-        for (let i = 0; i < postSet.tags.length; i += 1) {
-          const tag = postSet.tags[i].toLowerCase();
-          if (tag.indexOf(queryLowerCase) !== -1) {
+        Object.keys(postSet.tags).some((key) => {
+          const tagString = postSet.tags[key];
+          if (tagString.indexOf(queryLowerCase) !== -1) {
             tagsMatch = true;
-            break;
+            return true;
           }
-        }
+          return false;
+        });
       }
       const filterMatch = filters[postSet.status];
       if ((titleMatch || tagsMatch) && filterMatch) {

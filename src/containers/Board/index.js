@@ -85,13 +85,15 @@ class Board extends React.Component {
       const titleMatch = (postSet.get('title') && postSet.get('title').toLowerCase().indexOf(queryLowerCase) !== -1);
       let tagsMatch = false;
       if (postSet.get('tags')) {
-        for (let i = 0; i < postSet.get('tags').size; i += 1) {
-          const tag = postSet.getIn(['tags', i]).toLowerCase();
-          if (tag.indexOf(queryLowerCase) !== -1) {
+        const tags = postSet.get('tags').toJS();
+        Object.keys(tags).some((key) => {
+          const tagString = tags[key];
+          if (tagString.indexOf(queryLowerCase) !== -1) {
             tagsMatch = true;
-            break;
+            return true;
           }
-        }
+          return false;
+        });
       }
       if ((titleMatch || tagsMatch)) {
         return postSet;
