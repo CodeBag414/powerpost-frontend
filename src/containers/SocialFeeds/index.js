@@ -21,8 +21,9 @@ const ReactRouterMenuItem = withReactRouter(PPMenuItem);
 const Sidebar = styled.div`
     width: 225px;
     padding-top: 20px;
+    padding-bottom: 20px;
     position: fixed;
-    height: 100vh;
+    height: calc(100vh - 60px);
     overflow-y: scroll;
     border-right: solid 2px #C8CED0;
     i {
