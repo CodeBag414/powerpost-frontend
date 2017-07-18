@@ -33,8 +33,6 @@ class Sidebar extends React.Component {
       { caption: 'Shared Streams', className: 'sharedStreams', icon: 'list-alt', subPath: 'shared_streams/owned' },
       { caption: 'Social Feeds', className: 'socialFeeds', icon: 'list-ul', subPath: 'social_feeds' },
       { caption: 'Analytics', className: 'analytics', icon: 'bar-chart', subPath: 'statistics' },
-      { caption: 'Connections', className: 'connections', icon: 'exchange', subPath: 'settings/connections' },
-      { caption: 'Team', className: 'team', icon: 'group', subPath: 'settings/team' },
       { caption: 'Settings', className: 'settings', icon: 'cog', subPath: 'settings' },
     ];
     const NavComponent = collapsed ? CollapsedWrapper : MainNavWrapper;

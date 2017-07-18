@@ -434,6 +434,7 @@ class Library extends React.Component {
   }
 
   createPostSet = (mediaItem) => {
+    this.closeAllDialog();
     const { params: { account_id }, createPostSet } = this.props;
     const postSet = {
       account_id,

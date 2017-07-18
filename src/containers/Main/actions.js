@@ -10,7 +10,7 @@ import {
     FETCH_ACCOUNT_ERROR,
     TOGGLE_MENU,
     FETCH_CONNECTIONS,
-    SET_CONNECTIONS,
+    SET_CONNECTIONS_LIST,
     SET_PROCESSING,
 } from './constants';
 
@@ -53,7 +53,7 @@ export function fetchConnections(accountId) {
 
 export function setConnections(connections) {
   return {
-    type: SET_CONNECTIONS,
+    type: SET_CONNECTIONS_LIST,
     connections,
   };
 }
