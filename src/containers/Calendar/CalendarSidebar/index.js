@@ -25,7 +25,7 @@ class CalendarSidebar extends React.Component {
   };
 
   componentWillMount() {
-    const { permissionClasses, onToggleFilter } = this.props;
+    const { permissionClasses } = this.props;
     const newState = {};
     ['Ready', 'Review', 'Draft', 'Idea'].forEach((status) => {
       if (permissionClasses[status] === 'hidden') {
@@ -33,7 +33,6 @@ class CalendarSidebar extends React.Component {
       } else {
         newState[`show${status}`] = true;
       }
-      onToggleFilter(`show${status}`, newState[`show${status}`]);
     });
     this.setState(newState);
   }

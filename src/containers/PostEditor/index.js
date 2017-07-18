@@ -26,6 +26,7 @@ import {
 
 import {
   makeSelectConnections,
+  makeSelectCurrentAccount,
 } from 'containers/Main/selectors';
 
 import {
@@ -105,6 +106,7 @@ class PostEditor extends Component {
     postComment: PropTypes.func,
     deleteComment: PropTypes.func,
     comments: ImmutablePropTypes.list,
+    activeBrand: PropTypes.object,
   };
 
   static defaultProps = {
@@ -220,6 +222,7 @@ class PostEditor extends Component {
       postComment,
       deleteComment,
       comments,
+      activeBrand,
     } = this.props;
 
     if (postSet.get('isFetching') || postSet.get('details').isEmpty()) {
@@ -248,7 +251,7 @@ class PostEditor extends Component {
       });
     }
 
-    const { permissions } = userAccount.user_access;
+    const { permissions } = activeBrand.user_access;
     const permissionClasses = getClassesByPage(permissions, 'postEditor');
 
     const tabs = [
@@ -393,6 +396,7 @@ const mapStateToProps = createStructuredSelector({
   postSet: selectPostSet(),
   groupUsers: selectGroupUsers(),
   userAccount: makeSelectUserAccount(),
+  activeBrand: makeSelectCurrentAccount(),
   connections: makeSelectConnections(),
   wordpressGUI: selectWordpressGUI(),
   post: selectPost(),

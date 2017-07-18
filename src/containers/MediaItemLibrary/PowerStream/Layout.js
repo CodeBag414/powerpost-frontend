@@ -20,8 +20,8 @@ import {
 } from 'containers/App/actions';
 
 import {
-  makeSelectUserAccount,
-} from 'containers/App/selectors';
+  makeSelectCurrentAccount,
+} from 'containers/Main/selectors';
 
 import PostEditor from 'containers/PostEditor';
 
@@ -77,7 +77,7 @@ class PowerStreamLayout extends Component {
     updatePostSet: PropTypes.func,
     inviteEmailToStream: PropTypes.func,
     replicatePostSet: PropTypes.func,
-    userAccountForPermission: PropTypes.object,
+    activeBrand: PropTypes.object,
   }
 
   state = {
@@ -182,7 +182,7 @@ class PowerStreamLayout extends Component {
       postSet,
       postSets,
       userAccount,
-      userAccountForPermission,
+      activeBrand,
       accountId,
       streamCategory,
       streamId,
@@ -193,7 +193,7 @@ class PowerStreamLayout extends Component {
       shareDialogVisible,
     } = this.state;
 
-    const { permissions } = userAccountForPermission.user_access;
+    const { permissions } = activeBrand.user_access;
     const permissionClasses = getClassesByPage(permissions, 'sharedStreams');
 
     if (error) {
@@ -279,7 +279,7 @@ const mapStateToProps = createStructuredSelector({
   postSets: makeSelectPostSets(),
   postSet: makeSelectPostSet(),
   emailInvited: makeSelectEmailInvited(),
-  userAccountForPermission: makeSelectUserAccount(),
+  activeBrand: makeSelectCurrentAccount(),
 });
 
 const mapDispatchToProps = {

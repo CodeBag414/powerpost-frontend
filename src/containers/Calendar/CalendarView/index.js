@@ -119,7 +119,6 @@ class CalendarView extends React.Component {
       start: new Date(moment.unix(postSet.schedule_time)),
       end: new Date(moment.unix(postSet.schedule_time)),
     }));
-
     return (
       <Wrapper>
         <DragAndDropCalendar

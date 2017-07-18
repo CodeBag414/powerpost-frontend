@@ -9,11 +9,15 @@ import {
   makeSelectUserAccount,
 } from 'containers/App/selectors';
 
+import {
+  makeSelectCurrentAccount,
+} from 'containers/Main/selectors';
+
 import Layout from './Layout';
 
 const PostsContainer = ({
   params: { account_id, stream_category, stream_id },
-  userAccount,
+  userAccount, activeBrand,
 }) => {
   if (!userAccount) {
     return null;
@@ -24,7 +28,7 @@ const PostsContainer = ({
       accountId={account_id}
       streamCategory={stream_category}
       streamId={stream_id}
-      userAccount={userAccount}
+      activeBrand={activeBrand}
     />
   );
 };
@@ -32,10 +36,12 @@ const PostsContainer = ({
 PostsContainer.propTypes = {
   params: PropTypes.object,
   userAccount: PropTypes.object,
+  activeBrand: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({
   userAccount: makeSelectUserAccount(),
+  activeBrand: makeSelectCurrentAccount(),
 });
 
 export default connect(mapStateToProps)(PostsContainer);

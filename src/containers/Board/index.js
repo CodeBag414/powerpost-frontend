@@ -20,7 +20,8 @@ import {
   changePostSetSortOrderRequest,
   savePostSetSortOrderRequest,
 } from '../App/actions';
-import { makeSelectPostSets, makeSelectUserAccount } from '../App/selectors';
+import { makeSelectCurrentAccount } from '../Main/selectors';
+import { makeSelectPostSets } from '../App/selectors';
 import styles from './styles.scss';
 
 class Board extends React.Component {
@@ -109,9 +110,9 @@ class Board extends React.Component {
       { status: 2, statusColor: '#67C5E6', name: 'Draft' },
       { status: 6, statusColor: '#ACB5B8', name: 'Idea' },
     ];
-    const { deletePostSetAction, params, location: { hash }, userAccount } = this.props;
+    const { deletePostSetAction, params, location: { hash }, activeBrand } = this.props;
     const { moveStatus, searchText, postStatusId } = this.state;
-    const { permissions } = userAccount.user_access;
+    const { permissions } = activeBrand.user_access;
     const permissionClasses = getClassesByPage(permissions, 'statusBoards');
     const postSets = this.props.postSets.getIn(['data', 'post_sets'], fromJS([]));
     const filterPostSets = this.filterPostSets(postSets);
@@ -174,7 +175,7 @@ Board.propTypes = {
   location: PropTypes.shape({
     hash: PropTypes.string,
   }),
-  userAccount: PropTypes.object,
+  activeBrand: PropTypes.object,
   params: PropTypes.shape({
     account_id: PropTypes.string,
   }),
@@ -192,7 +193,7 @@ export function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   postSets: makeSelectPostSets(),
-  userAccount: makeSelectUserAccount(),
+  activeBrand: makeSelectCurrentAccount(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Board);

@@ -27,7 +27,7 @@ class PostsLayout extends Component {
     fetchPostSetsByST: PropTypes.func,
     // postSet: ImmutablePropTypes.map,
     accountId: PropTypes.string,
-    userAccount: PropTypes.object,
+    activeBrand: PropTypes.object,
   }
 
   state = {
@@ -45,7 +45,7 @@ class PostsLayout extends Component {
       accountId,
       fetchPostSets,
       fetchPostSetsByST,
-      userAccount,
+      activeBrand,
     } = this.props;
     const {
       error,
@@ -69,7 +69,7 @@ class PostsLayout extends Component {
       );
     }
 
-    const { permissions } = userAccount.user_access;
+    const { permissions } = activeBrand.user_access;
     const permissionClasses = getClassesByPage(permissions, 'posts');
 
     return (

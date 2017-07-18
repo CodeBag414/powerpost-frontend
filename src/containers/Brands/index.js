@@ -16,6 +16,7 @@ import {
 
 import {
   makeSelectAccountBrands,
+  makeSelectCurrentAccount,
 } from 'containers/Main/selectors';
 
 import {
@@ -41,6 +42,7 @@ class Brands extends Component {
     isBrandDeleted: PropTypes.bool,
     fetchAccount: PropTypes.func,
     getUser: PropTypes.func,
+    activeBrand: PropTypes.object,
   }
 
   constructor(props) {
@@ -79,11 +81,11 @@ class Brands extends Component {
   }
 
   render() {
-    const { userAccount, brands } = this.props;
+    const { userAccount, brands, activeBrand } = this.props;
     const { isDialogShown, filteredBrands } = this.state;
 
     const numBrands = userAccount && userAccount.account_access && userAccount.account_access.num_brands;
-    const { permissions } = userAccount.user_access;
+    const { permissions } = activeBrand.user_access;
     const permissionClasses = getClassesByPage(permissions, 'brands');
     return (
       <Wrapper>
@@ -117,6 +119,7 @@ export function mapDispatchToProps(dispatch) {
 const mapStateToProps = createStructuredSelector({
   brands: makeSelectAccountBrands(),
   userAccount: makeSelectUserAccount(),
+  activeBrand: makeSelectCurrentAccount(),
   isBrandCreated: makeSelectBrandCreated(),
   isBrandDeleted: makeSelectBrandDeleted(),
 });
