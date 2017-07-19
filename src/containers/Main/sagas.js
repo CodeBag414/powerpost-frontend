@@ -58,7 +58,7 @@ function* fetchConnectionsWorker({ accountId }) {
   const data = {
     payload: {
       account_id: accountId,
-      status: [1],
+      status: [1, 3, 5],
     },
   };
   const params = serialize(data);

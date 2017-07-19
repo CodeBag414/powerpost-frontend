@@ -64,7 +64,7 @@ function PreviewDialog({ createPostSet, previewDialog, closeAllDialog, mediaItem
             icon="add"
             primary
             style={{ margin: '5px' }}
-            onClick={() => createPostSet(mediaItem)}
+            onClick={() => { closeAllDialog(); createPostSet(mediaItem); }}
           />
         </div>
       </Wrapper>
