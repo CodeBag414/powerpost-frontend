@@ -2,11 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import PPButton from 'elements/atm.Button';
-import PPButtonInput from 'elements/atm.ButtonInput';
 import Dropdown from 'elements/atm.Dropdown';
 import TextField from 'elements/atm.TextField';
-
-import theme from './theme.scss';
 
 const styles = require('./styles.scss');
 
@@ -26,7 +23,7 @@ class ConnectionsControlBar extends React.Component {
   }
 
   render() {
-    const channelTypes = [{ value: "", label: 'All Channels' }];
+    const channelTypes = [{ value: '', label: 'All Channels' }];
     this.props.channels.forEach((channel) => {
       channelTypes.push({ value: channel, label: channel });
     });
@@ -63,7 +60,6 @@ ConnectionsControlBar.propTypes = {
   setChannelType: React.PropTypes.func,
   channels: React.PropTypes.array,
   handleDialogToggle: React.PropTypes.func,
-  channelFilter: React.PropTypes.string,
   channelType: React.PropTypes.string,
 };
 
