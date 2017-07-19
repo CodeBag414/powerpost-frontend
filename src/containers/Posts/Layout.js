@@ -14,7 +14,6 @@ import {
   makeSelectPostSets,
   makeSelectPostSet,
 } from 'containers/App/selectors';
-import Loading from 'components/Loading';
 
 import ErrorWrapper from './ErrorWrapper';
 import Wrapper from './Wrapper';
@@ -28,6 +27,7 @@ class PostsLayout extends Component {
     // postSet: ImmutablePropTypes.map,
     accountId: PropTypes.string,
     activeBrand: PropTypes.object,
+    location: PropTypes.object,
   }
 
   state = {
@@ -39,6 +39,14 @@ class PostsLayout extends Component {
     this.props.fetchPostSets();
   }
 
+  componentWillReceiveProps(nextProps) {
+    const nextPostSetId = nextProps.location.hash.startsWith('#postset') ? nextProps.location.hash.split('-')[1] : 0;
+    const postsetId = this.props.location.hash.startsWith('#postset') ? this.props.location.hash.split('-')[1] : 0;
+    if (postsetId && !nextPostSetId) {
+      this.props.fetchPostSets();
+    }
+  }
+
   render() {
     const {
       postSets,
@@ -46,6 +54,7 @@ class PostsLayout extends Component {
       fetchPostSets,
       fetchPostSetsByST,
       activeBrand,
+      location,
     } = this.props;
     const {
       error,
@@ -61,14 +70,6 @@ class PostsLayout extends Component {
       );
     }
 
-    if (postSets.get('isFetching')) {
-      return (
-        <Wrapper>
-          <Loading />
-        </Wrapper>
-      );
-    }
-
     const { permissions } = activeBrand.user_access;
     const permissionClasses = getClassesByPage(permissions, 'posts');
 
@@ -80,6 +81,7 @@ class PostsLayout extends Component {
           fetchPostSets={fetchPostSets}
           fetchPostSetsByST={fetchPostSetsByST}
           permissionClasses={permissionClasses}
+          location={location}
         />
       </Wrapper>
     );

@@ -17,7 +17,7 @@ import Layout from './Layout';
 
 const PostsContainer = ({
   params: { account_id, stream_category, stream_id },
-  userAccount, activeBrand,
+  userAccount, activeBrand, location,
 }) => {
   if (!userAccount) {
     return null;
@@ -29,6 +29,7 @@ const PostsContainer = ({
       streamCategory={stream_category}
       streamId={stream_id}
       activeBrand={activeBrand}
+      location={location}
     />
   );
 };
@@ -37,6 +38,7 @@ PostsContainer.propTypes = {
   params: PropTypes.object,
   userAccount: PropTypes.object,
   activeBrand: PropTypes.object,
+  location: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({

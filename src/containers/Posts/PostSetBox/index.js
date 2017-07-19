@@ -191,8 +191,11 @@ class PostSetBox extends Component {
         </ErrorWrapper>
       </Wrapper>
     );
-
+    let loading = false;
     if (postSets.get('requesting')) {
+      loading = true;
+    }
+    if (loading && !postSets.get('data')) {
       return loadingWrapper;
     }
     if (sortBy.value === 'schedule_time') {
@@ -236,6 +239,7 @@ class PostSetBox extends Component {
           <div className="post-editor-container">
             { postsetId ? <PostEditor id={postsetId} accountId={accountId} modal={false} /> : null}
           </div>
+          {loading ? <Loading opacity={0.5} showIndicator={false} /> : null}
         </div>
       </Wrapper>
     );

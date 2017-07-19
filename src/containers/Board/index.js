@@ -35,6 +35,14 @@ class Board extends React.Component {
     this.props.fetchPostSetsBySO();
   }
 
+  componentWillReceiveProps(nextProps) {
+    const nextPostSetId = nextProps.location.hash.startsWith('#postset') ? nextProps.location.hash.split('-')[1] : 0;
+    const postsetId = this.props.location.hash.startsWith('#postset') ? this.props.location.hash.split('-')[1] : 0;
+    if (postsetId && !nextPostSetId) {
+      this.props.fetchPostSetsBySO();
+    }
+  }
+
   onDragStart = (dragPostSet) => {
     this.setState({ dragPostSet });
   }
@@ -159,8 +167,8 @@ class Board extends React.Component {
               />
             )
           }
+          {loading ? <Loading opacity={0.5} showIndicator={!this.props.postSets.get('data')} /> : null}
         </div>
-        {loading ? <Loading opacity={0.5} showIndicator={!this.props.postSets.get('data')} /> : null}
       </div>
     );
   }
@@ -174,6 +182,7 @@ Board.propTypes = {
   savePostSetSortOrder: PropTypes.func.isRequired,
   postSets: ImmutablePropTypes.map.isRequired,
   activeBrand: PropTypes.object,
+  location: PropTypes.object,
 };
 
 export function mapDispatchToProps(dispatch) {
