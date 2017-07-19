@@ -6,6 +6,10 @@ import _ from 'lodash';
 import { makeSelectUser } from 'containers/App/selectors';
 
 import {
+  fetchPostSetRequest,
+} from 'containers/App/actions';
+
+import {
   getData,
   postData,
   deleteData,
@@ -320,6 +324,7 @@ function* createPostWorker({ payload }) {
 
   if (data) {
     yield put(createPostSuccess(data.post));
+    yield put(fetchPostSetRequest({ id: data.post.post_set_id }));
   }
 }
 
