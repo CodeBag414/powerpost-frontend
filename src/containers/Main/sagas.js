@@ -14,6 +14,8 @@ import {
     FETCH_ACCOUNT_ERROR,
     IS_LOADING_ACCOUNT,
     FETCH_CONNECTIONS,
+    FETCH_CONNECTIONS_SUCCESS,
+    FETCH_CONNECTIONS_FAILURE,
 } from './constants';
 
 export function* getAccount(action) {
@@ -64,14 +66,15 @@ function* fetchConnectionsWorker({ accountId }) {
   const response = yield call(getData, `/connection_api/connections?${params}`);
   if (response.data.status === 'success') {
     yield put(setConnections(response.data.connections));
+    yield put({ type: FETCH_CONNECTIONS_SUCCESS });
+  } else {
+    console.log('Fetch connection failure', response.data);
+    yield put({ type: FETCH_CONNECTIONS_FAILURE });
   }
 }
 
 export function* fetchConnectionsSaga() {
-  const watcher = yield takeLatest(FETCH_CONNECTIONS, fetchConnectionsWorker);
-
-  yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
+  yield takeLatest(FETCH_CONNECTIONS, fetchConnectionsWorker);
 }
 
 export default [
