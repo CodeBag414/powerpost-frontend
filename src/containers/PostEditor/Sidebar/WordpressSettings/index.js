@@ -408,7 +408,7 @@ export class WordpressSettings extends Component {
     } = this.state;
 
     const wordpressOptions = connections
-    .filter((c) => c.channel === 'wordpress')
+    .filter((c) => c.channel === 'wordpress' && c.status === '1')
     .map((c) => ({
       value: c.connection_id,
       label: c.display_name,
