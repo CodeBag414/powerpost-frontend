@@ -11,6 +11,7 @@ import { fromJS } from 'immutable';
 import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { getClassesByPage } from 'utils/permissionClass';
+import Loading from 'components/Loading';
 import PostSetsGroup from './PostSetsGroup';
 import {
   deletePostSetRequest,
@@ -126,6 +127,10 @@ class Board extends React.Component {
         className: permissionClasses[name],
       };
     });
+    let loading = false;
+    if (this.props.postSets.get('requesting')) {
+      loading = true;
+    }
     return (
       <div className={styles.board}>
         <div className={styles['board-header']}>
@@ -155,6 +160,7 @@ class Board extends React.Component {
             )
           }
         </div>
+        {loading ? <Loading opacity={0.5} showIndicator={!this.props.postSets.get('data')} /> : null}
       </div>
     );
   }
