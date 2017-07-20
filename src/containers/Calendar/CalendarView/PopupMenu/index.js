@@ -2,6 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import enhanceWithClickOutside from 'react-click-outside';
 import moment from 'moment';
 import { browserHistory } from 'react-router';
+import { fromJS } from 'immutable';
+
+import { buildChannelList } from 'containers/PostEditor/Sidebar/ChannelsPreview';
 
 import Button from 'elements/atm.Button';
 
@@ -30,6 +33,7 @@ class PopupMenu extends Component {
     popupPosition: PropTypes.object,
     onDelete: PropTypes.func,
     permissionClasses: PropTypes.object,
+    connections: PropTypes.array,
   };
 
   handleClickOutside = (e) => {
@@ -66,14 +70,15 @@ class PopupMenu extends Component {
   }
 
   render() {
-    const { postSet, popupPosition, permissionClasses } = this.props;
-    const channelCount = postSet.posts.length;
+    const { postSet, popupPosition, permissionClasses, connections } = this.props;
+    const postCount = postSet.posts.length;
     return (
       <Wrapper position={popupPosition}>
         <div className="event-popup-close"><i className="fa fa-times" aria-hidden="true" onClick={this.handleClickOutside} /></div>
         {
-          postSet.media_items.length &&
-            <img className="event-popup-image" src={postSet.media_items[0].properties.thumb_url || postSet.media_items[0].properties.picture} alt="Post" />
+          postSet.media_items.length
+            ? <img className="event-popup-image" src={postSet.media_items[0].properties.thumb_url || postSet.media_items[0].properties.picture} alt="Post" />
+            : null
         }
         <div className="event-popup-status">
           {getStatusText(postSet)}
@@ -81,7 +86,10 @@ class PopupMenu extends Component {
         <div className="event-popup-title">{postSet.title ? postSet.title : 'Untitled post'}</div>
         <div className="event-popup-time">{moment.unix(postSet.schedule_time).format('ddd, MMMM Do - h:mma')}</div>
         <div className="event-popup-message">{postSet.message}</div>
-        <div className="event-popup-channel-count">{channelCount} {channelCount === 1 ? 'channel' : 'channels'} scheduled for this time</div>
+        <div className="event-popup-channel-count">{postCount} {postCount === 1 ? 'post' : 'posts'} scheduled for this time on these channels:</div>
+        <div className="event-popup-channels">
+          {buildChannelList(connections, fromJS(postSet.posts))}
+        </div>
         <div className="event-popup-bottom">
           {postSet.tags && this.buildTags(postSet)}
           <div className="event-popup-buttons">

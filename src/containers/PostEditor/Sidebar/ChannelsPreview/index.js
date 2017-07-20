@@ -8,8 +8,31 @@ import Heading from 'components/Heading';
 
 import SectionWrapper from '../SectionWrapper';
 
-class ChannelsPreview extends Component {
+function connectionFromId(connections, id) {
+  return connections.find((c) => c.connection_id === id);
+}
 
+export function buildChannelList(connections, posts) {
+  if (!connections || !posts) return null;
+
+  const uniqueChannels = {};
+  posts.forEach((post) => {
+    if (post.get('status') === '0') return;
+    const connection = connectionFromId(connections, post.get('connection_id'));
+    if (connection && connection.channel) {
+      uniqueChannels[connection.channel] = connection;
+    }
+  });
+
+  const channels = Object.keys(uniqueChannels);
+  if (!channels || channels.length === 0) return <span>No channels chosen.</span>;
+
+  const channelList = channels.map((channel) =>
+    <SocialIcon icon={uniqueChannels[channel].channel_icon} />);
+  return channelList;
+}
+
+class ChannelsPreview extends Component {
   static propTypes = {
     connections: PropTypes.array,
     postSet: ImmutablePropTypes.map,
@@ -19,39 +42,13 @@ class ChannelsPreview extends Component {
     isExpanded: false,
   };
 
-  buildChannelList = () => {
-    const { connections, postSet } = this.props;
-
-    if (!connections || !postSet) return null;
-
-    const uniqueChannels = {};
-    postSet.getIn(['details', 'posts']).forEach((post) => {
-      if (post.get('status') === '0') return;
-      const connection = this.connectionFromId(post.get('connection_id'));
-      if (connection && connection.channel) {
-        uniqueChannels[connection.channel] = connection;
-      }
-    });
-
-    const channels = Object.keys(uniqueChannels);
-    if (!channels || channels.length === 0) return <span>No channels chosen.</span>;
-
-    const channelList = channels.map((channel) =>
-      <SocialIcon icon={uniqueChannels[channel].channel_icon} />);
-    return channelList;
-  }
-
-  connectionFromId = (id) => {
-    const { connections } = this.props;
-    return connections.find((c) => c.connection_id === id);
-  }
-
   expand = (isExpanded) => {
     this.setState({ isExpanded });
   }
 
   render() {
     const { isExpanded } = this.state;
+    const { connections, postSet } = this.props;
     return (
       <SectionWrapper>
         <Heading
@@ -63,7 +60,7 @@ class ChannelsPreview extends Component {
         />
         <SmoothCollapse expanded={isExpanded}>
           <div style={{ paddingBottom: '16px', paddingTop: '10px' }}>
-            {this.buildChannelList()}
+            {buildChannelList(connections, postSet.getIn(['details', 'posts']))}
           </div>
         </SmoothCollapse>
         <div style={{ marginTop: '-16px' }} />

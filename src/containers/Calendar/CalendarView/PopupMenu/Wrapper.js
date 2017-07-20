@@ -103,7 +103,15 @@ const Wrapper = styled.div`
     font-size: 11px;
     font-weight: bold;
     font-style: italic;
+    margin-bottom: 8px;
+  }
+
+  .event-popup-channels {
     margin-bottom: 32px;
+    i {
+      font-size: 30px;
+      margin-right: 8px;
+    }
   }
 
   .event-popup-tag {

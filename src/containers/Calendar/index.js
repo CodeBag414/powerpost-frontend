@@ -4,17 +4,18 @@ import { createStructuredSelector } from 'reselect';
 import moment from 'moment';
 
 import { getClassesByPage } from 'utils/permissionClass';
+
 import {
   deletePostSetRequest,
   fetchPostSetsBySTRequest,
   updateBunchPostRequest,
 } from 'containers/App/actions';
-
 import {
   makeSelectPostSets,
 } from 'containers/App/selectors';
 
 import {
+  makeSelectConnections,
   makeSelectCurrentAccount,
 } from 'containers/Main/selectors';
 
@@ -41,6 +42,7 @@ class Calendar extends React.Component {
     params: PropTypes.shape({
       account_id: PropTypes.string,
     }),
+    connections: PropTypes.array,
   };
 
   state = {
@@ -191,7 +193,7 @@ class Calendar extends React.Component {
 
   render() {
     const { query, showDeletePopup } = this.state;
-    const { postSetsByST, currentAccount } = this.props;
+    const { postSetsByST, currentAccount, connections } = this.props;
     let scheduledPostSets = [];
     let unscheduledPostSets = [];
     let loading = false;
@@ -220,6 +222,7 @@ class Calendar extends React.Component {
         />
         <CalendarView
           postSets={scheduledPostSets}
+          connections={connections}
           currentAccount={currentAccount}
           onMoveEvent={this.handleMoveEvent}
           onDeleteEvent={this.handleDeleteEvent}
@@ -247,6 +250,7 @@ const mapDispatchToProps = (dispatch) => (
 
 const mapStateToProps = createStructuredSelector({
   postSetsByST: makeSelectPostSets(),
+  connections: makeSelectConnections(),
   currentAccount: makeSelectCurrentAccount(),
 });
 

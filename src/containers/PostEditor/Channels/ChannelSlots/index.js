@@ -9,7 +9,6 @@ import Wrapper from './Wrapper';
 import ChannelSlot from './ChannelSlot';
 
 class ChannelSlots extends React.Component {
-
   componentWillReceiveProps(nextProps) {
     const { posts } = this.props;
     let oneSlotDeleted = false;
