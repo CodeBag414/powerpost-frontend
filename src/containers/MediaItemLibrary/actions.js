@@ -26,7 +26,15 @@ import {
   CREATE_BLOG_ITEM_REQUEST,
   CREATE_BLOG_ITEM_SUCCESS,
   CREATE_BLOG_ITEM_FAILURE,
+  SET_IS_FETCHING,
 } from './constants';
+
+export function setIsFetching(isFetching) {
+  return {
+    type: SET_IS_FETCHING,
+    isFetching,
+  };
+}
 
 export function fetchCollections(accountId) {
   return {

@@ -131,6 +131,11 @@ const makeSelectEmailInvited = () => createSelector(
     (library) => library.get('emailInvited')
 );
 
+const makeSelectIsFetching = () => createSelector(
+  selectLibrary,
+  (library) => library.get('isFetching')
+);
+
 export {
     makeSelectActiveCollection,
     makeSelectUrlContent,
@@ -146,4 +151,5 @@ export {
     makeSelectPostSets,
     makeSelectPostSet,
     makeSelectEmailInvited,
+    makeSelectIsFetching,
 };

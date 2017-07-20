@@ -13,6 +13,7 @@ import {
 } from 'containers/App/constants';
 
 import {
+  FETCH_COLLECTIONS,
   FETCH_COLLECTIONS_SUCCESS,
   FETCH_MEDIA_ITEMS_SUCCESS,
   FETCH_MEDIA_ITEMS_ERROR,
@@ -93,13 +94,17 @@ const initialState = fromJS({
 // Takes care of changing the application state
 function mediaLibraryReducer(state = initialState, action) {
   switch (action.type) {
+    case FETCH_COLLECTIONS:
+      return state
+        .set('isFetching', true);
     case FETCH_COLLECTIONS_SUCCESS:
       return state
         .set('collections', action.collections.data.collections)
         .set('activeCollection', action.collections.data.collections.map((coll) => (coll.parent_collection_id == null) && coll)[0]);
     case FETCH_MEDIA_ITEMS_SUCCESS:
       return state
-        .set('mediaItems', action.mediaItems.data.collection.media_items.filter((t) => t.status !== '0'));
+        .set('mediaItems', action.mediaItems.data.collection.media_items.filter((t) => t.status !== '0'))
+        .set('isFetching', false);
     case FETCH_MEDIA_ITEMS_ERROR:
       return state
         .set('error', action.mediaItems.data.message);

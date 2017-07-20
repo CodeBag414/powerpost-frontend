@@ -32,6 +32,10 @@ import {
   makeSelectIsProcessing,
 } from 'containers/Main/selectors';
 
+import {
+  setIsFetching,
+} from './actions';
+
 import Wrapper from './Wrapper';
 import BlogEditor from './BlogEditor';
 import LinkDialog from './LinkDialog';
@@ -539,6 +543,7 @@ export function mapDispatchToProps(dispatch) {
     createPostSet: (postSet) => dispatch(createPostSetRequest(postSet)),
     createBlogItem: (payload) => dispatch(createBlogItemRequest(payload)),
     setProcessing: (processing) => dispatch(setProcessing(processing)),
+    setIsFetching: (isFetching) => dispatch(setIsFetching(isFetching)),
   };
 }
 
