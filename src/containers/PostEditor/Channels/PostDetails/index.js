@@ -51,6 +51,9 @@ function PostDetails({
   const postSetId = postSet.getIn(['details', 'post_set_id']);
 
   const characterCount = 140 - (postMessage ? postMessage.length : 0);
+  const status = post.get('status');
+  const isPast = status === '2' || status === '3';
+  const disableClass = isPast ? 'disabled' : '';
   return (
     <Wrapper>
       <div className="left-column">
@@ -63,7 +66,7 @@ function PostDetails({
           message={postMessage}
           handleMessageChange={handleMessageChange}
           onBlur={handleMessageBlur}
-          className={permissionClasses.timeSlotMessage}
+          className={`${permissionClasses.timeSlotMessage} ${disableClass}`}
         />
         <PostPreview
           mediaItem={mediaItem}
@@ -77,22 +80,32 @@ function PostDetails({
         />
       </div>
       <div className="right-column">
-        <div className={`section-title schedule ${permissionClasses.timeSlotSchedule}`}>Schedule</div>
-        {post.get('status') !== '5' ?
-          <div className={`date-pickers ${permissionClasses.timeSlotSchedule}`}>
-            <div className="date-picker">
-              <DatePicker minDate={minDate} value={moment.unix(postTime).toDate()} onChange={handleDateChange} />
-            </div>
-            <div className="time-picker">
-              <TimePicker format="ampm" value={moment.unix(postTime).toDate()} onChange={handleDateChange} />
-            </div>
-          </div>
-        :
-          <div className={`post-upon-ready-placeholder ${permissionClasses.timeSlotSchedule}`}>This post will be sent when the status is set to Ready.</div>
+        <div className="section-title schedule">Schedule</div>
+        {
+          (!isPast && (
+            status !== '5' ?
+              <div className="date-pickers">
+                <div className={`date-picker ${permissionClasses.timeSlotSchedule} ${disableClass}`}>
+                  <DatePicker minDate={minDate} value={moment.unix(postTime).toDate()} onChange={handleDateChange} />
+                </div>
+                <div className={`time-picker ${permissionClasses.timeSlotSchedule} ${disableClass}`}>
+                  <TimePicker format="ampm" value={moment.unix(postTime).toDate()} onChange={handleDateChange} />
+                </div>
+              </div>
+            :
+              <div className="post-upon-ready-placeholder">This post will be sent when the status is set to Ready.</div>
+          )) || (
+            status === '2' ?
+              <div className="post-upon-ready-placeholder">This post was successfully published on this channel at SCHEDULE_TIME</div>
+            :
+              <div className="post-upon-ready-placeholder">There was a problem with publishing to this channel.</div>
+          )
         }
-        <PPButton className={`remove-slot ${permissionClasses.timeSlotDelete}`} onClick={() => handleRemoveSlot(post)}>
-          Remove Slot
-        </PPButton>
+        {
+          !isPast && <PPButton className={`remove-slot ${permissionClasses.timeSlotDelete}`} onClick={() => handleRemoveSlot(post)}>
+            Remove Slot
+          </PPButton>
+        }
       </div>
     </Wrapper>
   );
