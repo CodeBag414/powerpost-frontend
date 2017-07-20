@@ -482,7 +482,7 @@ class Library extends React.Component {
             </DropDownMenu>
           </div>
           <Menu style={{ margin: '0 auto', padding: '0', width: '150px' }} selectable>
-            <ReactRouterMenuItem caption="Media Library" to={`/account/${this.props.params.account_id}/library`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
+            <ReactRouterMenuItem caption="Media Library" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/media`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
             <ReactRouterMenuItem caption="Search the Web" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/search`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
             <ReactRouterMenuItem caption="RSS Feeds" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/RSS`} style={{ color: '#616669', fontWeight: '700', fontSize: '9px !important' }} />
           </Menu>

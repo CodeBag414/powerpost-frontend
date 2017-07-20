@@ -30,7 +30,7 @@ class Sidebar extends React.Component {
       { caption: 'Status Boards', className: 'statusBoards', icon: 'columns', subPath: 'boards' },
       { caption: 'Calendar', className: 'calendar', icon: 'calendar', subPath: 'calendar' },
       { caption: 'Posts', className: 'posts', icon: 'send', subPath: 'posts' },
-      { caption: 'Shared Streams', className: 'sharedStreams', icon: 'list-alt', subPath: 'shared_streams/owned' },
+      { caption: 'Shared Streams', className: 'sharedStreams', icon: 'list-alt', subPath: 'shared_streams', parentActive: true },
       { caption: 'Social Feeds', className: 'socialFeeds', icon: 'list-ul', subPath: 'social_feeds' },
       { caption: 'Analytics', className: 'analytics', icon: 'bar-chart', subPath: 'statistics' },
       { caption: 'Settings', className: 'settings', icon: 'cog', subPath: 'settings' },
@@ -71,8 +71,8 @@ class Sidebar extends React.Component {
               {
                 menuItems.map((menuItem) =>
                   collapsed
-                  ? <ReactRouterMenuItemWithTooltip key={menuItem.className} className={permissionClasses[menuItem.className]} tooltip={menuItem.caption} tooltipPosition="right" isCollapsed style={{ width: '60px' }} isSidebar icon={<i className={`fa fa-${menuItem.icon}`} />} to={`/account/${this.props.accountId}/${menuItem.subPath}`} />
-                  : <ReactRouterMenuItem caption={menuItem.caption} className={permissionClasses[menuItem.className]} activeClassName={styles.active} isSidebar icon={<i className={`fa fa-${menuItem.icon}`} />} to={`/account/${this.props.accountId}/${menuItem.subPath}`} />
+                  ? <ReactRouterMenuItemWithTooltip parentActive={menuItem.parentActive} key={menuItem.className} className={permissionClasses[menuItem.className]} tooltip={menuItem.caption} tooltipPosition="right" isCollapsed style={{ width: '60px' }} isSidebar icon={<i className={`fa fa-${menuItem.icon}`} />} to={`/account/${this.props.accountId}/${menuItem.subPath}`} />
+                  : <ReactRouterMenuItem parentActive={menuItem.parentActive} caption={menuItem.caption} className={permissionClasses[menuItem.className]} activeClassName={styles.active} isSidebar icon={<i className={`fa fa-${menuItem.icon}`} />} to={`/account/${this.props.accountId}/${menuItem.subPath}`} />
                 )
               }
               {

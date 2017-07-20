@@ -149,25 +149,27 @@ export function createRoutes(store, auth) {
 
             importModules.catch(errorLoading);
           },
-          indexRoute: {
-            name: 'Content Hub',
-            getComponent(nextState, cb) {
-              const importModules = Promise.all([
-                  // System.import('../App/views/Main/views/Dashboard/state/reducer'),
-                  // System.import('../App/views/Main/views/Dashboard/state/sagas'),
-                System.import('containers/MediaItemLibrary/Library'),
-              ]);
-
-              const renderRoute = loadModule(cb);
-
-              importModules.then(([component]) => {
-                renderRoute(component);
-              });
-
-              importModules.catch(errorLoading);
-            },
-          },
+          indexRoute: { onEnter: (nextState, replace) => replace(`/account/${nextState.params.account_id}/library/media`) },
           childRoutes: [
+            {
+              path: 'media',
+              name: 'Content Hub',
+              getComponent(nextState, cb) {
+                const importModules = Promise.all([
+                    // System.import('../App/views/Main/views/Dashboard/state/reducer'),
+                    // System.import('../App/views/Main/views/Dashboard/state/sagas'),
+                  System.import('containers/MediaItemLibrary/Library'),
+                ]);
+
+                const renderRoute = loadModule(cb);
+
+                importModules.then(([component]) => {
+                  renderRoute(component);
+                });
+
+                importModules.catch(errorLoading);
+              },
+            },
             {
               path: 'search',
               name: 'Search the Web',
@@ -225,24 +227,31 @@ export function createRoutes(store, auth) {
           },
         },
         {
-          path: '/account(/:account_id)/shared_streams/:stream_category(/:stream_id)',
+          path: '/account(/:account_id)/shared_streams',
           name: 'Shared Streams',
-          getComponent(nextState, cb) {
-            const importModules = Promise.all([
-              System.import('containers/MediaItemLibrary/reducer'),
-              System.import('containers/MediaItemLibrary/sagas'),
-              System.import('containers/MediaItemLibrary/PowerStream'),
-            ]);
-            const renderRoute = loadModule(cb);
+          indexRoute: { onEnter: (nextState, replace) => replace(`/account/${nextState.params.account_id}/shared_streams/owned`) },
+          childRoutes: [
+            {
+              path: ':stream_category(/:stream_id)',
+              name: 'owned_subscribed',
+              getComponent(nextState, cb) {
+                const importModules = Promise.all([
+                  System.import('containers/MediaItemLibrary/reducer'),
+                  System.import('containers/MediaItemLibrary/sagas'),
+                  System.import('containers/MediaItemLibrary/PowerStream'),
+                ]);
+                const renderRoute = loadModule(cb);
 
-            importModules.then(([mediaLibraryReducer, mediaLibrarySaga, component]) => {
-              injectReducer('library', mediaLibraryReducer.default);
-              injectSagas(mediaLibrarySaga.default);
-              renderRoute(component);
-            });
+                importModules.then(([mediaLibraryReducer, mediaLibrarySaga, component]) => {
+                  injectReducer('library', mediaLibraryReducer.default);
+                  injectSagas(mediaLibrarySaga.default);
+                  renderRoute(component);
+                });
 
-            importModules.catch(errorLoading);
-          },
+                importModules.catch(errorLoading);
+              },
+            },
+          ],
         },
         {
           path: '/account(/:account_id)/social_feeds',

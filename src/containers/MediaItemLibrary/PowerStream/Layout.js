@@ -201,8 +201,8 @@ class PowerStreamLayout extends Component {
         <Wrapper>
           <SidebarWrapper>
             <Menu style={{ margin: '0 auto', padding: '0', width: '150px' }} selectable>
-              <ReactRouterMenuItem caption="Owned" activeClassName={styles.active} to={`/account/${this.props.accountId}/shared_streams/owned`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important', width: '150px' }} />
-              <ReactRouterMenuItem caption="Subscriptions" activeClassName={styles.active} to={`/account/${this.props.accountId}/shared_streams/subscriptions`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
+              <ReactRouterMenuItem parentActive caption="Owned" activeClassName={styles.active} to={`/account/${this.props.accountId}/shared_streams/owned`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important', width: '150px' }} />
+              <ReactRouterMenuItem parentActive caption="Subscriptions" activeClassName={styles.active} to={`/account/${this.props.accountId}/shared_streams/subscriptions`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
             </Menu>
           </SidebarWrapper>
           <ContentWrapper>
@@ -231,8 +231,8 @@ class PowerStreamLayout extends Component {
       <Wrapper>
         <SidebarWrapper>
           <Menu style={{ margin: '0 auto', padding: '0', width: '150px' }} selectable>
-            <ReactRouterMenuItem caption="Owned" activeClassName={styles.active} to={`/account/${this.props.accountId}/shared_streams/owned`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important', width: '150px' }} />
-            <ReactRouterMenuItem caption="Subscriptions" activeClassName={styles.active} to={`/account/${this.props.accountId}/shared_streams/subscriptions`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
+            <ReactRouterMenuItem parentActive caption="Owned" activeClassName={styles.active} to={`/account/${this.props.accountId}/shared_streams/owned`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important', width: '150px' }} />
+            <ReactRouterMenuItem parentActive caption="Subscriptions" activeClassName={styles.active} to={`/account/${this.props.accountId}/shared_streams/subscriptions`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
           </Menu>
         </SidebarWrapper>
         <ContentWrapper>

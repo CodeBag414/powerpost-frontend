@@ -81,7 +81,7 @@ const initialState = fromJS({
   postSets: {
     requesting: true,
     error: null,
-    data: null,
+    data: {},
     action: null,
   },
   mediaItmes: [],
