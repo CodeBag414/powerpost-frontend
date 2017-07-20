@@ -22,6 +22,7 @@ class DateRangePickerComponent extends Component {
         'Last 30 Days': [moment().subtract(29, 'days'), moment()],
         'This Month': [moment().startOf('month'), moment().endOf('month')],
         'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+        'All Dates': [moment(0), moment()],
       },
     };
   }
@@ -41,7 +42,7 @@ class DateRangePickerComponent extends Component {
     const { startDate, endDate } = this.props;
     const start = startDate.format('MMM D');
     const end = endDate.format('MMM D');
-    let label = `${start} - ${end}`;
+    let label = (endDate.year() - startDate.year()) > 10 ? 'All Dates' : `${start} - ${end}`;
     if (start === end) {
       label = start;
     }
