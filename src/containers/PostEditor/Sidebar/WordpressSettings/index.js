@@ -72,45 +72,50 @@ export class WordpressSettings extends Component {
     };
   }
 
-  componentWillMount() {
-    const wordpressPost = this.props.postSet.getIn(['details', 'posts']).find((post) => {
-      if (post.get('status') === '0') return false;
-      if (post.get('connection_channel') === 'wordpress') return true;
-      return false;
-    });
-
-    if (wordpressPost && !wordpressPost.isEmpty()) {
-      this.props.setWordpressPost(wordpressPost);
-      this.props.fetchWordpressGUI({
-        connectionId: wordpressPost.get('connection_id'),
-      });
-
-      const immProperty = wordpressPost.get('properties');
-      let properties = {};
-      if (immProperty) {
-        properties = wordpressPost.get('properties').toJS();
-      }
-      if (properties.featured_image_id) {
-        this.props.getMediaItem(properties.featured_image_id);
-      }
-
-      this.setState({
-        ...properties,
-        destination: {
-          value: wordpressPost.get('connection_id'),
-          label: wordpressPost.get('connection_display_name'),
-        },
-        author: properties.author_id ? {
-          value: properties.author_id,
-        } : {},
-        scheduleTime: wordpressPost.get('schedule_time'),
-        allowComments: properties.allow_comments === '1',
-        isExpanded: true,
-      });
-    }
-  }
-
   componentWillReceiveProps(nextProps) {
+    if (this.props.postSet.getIn(['details', 'post_set_id']) !== nextProps.postSet.getIn(['details', 'post_set_id'])) {
+      const wordpressPost = nextProps.postSet.getIn(['details', 'posts']).find((post) => {
+        if (post.get('status') === '0') return false;
+        if (post.get('connection_channel') === 'wordpress') return true;
+        return false;
+      });
+
+      if (wordpressPost && !wordpressPost.isEmpty()) {
+        this.props.setWordpressPost(wordpressPost);
+        this.props.fetchWordpressGUI({
+          connectionId: wordpressPost.get('connection_id'),
+        });
+
+        const immProperty = wordpressPost.get('properties');
+        let properties = {};
+        if (immProperty) {
+          properties = wordpressPost.get('properties').toJS();
+        }
+        if (properties.featured_image_id) {
+          this.props.getMediaItem(properties.featured_image_id);
+        }
+
+        this.setState({
+          ...properties,
+          destination: {
+            value: wordpressPost.get('connection_id'),
+            label: wordpressPost.get('connection_display_name'),
+          },
+          author: properties.author_id ? {
+            value: properties.author_id,
+          } : {},
+          scheduleTime: wordpressPost.get('schedule_time'),
+          allowComments: properties.allow_comments === '1',
+          isExpanded: true,
+        });
+      } else {
+        this.setState({
+          destination: defaultDestinationOption,
+          isExpanded: false,
+        });
+      }
+    }
+
     if (this.props.wordpressGUI.get('isFetching') && !nextProps.wordpressGUI.get('isFetching')) {
       if (!nextProps.wordpressGUI.get('error')) {
         const { wordpressGUI } = nextProps;
