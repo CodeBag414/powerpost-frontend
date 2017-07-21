@@ -27,9 +27,11 @@ class Redeem extends Component {
     redeemToken: PropTypes.func,
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { redeemToken, params } = this.props;
-    redeemToken(params.token);
+    setTimeout(() => {
+      redeemToken(params.token);
+    }, 1000);
   }
 
   componentWillReceiveProps(nextProps) {
