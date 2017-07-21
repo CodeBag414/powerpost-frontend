@@ -69,14 +69,15 @@ class GooglePlusBlock extends Component {
         <Content>
           <div className="gp-message">{post.content}</div>
 
-          { (type === 'photo' || type === 'image') &&
+          { (type === 'photo' || type === 'image' || type === 'video') &&
             <img src={attachment.media_source} alt="feed" />
           }
 
-          { type === 'video' &&
+          {/* type === 'video' &&
             <video poster={attachment.url} preload="metadata" onMouseEnter={this.onMouseEnterVideo} onMouseLeave={this.onMouseLeaveVideo}>
               <source src={attachment.media_source} />
             </video>
+          */
           }
 
           { ((type === 'article' || type === 'link') || (type === 'document' || type === 'file') || type === 'blog') &&

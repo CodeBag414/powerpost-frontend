@@ -69,11 +69,11 @@ class Brands extends Component {
   }
 
   handleSearch = (ev) => {
-    this.filterBrands(ev);
+    this.filterBrands(ev.target.value);
   }
 
-  filterBrands = (ev) => {
-    const title = ev.target.value;
+  filterBrands = (value) => {
+    const title = value;
     const filteredBrands = this.props.brands.filter((b) => b.title.toLowerCase().indexOf(title.toLowerCase()) > -1);
     this.setState({
       filteredBrands,
