@@ -114,8 +114,8 @@ const MediaItem = (props) => {
       </Footer>
       <ActionBar>
         {!props.inPostEditor ? (
-          <IconButtonTooltip icon="add" tooltip="Create Post" onClick={() => props.createPostSet(props.mediaItem)} />
-        ) : (<IconButtonTooltip icon="add" tooltip="Add to Post" onClick={() => props.addToPost(props.mediaItem)} />)
+          <IconButtonTooltip icon="add" tooltip="Create Post" onClick={() => props.createPostSet(props.mediaItem)} className={props.permissionClasses.addToPost} />
+        ) : (<IconButtonTooltip icon="add" tooltip="Add to Post" onClick={() => props.addToPost(props.mediaItem)} className={props.permissionClasses.addToPost} />)
         }
         {!props.inPostEditor &&
         <div style={{ display: 'inline-block' }}>

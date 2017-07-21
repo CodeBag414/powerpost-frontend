@@ -56,7 +56,7 @@ const initialState = fromJS({
   feeds: [],
   rssItems: [],
   searchFilter: null,
-  sort: 'date',
+  sort: 'newest',
   urlContent: {},
   filter: SHOW_ALL,
   collections: [{}],

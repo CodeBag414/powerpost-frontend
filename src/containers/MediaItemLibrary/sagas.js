@@ -75,13 +75,13 @@ export function* getCollections(action) {
 
   const params = serialize(data);
   const collections = yield call(getData, `/media_api/collections?${params}`);
-  console.log(collections);
+
   yield put({ type: FETCH_COLLECTIONS_SUCCESS, collections });
 
   const activeCollection = yield select(makeSelectActiveCollection());
 
   const mediaItems = yield call(getData, `/media_api/collection/${activeCollection.collection_id}`);
-  console.log(mediaItems);
+
   if (!mediaItems.data.error) {
     yield put({ type: FETCH_MEDIA_ITEMS_SUCCESS, mediaItems });
   } else {

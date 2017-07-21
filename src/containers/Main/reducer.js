@@ -35,6 +35,9 @@ const initialState = fromJS({
     subscriptions: [{}],
     account_access: {
       permissions: [],
+      num_brands: false,
+      num_connections: false,
+      num_users: false,
     },
     user_access: {
       permissions: [],
@@ -71,6 +74,9 @@ function dashboardReducer(state = initialState, action) {
             .setIn(['activeBrand', 'properties'], action.account.data.account.properties)
             .setIn(['activeBrand', 'subscriptions'], action.account.data.account.subscriptions)
             .setIn(['activeBrand', 'account_access', 'permissions'], action.account.data.account.account_access.permissions)
+            .setIn(['activeBrand', 'account_access', 'num_brands'], action.account.data.account.account_access.num_brands)
+            .setIn(['activeBrand', 'account_access', 'num_connections'], action.account.data.account.account_access.num_connections)
+            .setIn(['activeBrand', 'account_access', 'num_users'], action.account.data.account.account_access.num_users)
             .setIn(['activeBrand', 'user_access_level'], action.account.data.account.user_access_level)
             .setIn(['activeBrand', 'subAccounts'], action.account.data.account.subaccounts)
             .setIn(['activeBrand', 'connections'], action.account.data.account.connections)

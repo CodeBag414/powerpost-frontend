@@ -81,10 +81,10 @@ class Brands extends Component {
   }
 
   render() {
-    const { userAccount, brands, activeBrand } = this.props;
+    const { brands, activeBrand } = this.props;
     const { isDialogShown, filteredBrands } = this.state;
 
-    const numBrands = userAccount && userAccount.account_access && userAccount.account_access.num_brands;
+    const numBrands = activeBrand && activeBrand.account_access && activeBrand.account_access.num_brands;
     const { permissions } = activeBrand.user_access;
     const permissionClasses = getClassesByPage(permissions, 'brands');
     return (

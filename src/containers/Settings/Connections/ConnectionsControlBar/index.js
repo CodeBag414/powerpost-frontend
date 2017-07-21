@@ -31,24 +31,16 @@ class ConnectionsControlBar extends React.Component {
     return (
       <div className={['row', styles.mainBlock].join(' ')}>
         <div
-          className={['col-xs-12', 'col-sm-6', 'col-md-3', styles.noLeftPadding].join(' ')}
-        >
-          <h3 className={[styles.noMargin, styles.verticalAlign].join(' ')}>Connected Accounts</h3>
-        </div>
-        <div
-          className={['col-xs-12', 'col-sm-6', 'col-md-3', styles.noLeftPadding, styles.verticalAlign].join(' ')}
+          className={['col-xs-12', 'col-sm-6', 'col-md-4', 'col-lg-4', styles.noLeftPadding, styles.verticalAlign].join(' ')}
         >
           <PPButton label="Connect a New Channel" primary onClick={this.props.handleDialogToggle} />
         </div>
+        <div className="col-lg-2 col-md-2" />
         <div
-          className={['col-xs-12', 'col-sm-6', 'col-md-3', 'col-lg-3', styles.noLeftPadding].join(' ')}
+          className={['col-xs-12', 'col-sm-6', 'col-md-6', 'col-lg-6', styles.noLeftPadding].join(' ')}
         >
-          <Dropdown label="" styles={{ textTransform: 'capitalize', height: '36px', marginTop: '-13px' }} placeholder="Filter by Channel" options={channelTypes} onChange={this.setChannelType} value={this.props.channelType} />
-        </div>
-        <div
-          className={['col-xs-12', 'col-sm-6', 'col-md-3', 'col-lg-3', styles.noLeftPadding].join(' ')}
-        >
-          <TextField iconClass="fa fa-search" hintText="Search" style={{ float: 'right', marginTop: '12px', height: '36px' }} onChange={this.setChannelFilter} />
+          <TextField iconClass="fa fa-search" hintText="Search" style={{ marginLeft: '40px', float: 'right', marginTop: '12px', height: '36px' }} onChange={this.setChannelFilter} />
+          <Dropdown label="" styles={{ width: '160px', textTransform: 'capitalize', height: '36px', marginTop: '-13px', float: 'right' }} placeholder="Filter by Channel" options={channelTypes} onChange={this.setChannelType} value={this.props.channelType} />
         </div>
       </div>
     );

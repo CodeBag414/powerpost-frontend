@@ -258,7 +258,7 @@ class LinkEditor extends Component {
             }
             <div className="button-wrapper" style={{ display: 'inline-block' }}>
               { mediaLibraryContext &&
-                <Button onClick={() => this.prepareLinkItem(create)} primary style={{ marginRight: '5px', marginBottom: '5px' }}>Save & Create Post</Button>
+                <Button onClick={() => this.prepareLinkItem(create)} primary style={{ marginRight: '5px', marginBottom: '5px' }} className={this.props.permissionClasses.addToPost} >Save & Create Post</Button>
               }
               <Button onClick={() => this.prepareLinkItem(doNotCreate)} style={{ marginBottom: '5px' }} primary>Save</Button>
             </div>

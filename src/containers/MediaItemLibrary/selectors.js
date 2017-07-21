@@ -74,7 +74,9 @@ const makeSelectVisibleMediaItems = () => createSelector(
   [makeSelectMediaItems(), makeSelectSortOrder(), makeSelectFilter()],
   (mediaItems, sortOrder, filter) => {
     let sortedItems = mediaItems;
-    if (sortOrder === 'date') {
+    if (sortOrder === 'oldest') {
+      sortedItems = mediaItems.sort((a, b) => a.creation_time - b.creation_time);
+    } else if (sortOrder === 'newest') {
       sortedItems = mediaItems.sort((a, b) => b.creation_time - a.creation_time);
     } else if (sortOrder === 'title') {
       sortedItems = mediaItems.sort((a, b) => {
@@ -88,7 +90,6 @@ const makeSelectVisibleMediaItems = () => createSelector(
     } else {
       sortedItems = mediaItems;
     }
-
     switch (filter) {
       case SHOW_BLOGS:
         return sortedItems.filter((t) => t.type === 'blog');

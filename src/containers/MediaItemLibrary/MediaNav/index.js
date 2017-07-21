@@ -20,7 +20,8 @@ import {
 import styles from './styles.scss';
 
 const sortOptions = [
-  { value: 'date', label: 'Date added' },
+  { value: 'oldest', label: 'Oldest' },
+  { value: 'newest', label: 'Newest' },
   { value: 'title', label: 'Title' },
 ];
 

@@ -23,6 +23,7 @@ import Button from 'elements/atm.Button';
 import MenuItem from 'elements/atm.MenuItem';
 import Menu from 'elements/atm.Menu';
 import withReactRouter from 'elements/hoc.withReactRouter';
+import { getClassesByPage } from 'utils/permissionClass';
 
 import {
   setProcessing,
@@ -30,6 +31,7 @@ import {
 
 import {
   makeSelectIsProcessing,
+  makeSelectCurrentAccount,
 } from 'containers/Main/selectors';
 
 import {
@@ -462,7 +464,7 @@ class Library extends React.Component {
   }
 
   render() {
-    const { location: { hash } } = this.props;
+    const { location: { hash }, activeBrand } = this.props;
     const blogEditor = hash.startsWith('#blog-editor');
 
     const actions = [
@@ -474,7 +476,8 @@ class Library extends React.Component {
       toggle: <Button label="Add New Item" primary onClick={this.toggle} />,
       align: 'left',
     };
-
+    const { permissions } = activeBrand.user_access;
+    const permissionClasses = getClassesByPage(permissions, 'library');
     return (
       <Wrapper>
         <SidebarWrapper>
@@ -501,14 +504,15 @@ class Library extends React.Component {
               openFileEditor: this.openFileEditor,
               openBlogEditor: this.openBlogEditor,
               handleAddLinkValueFromDialog: this.handleAddLinkValueFromDialog,
+              permissionClasses: permissionClasses,
             }
           )}
         </ContentWrapper>
-        <LinkEditor actions={actions} closeAllDialog={this.closeAllDialog} handleLinkEditorSave={this.handleLinkEditorSave} mediaLibraryContext linkEditorDialog={this.state.linkEditorDialog} urlContent={this.props.urlContent} filePickerKey={this.props.filePickerKey} linkItem={this.state.linkItem} />
-        <ImageEditor actions={actions} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleImageEditorSave} isOpen={this.state.imageEditorDialog} filePickerKey={this.props.filePickerKey} imageItem={this.state.imageItem} />
-        <LinkDialog actions={actions} setProcessing={this.props.setProcessing}closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue} handleSubmit={this.handleAddLinkSubmit} value={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
-        <VideoEditor actions={actions} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleVideoEditorSave} isOpen={this.state.videoEditorDialog} filePickerKey={this.props.filePickerKey} videoItem={this.state.videoItem} />
-        <FileEditor actions={actions} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave} isOpen={this.state.fileEditorDialog} filePickerKey={this.props.filePickerKey} fileItem={this.state.fileItem} />
+        <LinkEditor actions={actions} permissionClasses={permissionClasses} closeAllDialog={this.closeAllDialog} handleLinkEditorSave={this.handleLinkEditorSave} mediaLibraryContext linkEditorDialog={this.state.linkEditorDialog} urlContent={this.props.urlContent} filePickerKey={this.props.filePickerKey} linkItem={this.state.linkItem} />
+        <ImageEditor actions={actions} permissionClasses={permissionClasses} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleImageEditorSave} isOpen={this.state.imageEditorDialog} filePickerKey={this.props.filePickerKey} imageItem={this.state.imageItem} />
+        <LinkDialog actions={actions} permissionClasses={permissionClasses} setProcessing={this.props.setProcessing}closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue} handleSubmit={this.handleAddLinkSubmit} value={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
+        <VideoEditor actions={actions} permissionClasses={permissionClasses} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleVideoEditorSave} isOpen={this.state.videoEditorDialog} filePickerKey={this.props.filePickerKey} videoItem={this.state.videoItem} />
+        <FileEditor actions={actions} permissionClasses={permissionClasses} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave} isOpen={this.state.fileEditorDialog} filePickerKey={this.props.filePickerKey} fileItem={this.state.fileItem} />
         <div className="post-editor">
           { blogEditor ? <BlogEditor
             filePickerKey={this.props.filePickerKey}
@@ -559,6 +563,7 @@ const mapStateToProps = createStructuredSelector({
   processingItem: makeSelectProcessingItem(),
   activeMediaItem: makeSelectActiveMediaItem(),
   isProcessing: makeSelectIsProcessing(),
+  activeBrand: makeSelectCurrentAccount(),
 });
 
 Library.propTypes = {
@@ -576,6 +581,7 @@ Library.propTypes = {
   createBlogItem: PropTypes.func,
   isProcessing: PropTypes.func,
   urlContent: PropTypes.string,
+  activeBrand: PropTypes.object,
   activeCollection: PropTypes.shape({
     collection_id: PropTypes.string,
   }),

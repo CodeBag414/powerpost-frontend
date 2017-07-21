@@ -43,6 +43,9 @@ const permissionDetails = {
     team: ['team', 'hidden'],
     settings: ['settings', 'hidden'],
   },
+  library: {
+    addToPost: ['post_edit', 'hidden'],
+  },
   brands: {
     addNewBrandButton: ['brand_edit', 'hidden'],
     brandItemDelete: ['brand_edit', 'hidden'],

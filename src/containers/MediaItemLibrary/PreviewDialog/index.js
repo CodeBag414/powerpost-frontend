@@ -13,7 +13,7 @@ import SimpleButton from 'elements/atm.SimpleButton';
 
 import Wrapper from './Wrapper';
 
-function PreviewDialog({ createPostSet, previewDialog, closeAllDialog, mediaItem }) {
+function PreviewDialog({ createPostSet, previewDialog, closeAllDialog, mediaItem, permissionClasses }) {
   const mediaType = mediaItem.type;
   let iconName = '';
 
@@ -65,6 +65,7 @@ function PreviewDialog({ createPostSet, previewDialog, closeAllDialog, mediaItem
             primary
             style={{ margin: '5px' }}
             onClick={() => { closeAllDialog(); createPostSet(mediaItem); }}
+            className={permissionClasses.addToPost}
           />
         </div>
       </Wrapper>

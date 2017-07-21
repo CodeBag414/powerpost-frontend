@@ -152,12 +152,14 @@ class MediaItemLibrary extends React.Component {
           onConfirmDelete={(id) => this.onConfirmDelete(id, this.props.deleteMediaItem)}
           openPreview={this.openPreview}
           openEditor={this.openEditor}
+          permissionClasses={this.props.permissionClasses}
         />
         <PreviewDialog
           createPostSet={this.props.createPostSet}
           closeAllDialog={this.closeAllDialog}
           previewDialog={this.state.previewDialog}
           mediaItem={this.state.previewItem}
+          permissionClasses={this.props.permissionClasses}
         />
       </Wrapper>
     );
