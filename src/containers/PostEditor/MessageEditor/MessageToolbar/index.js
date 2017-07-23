@@ -44,7 +44,9 @@ function MessageToolbar({ characterLimit, openFilePicker, openLinkDialog, openMe
           {/* TODO: Add channel specific toolbar buttons here */}
         </div>
       }
-      <LimitIndicator className={characterLimit < 0 && 'negative'}>{characterLimit}</LimitIndicator>
+      {(currentChannel === -1 || currentChannel === 1) && // global or Twitter
+        <LimitIndicator className={characterLimit < 0 && 'negative'}>{characterLimit}</LimitIndicator>
+      }
     </Wrapper>
   );
 }

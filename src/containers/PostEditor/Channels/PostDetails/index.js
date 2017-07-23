@@ -59,7 +59,9 @@ function PostDetails({
       <div className="left-column">
         <div className="section-title modify-content">
           Customize Message
-          <LimitIndicator className={characterCount < 0 && 'negative'}>{characterCount}</LimitIndicator>
+          {connection.channel === 'twitter' &&
+            <LimitIndicator className={characterCount < 0 && 'negative'}>{characterCount}</LimitIndicator>
+          }
         </div>
         <MultiLineInput
           hasBorder
