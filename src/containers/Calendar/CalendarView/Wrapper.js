@@ -6,6 +6,8 @@ const Wrapper = styled.div`
   font-family: Lato;
   font-size: 11px;
   height: calc(100vh - 60px);
+  padding-right: 1px;
+  padding-bottom: 1px;
 
   .rbc-header {
     background-color: #efefef;
