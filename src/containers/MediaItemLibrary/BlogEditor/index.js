@@ -130,15 +130,15 @@ class BlogEditor extends Component {
     return (
       <Wrapper>
         <GeneralInfo
-          blogName={titleValue}
-          creationTime={creationTime}
+          blogName={titleValue || ''}
+          creationTime={creationTime || ''}
           user={user}
           onBack={this.onBack}
         />
         <div className="content-wrapper">
           <div className="main">
             <ReactSummernote
-              value={htmlDecode(content)}
+              value={htmlDecode(content || '')}
               options={{
                 dialogsInBody: true,
                 height: '70vh',
@@ -172,13 +172,13 @@ class BlogEditor extends Component {
               type="text"
               name="title"
               floatingLabelText="Title"
-              value={titleValue}
+              value={titleValue || ''}
               onChange={(e) => this.handleInputChange('titleValue', e.target.value)}
             />
             <TextArea
               floatingLabelText="Description"
               rows={5}
-              value={descriptionValue}
+              value={descriptionValue || ''}
               onChange={(e) => this.handleInputChange('descriptionValue', e.target.value)}
             />
             <div className="image-wrapper">
