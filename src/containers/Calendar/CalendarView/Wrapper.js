@@ -23,9 +23,14 @@ const Wrapper = styled.div`
     border-top: 1px solid #d6dbe1;
   }
 
+  .rbc-month-header {
+    min-height: 34px;
+  }
+
   .rbc-month-row {
     background: #fff;
     overflow: visible;
+    min-height: 82px;
   }
 
   .rbc-row-bg {
@@ -66,7 +71,7 @@ const Wrapper = styled.div`
 
   .rbc-event {
     border-radius: 3px;
-    padding: 6px 10px;
+    padding: 3px 10px;
     overflow: hidden;
     text-overflow: ellipsis;
     margin-left: 2px;
