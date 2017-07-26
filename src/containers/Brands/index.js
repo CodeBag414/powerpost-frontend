@@ -62,6 +62,10 @@ class Brands extends Component {
       this.props.fetchAccount(this.props.userAccount.account_id);
       this.props.getUser();
     }
+
+    if (this.props.brands.length !== nextProps.brands.length) {
+      this.setState({ filteredBrands: nextProps.brands });
+    }
   }
 
   handleDialogToggle = () => {
