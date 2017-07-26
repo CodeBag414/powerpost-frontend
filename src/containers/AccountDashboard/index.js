@@ -127,7 +127,7 @@ class AccountDashboard extends Component {
   }
 
   filterMediaItems = (mediaItems) => {
-    const lastestMediaItems = mediaItems.count() > 5 ? mediaItems.takeLast(6) : mediaItems;
+    const lastestMediaItems = mediaItems.count() > 5 ? mediaItems.take(6) : mediaItems;
     this.setState({ lastestMediaItems });
   }
 
