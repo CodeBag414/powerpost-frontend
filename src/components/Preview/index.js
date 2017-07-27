@@ -144,9 +144,9 @@ class Preview extends React.Component {
         {type === 'link' &&
           <div>
             <Image src={image} />
-            <LinkTitle>{item.properties.title}</LinkTitle>
+            <a href={item.properties.link} target="_blank"><LinkTitle>{item.properties.title}</LinkTitle></a>
             <LinkDescription>{item.properties.description}</LinkDescription>
-            <LinkUrl>{item.properties.link}</LinkUrl>
+            <a href={item.properties.link} target="_blank"><LinkUrl>{item.properties.link}</LinkUrl></a>
           </div>
         }
         {type === 'image' && <Image src={image} />}

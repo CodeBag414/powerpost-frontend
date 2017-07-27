@@ -114,9 +114,9 @@ export function* getLinkData(action) {
 
   const params = serialize(data);
 
-  const result = yield call(getData, `/media_api/url_content?${params}`);
+  const result = yield call(getData, `/media_api/url_preview?${params}`);
   if (result.data.result === 'success') {
-    const urlData = result.data.url_data[0];
+    const urlData = result.data.preview;
     yield put({ type: FETCH_URL_CONTENT_SUCCESS, urlData });
   } else {
     yield put({ type: MEDIA_ERROR, error: 'Error getting url content' });

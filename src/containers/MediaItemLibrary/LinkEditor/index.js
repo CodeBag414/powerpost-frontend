@@ -37,8 +37,8 @@ class LinkEditor extends Component {
     let selectedImage = {};
     let selectedImageIndex = -1;
 
-    if (urlContent.images && urlContent.images.length) {
-      selectedImage = urlContent.images[0];
+    if (urlContent.image) {
+      selectedImage = urlContent.image;
       selectedImageIndex = 0;
     }
 
@@ -88,11 +88,11 @@ class LinkEditor extends Component {
       if (this.state.captionValue !== nextProps.urlContent.description) {
         this.setState({ descriptionValue: nextProps.urlContent.description });
       }
-      if (this.state.url !== nextProps.urlContent.original_url) {
-        this.setState({ url: nextProps.urlContent.original_url });
+      if (this.state.url !== nextProps.urlContent.url) {
+        this.setState({ url: nextProps.urlContent.url });
       }
-      if (nextProps.urlContent.images && nextProps.urlContent.images.length) {
-        this.setState({ selectedImage: nextProps.urlContent.images[0], selectedImageIndex: 0 });
+      if (nextProps.urlContent.image) {
+        this.setState({ selectedImage: { url: nextProps.urlContent.image }, selectedImageIndex: 0 });
       }
     }
   }
@@ -205,57 +205,26 @@ class LinkEditor extends Component {
                 name="title"
                 floatingLabelText="Title"
                 value={titleValue}
+                disabled
                 onChange={(e) => this.handleInputChange('titleValue', e.target.value)}
               />
               <TextArea
                 floatingLabelText="Description"
                 rows={3}
                 value={descriptionValue}
+                disabled
                 onChange={(e) => this.handleInputChange('descriptionValue', e.target.value)}
               />
             </div>
             <div className="image-wrapper">
               {selectedImage && selectedImage.url &&
-                <div className="header">
-                  <p>Cover Image</p>
-                  <SimpleButton
-                    style={{ fontSize: '13px' }}
-                    color={theme.textColor}
-                    onClick={this.removeCoverImage}
-                    noBorder
-                  >
-                    Remove
-                  </SimpleButton>
-                </div>
-              }
-              {selectedImage && selectedImage.url &&
                 <div className="cover-image">
                   <LargeImageWrapper src={selectedImage.url} />
                 </div>
               }
-              <SimpleButton
-                style={{ fontSize: '13px' }}
-                color={theme.textColor}
-                onClick={this.openFilePicker}
-                noBorder
-              >
-                Upload New Cover Image
-              </SimpleButton>
             </div>
           </BodyWrapper>
           <FooterWrapper>
-            {(urlContent.images && urlContent.images.length > 0) &&
-              <div className="gallery">
-                <p>Select Cover Image</p>
-                <div>
-                  { urlContent.images.map((image, i) =>
-                    <div key={i} style={{ marginRight: '10px' }}>
-                      <SmallImageWrapper src={image.url} isSelected={selectedImageIndex === i} onClick={() => { this.setState({ selectedImage: image, selectedImageIndex: i }); }} />
-                    </div>
-                      )}
-                </div>
-              </div>
-            }
             <div className="button-wrapper" style={{ display: 'inline-block' }}>
               { mediaLibraryContext &&
                 <Button onClick={() => this.prepareLinkItem(create)} primary style={{ marginRight: '5px', marginBottom: '5px' }} className={this.props.permissionClasses.addToPost} >Save & Create Post</Button>

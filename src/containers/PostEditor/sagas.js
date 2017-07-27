@@ -86,11 +86,11 @@ export function* getLinkData(action) {
 
   const params = serialize(data);
 
-  const result = yield call(getData, `/media_api/url_content?${params}`);
+  const result = yield call(getData, `/media_api/url_preview?${params}`);
   if (result.data.result === 'success') {
     const urlData = {
-      ...result.data.url_data[0],
-      short_url: result.data.short_url,
+      ...result.data.preview,
+      short_url: result.data.preview.url,
     };
 
     yield put({ type: FETCH_URL_CONTENT_SUCCESS, urlData });
