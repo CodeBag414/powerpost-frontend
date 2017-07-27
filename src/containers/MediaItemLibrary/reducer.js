@@ -43,6 +43,7 @@ import {
   REPLICATE_POST_SET_SUCCESS,
   REPLICATE_POST_SET_FAILURE,
   CREATE_BLOG_ITEM_SUCCESS,
+  CLEAR_RSS_ITEMS,
 } from './constants';
 
 // The initial application state
@@ -129,6 +130,9 @@ function mediaLibraryReducer(state = initialState, action) {
     case FETCH_RSS_ITEMS_SUCCESS:
       return state
         .set('rssItems', action.rssItems);
+    case CLEAR_RSS_ITEMS:
+      return state
+        .set('rssItems', []);
     case SET_VISIBILITY_FILTER:
       return state
         .set('filter', action.filter);

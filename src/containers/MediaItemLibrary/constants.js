@@ -54,3 +54,4 @@ export const CREATE_BLOG_ITEM_REQUEST = 'MediaItemLibrary/CREATE_BLOG_ITEM_REQUE
 export const CREATE_BLOG_ITEM_SUCCESS = 'MediaItemLibrary/CREATE_BLOG_ITEM_SUCCESS';
 export const CREATE_BLOG_ITEM_FAILURE = 'MediaItemLibrary/CREATE_BLOG_ITEM_FAILURE';
 export const SET_IS_FETCHING = 'MediaItemLibrary/SET_IS_FETCHING';
+export const CLEAR_RSS_ITEMS = 'MediaItemLibrary/CLEAR_RSS_ITEMS';
