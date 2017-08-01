@@ -24,7 +24,6 @@ import {
 // create Brand (subaccount)
 export function* createBrand(action) {
   const { account_id, display_name, thumbnail_image_key, color } = action.brandObject;
-  console.log(action);
   const data = {
     payload: {
       account_id,
@@ -42,7 +41,6 @@ export function* createBrand(action) {
   try {
     const response = yield call(postData, requestUrl, data);
     const { data: payload } = response;
-    console.log(response);
     if (response.data.status === 'success') {
       toastr.success('Success!', 'A new brand has been added');
       yield put(createBrandSuccess(payload));
