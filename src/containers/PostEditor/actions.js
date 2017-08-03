@@ -26,6 +26,8 @@ import {
   CREATE_POST_FAILURE,
   SET_WORDPRESS_POST_REQUEST,
   CLEAR_MEDIA_ITEM,
+  FETCH_FACEBOOK_ENTITIES,
+  FETCH_FACEBOOK_ENTITIES_SUCCESS,
 } from './constants';
 
 export function fetchCollections(accountId) {
@@ -179,5 +181,19 @@ export function setWordpressPostRequest(payload) {
 export function clearMediaItem() {
   return {
     type: CLEAR_MEDIA_ITEM,
+  };
+}
+
+export function fetchFacebookEntities(payload) {
+  return {
+    type: FETCH_FACEBOOK_ENTITIES,
+    payload,
+  };
+}
+
+export function fetchFacebookEntitiesSuccess(entities) {
+  return {
+    type: FETCH_FACEBOOK_ENTITIES_SUCCESS,
+    entities,
   };
 }

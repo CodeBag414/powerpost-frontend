@@ -50,6 +50,7 @@ import {
   GET_MEDIA_ITEM_SUCCESS,
   CLEAR_URL_CONTENT,
   VIDEO_PROCESSING_DONE,
+  FETCH_FACEBOOK_ENTITIES_SUCCESS,
 } from './constants';
 
 const initialState = fromJS({
@@ -93,6 +94,7 @@ const initialState = fromJS({
     data: {},
   },
   newMediaItem: {},
+  facebookEntities: {},
 });
 
 function boardReducer(state = initialState, action) {
@@ -284,6 +286,8 @@ function boardReducer(state = initialState, action) {
         .setIn(['post', 'error'], fromJS(action.payload));
     case SET_WORDPRESS_POST_REQUEST:
       return state.setIn(['post', 'data'], action.payload);
+    case FETCH_FACEBOOK_ENTITIES_SUCCESS:
+      return state.set('facebookEntities', fromJS(action.entities));
     default: return state;
   }
 }

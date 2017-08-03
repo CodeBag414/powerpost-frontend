@@ -26,6 +26,7 @@ class Channels extends Component {
     newMediaItem: ImmutablePropTypes.map,
     updatePost: PropTypes.func,
     permissionClasses: PropTypes.object,
+    availableFBChannel: PropTypes.string,
   };
 
   constructor(props) {
@@ -125,7 +126,7 @@ class Channels extends Component {
   }
 
   render() {
-    const { postSet, connections, posts, newMediaItem, permissionClasses } = this.props;
+    const { postSet, connections, posts, newMediaItem, permissionClasses, availableFBChannel } = this.props;
     const { isDialogShown, currentPost, postMessage, postTime } = this.state;
     const hasContent = posts && Object.keys(posts).length && connections;
     const connection = connections && connections.filter((item) =>
@@ -177,6 +178,7 @@ class Channels extends Component {
               handleDateChange={this.handleDateChange}
               newMediaItem={newMediaItem.toJS()}
               permissionClasses={permissionClasses}
+              availableFBChannel={availableFBChannel}
             />
           </div>
         :

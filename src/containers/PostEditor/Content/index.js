@@ -85,6 +85,7 @@ class Content extends Component {
     setMediaItem: PropTypes.func,
     permissionClasses: PropTypes.object,
     setProcessing: PropTypes.func,
+    availableFBChannel: PropTypes.string,
   };
 
   static defaultProps = {
@@ -526,7 +527,7 @@ class Content extends Component {
   }
 
   render() {
-    const { pending, pushToLibrary, id, accountId, postSet, permissionClasses } = this.props;
+    const { pending, pushToLibrary, id, accountId, postSet, permissionClasses, availableFBChannel } = this.props;
     const { message, characterLimit, item, messageUrls, channelIndex } = this.state;
     // const { params: { postset_id, account_id } } = this.props;
     const actions = [
@@ -585,6 +586,8 @@ class Content extends Component {
               convertUrl={this.convertUrl}
               currentChannel={channelIndex}
               permissionClasses={permissionClasses}
+              isMentionsInput={channelIndex === 0}
+              availableFBChannel={availableFBChannel}
             />
           </PopupBorder>
         </MessageEditorWrapper>

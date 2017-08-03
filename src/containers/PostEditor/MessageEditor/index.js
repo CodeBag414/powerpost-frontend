@@ -6,6 +6,7 @@ import { MenuItem } from 'react-toolbox/lib/menu';
 import Popup from 'containers/Calendar/CalendarSidebar/Popup';
 
 import MultiLineInput from 'components/MultiLineInput';
+import MultiLineInputMentions from 'components/MultiLineInputMentions';
 import Preview from 'components/Preview';
 
 import Spinner from 'elements/atm.Spinner';
@@ -94,6 +95,8 @@ class MessageEditor extends Component {
       convertUrl,
       currentChannel,
       permissionClasses,
+      isMentionsInput,
+      availableFBChannel,
     } = this.props;
     const { menuVisible } = this.state;
     return (
@@ -113,13 +116,24 @@ class MessageEditor extends Component {
           currentChannel={currentChannel}
           permissionClasses={permissionClasses}
         />
-        <MultiLineInput
-          handleMessageChange={handleMessageChange}
-          highlightFocus={currentChannel === -1}
-          message={message}
-          onBlur={handleMessageBlur}
-          placeholder="What do you want to say?"
-        />
+        {
+          isMentionsInput ?
+            <MultiLineInputMentions
+              availableFBChannel={availableFBChannel}
+              handleMessageChange={handleMessageChange}
+              handleMessageBlur={handleMessageBlur}
+              message={message}
+              placeholder="What do you want to say?"
+            />
+            :
+              <MultiLineInput
+                handleMessageChange={handleMessageChange}
+                highlightFocus={currentChannel === -1}
+                message={message}
+                handleMessageBlur={handleMessageBlur}
+                placeholder="What do you want to say?"
+              />
+        }
         {isProcessing &&
           <Spinner />
         }
@@ -168,6 +182,8 @@ MessageEditor.propTypes = {
   convertUrl: PropTypes.func,
   currentChannel: PropTypes.number,
   permissionClasses: PropTypes.object,
+  isMentionsInput: PropTypes.bool,
+  availableFBChannel: PropTypes.string,
 };
 
 export default MessageEditor;

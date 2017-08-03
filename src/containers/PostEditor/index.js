@@ -50,6 +50,7 @@ import {
   selectPost,
   selectNewMediaItem,
   makeSelectComments,
+  selectFacebookEntities,
 } from 'containers/PostEditor/selectors';
 
 import Button from 'elements/atm.Button';
@@ -107,6 +108,7 @@ class PostEditor extends Component {
     deleteComment: PropTypes.func,
     comments: ImmutablePropTypes.list,
     activeBrand: PropTypes.object,
+    facebookEntities: ImmutablePropTypes.map,
   };
 
   static defaultProps = {
@@ -127,9 +129,17 @@ class PostEditor extends Component {
     this.props.clearMediaItem();
   }
 
-  componentWillReceiveProps({ postSet }) {
-    const titleText = postSet.getIn(['details', 'title']);
-    this.setState({ postTitle: titleText || 'Untitled Post' });
+  componentWillReceiveProps(nextProps) {
+    const { postSet, connections } = nextProps;
+
+    if (this.props.postSet !== postSet) {
+      const titleText = postSet.getIn(['details', 'title']);
+      this.setState({ postTitle: titleText || 'Untitled Post' });
+    }
+
+    if (connections && this.props.connections !== connections) {
+      this.setAvailableFBChannel(connections);
+    }
   }
 
   shouldComponentUpdate(nextProps) {
@@ -157,6 +167,16 @@ class PostEditor extends Component {
     }
   }
 
+  setAvailableFBChannel = (connections) => {
+    const facebookConnection = connections
+      .filter((connection) => connection.channel === 'facebook' && connection.status === '1')[0];
+    if (facebookConnection) {
+      this.availableFBChannel = facebookConnection.connection_id;
+    } else {
+      console.log('No active facebook connection available - cannot fetch Facebook entities');
+    }
+  }
+
   initialize = (props = this.props) => {
     const { accountId, id } = props;
     props.getComments(id);
@@ -167,6 +187,10 @@ class PostEditor extends Component {
     const payload = { accountId };
     props.fetchGroupUsers(payload);
     props.fetchCollections(accountId);
+
+    if (props.connections) {
+      this.setAvailableFBChannel(props.connections);
+    }
   }
 
   handleClickDelete = () => {
@@ -255,8 +279,8 @@ class PostEditor extends Component {
     const permissionClasses = getClassesByPage(permissions, 'postEditor');
 
     const tabs = [
-      { name: 'Content', component: <Content postSet={postSet} permissionClasses={permissionClasses} accountId={this.props.accountId} id={this.props.id} location={this.props.location} params={this.props.params} /> },
-      { name: 'Schedule', component: <Channels postSet={postSet} permissionClasses={permissionClasses} posts={posts} updatePost={updatePost} />, count: totalTimeslots },
+      { name: 'Content', component: <Content postSet={postSet} permissionClasses={permissionClasses} accountId={this.props.accountId} id={this.props.id} location={this.props.location} params={this.props.params} availableFBChannel={this.availableFBChannel} /> },
+      { name: 'Schedule', component: <Channels postSet={postSet} permissionClasses={permissionClasses} posts={posts} updatePost={updatePost} availableFBChannel={this.availableFBChannel} />, count: totalTimeslots },
     ];
 
     const generalInfo = (
@@ -403,6 +427,7 @@ const mapStateToProps = createStructuredSelector({
   filePickerKey: makeSelectFilePickerKey(),
   newMediaItem: selectNewMediaItem(),
   comments: makeSelectComments(),
+  facebookEntities: selectFacebookEntities(),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostEditor));

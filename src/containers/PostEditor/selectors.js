@@ -95,6 +95,11 @@ const selectNewMediaItem = () => createSelector(
   (postSetEditor) => postSetEditor.get('newMediaItem'),
 );
 
+const selectFacebookEntities = () => createSelector(
+  selectPostSetEditor,
+  (postSetEditor) => postSetEditor.get('facebookEntities'),
+);
+
 export {
   makeSelectComments,
   makeSelectAccountTags,
@@ -110,4 +115,5 @@ export {
   selectWordpressGUI,
   selectPost,
   selectNewMediaItem,
+  selectFacebookEntities,
 };

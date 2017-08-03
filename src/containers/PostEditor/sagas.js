@@ -57,6 +57,7 @@ import {
   FETCH_WORDPRESS_GUI_REQUEST,
   CREATE_POST_REQUEST,
   VIDEO_PROCESSING_DONE,
+  FETCH_FACEBOOK_ENTITIES,
 } from './constants';
 
 import {
@@ -64,6 +65,7 @@ import {
   fetchWordpressGUIFailure,
   createPostSuccess,
   createPostFailure,
+  fetchFacebookEntitiesSuccess,
 } from './actions';
 
 export function* getComments(payload) {
@@ -242,16 +244,15 @@ export function* pollData(action) {
     const res = yield call(getData, `/media_api/media_item/${id}`);
     if (res.data.result === 'success') {
       if (res.data.media_item.status === '1') {
-        const mediaItem = res.data.media_item;
-        //processingItem = false;
+        // processingItem = false;
         yield put(setProcessing(false));
-        yield put({ type: VIDEO_PROCESSING_DONE, mediaItem });
+        yield put({ type: VIDEO_PROCESSING_DONE, mediaItem: res.data.media_item });
       } else if (res.data.media_item.status === '3') {
         yield put({ type: VIDEO_PROCESSING, id });
       }
     }
   } catch (error) {
-
+    console.log('Error in pollData', error);
   }
 }
 
@@ -412,6 +413,25 @@ export function* fetchWordpressGUISaga() {
   yield cancel(watcher);
 }
 
+export function* fetchFacebookEntitiesWorker({ payload }) {
+  const data = { payload };
+  const params = serialize(data);
+
+  const response = yield call(getData, `/connection_api/search_facebook?${params}`);
+  if (response.data.result === 'success') {
+    yield put(fetchFacebookEntitiesSuccess(response.data.results));
+  } else {
+    console.log('Error in search_facebook. response: ', response);
+  }
+}
+
+export function* fetchFacebookEntitiesSaga() {
+  const watcher = yield takeLatest(FETCH_FACEBOOK_ENTITIES, fetchFacebookEntitiesWorker);
+
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
 export default [
   fetchComments,
   postComment,
@@ -426,6 +446,7 @@ export default [
   fetchWordpressGUISaga,
   createPostSaga,
   watchPollData,
+  fetchFacebookEntitiesSaga,
 ];
 
 const delay = (millis) => {

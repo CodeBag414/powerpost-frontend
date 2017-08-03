@@ -8,6 +8,7 @@ import TimePicker from 'elements/atm.TimePicker';
 import PPButton from 'elements/atm.Button';
 
 import MultiLineInput from 'components/MultiLineInput';
+import MultiLineInputMentions from 'components/MultiLineInputMentions';
 import Wrapper from './Wrapper';
 import LimitIndicator from './LimitIndicator';
 import PostPreview from './PostPreview';
@@ -43,6 +44,7 @@ function PostDetails({
   postMessage,
   postTime,
   permissionClasses,
+  availableFBChannel,
 }) {
   const minDate = new Date();
   minDate.setDate(minDate.getDate() - 1);
@@ -63,13 +65,24 @@ function PostDetails({
             <LimitIndicator className={characterCount < 0 && 'negative'}>{characterCount}</LimitIndicator>
           }
         </div>
-        <MultiLineInput
-          hasBorder
-          message={postMessage}
-          handleMessageChange={handleMessageChange}
-          onBlur={handleMessageBlur}
-          className={`${permissionClasses.timeSlotMessage} ${disableClass}`}
-        />
+        {connection.channel === 'facebook' ?
+          <MultiLineInputMentions
+            hasBorder
+            availableFBChannel={availableFBChannel}
+            className={`${permissionClasses.timeSlotMessage} ${disableClass}`}
+            handleMessageChange={handleMessageChange}
+            handleMessageBlur={handleMessageBlur}
+            message={postMessage}
+          />
+          :
+            <MultiLineInput
+              hasBorder
+              className={`${permissionClasses.timeSlotMessage} ${disableClass}`}
+              handleMessageChange={handleMessageChange}
+              message={postMessage}
+              onBlur={handleMessageBlur}
+            />
+        }
         <PostPreview
           mediaItem={mediaItem}
           post={post}
@@ -125,6 +138,7 @@ PostDetails.propTypes = {
   postSet: ImmutablePropTypes.map,
   postTime: PropTypes.string,
   permissionClasses: PropTypes.object,
+  availableFBChannel: PropTypes.string,
 };
 
 export default PostDetails;

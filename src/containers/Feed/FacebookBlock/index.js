@@ -1,8 +1,9 @@
-/* eslint-disable jsx-a11y/anchor-has-content */
+/* eslint-disable react/no-danger */
+
 import React, { Component, PropTypes } from 'react';
 import moment from 'moment';
 import Link from 'react-toolbox/lib/link';
-import Linkify from 'react-linkify';
+import linkifyHtml from 'linkifyjs/html';
 
 import SocialIcon from 'elements/atm.SocialIcon';
 
@@ -11,12 +12,21 @@ import Header from './Header';
 import Content from './Content';
 import Footer from './Footer';
 
+/* For Facebook Mentions in Preview blocks only */
+function getFormattedMessage(message) {
+  const regex = /@\[([^\]]*)]\((\d*)\)/g;
+  const html = linkifyHtml(message)
+    .replace(regex, (match, p1, p2) =>
+      `<a href="https://www.facebook.com/${p2}" target="_blank">${p1}</a>`
+    );
+  return { __html: html };
+}
+
 function getFormattedTime(time) {
   return moment(time).format('D MMMM YYYY');
 }
 
 class FacebookBlock extends Component {
-
   onMouseEnterVideo(e) {
     const target = e.target;
     target.controls = true;
@@ -46,9 +56,10 @@ class FacebookBlock extends Component {
           </div>
         </Header>
         <Content>
-          <Linkify properties={{ target: '_blank' }}>
-            <span className={`fb-message ${post.type === 'status' && 'large'}`}>{post.message}</span>
-          </Linkify>
+          <span
+            className={`fb-message ${post.type === 'status' && 'large'}`}
+            dangerouslySetInnerHTML={getFormattedMessage(post.message)}
+          />
 
           { (post.type === 'photo' || post.type === 'image') &&
             <img className="fb-image" src={post.full_picture} alt="feed" />
