@@ -10,6 +10,10 @@ import {
   makeSelectUserAccount,
 } from 'containers/App/selectors';
 
+import {
+  makeSelectCurrentAccount
+} from 'containers/Main/selectors';
+
 import BrandUploadForm from './BrandUploadForm';
 
 import { createBrandRequest } from '../actions';
@@ -36,7 +40,7 @@ class AddBrandDialog extends Component {
 
   createNewBrand = (content) => {
     const data = {
-      account_id: this.props.userOwnAccount.account_id,
+      account_id: this.props.activeAccount.account_id,
       display_name: content.brandName,
       thumbnail_image_key: content.avatarKey,
       color: content.backgroundColor,
@@ -75,6 +79,7 @@ export function mapDispatchToProps(dispatch) {
 const mapStateToProps = createStructuredSelector({
   user: makeSelectUser(),
   userOwnAccount: makeSelectUserAccount(),
+  activeAccount: makeSelectCurrentAccount(),
 });
 
 export default (connect(mapStateToProps, mapDispatchToProps)(AddBrandDialog));

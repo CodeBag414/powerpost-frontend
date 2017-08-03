@@ -59,7 +59,7 @@ class Brands extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.isBrandCreated !== nextProps.isBrandCreated ||
       this.props.isBrandDeleted !== nextProps.isBrandDeleted) {
-      this.props.fetchAccount(this.props.userAccount.account_id);
+      this.props.fetchAccount(this.props.activeBrand.account_id);
       this.props.getUser();
     }
 

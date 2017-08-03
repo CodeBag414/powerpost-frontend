@@ -52,6 +52,7 @@ import {
   INVITE_EMAIL_TO_STREAM_REQUEST,
   REPLICATE_POST_SET_REQUEST,
   CREATE_BLOG_ITEM_REQUEST,
+  CLEAR_RSS_ITEMS,
 } from './constants';
 
 import {
@@ -130,7 +131,7 @@ export function* getRSSFeeds(action) {
       account_id: id,
     },
   };
-
+  yield put({ type: CLEAR_RSS_ITEMS });
   const params = serialize(data);
   const results = yield call(getData, `/feed_api/feeds?${params}`);
   if (results.data.status === 'success') {
