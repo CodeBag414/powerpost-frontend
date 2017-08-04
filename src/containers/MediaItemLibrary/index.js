@@ -37,6 +37,7 @@ import {
 
 import {
   setIsFetching,
+  getEmbedData,
 } from './actions';
 
 import Wrapper from './Wrapper';
@@ -554,6 +555,7 @@ class Library extends React.Component {
             openAddFile={this.openAddFile}
             openAddLink={this.openAddLink}
             openBlogEditor={this.openBlogEditor}
+            getEmbedData={this.props.getEmbedData}
             handleAddLinkValueFromDialog={this.handleAddLinkValueFromDialog}
           /> : null }
         </div>
@@ -583,6 +585,7 @@ export function mapDispatchToProps(dispatch) {
     createBlogItem: (payload) => dispatch(createBlogItemRequest(payload)),
     setProcessing: (processing) => dispatch(setProcessing(processing)),
     setIsFetching: (isFetching) => dispatch(setIsFetching(isFetching)),
+    getEmbedData: (url) => dispatch(getEmbedData(url)),
     pushToRoute: (route) => dispatch(routerActions.push(route)),
   };
 }
