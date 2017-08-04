@@ -20,6 +20,11 @@ const makeSelectUrlContent = () => createSelector(
   (library) => library.get('urlContent')
 );
 
+const makeSelectEmbedData = () => createSelector(
+  selectLibrary,
+  (library) => library.get('embedData')
+);
+
 const makeSelectMediaItems = () => createSelector(
   [selectLibrary],
   (library) => library.get('mediaItems')
@@ -153,4 +158,5 @@ export {
     makeSelectPostSet,
     makeSelectEmailInvited,
     makeSelectIsFetching,
+    makeSelectEmbedData,
 };

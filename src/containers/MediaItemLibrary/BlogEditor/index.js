@@ -57,6 +57,22 @@ class BlogEditor extends Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if(this.props.embedData.url !== nextProps.embedData.url) {
+      this.injectEmbed(nextProps.embedData);
+    }
+  }
+
+  injectEmbed = (embedData) => {
+    const iframe = document.createElement('iframe');
+    const container = document.createElement('div');
+    container.style.cssText = 'position:relative;width:100%;height:0;padding-bottom: 51%;';
+    iframe.src = embedData.iframe_src;
+    iframe.style.cssText = 'position:absolute;width:100%;height:100%;left:0;top:0;';
+    container.appendChild(iframe);
+    ReactSummernote.insertNode(container);
+  }
+
   onBack = () => {
     browserHistory.push(this.props.location.pathname);
   }

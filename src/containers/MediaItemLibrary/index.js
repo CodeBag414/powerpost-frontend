@@ -78,6 +78,7 @@ import {
   makeSelectFilter,
   makeSelectProcessingItem,
   makeSelectActiveMediaItem,
+  makeSelectEmbedData,
 } from './selectors';
 
 const DropDownMenu = styled(DropdownMenu)`
@@ -420,7 +421,7 @@ class Library extends React.Component {
     const hash = this.props.location.hash;
     if (hash === '#blog-editor') {
       this.setState({ addLinkValue: '', linkDialog: false });
-      this.props.fetchEmbedData(this.state.addLinkValue);
+      this.props.getEmbedData(this.state.addLinkValue);
     } else {
       this.setState({ addLinkValue: '', linkDialog: false, searchDialog: false, rssFeedDialog: false, linkEditorDialog: true });
       this.props.fetchUrlData(this.state.addLinkValue);
@@ -555,7 +556,7 @@ class Library extends React.Component {
             openAddFile={this.openAddFile}
             openAddLink={this.openAddLink}
             openBlogEditor={this.openBlogEditor}
-            getEmbedData={this.props.getEmbedData}
+            embedData={this.props.embedData}
             handleAddLinkValueFromDialog={this.handleAddLinkValueFromDialog}
           /> : null }
         </div>
@@ -603,6 +604,7 @@ const mapStateToProps = createStructuredSelector({
   activeMediaItem: makeSelectActiveMediaItem(),
   isProcessing: makeSelectIsProcessing(),
   activeBrand: makeSelectCurrentAccount(),
+  embedData: makeSelectEmbedData(),
 });
 
 Library.propTypes = {
