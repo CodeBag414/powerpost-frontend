@@ -36,6 +36,13 @@ export function setIsFetching(isFetching) {
   };
 }
 
+export function getEmbedData(url) {
+  return {
+    type: GET_EMBED_DATA,
+    url,
+  };
+}
+
 export function fetchCollections(accountId) {
   return {
     type: FETCH_COLLECTIONS,
