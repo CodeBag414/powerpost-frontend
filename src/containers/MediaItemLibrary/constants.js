@@ -54,3 +54,5 @@ export const CREATE_BLOG_ITEM_REQUEST = 'MediaItemLibrary/CREATE_BLOG_ITEM_REQUE
 export const CREATE_BLOG_ITEM_SUCCESS = 'MediaItemLibrary/CREATE_BLOG_ITEM_SUCCESS';
 export const CREATE_BLOG_ITEM_FAILURE = 'MediaItemLibrary/CREATE_BLOG_ITEM_FAILURE';
 export const SET_IS_FETCHING = 'MediaItemLibrary/SET_IS_FETCHING';
+export const GET_EMBED_DATA = 'MediaItemLibrary/GET_EMBED_DATA';
+export const GET_EMBED_DATA_SUCCESS = 'MediaItemLibrary/GET_EMBED_DATA_SUCCESS';
