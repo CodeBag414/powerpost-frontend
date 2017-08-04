@@ -9,8 +9,9 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import filepicker from 'filepicker-js';
 import { createStructuredSelector } from 'reselect';
-import { browserHistory } from 'react-router';
+import { routerActions } from 'react-router-redux';
 import DropdownMenu from 'react-dd-menu';
+import ReactSummernote from 'react-summernote';
 
 import {
   createPostSetRequest,
@@ -166,8 +167,10 @@ class Library extends React.Component {
     // If Blog post is created or updated successfully, then the modal view for blog editor will be hidden
 
     if (this.props.isProcessing !== nextProps.isProcessing) {
-      if (!nextProps.isProcessing && !nextProps.location.hash.startsWith('#postset')) {
-        browserHistory.push(this.props.location.pathname);
+      if(!nextProps.isProcessing && nextProps.location.hash.startsWith('#blog-editor')) {
+        // do nothing
+      } else if (!nextProps.isProcessing && !nextProps.location.hash.startsWith('#postset')) {
+        this.props.pushToRoute(this.props.location.pathname);
       }
     }
   }
@@ -179,13 +182,13 @@ class Library extends React.Component {
   openAddBlog() {
     const { pathname } = this.props.location;
     this.setState({ blogItem: null });
-    browserHistory.push(`${pathname}#blog-editor`);
+    this.props.pushToRoute(`${pathname}#blog-editor`);
   }
 
   openBlogEditor = (mediaItem) => {
     const { pathname } = this.props.location;
     this.setState({ blogItem: mediaItem });
-    browserHistory.push(`${pathname}#blog-editor`);
+    this.props.pushToRoute(`${pathname}#blog-editor`);
   }
 
   openLinkEditor(linkItem) {
@@ -216,10 +219,15 @@ class Library extends React.Component {
 
   openAddFile() {
     filepicker.setKey(this.props.filePickerKey);
-
+    const hash = this.props.location.hash;
+    let mimetypes;
+    if (hash === '#blog-editor') {
+      mimetypes = { mimetypes: ['image/*', 'video/*'] }
+    }
     const filePickerOptions = {
       buttonText: 'Upload',
       container: 'modal',
+      ...mimetypes,
       multiple: false,
       maxFiles: 1,
       imageQuality: 80,
@@ -235,6 +243,10 @@ class Library extends React.Component {
     }
 
     filepicker.pickAndStore(filePickerOptions, filePickerStoreOptions, this.handleOpenAddFile, onFail);
+  }
+
+  openEmbedLink() {
+
   }
 
   closeAllDialog() {
@@ -279,6 +291,14 @@ class Library extends React.Component {
       this.props.updateMediaItem(item);
     } else if (action === 'create') {
       this.props.createMediaItem(item);
+    }
+    const hash = this.props.location.hash
+    if (hash === '#blog-editor') {
+      const video = document.createElement('video');
+      video.src = item.properties.url;
+      video.controls = true;
+      video.style.cssText = 'width:100%;height:auto;';
+      ReactSummernote.insertNode(video);
     }
   }
 
@@ -375,6 +395,12 @@ class Library extends React.Component {
     } else if (action === 'create') {
       this.props.createMediaItem(rest);
     }
+    const hash = this.props.location.hash
+    if (hash === '#blog-editor') {
+      const img = document.createElement('img');
+      img.src = imageItem.properties.url;
+      ReactSummernote.insertNode(img);
+    }
   }
 
   handleAddLinkValue = (event) => {
@@ -390,10 +416,14 @@ class Library extends React.Component {
       this.setState({ addLinkValueError: 'A link URL is required' });
       return;
     }
-
-    this.setState({ addLinkValue: '', linkDialog: false, searchDialog: false, rssFeedDialog: false, linkEditorDialog: true });
-
-    this.props.fetchUrlData(this.state.addLinkValue);
+    const hash = this.props.location.hash;
+    if (hash === '#blog-editor') {
+      this.setState({ addLinkValue: '', linkDialog: false });
+      this.props.fetchEmbedData(this.state.addLinkValue);
+    } else {
+      this.setState({ addLinkValue: '', linkDialog: false, searchDialog: false, rssFeedDialog: false, linkEditorDialog: true });
+      this.props.fetchUrlData(this.state.addLinkValue);
+    }
   }
 
   handleOpenAddFile(mediaItem) {
@@ -510,7 +540,7 @@ class Library extends React.Component {
         </ContentWrapper>
         <LinkEditor actions={actions} permissionClasses={permissionClasses} closeAllDialog={this.closeAllDialog} handleLinkEditorSave={this.handleLinkEditorSave} mediaLibraryContext linkEditorDialog={this.state.linkEditorDialog} urlContent={this.props.urlContent} filePickerKey={this.props.filePickerKey} linkItem={this.state.linkItem} />
         <ImageEditor actions={actions} permissionClasses={permissionClasses} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleImageEditorSave} isOpen={this.state.imageEditorDialog} filePickerKey={this.props.filePickerKey} imageItem={this.state.imageItem} />
-        <LinkDialog actions={actions} permissionClasses={permissionClasses} setProcessing={this.props.setProcessing}closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue} handleSubmit={this.handleAddLinkSubmit} value={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
+        <LinkDialog actions={actions} permissionClasses={permissionClasses} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue} handleSubmit={this.handleAddLinkSubmit} value={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
         <VideoEditor actions={actions} permissionClasses={permissionClasses} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleVideoEditorSave} isOpen={this.state.videoEditorDialog} filePickerKey={this.props.filePickerKey} videoItem={this.state.videoItem} />
         <FileEditor actions={actions} permissionClasses={permissionClasses} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave} isOpen={this.state.fileEditorDialog} filePickerKey={this.props.filePickerKey} fileItem={this.state.fileItem} />
         <div className="post-editor">
@@ -520,6 +550,11 @@ class Library extends React.Component {
             onCreate={this.createBlogPost}
             onUpdate={this.updateBlogPost}
             selectedItem={this.state.blogItem}
+            filePickerKey={this.props.filePickerKey}
+            openAddFile={this.openAddFile}
+            openAddLink={this.openAddLink}
+            openBlogEditor={this.openBlogEditor}
+            handleAddLinkValueFromDialog={this.handleAddLinkValueFromDialog}
           /> : null }
         </div>
       </Wrapper>
@@ -548,6 +583,7 @@ export function mapDispatchToProps(dispatch) {
     createBlogItem: (payload) => dispatch(createBlogItemRequest(payload)),
     setProcessing: (processing) => dispatch(setProcessing(processing)),
     setIsFetching: (isFetching) => dispatch(setIsFetching(isFetching)),
+    pushToRoute: (route) => dispatch(routerActions.push(route)),
   };
 }
 

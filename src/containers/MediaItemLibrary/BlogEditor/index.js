@@ -123,6 +123,10 @@ class BlogEditor extends Component {
     filepicker.pick(filePickerOptions, this.handleFilePickerSuccess, onFail);
   }
 
+  addImage = () => {
+    const img = document.createElement('img');
+    ReactSummernote.insertNode(img);
+  }
   render() {
     const { user, selectedItem } = this.props;
     const { titleValue, descriptionValue, selectedImage, creationTime, content } = this.state;
@@ -134,7 +138,21 @@ class BlogEditor extends Component {
           creationTime={creationTime || ''}
           user={user}
           onBack={this.onBack}
+          handleInputChange={this.handleInputChange}
         />
+        <div style={{ padding: '10px' }} >
+          <Button
+            primary
+            label="Add Image/Video"
+            onClick={this.props.openAddFile}
+            style={{ marginLeft: '15px', marginRight: '15px' }}
+          />
+          <Button
+            primary
+            label="Embed Link"
+            onClick={this.props.openAddLink}
+          />
+        </div>
         <div className="content-wrapper">
           <div className="main">
             <ReactSummernote
@@ -168,13 +186,6 @@ class BlogEditor extends Component {
                 style={{ float: 'left', marginTop: '30px', marginLeft: '10px' }}
               />
             </div>
-            <PPTextField
-              type="text"
-              name="title"
-              floatingLabelText="Title"
-              value={titleValue || ''}
-              onChange={(e) => this.handleInputChange('titleValue', e.target.value)}
-            />
             <TextArea
               floatingLabelText="Description"
               rows={5}
