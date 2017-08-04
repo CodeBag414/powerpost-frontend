@@ -69,7 +69,7 @@ import ExpandCollapseButton from './Sidebar/ExpandCollapseButton';
 import Comments from './Comments';
 
 import Content from './Content';
-import Channels from './Channels';
+import Schedule from './Schedule';
 import TabWrapper from './TabWrapper';
 
 class PostEditor extends Component {
@@ -280,7 +280,7 @@ class PostEditor extends Component {
 
     const tabs = [
       { name: 'Content', component: <Content postSet={postSet} permissionClasses={permissionClasses} accountId={this.props.accountId} id={this.props.id} location={this.props.location} params={this.props.params} availableFBChannel={this.availableFBChannel} /> },
-      { name: 'Schedule', component: <Channels postSet={postSet} permissionClasses={permissionClasses} posts={posts} updatePost={updatePost} availableFBChannel={this.availableFBChannel} />, count: totalTimeslots },
+      { name: 'Schedule', component: <Schedule postSet={postSet} permissionClasses={permissionClasses} posts={posts} updatePost={updatePost} availableFBChannel={this.availableFBChannel} />, count: totalTimeslots },
     ];
 
     const generalInfo = (

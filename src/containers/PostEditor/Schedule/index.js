@@ -17,7 +17,7 @@ import AddChannelSlotDialog from './AddChannelSlotDialog';
 import Wrapper from './Wrapper';
 import PostDetails from './PostDetails';
 
-class Channels extends Component {
+class Schedule extends Component {
   static propTypes = {
     connections: PropTypes.array,
     postSet: ImmutablePropTypes.map,
@@ -204,4 +204,4 @@ const mapStateToProps = createStructuredSelector({
   newMediaItem: selectNewMediaItem(),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Channels);
+export default connect(mapStateToProps, mapDispatchToProps)(Schedule);
