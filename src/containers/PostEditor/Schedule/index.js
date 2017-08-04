@@ -18,7 +18,6 @@ import Wrapper from './Wrapper';
 import PostDetails from './PostDetails';
 
 class Channels extends Component {
-
   static propTypes = {
     connections: PropTypes.array,
     postSet: ImmutablePropTypes.map,
