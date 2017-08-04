@@ -44,6 +44,7 @@ import {
   REPLICATE_POST_SET_FAILURE,
   CREATE_BLOG_ITEM_SUCCESS,
   CLEAR_RSS_ITEMS,
+  GET_EMBED_DATA_SUCCESS,
 } from './constants';
 
 // The initial application state
@@ -59,6 +60,7 @@ const initialState = fromJS({
   searchFilter: null,
   sort: 'newest',
   urlContent: {},
+  embedData: {},
   filter: SHOW_ALL,
   collections: [{}],
   activeCollection: {
@@ -117,7 +119,11 @@ function mediaLibraryReducer(state = initialState, action) {
         .set('urlContent', action.urlData);
     case CLEAR_URL_CONTENT:
       return state
-        .set('urlContent', {});
+        .set('urlContent', {})
+        .set('embedData', {});
+    case GET_EMBED_DATA_SUCCESS:
+      return state
+        .set('embedData', action.embedData);ß
     case SEARCH_BING_SUCCESS:
       return state
         .set('searchResults', action.webResults);

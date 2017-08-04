@@ -30,8 +30,8 @@ import {
   FETCH_MEDIA_ITEMS_SUCCESS,
   FETCH_URL_CONTENT,
   FETCH_URL_CONTENT_SUCCESS,
-  GET_EMBED_CONTENT,
-  GET_EMBED_CONTENT_SUCCESS,
+  GET_EMBED_DATA,
+  GET_EMBED_DATA_SUCCESS,
   MEDIA_ERROR,
   VIDEO_PROCESSING,
   SET_PROCESSING_ITEM,
@@ -138,8 +138,8 @@ export function* getEmbed(action) {
   const result = yield call(getData, `/media_api/url_content?${params}`);
   console.log(result);
   if (result.data.result === 'success') {
-    const embedData = result.data.content;
-    yield put({ type: GET_EMBED_CONTENT_SUCCESS, embedData });
+    const embedData = result.data.url_data[0];
+    yield put({ type: GET_EMBED_DATA_SUCCESS, embedData });
   } else {
     yield put({ type: MEDIA_ERROR, error: 'Error getting embed content' });
   }
@@ -309,7 +309,7 @@ export function* showError(action) {
 }
 
 export function* getEmbedData() {
-  const watcher = yield takeLatest(GET_EMBED_CONTENT, getEmbed);
+  const watcher = yield takeLatest(GET_EMBED_DATA, getEmbed);
 
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
