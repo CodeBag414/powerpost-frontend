@@ -13,8 +13,8 @@ import VideoEditor from 'containers/MediaItemLibrary/VideoEditor';
 import LinkDialog from 'containers/MediaItemLibrary/LinkDialog';
 import ImageEditor from 'containers/MediaItemLibrary/ImageEditor';
 
-import { getMediaTypeAndItem } from 'containers/PostEditor/Channels/PostDetails';
-import PostPreview from 'containers/PostEditor/Channels/PostDetails/PostPreview';
+import { getMediaTypeAndItem } from 'containers/PostEditor/Schedule/PostDetails';
+import PostPreview from 'containers/PostEditor/Schedule/PostDetails/PostPreview';
 
 import {
   setProcessing,
