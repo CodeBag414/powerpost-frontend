@@ -210,11 +210,11 @@ function buildPostPreview(postData, postMessage, postTime, connection, type, med
   }
 }
 
-function PostPreview({ post, postMessage, postTime, connection, type, mediaItem, postSetId, marginBottom }) {
+function PostPreview({ post, postMessage, postTime, connection, type, mediaItem, postSetId, marginBottom, title }) {
   return (
     <Wrapper marginBottom={marginBottom}>
       <div className="section-title post-preview-title">
-        Preview Post
+        {title}
       </div>
       <div className="post-preview">
         {connection && buildPostPreview(post, postMessage, postTime, connection, type, mediaItem, postSetId)}
@@ -266,6 +266,11 @@ PostPreview.propTypes = {
   postSetId: ImmutablePropTypes.map,
   postTime: PropTypes.string,
   type: PropTypes.string,
+  title: PropTypes.string,
+};
+
+PostPreview.defaultProps = {
+  title: 'Preview Post',
 };
 
 export default PostPreview;

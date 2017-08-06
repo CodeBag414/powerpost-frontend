@@ -11,11 +11,14 @@ import {
 
 import { selectNewMediaItem } from 'containers/PostEditor/selectors';
 
+import { getMediaTypeAndItem } from 'utils/media';
+
+import PostPreview from 'containers/PostEditor/PostPreview';
+
 import NoContent from './NoContent';
 import ChannelSlots from './ChannelSlots';
 import AddChannelSlotDialog from './AddChannelSlotDialog';
 import Wrapper from './Wrapper';
-import PostDetails from './PostDetails';
 
 class Schedule extends Component {
   static propTypes = {
@@ -133,57 +136,54 @@ class Schedule extends Component {
     )[0];
     const isBunchPosting = postSet.get('bunch_post_fetching');
     const currentMediaItems = (newMediaItem.type) ? [newMediaItem] : postSet.getIn(['details', 'media_items']).toJS();
+
+    const { type, mediaItem } = getMediaTypeAndItem(newMediaItem, postSet);
+    const postSetId = postSet.getIn(['details', 'post_set_id']);
+
     return (
       <Wrapper>
         <div className="left">
-          <div className={`title ${permissionClasses.postScheduleButton}`}>Where to Post?</div>
-          <PPButton
-            label={
-              <div>
-                <span className="button-plus">+</span>
-                <span className="button-title">Schedule</span>
-              </div>
-            }
-            className={`add-button ${permissionClasses.postScheduleButton}`}
-            onClick={this.handleDialogToggle}
-            primary
-          />
-          <div className="content">
-            {hasContent ?
-              <ChannelSlots
-                posts={posts}
-                connections={connections}
-                handleClickTimestamp={this.handleClickTimestamp}
-                handleRemoveSlot={this.handleRemoveSlot}
-                currentPost={this.state.currentPost}
-                permissionClasses={permissionClasses}
-              />
-            : <NoContent />
-            }
-          </div>
-        </div>
-
-        { hasContent && currentPost ?
-          <div className="right">
-            <PostDetails
-              post={currentPost}
-              postSet={postSet}
-              postMessage={postMessage}
-              postTime={postTime}
-              connection={connection}
-              handleMessageChange={this.handleMessageChange}
-              handleMessageBlur={this.handleMessageBlur}
-              handleRemoveSlot={this.handleRemoveSlot}
-              handleDateChange={this.handleDateChange}
-              newMediaItem={newMediaItem.toJS()}
-              permissionClasses={permissionClasses}
-              availableFBChannel={availableFBChannel}
+          <div className="schedule-button-row">
+            <div className={`title ${permissionClasses.postScheduleButton}`}>Where to Post?</div>
+            <PPButton
+              label={
+                <div>
+                  <span className="button-plus">+</span>
+                  <span className="button-title">Schedule</span>
+                </div>
+              }
+              className={`add-button ${permissionClasses.postScheduleButton}`}
+              onClick={this.handleDialogToggle}
+              primary
             />
           </div>
-        :
-          null
-        }
-
+          {hasContent ?
+            <ChannelSlots
+              posts={posts}
+              connections={connections}
+              handleClickTimestamp={this.handleClickTimestamp}
+              handleRemoveSlot={this.handleRemoveSlot}
+              currentPost={this.state.currentPost}
+              permissionClasses={permissionClasses}
+            />
+            : <NoContent />
+          }
+        </div>
+        <div className="right">
+          {(!!hasContent && currentPost) &&
+            <PostPreview
+              mediaItem={mediaItem}
+              post={currentPost}
+              postMessage={postMessage}
+              postSetId={postSetId}
+              postTime={postTime}
+              connection={connection}
+              postSet={postSet}
+              type={type}
+              title="Preview"
+            />
+          }
+        </div>
         <AddChannelSlotDialog
           active={isDialogShown}
           handleDialogToggle={this.handleDialogToggle}

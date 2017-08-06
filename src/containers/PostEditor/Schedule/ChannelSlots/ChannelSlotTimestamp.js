@@ -4,12 +4,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import moment from 'moment';
+import classnames from 'classnames';
 
 import PPButton from 'elements/atm.Button';
 
 function ChannelSlotTimestamp({ post, currentPost, handleClickTimestamp, handleRemoveSlot, permissionClasses }) {
   return (
-    <div className="slot-timestamp">
+    <div className={classnames('slot-timestamp', { active: currentPost === post })}>
+
       <PPButton className={currentPost === post && 'active'} onClick={() => handleClickTimestamp(post)}>
         {
           post.get('status') !== '5' && post.get('schedule_time')

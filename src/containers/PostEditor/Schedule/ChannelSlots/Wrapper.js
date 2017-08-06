@@ -1,19 +1,23 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  width: 280px;
+  margin-left: -40px;
+
   .channel-slot {
-    margin-bottom: 18px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #DBDFE0;
   }
 
   .slot-header {
+    background-color: #F9FAFA;
+    border-top: 1px solid #CFD8DC;
+    padding-bottom: 10px;
+    padding-left: 40px;
+    padding-top: 10px;
+
     i {
-      font-size: 32px;
+      font-size: 24px;
       border-radius: 2px;
       vertical-align: middle;
-      margin-right: 18px;
+      margin-right: 14px;
     }
     .facebook-icon-color {
       color: #4867AA;
@@ -35,9 +39,9 @@ const Wrapper = styled.div`
     }
 
     span {
-      color: #888888;
+      color: #616669;
       font-family: Lato;
-      font-size: 15px;
+      font-size: 14px;
       line-height: 17px;
       vertical-align: middle;
     }
@@ -45,7 +49,20 @@ const Wrapper = styled.div`
 
   .slot-timestamp {
     position: relative;
-    text-align: right;
+    border-top: 1px solid #DBDFE0;
+
+    &:hover {
+      background-color: #F4F9FD;
+    }
+
+    &.active {
+      background-color: #F4F9FD;
+      border-bottom: 1px solid #67C5E6;
+      border-top: 1px solid #67C5E6;
+      margin-bottom: -1px;
+      z-index: 1;
+    }
+
     button {
       width: 238px;
       height: 32px;
