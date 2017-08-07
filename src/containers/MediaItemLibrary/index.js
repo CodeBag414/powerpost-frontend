@@ -294,6 +294,14 @@ class Library extends React.Component {
     } else if (action === 'create') {
       this.props.createMediaItem(item);
     }
+    const hash = this.props.location.hash
+    if (hash === '#blog-editor') {
+      const video = document.createElement('video');
+      video.src = item.properties.url;
+      video.controls = true;
+      video.style.cssText = 'width:100%;height:auto;';
+      ReactSummernote.insertNode(video);
+    }
   }
 
   handleFileEditorSave = (item) => {
