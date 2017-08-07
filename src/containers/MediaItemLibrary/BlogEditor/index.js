@@ -57,6 +57,22 @@ class BlogEditor extends Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if(this.props.embedData.url !== nextProps.embedData.url) {
+      this.injectEmbed(nextProps.embedData);
+    }
+  }
+
+  injectEmbed = (embedData) => {
+    const iframe = document.createElement('iframe');
+    const container = document.createElement('div');
+    container.style.cssText = 'position:relative;width:100%;height:0;padding-bottom: 51%;';
+    iframe.src = embedData.iframe_src;
+    iframe.style.cssText = 'position:absolute;width:100%;height:100%;left:0;top:0;';
+    container.appendChild(iframe);
+    ReactSummernote.insertNode(container);
+  }
+
   onBack = () => {
     browserHistory.push(this.props.location.pathname);
   }
@@ -123,6 +139,10 @@ class BlogEditor extends Component {
     filepicker.pick(filePickerOptions, this.handleFilePickerSuccess, onFail);
   }
 
+  addImage = () => {
+    const img = document.createElement('img');
+    ReactSummernote.insertNode(img);
+  }
   render() {
     const { user, selectedItem } = this.props;
     const { titleValue, descriptionValue, selectedImage, creationTime, content } = this.state;
@@ -134,7 +154,21 @@ class BlogEditor extends Component {
           creationTime={creationTime || ''}
           user={user}
           onBack={this.onBack}
+          handleInputChange={this.handleInputChange}
         />
+        <div style={{ padding: '10px' }} >
+          <Button
+            primary
+            label="Add Image"
+            onClick={this.props.openAddFile}
+            style={{ marginLeft: '15px', marginRight: '15px' }}
+          />
+          <Button
+            primary
+            label="Embed Link"
+            onClick={this.props.openAddLink}
+          />
+        </div>
         <div className="content-wrapper">
           <div className="main">
             <ReactSummernote
@@ -146,7 +180,7 @@ class BlogEditor extends Component {
                   ['fontname', ['fontname', 'fontsize', 'color']],
                   ['font', ['bold', 'italic', 'underline']],
                   ['para', ['ul', 'ol', 'paragraph']],
-                  ['insert', ['link', 'picture', 'video']],
+                  ['insert', ['link']],
                   ['view', ['fullscreen', 'codeview']],
                 ],
                 fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Merriweather'],
@@ -168,13 +202,6 @@ class BlogEditor extends Component {
                 style={{ float: 'left', marginTop: '30px', marginLeft: '10px' }}
               />
             </div>
-            <PPTextField
-              type="text"
-              name="title"
-              floatingLabelText="Title"
-              value={titleValue || ''}
-              onChange={(e) => this.handleInputChange('titleValue', e.target.value)}
-            />
             <TextArea
               floatingLabelText="Description"
               rows={5}

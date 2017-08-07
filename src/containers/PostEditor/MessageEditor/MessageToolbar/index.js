@@ -14,7 +14,7 @@ function MessageToolbar({ characterLimit, openFilePicker, openLinkDialog, openMe
     <Wrapper currentChannel={currentChannel} className={permissionClasses.addContentControl}>
       {currentChannel === -1 ?
         <div>
-          <TooltipToolbarButton tooltip="Open Content Library" tooltipDelay={200} width={30} marginLeft={12} onClick={openMediaLibrary}><i className="fa fa-folder-o" /></TooltipToolbarButton>
+          <TooltipToolbarButton tooltip="Add Item from Content Hub" tooltipDelay={200} width={30} marginLeft={12} onClick={openMediaLibrary}><i className="fa fa-folder-o" /></TooltipToolbarButton>
           <TooltipToolbarButton tooltip="Upload Content" tooltipDelay={200} width={30} marginLeft={12} onClick={openFilePicker}><i className="fa fa-upload" /></TooltipToolbarButton>
           <TooltipToolbarButton tooltip="Insert Link" tooltipDelay={200} width={30} marginRight={12} marginLeft={12} onClick={openLinkDialog}><i className="fa fa-link" /></TooltipToolbarButton>
           <Divider />

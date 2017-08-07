@@ -30,6 +30,8 @@ import {
   FETCH_MEDIA_ITEMS_SUCCESS,
   FETCH_URL_CONTENT,
   FETCH_URL_CONTENT_SUCCESS,
+  GET_EMBED_DATA,
+  GET_EMBED_DATA_SUCCESS,
   MEDIA_ERROR,
   VIDEO_PROCESSING,
   SET_PROCESSING_ITEM,
@@ -121,6 +123,25 @@ export function* getLinkData(action) {
     yield put({ type: FETCH_URL_CONTENT_SUCCESS, urlData });
   } else {
     yield put({ type: MEDIA_ERROR, error: 'Error getting url content' });
+  }
+}
+
+export function* getEmbed(action) {
+  const data = {
+    payload: {
+      url: action.url,
+    }
+  };
+
+  const params = serialize(data);
+
+  const result = yield call(getData, `/media_api/url_content?${params}`);
+  console.log(result);
+  if (result.data.result === 'success') {
+    const embedData = result.data.url_data[0];
+    yield put({ type: GET_EMBED_DATA_SUCCESS, embedData });
+  } else {
+    yield put({ type: MEDIA_ERROR, error: 'Error getting embed content' });
   }
 }
 
@@ -286,6 +307,14 @@ export function* pollData(action) {
 export function* showError(action) {
   toastr.error('Error!', action.error);
 }
+
+export function* getEmbedData() {
+  const watcher = yield takeLatest(GET_EMBED_DATA, getEmbed);
+
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
 export function* linkData() {
   const watcher = yield takeLatest(FETCH_URL_CONTENT, getLinkData);
 
@@ -469,6 +498,7 @@ export function* mediaItemSaga() {
   const watcherM = yield fork(inviteEmailToStreamSaga);
   const watcherN = yield fork(replicatePostSetSaga);
   const watcherO = yield fork(createBlogItemWatcher);
+  const watcherP = yield fork(getEmbedData);
 
   yield take(LOCATION_CHANGE);
   yield cancel(watcherB);
@@ -485,6 +515,7 @@ export function* mediaItemSaga() {
   yield cancel(watcherM);
   yield cancel(watcherN);
   yield cancel(watcherO);
+  yield cancel(watcherP);
 }
 
 export default [
