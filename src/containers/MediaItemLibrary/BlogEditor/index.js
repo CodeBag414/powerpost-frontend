@@ -130,7 +130,7 @@ class BlogEditor extends Component {
       maxFiles: 1,
       imageQuality: 80,
       imageMax: [1200, 1200],
-      services: ['CONVERT', 'COMPUTER', 'GOOGLE_DRIVE', 'DROPBOX', 'BOX', 'IMAGE_SEARCH'],
+      services: ['CONVERT', 'COMPUTER', 'GOOGLE_DRIVE', 'DROPBOX', 'BOX', 'IMAGE_SEARCH', 'FACEBOOK', 'INSTAGRAM'],
       conversions: ['crop', 'filter'],
     };
     function onFail(error) {
