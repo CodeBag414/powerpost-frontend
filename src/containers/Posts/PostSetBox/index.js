@@ -14,12 +14,12 @@ import StatusSelector from './StatusSelector';
 
 const sortByOptions = [
   {
-    value: 'creation_time',
-    label: 'Creation Time',
-  },
-  {
     value: 'schedule_time',
     label: 'Schedule Time',
+  },
+  {
+    value: 'creation_time',
+    label: 'Creation Time',
   },
 ];
 

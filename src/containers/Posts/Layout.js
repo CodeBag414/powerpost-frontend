@@ -36,7 +36,7 @@ class PostsLayout extends Component {
   }
 
   componentWillMount() {
-    this.props.fetchPostSets();
+    this.props.fetchPostSetsByST();
   }
 
   componentWillReceiveProps(nextProps) {
