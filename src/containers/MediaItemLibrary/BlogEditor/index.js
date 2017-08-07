@@ -159,7 +159,7 @@ class BlogEditor extends Component {
         <div style={{ padding: '10px' }} >
           <Button
             primary
-            label="Add Image/Video"
+            label="Add Image"
             onClick={this.props.openAddFile}
             style={{ marginLeft: '15px', marginRight: '15px' }}
           />
@@ -180,7 +180,7 @@ class BlogEditor extends Component {
                   ['fontname', ['fontname', 'fontsize', 'color']],
                   ['font', ['bold', 'italic', 'underline']],
                   ['para', ['ul', 'ol', 'paragraph']],
-                  ['insert', ['link', 'picture', 'video']],
+                  ['insert', ['link']],
                   ['view', ['fullscreen', 'codeview']],
                 ],
                 fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Merriweather'],

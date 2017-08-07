@@ -224,7 +224,7 @@ class Library extends React.Component {
     const hash = this.props.location.hash;
     let mimetypes;
     if (hash === '#blog-editor') {
-      mimetypes = { mimetypes: ['image/*', 'video/*'] }
+      mimetypes = { mimetype: 'image/*' }
     }
     const filePickerOptions = {
       buttonText: 'Upload',
@@ -293,14 +293,6 @@ class Library extends React.Component {
       this.props.updateMediaItem(item);
     } else if (action === 'create') {
       this.props.createMediaItem(item);
-    }
-    const hash = this.props.location.hash
-    if (hash === '#blog-editor') {
-      const video = document.createElement('video');
-      video.src = item.properties.url;
-      video.controls = true;
-      video.style.cssText = 'width:100%;height:auto;';
-      ReactSummernote.insertNode(video);
     }
   }
 
@@ -397,10 +389,10 @@ class Library extends React.Component {
     } else if (action === 'create') {
       this.props.createMediaItem(rest);
     }
-    const hash = this.props.location.hash
+    const hash = this.props.location.hash;
     if (hash === '#blog-editor') {
       const img = document.createElement('img');
-      img.src = imageItem.properties.url;
+      img.src = `https://s3.amazonaws.com/powerpost/${imageItem.properties.key}`;
       ReactSummernote.insertNode(img);
     }
   }
