@@ -86,7 +86,10 @@ const BrandItem = (props) => {
         </PPTooltipRouter>
       </div>
       { brand.subaccounts && brand.subaccounts.length > 0 && <p style={{ marginLeft: '40px', fontWeight: '700' }}>Sub-Brands</p> }
-      { brand.subaccounts && brand.subaccounts.length > 0 && brand.subaccounts.map((subbrand, i) => <SubBrandItem brand={subbrand} key={i} role={role} />)}
+      { brand.subaccounts && brand.subaccounts.length > 0 &&
+        brand.subaccounts
+        .sort((a, b) => a.title.toUpperCase() >= b.title.toUpperCase())
+        .map((subbrand, i) => <SubBrandItem brand={subbrand} key={i} role={role} />)}
     </Wrapper>
   );
 };

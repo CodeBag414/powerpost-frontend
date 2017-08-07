@@ -42,7 +42,7 @@ class ResetPassword extends Component {
 
       this.props.resetPassword({
         ...user,
-        password: this.state.password.value,
+        password: this.state.password,
         apiKey: query.api_key,
       });
       this.setState(initialState);

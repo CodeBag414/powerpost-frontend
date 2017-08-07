@@ -48,7 +48,7 @@ const Dashboard = (props) => {
         <div className="col-md-12">
           <Header>
             { userInfo && userInfo.display_name
-              ? `Hello there ${userInfo.display_name}!`
+              ? `Hello there, ${userInfo.display_name}!`
               : ''
             }
             {/*
@@ -72,7 +72,10 @@ const Dashboard = (props) => {
                     ? <BrandItem brand={userOwnAccount} key={'ownaccount'} />
                     : null
                   }
-                  { brands.length > 0 && brands.map((brand, index) => <BrandItem brand={brand} key={index} />) }
+                  { brands.length > 0 &&
+                    brands
+                    .sort((a, b) => a.title.toUpperCase() >= b.title.toUpperCase())
+                    .map((brand, index) => <BrandItem brand={brand} key={index} />) }
                 </div>
               </div>
             </Pane>
