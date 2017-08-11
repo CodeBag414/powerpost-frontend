@@ -143,7 +143,7 @@ export class WordpressSettings extends Component {
       }
     }
 
-    if (this.props.newMediaItem !== nextProps.newMediaItem) {
+   if (this.props.newMediaItem !== nextProps.newMediaItem && nextProps.newMediaItem.get('type') !== 'blog') {
       const { newMediaItem } = nextProps;
       const featuredImageId = newMediaItem.get('media_item_id');
       this.setState({
@@ -324,7 +324,6 @@ export class WordpressSettings extends Component {
               account_id: accountId,
             },
           };
-          // console.log(mediaItem);
           this.openImageEditor(imageItem);
         });
     }

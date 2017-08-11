@@ -35,11 +35,6 @@ import {
   makeSelectCurrentAccount,
 } from 'containers/Main/selectors';
 
-import {
-  setIsFetching,
-  getEmbedData,
-} from './actions';
-
 import Wrapper from './Wrapper';
 import BlogEditor from './BlogEditor';
 import LinkDialog from './LinkDialog';
@@ -66,6 +61,8 @@ import {
   setSortOrder,
   setActiveMediaItemId,
   createBlogItemRequest,
+  setIsFetching,
+  getEmbedData,
 } from './actions';
 
 import {
@@ -234,7 +231,7 @@ class Library extends React.Component {
       maxFiles: 1,
       imageQuality: 80,
       imageMax: [1200, 1200],
-      services: ['CONVERT', 'COMPUTER', 'GOOGLE_DRIVE', 'DROPBOX', 'BOX', 'IMAGE_SEARCH'],
+      services: ['CONVERT', 'COMPUTER', 'GOOGLE_DRIVE', 'DROPBOX', 'BOX', 'IMAGE_SEARCH', 'FACEBOOK', 'INSTAGRAM'],
       conversions: ['crop', 'filter'],
     };
     const filePickerStoreOptions = {
@@ -557,6 +554,8 @@ class Library extends React.Component {
             openAddLink={this.openAddLink}
             openBlogEditor={this.openBlogEditor}
             embedData={this.props.embedData}
+            getEmbedData={this.props.getEmbedData}
+            goBack={this.props.goBack}
             handleAddLinkValueFromDialog={this.handleAddLinkValueFromDialog}
           /> : null }
         </div>
@@ -588,6 +587,7 @@ export function mapDispatchToProps(dispatch) {
     setIsFetching: (isFetching) => dispatch(setIsFetching(isFetching)),
     getEmbedData: (url) => dispatch(getEmbedData(url)),
     pushToRoute: (route) => dispatch(routerActions.push(route)),
+    goBack: () => dispatch(routerActions.goBack()),
   };
 }
 

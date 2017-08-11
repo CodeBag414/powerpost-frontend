@@ -23,13 +23,14 @@ class Sidebar extends React.Component {
       permissionClasses, location, isMenuCollapsed, activeBrand,
       createPostSet, handleMenuToggle,
     } = this.props;
+
     const menuItems = [
       { caption: 'Dashboard', className: '', icon: 'home', subPath: '' },
       { caption: 'Brands', className: 'brands', icon: 'th-large', subPath: 'brands' },
       { caption: 'Content Hub', className: 'contentHub', icon: 'folder', subPath: 'library' },
-      { caption: 'Status Boards', className: 'statusBoards', icon: 'columns', subPath: 'boards' },
-      { caption: 'Calendar', className: 'calendar', icon: 'calendar', subPath: 'calendar' },
       { caption: 'Posts', className: 'posts', icon: 'send', subPath: 'posts' },
+      { caption: 'Calendar', className: 'calendar', icon: 'calendar', subPath: 'calendar' },
+      { caption: 'Status Boards', className: 'statusBoards', icon: 'columns', subPath: 'boards' },
       { caption: 'Shared Streams', className: 'sharedStreams', icon: 'list-alt', subPath: 'shared_streams', parentActive: true },
       { caption: 'Social Feeds', className: 'socialFeeds', icon: 'list-ul', subPath: 'social_feeds' },
       { caption: 'Analytics', className: 'analytics', icon: 'bar-chart', subPath: 'statistics' },

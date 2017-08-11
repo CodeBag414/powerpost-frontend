@@ -14,6 +14,11 @@ const makeSelectComments = () => createSelector(
   (postSetEditor) => postSetEditor.get('comments'),
 );
 
+const makeSelectEmbedData = () => createSelector(
+  selectPostSetEditor,
+  (postSetEditor) => postSetEditor.get('embedData')
+);
+
 const makeSelectFilter = () => createSelector(
   [selectPostSetEditor],
   (postSetEditor) => postSetEditor.get('filter')
@@ -116,4 +121,5 @@ export {
   selectPost,
   selectNewMediaItem,
   selectFacebookEntities,
+  makeSelectEmbedData,
 };

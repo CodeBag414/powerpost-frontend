@@ -51,6 +51,7 @@ import {
   CLEAR_URL_CONTENT,
   VIDEO_PROCESSING_DONE,
   FETCH_FACEBOOK_ENTITIES_SUCCESS,
+  GET_EMBED_DATA_SUCCESS,
 } from './constants';
 
 const initialState = fromJS({
@@ -70,6 +71,7 @@ const initialState = fromJS({
   },
   mediaItems: [],
   urlContent: {},
+  embedData: {},
   isProcessing: false,
   postSet: {
     isFetching: false,
@@ -106,6 +108,9 @@ function boardReducer(state = initialState, action) {
       return state
         .set('pending', false)
         .updateIn(['comments'], (comments) => comments.push(fromJS(action.comment)));
+    case GET_EMBED_DATA_SUCCESS:
+      return state
+        .set('embedData', action.embedData);
     case FETCH_COMMENTS_REQUEST:
       return state
         .set('pending', true)

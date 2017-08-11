@@ -97,6 +97,7 @@ class MessageEditor extends Component {
       permissionClasses,
       isMentionsInput,
       availableFBChannel,
+      openAddBlog,
     } = this.props;
     const { menuVisible } = this.state;
     return (
@@ -104,6 +105,7 @@ class MessageEditor extends Component {
         <MessageToolbar
           characterLimit={characterLimit}
           openFilePicker={openFilePicker}
+          openAddBlog={openAddBlog}
           pushToLibrary={pushToLibrary}
           accountId={accountId}
           postSetId={postSetId}

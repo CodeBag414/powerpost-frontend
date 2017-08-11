@@ -28,12 +28,44 @@ import {
   CLEAR_MEDIA_ITEM,
   FETCH_FACEBOOK_ENTITIES,
   FETCH_FACEBOOK_ENTITIES_SUCCESS,
+  GET_EMBED_DATA,
+  CREATE_BLOG_ITEM_REQUEST,
+  CREATE_BLOG_ITEM_SUCCESS,
+  CREATE_BLOG_ITEM_FAILURE,
 } from './constants';
+
+export function createBlogItemRequest(payload) {
+  return {
+    type: CREATE_BLOG_ITEM_REQUEST,
+    payload,
+  };
+}
+
+export function createBlogItemSuccess(payload) {
+  return {
+    type: CREATE_BLOG_ITEM_SUCCESS,
+    payload,
+  };
+}
+
+export function createBlogItemFailure(error) {
+  return {
+    type: CREATE_BLOG_ITEM_FAILURE,
+    error,
+  };
+}
 
 export function fetchCollections(accountId) {
   return {
     type: FETCH_COLLECTIONS,
     accountId,
+  };
+}
+
+export function getEmbedData(url) {
+  return {
+    type: GET_EMBED_DATA,
+    url,
   };
 }
 
@@ -77,10 +109,11 @@ export function removeMediaItem() {
   return { type: REMOVE_MEDIA_ITEM };
 }
 
-export function updateMediaItem(mediaItem) {
+export function updateMediaItem(mediaItem, inBlog = false) {
   return {
     type: UPDATE_MEDIA_ITEM,
     mediaItem,
+    inBlog,
   };
 }
 

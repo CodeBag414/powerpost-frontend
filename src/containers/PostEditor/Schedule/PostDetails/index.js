@@ -48,7 +48,6 @@ function PostDetails({
 }) {
   const minDate = new Date();
   minDate.setDate(minDate.getDate() - 1);
-  // console.log('PostDetails postSet', postSet.toJS());
   const { type, mediaItem } = getMediaTypeAndItem(newMediaItem, postSet);
   const postSetId = postSet.getIn(['details', 'post_set_id']);
 

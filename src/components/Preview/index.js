@@ -157,7 +157,7 @@ class Preview extends React.Component {
             <LinkDescription>{item.properties.caption}</LinkDescription>
             <Button onClick={this.toggleBlog}>Toggle Blog</Button>
             <BlogContainer toggled={this.state.toggled}>
-              {renderHTML(htmlDecode(item.properties.html))}
+              {renderHTML(htmlDecode(item.properties.html || ' '))}
             </BlogContainer>
           </div>
         }

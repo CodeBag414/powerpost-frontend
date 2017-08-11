@@ -6,12 +6,14 @@ import { Map, fromJS } from 'immutable';
 import { routerActions } from 'react-router-redux';
 import filepicker from 'filepicker-js';
 import * as linkify from 'linkifyjs';
+import ReactSummernote from 'react-summernote';
 
 import LinkEditor from 'containers/MediaItemLibrary/LinkEditor';
 import FileEditor from 'containers/MediaItemLibrary/FileEditor';
 import VideoEditor from 'containers/MediaItemLibrary/VideoEditor';
 import LinkDialog from 'containers/MediaItemLibrary/LinkDialog';
 import ImageEditor from 'containers/MediaItemLibrary/ImageEditor';
+import BlogEditor from 'containers/MediaItemLibrary/BlogEditor';
 
 import { getMediaTypeAndItem } from 'containers/PostEditor/Schedule/PostDetails';
 import PostPreview from 'containers/PostEditor/Schedule/PostDetails/PostPreview';
@@ -35,6 +37,8 @@ import {
   setMediaItem,
   fetchUrlData,
   clearUrlContent,
+  getEmbedData,
+  createBlogItemRequest,
 } from 'containers/PostEditor/actions';
 
 import {
@@ -43,6 +47,7 @@ import {
   makeSelectUrlContent,
   makeSelectIsProcessing,
   makeSelectFilter,
+  makeSelectEmbedData,
 } from 'containers/PostEditor/selectors';
 
 import PopupBorder from 'components/PopupBorder';
@@ -296,18 +301,38 @@ class Content extends Component {
     setTimeout(() => this.handleMessageBlur(), 5000);
   }
 
+  openAddBlog = () => {
+    this.setState({ blogItem: null });
+    const { pathname } = this.props.location;
+    const { hash } = this.props.location;
+    this.props.pushToRoute(`${pathname}${hash}#blog-editor`);
+  }
+
+  openBlogEditor = (mediaItem) => {
+    const { pathname } = this.props.location;
+    const { hash } = this.props.location;
+
+    this.setState({ blogItem: mediaItem });
+    this.props.pushToRoute(`${pathname}${hash}#blog-editor`);
+  }
+
   openFilePicker = () => {
     const { filePickerKey } = this.props;
     filepicker.setKey(filePickerKey);
-
+    const hash = this.props.location.hash;
+    let mimetypes;
+    if (hash.endsWith('#blog-editor')) {
+      mimetypes = { mimetype: 'image/*' };
+    }
     const filePickerOptions = {
       buttonText: 'Upload',
       container: 'modal',
+      ...mimetypes,
       multiple: false,
       maxFiles: 1,
       imageQuality: 80,
       imageMax: [1200, 1200],
-      services: ['CONVERT', 'COMPUTER', 'GOOGLE_DRIVE', 'DROPBOX', 'BOX', 'IMAGE_SEARCH'],
+      services: ['CONVERT', 'COMPUTER', 'GOOGLE_DRIVE', 'DROPBOX', 'BOX', 'IMAGE_SEARCH', 'FACEBOOK', 'INSTAGRAM'],
       conversions: ['crop', 'filter'],
     };
     const filePickerStoreOptions = {
@@ -328,7 +353,6 @@ class Content extends Component {
     filepicker.setKey(filePickerKey);
     if (item.picture) {
       filepicker.storeUrl(`https://process.filestackapi.com/${filePickerKey}/${item.picture}`, (Blob) => {
-        // console.log(Blob);
         item.picture = Blob.url;
         item.picture_key = Blob.key;
         filepicker.storeUrl(
@@ -368,7 +392,6 @@ class Content extends Component {
               account_id: accountId,
             },
           };
-          // console.log(mediaItem);
           this.openImageEditor(imageItem);
         });
     } else if (mediaItem[0].mimetype.match('video')) {
@@ -379,10 +402,8 @@ class Content extends Component {
           account_id: accountId,
         },
       };
-      // console.log(mediaItem);
       this.openVideoEditor(videoItem);
     } else {
-      // console.log(mediaItem);
       const fileItem = {
         mediaItemType: 'file',
         properties: {
@@ -402,7 +423,6 @@ class Content extends Component {
     filepicker.setKey(filePickerKey);
     if (fileItem.picture) {
       filepicker.storeUrl(`https://process.filestackapi.com/${filePickerKey}/${fileItem.picture}`, (Blob) => {
-        // console.log(Blob);
         fileItem.picture = Blob.url;
         fileItem.picture_key = Blob.key;
         filepicker.storeUrl(
@@ -435,20 +455,19 @@ class Content extends Component {
   }
 
   handleAddLinkSubmit = () => {
-    // console.log('in handle add link submit');
     if (this.state.addLinkValue === '') {
-      // console.log('no link value, abort');
       this.setState({ addLinkValueError: 'A link URL is required' });
       return;
     }
 
-    /* const linkItem = {
-      source: this.state.addLinkValue,
-    }; */
-
-    this.setState({ addLinkValue: '', linkDialog: false, linkEditor: true });
-
-    this.props.fetchUrlData(this.state.addLinkValue);
+    const hash = this.props.location.hash;
+    if (hash.endsWith('#blog-editor')) {
+      this.setState({ addLinkValue: '', linkDialog: false });
+      this.props.getEmbedData(this.state.addLinkValue);
+    } else {
+      this.setState({ addLinkValue: '', linkDialog: false, searchDialog: false, rssFeedDialog: false, linkEditorDialog: true });
+      this.props.fetchUrlData(this.state.addLinkValue);
+    }
   }
 
   handleImageEditorSave = (imageItem) => {
@@ -458,6 +477,12 @@ class Content extends Component {
       this.props.updateMediaItem(rest);
     } else if (action === 'create') {
       this.props.createMediaItem(rest);
+    }
+    const hash = this.props.location.hash;
+    if (hash.endsWith('#blog-editor')) {
+      const img = document.createElement('img');
+      img.src = `https://s3.amazonaws.com/powerpost/${imageItem.properties.key}`;
+      ReactSummernote.insertNode(img);
     }
     setTimeout(() => this.handleMessageBlur(), 3000);
   }
@@ -476,6 +501,8 @@ class Content extends Component {
       this.openVideoEditor(mediaItem);
     } else if (mediaItem.type === 'document') {
       this.openFileEditor(mediaItem);
+    } else if (mediaItem.type === 'blog') {
+      this.openBlogEditor(mediaItem);
     }
   }
 
@@ -526,14 +553,25 @@ class Content extends Component {
     this.setState({ channelIndex });
   }
 
+  createBlogPost = (blogItem) => {
+    this.props.setProcessing(true);
+    this.props.createBlogItem(blogItem);
+  }
+
+  updateBlogPost = (blogItem) => {
+    this.props.setProcessing(true);
+    const inBlog = true;
+    this.props.updateMediaItem(blogItem, inBlog);
+  }
+
   render() {
-    const { pending, pushToLibrary, id, accountId, postSet, permissionClasses, availableFBChannel } = this.props;
+    const { location: { hash }, pending, pushToLibrary, id, accountId, postSet, permissionClasses, availableFBChannel } = this.props;
     const { message, characterLimit, item, messageUrls, channelIndex } = this.state;
     // const { params: { postset_id, account_id } } = this.props;
     const actions = [
       { label: 'close', onClick: this.closeAllDialog },
     ];
-
+    const blogEditor = hash.endsWith('#blog-editor');
     let previewConnection;
     const previewPostTime = new Date().getTime() / 1000;
     const previewPostData = Map();
@@ -575,6 +613,8 @@ class Content extends Component {
               handleMessageBlur={this.handleMessageBlur}
               openFilePicker={this.openFilePicker}
               openEditor={this.openEditor}
+              openAddBlog={this.openAddBlog}
+              updateBlogPost={this.updateBlogPost}
               pushToLibrary={pushToLibrary}
               accountId={accountId}
               postSetId={id}
@@ -610,6 +650,21 @@ class Content extends Component {
         <VideoEditor actions={actions} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleVideoEditorSave} isOpen={this.state.videoEditor} filePickerKey={this.props.filePickerKey} videoItem={this.state.mediaItem} />
         <FileEditor actions={actions} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave} isOpen={this.state.fileEditor} filePickerKey={this.props.filePickerKey} fileItem={this.state.mediaItem} />
         <MediaLibraryDialog actions={actions} filter={this.props.filter} closeAllDialog={this.closeAllDialog} isOpen={this.state.mediaLibrary} mediaItems={this.props.mediaItems} addToPost={this.addToPost} />
+        <div className="post-editor">
+          { blogEditor ? <BlogEditor
+            filePickerKey={this.props.filePickerKey}
+            location={this.props.location}
+            onCreate={this.createBlogPost}
+            onUpdate={this.updateBlogPost}
+            selectedItem={this.state.blogItem}
+            openAddFile={this.openFilePicker}
+            openAddLink={this.openLinkDialog}
+            openBlogEditor={this.openBlogEditor}
+            goBack={this.props.goBack}
+            embedData={this.props.embedData}
+            handleAddLinkValueFromDialog={this.handleAddLinkValueFromDialog}
+          /> : null }
+        </div>
       </Wrapper>
     );
   }
@@ -624,8 +679,12 @@ export function mapDispatchToProps(dispatch) {
     pushToLibrary: (redirectUrl, accountId) => dispatch(routerActions.push({ pathname: `/account/${accountId}/library`, query: { postSet: redirectUrl } })),
     setMediaItem: (mediaItem) => dispatch(setMediaItem(mediaItem)),
     fetchUrlData: (url) => dispatch(fetchUrlData(url)),
+    getEmbedData: (url) => dispatch(getEmbedData(url)),
     clearUrlContent: () => dispatch(clearUrlContent()),
     setProcessing: (processing) => dispatch(setProcessing(processing)),
+    pushToRoute: (route) => dispatch(routerActions.push(route)),
+    createBlogItem: (payload) => dispatch(createBlogItemRequest(payload)),
+    goBack: () => dispatch(routerActions.goBack()),
   };
 }
 
@@ -636,6 +695,7 @@ const mapStateToProps = createStructuredSelector({
   mediaItems: makeSelectVisibleMediaItems(),
   isProcessing: makeSelectIsProcessing(),
   filter: makeSelectFilter(),
+  embedData: makeSelectEmbedData(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Content);

@@ -14,12 +14,16 @@ import Footer from './Footer';
 
 /* For Facebook Mentions in Preview blocks only */
 function getFormattedMessage(message) {
-  const regex = /@\[([^\]]*)]\((\d*)\)/g;
-  const html = linkifyHtml(message)
-    .replace(regex, (match, p1, p2) =>
-      `<a href="https://www.facebook.com/${p2}" target="_blank">${p1}</a>`
-    );
-  return { __html: html };
+  if(message) {
+    const regex = /@\[([^\]]*)]\((\d*)\)/g;
+    const html = linkifyHtml(message)
+      .replace(regex, (match, p1, p2) =>
+        `<a href="https://www.facebook.com/${p2}" target="_blank">${p1}</a>`
+      );
+    return { __html: html };
+  } else {
+    return { __html: '<span></span>' }
+  }
 }
 
 function getFormattedTime(time) {

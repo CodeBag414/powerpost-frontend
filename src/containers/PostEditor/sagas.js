@@ -7,7 +7,12 @@ import { makeSelectUser } from 'containers/App/selectors';
 
 import {
   fetchPostSetRequest,
+  updatePostSetRequest,
 } from 'containers/App/actions';
+
+import {
+  UPDATE_POST_SET_REQUEST,
+} from 'containers/App/constants';
 
 import {
   getData,
@@ -23,9 +28,11 @@ import {
 
 import {
   makeSelectActiveCollection,
+  selectPostSet,
 } from './selectors';
 
 import {
+  CREATE_BLOG_ITEM_REQUEST,
   POST_COMMENT_REQUEST,
   ADD_COMMENT,
   FETCH_COMMENTS_REQUEST,
@@ -58,6 +65,8 @@ import {
   CREATE_POST_REQUEST,
   VIDEO_PROCESSING_DONE,
   FETCH_FACEBOOK_ENTITIES,
+  GET_EMBED_DATA,
+  GET_EMBED_DATA_SUCCESS,
 } from './constants';
 
 import {
@@ -66,6 +75,7 @@ import {
   createPostSuccess,
   createPostFailure,
   fetchFacebookEntitiesSuccess,
+  createBlogItemFailure,
 } from './actions';
 
 export function* getComments(payload) {
@@ -76,6 +86,25 @@ export function* getComments(payload) {
     yield put({ type: SET_COMMENTS, comments });
   } else {
     // console.log(result);
+  }
+}
+
+export function* getEmbed(action) {
+  const data = {
+    payload: {
+      url: action.url,
+    },
+  };
+
+  const params = serialize(data);
+
+  const result = yield call(getData, `/media_api/url_content?${params}`);
+
+  if (result.data.result === 'success') {
+    const embedData = result.data.url_data[0];
+    yield put({ type: GET_EMBED_DATA_SUCCESS, embedData });
+  } else {
+    yield put({ type: MEDIA_ERROR, error: 'Error getting embed content' });
   }
 }
 
@@ -258,6 +287,7 @@ export function* pollData(action) {
 
 export function* updateMediaItem(action) {
   const { ...item } = action.mediaItem;
+  const inBlog = action.inBlog;
   const data = {
     payload: item,
   };
@@ -265,6 +295,7 @@ export function* updateMediaItem(action) {
   const results = yield call(putData, `/media_api/media_item/${item.media_item_id}`, data);
   if (results.data.result === 'success') {
     const mediaItems = results.data.media_items;
+    yield put(setProcessing(false));
     yield put({ type: UPDATE_MEDIA_ITEM_SUCCESS, mediaItems });
   }
 }
@@ -291,6 +322,34 @@ export function* getCollections(action) {
     yield put({ type: FETCH_MEDIA_ITEMS_ERROR, mediaItems });
   }
 }
+
+export function* createBlogItemSaga(action) {
+  const activeCollection = yield select(makeSelectActiveCollection());
+  const data = {
+    payload: {
+      ...action.payload,
+      collection_id: activeCollection.collection_id,
+    },
+  };
+  const results = yield call(postData, '/media_api/blog', data);
+
+  yield put(setProcessing(false));
+  if (results.data.result === 'success') {
+    const mediaItems = results.data.media_items;
+    yield put({ type: CREATE_MEDIA_ITEM_SUCCESS, mediaItems });
+
+    const postSet = yield select(selectPostSet());
+    const payload = {
+      ...postSet.get('details').toJS(),
+      id: postSet.getIn(['details', 'post_set_id']),
+    };
+
+    yield put({ type: UPDATE_POST_SET_REQUEST, payload });
+  } else {
+    yield put(createBlogItemFailure(results.data.message));
+  }
+}
+
 
 export function* fetchWordpressGUIWorker({ payload }) {
   let data;
@@ -406,6 +465,13 @@ export function* collectionData() {
   yield cancel(watcher);
 }
 
+export function* getEmbedData() {
+  const watcher = yield takeLatest(GET_EMBED_DATA, getEmbed);
+
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
+
 export function* fetchWordpressGUISaga() {
   const watcher = yield takeLatest(FETCH_WORDPRESS_GUI_REQUEST, fetchWordpressGUIWorker);
 
@@ -423,6 +489,13 @@ export function* fetchFacebookEntitiesWorker({ payload }) {
   } else {
     console.log('Error in search_facebook. response: ', response);
   }
+}
+
+export function* createBlogItemWatcher() {
+  const watcher = yield takeLatest(CREATE_BLOG_ITEM_REQUEST, createBlogItemSaga);
+
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
 }
 
 export function* fetchFacebookEntitiesSaga() {
@@ -447,6 +520,8 @@ export default [
   createPostSaga,
   watchPollData,
   fetchFacebookEntitiesSaga,
+  getEmbedData,
+  createBlogItemWatcher,
 ];
 
 const delay = (millis) => {

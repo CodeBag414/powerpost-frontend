@@ -642,7 +642,6 @@ export function* fetchPostSetWorker({ payload, section }) {
 
 export function* updatePostSetWorker(action) {
   const { payload, section } = action;
-
   /* Modify post type correctly */
   if (payload.post_type === 'document') payload.post_type = 'file';
 

@@ -123,7 +123,7 @@ function mediaLibraryReducer(state = initialState, action) {
         .set('embedData', {});
     case GET_EMBED_DATA_SUCCESS:
       return state
-        .set('embedData', action.embedData);ß
+        .set('embedData', action.embedData);
     case SEARCH_BING_SUCCESS:
       return state
         .set('searchResults', action.webResults);
