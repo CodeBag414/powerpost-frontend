@@ -11,6 +11,13 @@ class DeletePostSetDialog extends Component {
     active: PropTypes.bool.isRequired,
     deletePostSet: PropTypes.func,
     handleDialogToggle: PropTypes.func,
+    message: PropTypes.string,
+    title: PropTypes.string,
+  }
+
+  static defaultProps = {
+    message: 'Are you sure? You will not be able to recover this Post Set and all of its posts.',
+    title: 'Delete Post Set',
   }
 
   delete = (e) => {
@@ -21,7 +28,7 @@ class DeletePostSetDialog extends Component {
   }
 
   render() {
-    const { active, handleDialogToggle } = this.props;
+    const { active, handleDialogToggle, title, message } = this.props;
 
     return (
       <PPDialog
@@ -31,12 +38,12 @@ class DeletePostSetDialog extends Component {
       >
         <Wrapper>
           <div className="header">
-            <h2 className="title">Delete Post Set</h2>
+            <h2 className="title">{title}</h2>
             <button onClick={handleDialogToggle}><i className="fa fa-times" aria-hidden="true" /></button>
           </div>
           <div className="divider" />
           <div className="body-wrapper">
-            <p>Are you sure? You will not be able to recover this Post Set and all of its posts.</p>
+            <p>{message}</p>
             <div className="button_wrapper">
               <PPButton
                 type="submit"

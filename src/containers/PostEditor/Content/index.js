@@ -8,15 +8,15 @@ import filepicker from 'filepicker-js';
 import * as linkify from 'linkifyjs';
 import ReactSummernote from 'react-summernote';
 
+import { getMediaTypeAndItem } from 'utils/media';
+
 import LinkEditor from 'containers/MediaItemLibrary/LinkEditor';
 import FileEditor from 'containers/MediaItemLibrary/FileEditor';
 import VideoEditor from 'containers/MediaItemLibrary/VideoEditor';
 import LinkDialog from 'containers/MediaItemLibrary/LinkDialog';
 import ImageEditor from 'containers/MediaItemLibrary/ImageEditor';
 import BlogEditor from 'containers/MediaItemLibrary/BlogEditor';
-
-import { getMediaTypeAndItem } from 'containers/PostEditor/Schedule/PostDetails';
-import PostPreview from 'containers/PostEditor/Schedule/PostDetails/PostPreview';
+import PostPreview from 'containers/PostEditor/PostPreview';
 
 import {
   setProcessing,

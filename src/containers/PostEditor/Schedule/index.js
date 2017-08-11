@@ -133,9 +133,10 @@ class Schedule extends Component {
     )[0];
     const isBunchPosting = postSet.get('bunch_post_fetching');
     const currentMediaItems = (newMediaItem.type) ? [newMediaItem] : postSet.getIn(['details', 'media_items']).toJS();
+
     return (
       <Wrapper>
-        <div className="left">
+        <div className="schedule-button-row">
           <div className={`title ${permissionClasses.postScheduleButton}`}>Where to Post?</div>
           <PPButton
             label={
@@ -148,7 +149,12 @@ class Schedule extends Component {
             onClick={this.handleDialogToggle}
             primary
           />
-          <div className="content">
+        </div>
+        <div className="columns">
+          <div className="left">
+            {!!hasContent &&
+              <div className="sort-by-header">Sort By: Schedule Time</div>
+            }
             {hasContent ?
               <ChannelSlots
                 posts={posts}
@@ -158,32 +164,28 @@ class Schedule extends Component {
                 currentPost={this.state.currentPost}
                 permissionClasses={permissionClasses}
               />
-            : <NoContent />
+              : <NoContent />
+            }
+          </div>
+          <div className="right">
+            {(!!hasContent && currentPost) &&
+              <PostDetails
+                post={currentPost}
+                postSet={postSet}
+                postMessage={postMessage}
+                postTime={postTime}
+                connection={connection}
+                handleMessageChange={this.handleMessageChange}
+                handleMessageBlur={this.handleMessageBlur}
+                handleRemoveSlot={this.handleRemoveSlot}
+                handleDateChange={this.handleDateChange}
+                newMediaItem={newMediaItem.toJS()}
+                permissionClasses={permissionClasses}
+                availableFBChannel={availableFBChannel}
+              />
             }
           </div>
         </div>
-
-        { hasContent && currentPost ?
-          <div className="right">
-            <PostDetails
-              post={currentPost}
-              postSet={postSet}
-              postMessage={postMessage}
-              postTime={postTime}
-              connection={connection}
-              handleMessageChange={this.handleMessageChange}
-              handleMessageBlur={this.handleMessageBlur}
-              handleRemoveSlot={this.handleRemoveSlot}
-              handleDateChange={this.handleDateChange}
-              newMediaItem={newMediaItem.toJS()}
-              permissionClasses={permissionClasses}
-              availableFBChannel={availableFBChannel}
-            />
-          </div>
-        :
-          null
-        }
-
         <AddChannelSlotDialog
           active={isDialogShown}
           handleDialogToggle={this.handleDialogToggle}

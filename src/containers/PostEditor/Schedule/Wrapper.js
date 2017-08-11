@@ -1,17 +1,19 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  display: flex;
-  margin-bottom: 50px;
+  font-family: Lato;
   padding-top: 40px;
-  position: relative;
-  width: 100%;
+  min-width: 900px;
 
+  .schedule-button-row {
+    margin-bottom: 20px;
+    padding-right: 29px;
+  }
   .title {
-    color: #888888;
+    color: #6F6F6F;
     display: inline-block;
-    font-size: 16px;
-    line-height: 19px;
+    font-size: 17px;
+    line-height: 36px;
     vertical-align: middle;
   }
   .add-button {
@@ -20,7 +22,7 @@ const Wrapper = styled.div`
     padding: 0 20px;
     .button-plus {
       font-size: 19px;
-      margin-right: 6px;
+      margin-right: 14px;
       vertical-align: middle;
     }
     .button-title {
@@ -28,15 +30,35 @@ const Wrapper = styled.div`
       vertical-align: middle;
     }
   }
-  .content {
-    margin-top: 35px;
+
+  .columns {
+    display: flex;
+    margin-top: 60px;
+  }
+
+  .left {
+    padding-bottom: 50px;
+    position: relative;
+    width: 56%;
+  }
+  .sort-by-header {
+    color: #b8b8b8;
+    font-weight: 500;
+    position: absolute;
+    right: 10px;
+    top: -35px;
   }
 
   .right {
-    margin-left: 16px;
-    border-left: 1.1px solid #DBDFE0;
-    padding-left: 23px;
+    padding-left: 40px;
+    width: 44%;
   }
+  .post-preview-title {
+    color: #6f6f6f;
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+
   .overlay {
     position: absolute;
     left: 0;

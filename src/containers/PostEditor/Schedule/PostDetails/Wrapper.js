@@ -1,34 +1,39 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  display: flex;
-
-  .left-column {
-    width: 450px;
-  }
-
-  .right-column {
-    margin-left: 46px;
-  }
+  font-family: Lato;
+  max-width: 450px;
 
   .section-title {
     color: #616669;
-    font-family: Lato;
     font-size: 14px;
+    font-weight: bold;
     line-height: 17px;
     margin-bottom: 13px;
-    &.modify-content {
-      margin-top: 10px;
-    }
     &.schedule {
-      margin-top: 10px;
+      margin-top: 30px;
     }
   }
 
-  .date-pickers {
-    .time-picker {
-      margin-top: 13px;
-      width: 100px;
+  .schedule-content {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    .date-pickers {
+      .date-picker {
+        display: inline-block;
+        width: 140px;
+      }
+      .time-picker {
+        display: inline-block;
+        margin-left: 8px;
+        width: 100px;
+      }
+    }
+    i {
+      cursor: pointer;
+      font-size: 18px;
     }
   }
 
@@ -41,7 +46,6 @@ const Wrapper = styled.div`
     margin-left: -6px;
     height: 32px;
     color: #8C9496 !important;
-    font-family: Lato;
     font-size: 12px;
     font-weight: bold;
     line-height: 15px;

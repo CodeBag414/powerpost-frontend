@@ -1,79 +1,71 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  width: 280px;
-  .channel-slot {
-    margin-bottom: 18px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #DBDFE0;
-  }
-
-  .slot-header {
-    i {
-      font-size: 32px;
-      border-radius: 2px;
-      vertical-align: middle;
-      margin-right: 18px;
-    }
-    .facebook-icon-color {
-      color: #4867AA;
-    }
-    .linkedin-icon-color {
-      color: #0177B5;
-    }
-    .pinterest-icon-color {
-      color: #D50C22;
-    }
-    .twitter-icon-color {
-      color: #1DA1F2;
-    }
-    .wordpress-icon-color {
-      color: #464646;
-    }
-    .google-icon-color, .fa-google-plus-square {
-      color: #d34836;
-    }
-
-    span {
-      color: #888888;
-      font-family: Lato;
-      font-size: 15px;
-      line-height: 17px;
-      vertical-align: middle;
-    }
-  }
+  border-bottom: 1px solid #d6d6d6;
+  border-left: 1px solid #d6d6d6;
+  border-right: 1px solid #d6d6d6;
 
   .slot-timestamp {
+    border-top: 1px solid #d6d6d6;
+    display: flex;
+    font-size: 12px;
+    padding: 20px 40px;
     position: relative;
-    text-align: right;
-    button {
-      width: 238px;
-      height: 32px;
-      text-align: left;
-      color: #8C9496 !important;
-      font-family: Lato;
-      font-size: 12px;
-      font-weight: bold;
-      line-height: 15px;
-      border: none;
-      
-      &.active {
-        background-color: #F0F3F4;
-        border-radius: 4px;
+
+    &:hover, &.active {
+      background-color: #F3F8Fa;
+    }
+
+    .connection-info {
+      max-width: 90px;
+      min-width: 90px;
+      i {
+        font-size: 28px;
+        margin-right: 8px;
+      }
+      .connection-type {
+        color: #999;
+        text-transform: uppercase;
+      }
+      .connection-name {
+        color: #999;
+        font-weight: bold;
+        margin-top: 8px;
       }
     }
-    i {
-      visibility: hidden;
-      position: absolute;
-      top: 8px;
-      right: 10px;
-      font-size: 16px;
-      color: #333;
-      text-align: right;
-      cursor: pointer;
+
+    .date-time {
+      color: #777;
+      margin-left: 40px;
+      min-width: 90px;
+      .date-row {
+        font-size: 14px;
+        font-weight: bold;
+      }
+      .time-row {
+        margin-top: 8px;
+        text-transform: uppercase;
+      }
     }
-    &:hover i {
-      visibility: visible;
+
+    .message {
+      color: #999;
+      width: calc(100% - 250px);
+      margin-left: 30px;
+      .message-content {
+        width: 100%;
+        word-wrap: break-word;
+      }
+    }
+
+    .deletePopover {
+      color: #666;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 5px 10px;
+      position: absolute;
+      right: 0;
+      top: 0;
     }
   }
 `;

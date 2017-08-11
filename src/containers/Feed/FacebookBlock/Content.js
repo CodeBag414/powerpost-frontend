@@ -7,6 +7,8 @@ const Content = styled.div`
   .fb-message {
     font-size: 14px;
     font-weight: normal;
+    width: 100%;
+    word-wrap: break-word;
 
     &.large {
       font-size: 24px;

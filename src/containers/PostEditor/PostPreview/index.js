@@ -13,7 +13,7 @@ import LinkedInBlock from 'containers/Feed/LinkedInBlock';
 import PinterestBlock from 'containers/Feed/PinterestBlock';
 import GooglePlusBlock from 'containers/Feed/GooglePlusBlock';
 
-import PostPreviewWrapper from './PostPreviewWrapper';
+import Wrapper from './Wrapper';
 
 function getCreatorURL(url) {
   if (url) {
@@ -210,11 +210,11 @@ function buildPostPreview(postData, postMessage, postTime, connection, type, med
   }
 }
 
-function PostPreview({ post, postMessage, postTime, connection, type, mediaItem, postSetId, marginBottom }) {
+function PostPreview({ post, postMessage, postTime, connection, type, mediaItem, postSetId, marginBottom, title }) {
   return (
-    <PostPreviewWrapper marginBottom={marginBottom}>
+    <Wrapper marginBottom={marginBottom}>
       <div className="section-title post-preview-title">
-        Preview Post
+        {title}
       </div>
       <div className="post-preview">
         {connection && buildPostPreview(post, postMessage, postTime, connection, type, mediaItem, postSetId)}
@@ -253,7 +253,7 @@ function PostPreview({ post, postMessage, postTime, connection, type, mediaItem,
         {connection && connection.channel === 'linkedin' && type === 'video' &&
           'NOTE: A link to the video will be appended to the LinkedIn message.'}
       </div>
-    </PostPreviewWrapper>
+    </Wrapper>
   );
 }
 
@@ -266,6 +266,11 @@ PostPreview.propTypes = {
   postSetId: ImmutablePropTypes.map,
   postTime: PropTypes.string,
   type: PropTypes.string,
+  title: PropTypes.string,
+};
+
+PostPreview.defaultProps = {
+  title: 'Preview Post',
 };
 
 export default PostPreview;

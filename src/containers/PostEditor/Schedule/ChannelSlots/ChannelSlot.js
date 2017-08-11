@@ -2,21 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import ChannelSlotHeader from './ChannelSlotHeader';
+// import ChannelSlotHeader from './ChannelSlotHeader';
 import ChannelSlotTimestamp from './ChannelSlotTimestamp';
 
 function ChannelSlot({ postItems, connection, handleClickTimestamp, handleRemoveSlot, currentPost, permissionClasses }) {
   return (
     <div className="channel-slot">
-      <ChannelSlotHeader connection={connection} />
+      {/* <ChannelSlotHeader connection={connection} /> */}
       {
         postItems.map((post) =>
           <ChannelSlotTimestamp
-            post={post}
+            connection={connection}
+            currentPost={currentPost}
             handleClickTimestamp={handleClickTimestamp}
             handleRemoveSlot={handleRemoveSlot}
-            currentPost={currentPost}
             permissionClasses={permissionClasses}
+            post={post}
           />
         )
       }
