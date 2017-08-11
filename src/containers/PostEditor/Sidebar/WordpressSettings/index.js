@@ -46,6 +46,7 @@ export class WordpressSettings extends Component {
     setWordpressPost: PropTypes.func,
     getMediaItem: PropTypes.func,
     permissionClasses: PropTypes.object,
+    setProcessing: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -388,6 +389,7 @@ export class WordpressSettings extends Component {
       wordpressGUI,
       filePickerKey,
       permissionClasses,
+      setProcessing,
     } = this.props;
 
     const {
@@ -542,6 +544,7 @@ export class WordpressSettings extends Component {
             isOpen={this.state.imageEditor}
             filePickerKey={filePickerKey}
             imageItem={this.state.mediaItem}
+            setProcessing={setProcessing}
           />
         </SmoothCollapse>
         <div style={{ marginTop: '-200px' }} />

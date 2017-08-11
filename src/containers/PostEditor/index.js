@@ -18,6 +18,10 @@ import {
 } from 'containers/App/actions';
 
 import {
+  setProcessing,
+} from 'containers/Main/actions';
+
+import {
   makeSelectUser,
   selectGroupUsers,
   makeSelectUserAccount,
@@ -109,6 +113,7 @@ class PostEditor extends Component {
     comments: ImmutablePropTypes.list,
     activeBrand: PropTypes.object,
     facebookEntities: ImmutablePropTypes.map,
+    setProcessing: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -367,6 +372,7 @@ class PostEditor extends Component {
                 setWordpressPost={this.props.setWordpressPost}
                 getMediaItem={this.props.getMediaItem}
                 permissionClasses={permissionClasses}
+                setProcessing={this.props.setProcessing}
               />
               <SharedStream
                 accountStreamId={userAccount.account_streams[0].stream_id}
@@ -412,6 +418,7 @@ export function mapDispatchToProps(dispatch) {
     getMediaItem: (mediaItemId) => dispatch(getMediaItem(mediaItemId)),
     postComment: (postSetId, text) => dispatch(postCommentRequest({ postSetId, text })),
     deleteComment: (commentId) => dispatch(deleteCommentRequest(commentId)),
+    setProcessing: (processing) => dispatch(setProcessing(processing)),
   };
 }
 
