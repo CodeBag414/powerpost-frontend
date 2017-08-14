@@ -22,7 +22,7 @@ const PostSetList = ({
     {
       postSets.map((p, index) => (
         <PostSetItem
-          key={index}
+          key={p.get('post_set_id')}
           active={currentPostSetIndex === index}
           mediaItems={p.get('media_items')}
           streamName={streamName}

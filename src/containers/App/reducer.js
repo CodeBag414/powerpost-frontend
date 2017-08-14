@@ -371,7 +371,13 @@ function globalReducer(state = initialState, action) {
         )
         .updateIn(
           ['postSets', 'data', 'scheduled_post_sets'],
-          (postSets) => postSets && postSets.map((postSet) => postSet.get('post_set_id') === action.payload.post_set_id ? fromJS(action.payload) : postSet)
+          (postSets) => postSets && postSets.map((postSet) =>
+            (postSet.get('post_set_id') === action.payload.post_set_id) ?
+              fromJS({
+                ...postSet.toJS(),
+                ...action.payload,
+              })
+            : postSet)
         )
         .updateIn(
           ['postSets', 'data', 'post_when_ready_post_sets'],
