@@ -398,7 +398,7 @@ function* createPostWorker({ payload }) {
 
   if (data) {
     yield put(createPostSuccess(data.post));
-    yield put(fetchPostSetRequest({ id: data.post.post_set_id }));
+    // yield put(fetchPostSetRequest({ id: data.post.post_set_id }));
   }
 }
 

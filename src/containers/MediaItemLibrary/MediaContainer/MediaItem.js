@@ -105,7 +105,10 @@ const MediaItem = (props) => {
 
   return (
     <Wrapper>
-      <ImageContainer onClick={() => props.openPreview(props.mediaItem)}>
+      <ImageContainer
+        onClick={() => !props.inPostEditor ? props.openPreview(props.mediaItem) :
+        props.addToPost(props.mediaItem)}
+      >
         { coverImage || coverImage === '' ? (<CoverImage src={coverImage} />) : (<IconPlaceholder className={`fa ${fa}`} />) }
       </ImageContainer>
       <Footer>
