@@ -268,7 +268,7 @@ class Content extends Component {
     this.props.setProcessing(true);
     const { action, ...linkItem } = item;
     filepicker.setKey(filePickerKey);
-    const picture = linkItem.picture || linkItem.properties.picture;
+    const picture = linkItem && (linkItem.picture || linkItem.properties.picture);
     if (picture) {
       filepicker.storeUrl(`https://process.filestackapi.com/${filePickerKey}/${picture}`, (Blob) => {
         if (action === 'update') {
@@ -303,7 +303,6 @@ class Content extends Component {
         this.props.updateMediaItem(linkItem);
       }
     }
-    setTimeout(() => this.handleMessageBlur(), 5000);
   }
 
   openAddBlog = () => {
@@ -378,7 +377,6 @@ class Content extends Component {
     } else if (action === 'create') {
       this.props.createMediaItem(item);
     }
-    setTimeout(() => this.handleMessageBlur(), 3000);
   }
 
   handleOpenFilePicker = (mediaItem) => {
@@ -448,7 +446,6 @@ class Content extends Component {
     } else if (action === 'create') {
       this.props.createMediaItem(fileItem);
     }
-    setTimeout(() => this.handleMessageBlur(), 3000);
   }
 
   handleAddLinkValue = (event) => {
@@ -490,12 +487,11 @@ class Content extends Component {
       img.src = `https://s3.amazonaws.com/powerpost/${imageItem.properties.key}`;
       ReactSummernote.insertNode(img);
     }
-    setTimeout(() => this.handleMessageBlur(), 3000);
   }
 
   removeItem = () => {
     this.props.removeMediaItem();
-    setTimeout(() => this.handleMessageBlur(), 1500);
+    setTimeout(() => this.handleMessageBlur(), 100);
   }
 
   openEditor = (mediaItem) => {
@@ -516,7 +512,7 @@ class Content extends Component {
     this.props.setMediaItem(mediaItem);
     this.closeAllDialog();
 
-    setTimeout(() => this.handleMessageBlur(), 3000);
+    setTimeout(() => this.handleMessageBlur(), 100);
   }
 
   shortenUrl = () => {

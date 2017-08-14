@@ -7,7 +7,6 @@ import { makeSelectUser } from 'containers/App/selectors';
 
 import {
   fetchPostSetRequest,
-  updatePostSetRequest,
 } from 'containers/App/actions';
 
 import {
@@ -248,18 +247,25 @@ export function* createMediaItem(action) {
   if (url !== '') {
     const res = yield call(postData, url, data);
     if (res.data.result === 'success') {
+      const id = res.data.media_items[0].media_item_id;
+      const mediaItems = res.data.media_items;
+
       if (res.data.media_items[0].status === '3') {
-        const id = res.data.media_items[0].media_item_id;
         yield put({ type: VIDEO_PROCESSING, id });
-        const mediaItems = res.data.media_items;
-        yield put({ type: CREATE_MEDIA_ITEM_SUCCESS, mediaItems });
-        yield put({ type: PROCESS_ITEM_SUCCESS });
       } else {
-        const mediaItems = res.data.media_items;
-        yield put({ type: CREATE_MEDIA_ITEM_SUCCESS, mediaItems });
-        yield put({ type: PROCESS_ITEM_SUCCESS });
         yield put(setProcessing(false));
       }
+
+      yield put({ type: CREATE_MEDIA_ITEM_SUCCESS, mediaItems });
+      yield put({ type: PROCESS_ITEM_SUCCESS });
+
+      /* Update post set in the backend */
+      const postSet = yield select(selectPostSet());
+      const payload = {
+        ...postSet.get('details').toJS(),
+        id: postSet.getIn(['details', 'post_set_id']),
+      };
+      yield put({ type: UPDATE_POST_SET_REQUEST, payload });
     } else {
       yield put({ type: CREATE_MEDIA_ITEM_ERROR });
     }
@@ -297,6 +303,14 @@ export function* updateMediaItem(action) {
     const mediaItems = results.data.media_items;
     yield put(setProcessing(false));
     yield put({ type: UPDATE_MEDIA_ITEM_SUCCESS, mediaItems });
+
+    /* Update post set in the backend */
+    const postSet = yield select(selectPostSet());
+    const payload = {
+      ...postSet.get('details').toJS(),
+      id: postSet.getIn(['details', 'post_set_id']),
+    };
+    yield put({ type: UPDATE_POST_SET_REQUEST, payload });
   }
 }
 
@@ -356,7 +370,6 @@ export function* fetchWordpressGUIWorker({ payload }) {
 
   try {
     const response = yield call(getData, `/connection_api/wordpress_gui/${payload.connectionId}`);
-    console.log(response);
     if (response.data.status !== 'success') {
       throw Error('Status Wrong!');
     }
