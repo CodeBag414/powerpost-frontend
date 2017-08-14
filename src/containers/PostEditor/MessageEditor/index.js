@@ -132,7 +132,7 @@ class MessageEditor extends Component {
                 handleMessageChange={handleMessageChange}
                 highlightFocus={currentChannel === -1}
                 message={message}
-                handleMessageBlur={handleMessageBlur}
+                onBlur={handleMessageBlur}
                 placeholder="What do you want to say?"
               />
         }

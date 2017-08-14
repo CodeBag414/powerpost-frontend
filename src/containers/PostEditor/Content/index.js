@@ -191,24 +191,24 @@ class Content extends Component {
   handleMessageBlur = (event, message = this.state.message) => {
     const { channelIndex } = this.state;
     const { updatePostSet, postSet } = this.props;
-    const postDetails = postSet.get('details').toJS();
+    const postSetDetails = postSet.get('details').toJS();
 
     if (channelIndex > -1) {
-      const channelMessages = postDetails.properties;
+      const channelMessages = postSetDetails.properties;
       const channelName = CHANNELS[channelIndex].name;
       const newChannelMessages = {
         ...channelMessages,
         [channelName]: message,
       };
       updatePostSet({
-        ...postDetails,
-        id: postDetails.post_set_id,
+        ...postSetDetails,
+        id: postSetDetails.post_set_id,
         properties: newChannelMessages,
       });
     } else {
       updatePostSet({
-        ...postDetails,
-        id: postDetails.post_set_id,
+        ...postSetDetails,
+        id: postSetDetails.post_set_id,
         message,
       });
     }
