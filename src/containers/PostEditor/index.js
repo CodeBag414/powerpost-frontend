@@ -322,7 +322,10 @@ class PostEditor extends Component {
                   tabs.map((tab, index) =>
                     <span
                       key={tab.name}
-                      className={`${index === selectedTabIndex ? 'active-link' : ''} ${tab.name.toLowerCase() === 'content' && permissionClasses.contentTab}`}
+                      className={`
+                        ${index === (permissionClasses.contentTab && 1) || selectedTabIndex ? 'active-link' : ''}
+                        ${tab.name.toLowerCase() === 'content' && permissionClasses.contentTab}
+                      `}
                       onClick={() => {
                         this.setState({
                           selectedTabIndex: index,
