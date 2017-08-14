@@ -44,6 +44,7 @@ class PostsLayout extends Component {
     const postsetId = this.props.location.hash.startsWith('#postset') ? this.props.location.hash.split('-')[1] : 0;
     if (postsetId && !nextPostSetId) {
       this.props.fetchPostSets();
+      this.props.fetchPostSetsByST();
     }
   }
 

@@ -49,7 +49,7 @@ class Sidebar extends React.Component {
                   tooltipPosition="right"
                   label={<i className="fa fa-plus" />}
                   style={{ margin: '0 auto', display: 'block', marginTop: '10px', width: '40px', minWidth: '0px' }}
-                  onClick={this.props.createPostSet}
+                  onClick={createPostSet}
                   className={`new-post-button ${permissionClasses.createPost}`}
                   primary
                 />
