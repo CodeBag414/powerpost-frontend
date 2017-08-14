@@ -15,7 +15,7 @@ import VideoEditor from 'containers/MediaItemLibrary/VideoEditor';
 import LinkDialog from 'containers/MediaItemLibrary/LinkDialog';
 import ImageEditor from 'containers/MediaItemLibrary/ImageEditor';
 import BlogEditor from 'containers/MediaItemLibrary/BlogEditor';
-import PostPreview from 'containers/PostEditor/Schedule/PostDetails';
+import PostPreview from 'containers/PostEditor/PostPreview';
 
 import {
   setProcessing,
