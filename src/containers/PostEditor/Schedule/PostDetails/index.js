@@ -39,6 +39,9 @@ function PostDetails({
   const status = post.get('status');
   const isPast = status === '2' || status === '3';
   const disableClass = isPast ? 'disabled' : '';
+
+  if (!connection) return null;
+
   return (
     <Wrapper>
       <div className="section-title modify-content">
@@ -88,7 +91,7 @@ function PostDetails({
           )
         }
         {!isPast &&
-          <i className={`fa fa-trash ${permissionClasses.timeSlotDelete}`} onClick={() => handleRemoveSlot(post)} />
+          <i className={`fa fa-trash ${permissionClasses.timeSlotDelete}`} onClick={() => handleRemoveSlot(post.toJS())} />
         }
       </div>
       <PostPreview

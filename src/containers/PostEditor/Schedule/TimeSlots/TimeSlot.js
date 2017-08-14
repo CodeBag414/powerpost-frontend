@@ -4,6 +4,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import moment from 'moment';
 import classnames from 'classnames';
 import enhanceWithClickOutside from 'react-click-outside';
+import { isEqual } from 'lodash';
 
 import DeletePostSetDialog from 'components/DeletePostSetDialog';
 import SocialIcon from 'elements/atm.SocialIcon';
@@ -14,7 +15,7 @@ function getConnectionType(connection) {
   return connection && connection.type.split('_')[1];
 }
 
-class ChannelSlotTimestamp extends Component {
+class TimeSlot extends Component {
   static propTypes = {
     connection: PropTypes.object,
     currentPost: ImmutablePropTypes.map,
@@ -44,11 +45,11 @@ class ChannelSlotTimestamp extends Component {
 
   render() {
     const { connection, post, currentPost, handleClickTimestamp, handleRemoveSlot, permissionClasses } = this.props;
-
     if (!connection) return null;
+
     return (
       <div
-        className={classnames('slot-timestamp', { active: currentPost === post })}
+        className={classnames('slot-timestamp', { active: isEqual(currentPost, post) })}
         onClick={() => handleClickTimestamp(post)}
       >
         {/* TODO: More button here */}
@@ -60,17 +61,17 @@ class ChannelSlotTimestamp extends Component {
           <div className="connection-name">{connection.display_name}</div>
         </div>
         <div className="date-time">
-          {post.get('status') !== '5' && post.get('schedule_time') ?
+          {post.status !== '5' && post.schedule_time ?
             <div>
-              <div className="date-row">{moment.unix(post.get('schedule_time')).format('MMM D')}</div>
-              <div className="time-row">{moment.unix(post.get('schedule_time')).format('ddd, hh:mm')}</div>
+              <div className="date-row">{moment.unix(post.schedule_time).format('MMM D')}</div>
+              <div className="time-row">{moment.unix(post.schedule_time).format('ddd, hh:mm')}</div>
             </div>
           :
             'Post when ready'
           }
         </div>
         <div className="message">
-          <span className="message-content">{post.get('message')}</span>
+          <span className="message-content">{post.message}</span>
         </div>
         <div className={`deletePopover ${permissionClasses.deleteEllipsesMenu}`} onClick={this.showPopover} >
           <i className="fa fa-ellipsis-v" />
@@ -92,4 +93,4 @@ class ChannelSlotTimestamp extends Component {
   }
 }
 
-export default enhanceWithClickOutside(ChannelSlotTimestamp);
+export default enhanceWithClickOutside(TimeSlot);

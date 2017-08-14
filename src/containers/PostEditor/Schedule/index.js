@@ -4,6 +4,7 @@ import PPButton from 'elements/atm.Button';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { fromJS } from 'immutable';
 
 import {
   makeSelectConnections,
@@ -12,7 +13,7 @@ import {
 import { selectNewMediaItem } from 'containers/PostEditor/selectors';
 
 import NoContent from './NoContent';
-import ChannelSlots from './ChannelSlots';
+import TimeSlots from './TimeSlots';
 import AddChannelSlotDialog from './AddChannelSlotDialog';
 import Wrapper from './Wrapper';
 import PostDetails from './PostDetails';
@@ -32,30 +33,30 @@ class Schedule extends Component {
     super(props);
 
     const { posts } = props;
-    const currentPost = Object.keys(posts).length && posts[Object.keys(posts)[0]][0];
+    const currentPost = posts && posts.length && posts[0];
 
     this.state = {
       currentPost,
       isDialogShown: false,
       postMessage: this.constructPostMessage(currentPost),
-      postTime: currentPost && currentPost.get('schedule_time'),
+      postTime: currentPost && currentPost.schedule_time,
     };
   }
 
   constructPostMessage = (post) => {
     const { postSet, connections } = this.props;
     let postMessage;
-    if (post && post.getIn(['properties', 'edited'])) {
-      postMessage = post.get('message');
+    if (post && post.properties && post.properties.edited) {
+      postMessage = post.message;
     } else {
       let channelMessage;
       if (post) {
         let channelName = '';
-        if (post.get('connection_channel')) {
-          channelName = `message_${post.get('connection_channel')}`;
-        } else if (post.get('connection_id')) {
+        if (post.connection_channel) {
+          channelName = `message_${post.connection_channel}`;
+        } else if (post.connection_id) {
           const connection = connections.filter((item) =>
-            item.connection_id === post.get('connection_id'),
+            item.connection_id === post.connection_id,
           )[0];
           channelName = `message_${connection.channel}`;
         }
@@ -75,7 +76,7 @@ class Schedule extends Component {
     this.setState({
       currentPost: post,
       postMessage: this.constructPostMessage(post),
-      postTime: post && post.get('schedule_time'),
+      postTime: post && post.schedule_time,
     });
   }
 
@@ -89,7 +90,7 @@ class Schedule extends Component {
     });
 
     const newPost = {
-      ...currentPost.toJS(),
+      ...currentPost,
       schedule_time: newDate,
     };
     updatePost(newPost, 'bunch_post');
@@ -106,7 +107,7 @@ class Schedule extends Component {
     const { currentPost, postMessage } = this.state;
 
     const newPost = {
-      ...currentPost.toJS(),
+      ...currentPost,
       message: postMessage,
       properties: {
         edited: true,
@@ -118,7 +119,7 @@ class Schedule extends Component {
   handleRemoveSlot = (postToDelete) => {
     const { updatePost } = this.props;
     const newPost = {
-      ...postToDelete.toJS(),
+      ...postToDelete,
       status: '0',
     };
     updatePost(newPost, 'bunch_post');
@@ -127,9 +128,9 @@ class Schedule extends Component {
   render() {
     const { postSet, connections, posts, newMediaItem, permissionClasses, availableFBChannel } = this.props;
     const { isDialogShown, currentPost, postMessage, postTime } = this.state;
-    const hasContent = posts && Object.keys(posts).length && connections;
+    const hasContent = posts && posts.length;
     const connection = connections && connections.filter((item) =>
-      currentPost && item.connection_id === currentPost.get('connection_id'),
+      currentPost && item.connection_id === currentPost.connection_id,
     )[0];
     const isBunchPosting = postSet.get('bunch_post_fetching');
     const currentMediaItems = (newMediaItem.type) ? [newMediaItem] : postSet.getIn(['details', 'media_items']).toJS();
@@ -156,7 +157,7 @@ class Schedule extends Component {
               <div className="sort-by-header">Sort By: Schedule Time</div>
             }
             {hasContent ?
-              <ChannelSlots
+              <TimeSlots
                 posts={posts}
                 connections={connections}
                 handleClickTimestamp={this.handleClickTimestamp}
@@ -168,9 +169,9 @@ class Schedule extends Component {
             }
           </div>
           <div className="right">
-            {(!!hasContent && currentPost) &&
+            {!!(hasContent && currentPost) &&
               <PostDetails
-                post={currentPost}
+                post={fromJS(currentPost)}
                 postSet={postSet}
                 postMessage={postMessage}
                 postTime={postTime}

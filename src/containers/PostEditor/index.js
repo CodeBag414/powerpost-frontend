@@ -54,7 +54,6 @@ import {
   selectPost,
   selectNewMediaItem,
   makeSelectComments,
-  selectFacebookEntities,
 } from 'containers/PostEditor/selectors';
 
 import Button from 'elements/atm.Button';
@@ -112,7 +111,6 @@ class PostEditor extends Component {
     deleteComment: PropTypes.func,
     comments: ImmutablePropTypes.list,
     activeBrand: PropTypes.object,
-    facebookEntities: ImmutablePropTypes.map,
     setProcessing: PropTypes.func.isRequired,
   };
 
@@ -178,6 +176,7 @@ class PostEditor extends Component {
     if (facebookConnection) {
       this.availableFBChannel = facebookConnection.connection_id;
     } else {
+      // eslint-disable-next-line
       console.log('No active facebook connection available - cannot fetch Facebook entities');
     }
   }
@@ -264,20 +263,27 @@ class PostEditor extends Component {
 
     const { postTitle, selectedTab, showDeletePopup } = this.state;
     const postsArray = postSet.getIn(['details', 'posts']);
-    const posts = {};
-    let totalTimeslots = 0;
+    let posts;
     if (postsArray) {
-      postsArray.map((postItem) => {
-        const connection = connections && connections.filter((item) =>
-          item.connection_id === postItem.get('connection_id'),
-        )[0];
-        if (postItem.get('status') !== '0' && connection && connection.channel !== 'wordpress') {
-          if (!posts[postItem.get('connection_id')]) posts[postItem.get('connection_id')] = [];
-          posts[postItem.get('connection_id')].push(postItem);
-          totalTimeslots += 1;
-        }
-        return true;
+      // Sort posts & calculate total timeslots
+      posts = postsArray.toJS().filter((postItem) =>
+        postItem.status !== '0' && postItem.connection_channel !== 'wordpress'
+      ).sort((postA, postB) => {
+        const timeA = postA.schedule_time;
+        const timeB = postB.schedule_time;
+        return (timeA > timeB);
       });
+      // postsArray.map((postItem) => {
+      //   const connection = connections && connections.filter((item) =>
+      //     item.connection_id === postItem.get('connection_id'),
+      //   )[0];
+      //   if (postItem.get('status') !== '0' && connection && connection.channel !== 'wordpress') {
+      //     if (!posts[postItem.get('connection_id')]) posts[postItem.get('connection_id')] = [];
+      //     posts[postItem.get('connection_id')].push(postItem);
+      //     totalTimeslots += 1;
+      //   }
+      //   return true;
+      // });
     }
 
     const { permissions } = activeBrand.user_access;
@@ -285,7 +291,7 @@ class PostEditor extends Component {
 
     const tabs = [
       { name: 'Content', component: <Content postSet={postSet} permissionClasses={permissionClasses} accountId={this.props.accountId} id={this.props.id} location={this.props.location} params={this.props.params} availableFBChannel={this.availableFBChannel} /> },
-      { name: 'Schedule', component: <Schedule postSet={postSet} permissionClasses={permissionClasses} posts={posts} updatePost={updatePost} availableFBChannel={this.availableFBChannel} />, count: totalTimeslots },
+      { name: 'Schedule', component: <Schedule postSet={postSet} permissionClasses={permissionClasses} posts={posts} updatePost={updatePost} availableFBChannel={this.availableFBChannel} />, count: posts ? posts.length : 0 },
     ];
 
     const generalInfo = (
@@ -434,7 +440,6 @@ const mapStateToProps = createStructuredSelector({
   filePickerKey: makeSelectFilePickerKey(),
   newMediaItem: selectNewMediaItem(),
   comments: makeSelectComments(),
-  facebookEntities: selectFacebookEntities(),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostEditor));
