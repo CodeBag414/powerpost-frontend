@@ -2,6 +2,7 @@ import _ from 'lodash';
 const permissionDetails = {
   postEditor: {
     title: ['post_edit', 'disabled'],
+    contentTab: ['post_edit', 'hidden'],
     assignedTo: ['post_review', 'hidden'],
     statusChangerAll: ['post_edit', 'hidden'],
     statusChangerReviewReady: ['post_review', 'hidden'],
@@ -14,7 +15,7 @@ const permissionDetails = {
     contentScheduleTabs: ['post_edit', 'disabled'],
     postScheduleButton: ['post_edit', 'hidden'],
     timeSlots: ['post_edit', 'disabled'],
-    timeSlotMessage: ['post_edit', 'disabled'],
+    timeSlotMessage: ['post_edit', 'hidden'],
     // timeSlotPreview: [null, null, null, '*'],
     timeSlotSchedule: ['post_edit', 'hidden'],
     timeSlotDelete: ['post_edit', 'hidden'],
@@ -27,6 +28,8 @@ const permissionDetails = {
     Draft: ['post_edit', 'hidden'],
     Ready: [['post_edit', 'post_review'], 'hidden'],
     Review: [['post_edit', 'post_review'], 'hidden'],
+    deleteEllipsesMenu: ['post_edit', 'hidden'],
+    modifyDateTime: ['post_edit', 'hidden'],
   },
   mainNav: {
     createPost: ['post_edit', 'hidden'],

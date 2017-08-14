@@ -46,7 +46,6 @@ class TimeSlot extends Component {
   render() {
     const { connection, post, currentPost, handleClickTimestamp, handleRemoveSlot, permissionClasses } = this.props;
     if (!connection) return null;
-
     return (
       <div
         className={classnames('slot-timestamp', { active: isEqual(currentPost, post) })}

@@ -122,7 +122,7 @@ class PostEditor extends Component {
 
   state = {
     postTitle: '',
-    selectedTab: 'Content',
+    selectedTab: 'Schedule',
     showDeletePopup: false,
     sidebarExpanded: true,
   };
@@ -322,7 +322,7 @@ class PostEditor extends Component {
                   tabs.map((tab) =>
                     <span
                       key={tab.name}
-                      className={tab.name === selectedTab ? 'active-link' : ''}
+                      className={`${tab.name === selectedTab ? 'active-link' : ''} ${tab.name.toLowerCase() === 'content' && permissionClasses.contentTab}`}
                       onClick={() => {
                         this.setState({
                           selectedTab: tab.name,

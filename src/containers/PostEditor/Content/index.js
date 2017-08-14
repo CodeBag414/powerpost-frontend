@@ -90,6 +90,12 @@ class Content extends Component {
     permissionClasses: PropTypes.object,
     setProcessing: PropTypes.func,
     availableFBChannel: PropTypes.string,
+    location: PropTypes.object,
+    getEmbedData: PropTypes.func,
+    pushToRoute: PropTypes.func,
+    embedData: PropTypes.object,
+    goBack: PropTypes.func,
+    createBlogItem: PropTypes.func,
   };
 
   static defaultProps = {

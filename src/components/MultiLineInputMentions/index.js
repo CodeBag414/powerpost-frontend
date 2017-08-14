@@ -17,6 +17,7 @@ class MultiLineInputMentions extends Component {
     handleMessageBlur: PropTypes.func,
     hasBorder: PropTypes.bool,
     availableFBChannel: PropTypes.string,
+    className: PropTypes.string,
   };
 
   static defaultProps = {
@@ -73,9 +74,9 @@ class MultiLineInputMentions extends Component {
   }
 
   render() {
-    const { placeholder, message, handleMessageChange, handleMessageBlur, hasBorder } = this.props;
+    const { placeholder, message, handleMessageChange, handleMessageBlur, hasBorder, className } = this.props;
     return (
-      <Wrapper className={hasBorder ? 'hasBorder' : ''}>
+      <Wrapper className={`${hasBorder ? 'hasBorder' : ''} ${className}`}>
         <MentionsInput
           allowSpaceInQuery
           onBlur={() => handleMessageBlur()}

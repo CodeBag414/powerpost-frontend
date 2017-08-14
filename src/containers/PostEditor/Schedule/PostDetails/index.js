@@ -44,7 +44,7 @@ function PostDetails({
 
   return (
     <Wrapper>
-      <div className="section-title modify-content">
+      <div className={`section-title modify-content ${permissionClasses.timeSlotMessage}`}>
         Customize Message
         {connection.channel === 'twitter' &&
           <LimitIndicator className={characterCount < 0 && 'negative'}>{characterCount}</LimitIndicator>
@@ -68,16 +68,16 @@ function PostDetails({
             onBlur={handleMessageBlur}
           />
       }
-      <div className="section-title schedule">Modify Date & Time</div>
-      <div className="schedule-content">
+      <div className={`section-title schedule ${permissionClasses.modifyDateTime}`}>Modify Date & Time</div>
+      <div className={`schedule-content ${permissionClasses.timeSlotSchedule}`}>
         {
           (!isPast && (
             status !== '5' ?
               <div className="date-pickers">
-                <div className={`date-picker ${permissionClasses.timeSlotSchedule} ${disableClass}`}>
+                <div className={`date-picker ${disableClass}`}>
                   <DatePicker minDate={minDate} value={moment.unix(postTime).toDate()} onChange={handleDateChange} />
                 </div>
-                <div className={`time-picker ${permissionClasses.timeSlotSchedule} ${disableClass}`}>
+                <div className={`time-picker ${disableClass}`}>
                   <TimePicker format="ampm" value={moment.unix(postTime).toDate()} onChange={handleDateChange} />
                 </div>
               </div>
@@ -91,7 +91,7 @@ function PostDetails({
           )
         }
         {!isPast &&
-          <i className={`fa fa-trash ${permissionClasses.timeSlotDelete}`} onClick={() => handleRemoveSlot(post.toJS())} />
+          <i className="fa fa-trash" onClick={() => handleRemoveSlot(post.toJS())} />
         }
       </div>
       <PostPreview

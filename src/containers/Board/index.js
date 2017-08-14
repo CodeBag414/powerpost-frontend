@@ -167,8 +167,8 @@ class Board extends React.Component {
               />
             )
           }
-          {loading ? <Loading opacity={0.5} showIndicator={!this.props.postSets.get('data')} /> : null}
         </div>
+        {loading ? <Loading opacity={0.5} showIndicator={!this.props.postSets.get('data')} /> : null}
       </div>
     );
   }
