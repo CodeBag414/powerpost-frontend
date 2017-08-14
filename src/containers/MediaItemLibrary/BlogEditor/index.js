@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { browserHistory } from 'react-router';
 import { htmlEncode, htmlDecode } from 'js-htmlencode';
 import filepicker from 'filepicker-js';
 import ReactSummernote from 'react-summernote';
@@ -58,7 +57,7 @@ class BlogEditor extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(this.props.embedData.url !== nextProps.embedData.url) {
+    if(nextProps.embedData.url) {
       this.injectEmbed(nextProps.embedData);
     }
   }
@@ -66,15 +65,22 @@ class BlogEditor extends Component {
   injectEmbed = (embedData) => {
     const iframe = document.createElement('iframe');
     const container = document.createElement('div');
-    container.style.cssText = 'position:relative;width:100%;height:0;padding-bottom: 51%;';
+    const maxWidth = embedData.media.width;
+    container.style.cssText = 'position:relative;width:100%;max-width:' + maxWidth + 'px;height:0;padding-bottom: 51%;';
     iframe.src = embedData.iframe_src;
-    iframe.style.cssText = 'position:absolute;width:100%;height:100%;left:0;top:0;';
+    iframe.style.cssText = 'position:absolute;width:100%;max-width:' + maxWidth + 'px;height:100%;left:0;top:0;';
     container.appendChild(iframe);
     ReactSummernote.insertNode(container);
   }
 
   onBack = () => {
-    this.props.goBack();
+    const hash = this.props.location.hash
+    if (hash.startsWith('#blog-editor')) {
+      this.props.pushToRoute(this.props.location.pathname);
+    } else if (hash.startsWith('#postset')) {
+      const newHash = hash.split('#');
+      this.props.pushToRoute(`${this.props.location.pathname}#${newHash[1]}`);
+    }
   }
 
   onChange = (content) => {

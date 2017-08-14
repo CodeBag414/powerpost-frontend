@@ -136,7 +136,6 @@ export function* getEmbed(action) {
   const params = serialize(data);
 
   const result = yield call(getData, `/media_api/url_content?${params}`);
-  console.log(result);
   if (result.data.result === 'success') {
     const embedData = result.data.url_data[0];
     yield put({ type: GET_EMBED_DATA_SUCCESS, embedData });

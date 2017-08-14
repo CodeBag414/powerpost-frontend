@@ -7,7 +7,6 @@ import { routerActions } from 'react-router-redux';
 import filepicker from 'filepicker-js';
 import * as linkify from 'linkifyjs';
 import ReactSummernote from 'react-summernote';
-
 import { getMediaTypeAndItem } from 'utils/media';
 
 import LinkEditor from 'containers/MediaItemLibrary/LinkEditor';
@@ -16,7 +15,8 @@ import VideoEditor from 'containers/MediaItemLibrary/VideoEditor';
 import LinkDialog from 'containers/MediaItemLibrary/LinkDialog';
 import ImageEditor from 'containers/MediaItemLibrary/ImageEditor';
 import BlogEditor from 'containers/MediaItemLibrary/BlogEditor';
-import PostPreview from 'containers/PostEditor/PostPreview';
+import { getMediaTypeAndItem } from 'containers/PostEditor/Schedule/PostDetails';
+import PostPreview from 'containers/PostEditor/Schedule/PostDetails/PostPreview';
 
 import {
   setProcessing,
@@ -465,7 +465,8 @@ class Content extends Component {
       this.setState({ addLinkValue: '', linkDialog: false });
       this.props.getEmbedData(this.state.addLinkValue);
     } else {
-      this.setState({ addLinkValue: '', linkDialog: false, searchDialog: false, rssFeedDialog: false, linkEditorDialog: true });
+      console.log('open link editor');
+      this.setState({ addLinkValue: '', linkDialog: false, searchDialog: false, rssFeedDialog: false, linkEditor: true });
       this.props.fetchUrlData(this.state.addLinkValue);
     }
   }
@@ -661,6 +662,7 @@ class Content extends Component {
             openAddLink={this.openLinkDialog}
             openBlogEditor={this.openBlogEditor}
             goBack={this.props.goBack}
+            pushToRoute={this.props.pushToRoute}
             embedData={this.props.embedData}
             handleAddLinkValueFromDialog={this.handleAddLinkValueFromDialog}
           /> : null }

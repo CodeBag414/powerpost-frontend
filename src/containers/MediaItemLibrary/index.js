@@ -169,7 +169,8 @@ class Library extends React.Component {
       if(!nextProps.isProcessing && nextProps.location.hash.startsWith('#blog-editor')) {
         // do nothing
       } else if (!nextProps.isProcessing && !nextProps.location.hash.startsWith('#postset')) {
-        this.props.pushToRoute(this.props.location.pathname);
+        //this.props.pushToRoute(this.props.location.pathname);
+        //console.log('change route');
       }
     }
   }
@@ -556,6 +557,7 @@ class Library extends React.Component {
             embedData={this.props.embedData}
             getEmbedData={this.props.getEmbedData}
             goBack={this.props.goBack}
+            pushToRoute={this.props.pushToRoute}
             handleAddLinkValueFromDialog={this.handleAddLinkValueFromDialog}
           /> : null }
         </div>

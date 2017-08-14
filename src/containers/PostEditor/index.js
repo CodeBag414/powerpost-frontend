@@ -288,7 +288,6 @@ class PostEditor extends Component {
 
     const { permissions } = activeBrand.user_access;
     const permissionClasses = getClassesByPage(permissions, 'postEditor');
-
     const tabs = [
       { name: 'Content', component: <Content postSet={postSet} permissionClasses={permissionClasses} accountId={this.props.accountId} id={this.props.id} location={this.props.location} params={this.props.params} availableFBChannel={this.availableFBChannel} /> },
       { name: 'Schedule', component: <Schedule postSet={postSet} permissionClasses={permissionClasses} posts={posts} updatePost={updatePost} availableFBChannel={this.availableFBChannel} />, count: posts ? posts.length : 0 },
