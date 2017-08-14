@@ -74,7 +74,60 @@ export class WordpressSettings extends Component {
   }
 
   componentWillMount() {
-    const wordpressPost = this.props.postSet.getIn(['details', 'posts']).find((post) => {
+    this.setupWordPressPost();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.postSet.getIn(['details', 'post_set_id']) !== nextProps.postSet.getIn(['details', 'post_set_id'])) {
+      this.setupWordPressPost(nextProps);
+    }
+
+    if (this.props.wordpressGUI.get('isFetching') && !nextProps.wordpressGUI.get('isFetching')) {
+      if (!nextProps.wordpressGUI.get('error')) {
+        const { wordpressGUI } = nextProps;
+        const authorOptions = wordpressGUI
+          .getIn(['data', 'authors'])
+          .map((a) => ({
+            value: a.get('user_id'),
+            label: a.get('display_name'),
+          }))
+          .toJS();
+
+        if (this.state.author && this.state.author.value) {
+          const author = find(authorOptions, { value: this.state.author.value });
+          this.setState({
+            author,
+          });
+        }
+        this.setState({
+          categorySuggestions: wordpressGUI
+            .getIn(['data', 'categories'])
+            .map((c) => c.get('slug'))
+            .toJS(),
+          tagSuggestions: wordpressGUI
+            .getIn(['data', 'terms'])
+            .map((t) => t.get('slug'))
+            .toJS(),
+          authorOptions,
+        });
+      }
+    }
+
+    if (this.props.newMediaItem !== nextProps.newMediaItem && nextProps.newMediaItem.get('type') !== 'blog') {
+      const { newMediaItem } = nextProps;
+      const featuredImageId = newMediaItem.get('media_item_id');
+      this.setState({
+        featuredImageUrl: newMediaItem.getIn(['properties', 'url']),
+        featuredImageId,
+      });
+      this.handlePostSave({
+        featured_image_id: featuredImageId,
+      });
+    }
+  }
+
+  setupWordPressPost(props = this.props) {
+    const wordpressPost = props.postSet.getIn(['details', 'posts']).find((post) => {
       if (post.get('status') === '0') return false;
       if (post.get('connection_channel') === 'wordpress') return true;
       return false;
@@ -108,50 +161,10 @@ export class WordpressSettings extends Component {
         allowComments: properties.allow_comments === '1',
         isExpanded: true,
       });
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.wordpressGUI.get('isFetching') && !nextProps.wordpressGUI.get('isFetching')) {
-      if (!nextProps.wordpressGUI.get('error')) {
-        const { wordpressGUI } = nextProps;
-        const authorOptions = wordpressGUI
-          .getIn(['data', 'authors'])
-          .map((a) => ({
-            value: a.get('user_id'),
-            label: a.get('display_name'),
-          }))
-          .toJS();
-
-        if (this.state.author && this.state.author.value) {
-          const author = find(authorOptions, { value: this.state.author.value });
-          this.setState({
-            author,
-          });
-        }
-        this.setState({
-          categorySuggestions: wordpressGUI
-            .getIn(['data', 'categories'])
-            .map((c) => c.get('slug'))
-            .toJS(),
-          tagSuggestions: wordpressGUI
-            .getIn(['data', 'terms'])
-            .map((t) => t.get('slug'))
-            .toJS(),
-          authorOptions,
-        });
-      }
-    }
-
-   if (this.props.newMediaItem !== nextProps.newMediaItem && nextProps.newMediaItem.get('type') !== 'blog') {
-      const { newMediaItem } = nextProps;
-      const featuredImageId = newMediaItem.get('media_item_id');
+    } else {
       this.setState({
-        featuredImageUrl: newMediaItem.getIn(['properties', 'url']),
-        featuredImageId,
-      });
-      this.handlePostSave({
-        featured_image_id: featuredImageId,
+        destination: defaultDestinationOption,
+        isExpanded: false,
       });
     }
   }
