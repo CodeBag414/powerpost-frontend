@@ -122,7 +122,7 @@ class PostEditor extends Component {
 
   state = {
     postTitle: '',
-    selectedTab: 'Schedule',
+    selectedTabIndex: 0,
     showDeletePopup: false,
     sidebarExpanded: true,
   };
@@ -261,7 +261,7 @@ class PostEditor extends Component {
       );
     }
 
-    const { postTitle, selectedTab, showDeletePopup } = this.state;
+    const { postTitle, selectedTabIndex, showDeletePopup } = this.state;
     const postsArray = postSet.getIn(['details', 'posts']);
     let posts;
     if (postsArray) {
@@ -319,13 +319,13 @@ class PostEditor extends Component {
             <div className="main">
               <TabWrapper>
                 {
-                  tabs.map((tab) =>
+                  tabs.map((tab, index) =>
                     <span
                       key={tab.name}
-                      className={`${tab.name === selectedTab ? 'active-link' : ''} ${tab.name.toLowerCase() === 'content' && permissionClasses.contentTab}`}
+                      className={`${index === selectedTabIndex ? 'active-link' : ''} ${tab.name.toLowerCase() === 'content' && permissionClasses.contentTab}`}
                       onClick={() => {
                         this.setState({
-                          selectedTab: tab.name,
+                          selectedTab: index,
                           sidebarExpanded: !(tab.name === 'Schedule'),
                         });
                       }}
@@ -340,7 +340,7 @@ class PostEditor extends Component {
                 <div className="tabs-bottom-border"></div>
               </TabWrapper>
               {
-                tabs.map((tab) => (tab.name === selectedTab ? tab.component : null))
+                tabs.map((tab, index) => (index === selectedTabIndex ? tab.component : null))
               }
               <Comments
                 comments={comments}
