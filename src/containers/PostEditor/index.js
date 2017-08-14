@@ -325,7 +325,7 @@ class PostEditor extends Component {
                       className={`${index === selectedTabIndex ? 'active-link' : ''} ${tab.name.toLowerCase() === 'content' && permissionClasses.contentTab}`}
                       onClick={() => {
                         this.setState({
-                          selectedTab: index,
+                          selectedTabIndex: index,
                           sidebarExpanded: !(tab.name === 'Schedule'),
                         });
                       }}
