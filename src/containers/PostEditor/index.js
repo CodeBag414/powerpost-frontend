@@ -323,7 +323,7 @@ class PostEditor extends Component {
                     <span
                       key={tab.name}
                       className={`
-                        ${index === (permissionClasses.contentTab && 1) || selectedTabIndex ? 'active-link' : ''}
+                        ${((permissionClasses.contentTab && index === 1) || index === selectedTabIndex) ? 'active-link' : ''}
                         ${tab.name.toLowerCase() === 'content' && permissionClasses.contentTab}
                       `}
                       onClick={() => {
