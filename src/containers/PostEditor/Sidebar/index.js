@@ -8,7 +8,7 @@ const Sidebar = styled.div`
   top: 0;
   transition: right .25s;
   width: 258px;
-  height: 100%;
+  min-height: 100%;
 
   .button-flat {
     border: none;
