@@ -734,6 +734,24 @@ export function createRoutes(store, auth) {
         importModules.catch(errorLoading);
       },
     },
+    {
+      path: 'post/page/:id',
+      name: 'publicPage',
+      loc: 'https://legacy.powerpost.digital',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          System.import('containers/Redirect'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([component]) => {
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      }
+    },
   ];
 
   return {
