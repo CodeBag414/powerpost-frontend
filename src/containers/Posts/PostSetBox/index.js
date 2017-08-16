@@ -37,7 +37,7 @@ class PostSetBox extends Component {
     currentPostStatus: 3,
     searchText: null,
     sortBy: sortByOptions[0],
-    startDate: moment().startOf('day').subtract(29, 'days'),
+    startDate: moment(0),
     endDate: moment().endOf('day'),
     searchVisible: false,
   }
