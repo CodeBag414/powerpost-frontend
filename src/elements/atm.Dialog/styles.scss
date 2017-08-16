@@ -1,5 +1,9 @@
 @import '~globals.scss';
 
+[data-react-toolbox="overlay"] {
+  z-index: 1000000;
+}
+
 .dialog {
   width: auto;
   border-radius: 4px;

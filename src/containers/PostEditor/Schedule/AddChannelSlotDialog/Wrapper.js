@@ -9,7 +9,7 @@ const Wrapper = styled.div`
   max-height: 80vh;
   position: relative;
   display: flex;
-  flex-direction: column;  
+  flex-direction: column;
 
   .close-button {
     position: absolute;
@@ -26,7 +26,6 @@ const Wrapper = styled.div`
   }
   .content-area {
     padding: 0 40px;
-    flex: 1;
     display: flex;
     overflow-y: auto;
   }
