@@ -40,6 +40,8 @@ function PostDetails({
   const isPast = status === '2' || status === '3';
   const disableClass = isPast ? 'disabled' : '';
 
+  const scheduleTime = moment.unix(post.get('schedule_time')).format('h:mma, MMMM D');
+
   if (!connection) return null;
 
   return (
@@ -85,7 +87,7 @@ function PostDetails({
               <div className="post-upon-ready-placeholder">This post will be sent when the status is set to Ready.</div>
           )) || (
             status === '2' ?
-              <div className="post-upon-ready-placeholder">This post was successfully published on this channel at SCHEDULE_TIME</div>
+              <div className="post-upon-ready-placeholder">This post was successfully published on this channel at {scheduleTime}.</div>
             :
               <div className="post-upon-ready-placeholder">There was a problem with publishing to this channel.</div>
           )
