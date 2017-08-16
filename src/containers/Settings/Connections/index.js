@@ -52,7 +52,7 @@ class Connections extends React.Component {
     window.addEventListener('message', receiveMessage.bind(this), false);
 
     function receiveMessage(event) {
-      if (event.origin.includes('dev2')) {
+      if (event.origin.includes('dev2') || event.origin.includes('devapi') || event.origin.includes('api.powerpost')) {
         this.props.connectionCallback(event.data);
       }
     }
