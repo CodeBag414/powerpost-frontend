@@ -512,7 +512,7 @@ class Library extends React.Component {
       <Wrapper>
         <SidebarWrapper>
           <div style={{ display: 'block', textAlign: 'center' }}>
-            <DropDownMenu {...menuOptions} >
+            <DropDownMenu {...menuOptions} className={permissionClasses.createNewItem} >
               <MenuItem caption="Add File" onClick={this.openAddFile} />
               <MenuItem caption="Add Link" onClick={this.openAddLink} />
               <MenuItem caption="Add Blog" onClick={this.openAddBlog} />
@@ -520,8 +520,8 @@ class Library extends React.Component {
           </div>
           <Menu style={{ margin: '0 auto', padding: '0', width: '150px' }} selectable>
             <ReactRouterMenuItem caption="Media Library" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/media`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
-            <ReactRouterMenuItem caption="Search the Web" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/search`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
-            <ReactRouterMenuItem caption="RSS Feeds" activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/RSS`} style={{ color: '#616669', fontWeight: '700', fontSize: '9px !important' }} />
+            <ReactRouterMenuItem caption="Search the Web" className={permissionClasses.createNewItem} activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/search`} style={{ color: '#616669', fontWeight: '700', fontSize: '13px !important' }} />
+            <ReactRouterMenuItem caption="RSS Feeds" className={permissionClasses.createNewItem} activeClassName={styles.active} to={`/account/${this.props.params.account_id}/library/RSS`} style={{ color: '#616669', fontWeight: '700', fontSize: '9px !important' }} />
           </Menu>
         </SidebarWrapper>
         <ContentWrapper>
