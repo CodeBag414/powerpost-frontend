@@ -41,7 +41,6 @@ class BlogEditor extends Component {
     super(props);
 
     const selectedItem = props.selectedItem;
-    console.log(selectedItem);
     this.state = {
       titleValue: selectedItem.properties ? selectedItem.properties.title : '',
       descriptionValue: selectedItem.properties ? selectedItem.properties.caption : '',
@@ -239,6 +238,7 @@ class BlogEditor extends Component {
                 Upload New Cover Image
               </SimpleButton>
             </div>
+          </div>
           </div>
         </Wrapper>
       </FullScreenDialog>
