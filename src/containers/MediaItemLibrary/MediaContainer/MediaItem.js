@@ -101,7 +101,7 @@ const MediaItem = (props) => {
   if (props.mediaItem.status === 0) {
     return;
   }
-  const EditorLink = <IconButtonTooltip icon="edit" tooltip="Edit" className={props.permissionClasses.editItem} onClick={() => props.openEditor(props.mediaItem)} />;
+  const EditorLink = <IconButtonTooltip icon="edit" tooltip="Edit" className={props.permissionClasses && props.permissionClasses.editItem} onClick={() => props.openEditor(props.mediaItem)} />;
 
   return (
     <Wrapper>
@@ -124,7 +124,7 @@ const MediaItem = (props) => {
         <div style={{ display: 'inline-block' }}>
           {EditorLink}
           <IconButtonTooltip icon="remove_red_eye" tooltip="View" onClick={() => props.openPreview(props.mediaItem)} />
-          <IconButtonTooltip icon="delete_forever" className={props.permissionClasses.deleteItem} tooltip="Delete" onClick={() => props.onDelete(props.mediaItem.media_item_id)} />
+          <IconButtonTooltip icon="delete_forever" className={props.permissionClasses && props.permissionClasses.deleteItem} tooltip="Delete" onClick={() => props.onDelete(props.mediaItem.media_item_id)} />
         </div>
         }
       </ActionBar>
