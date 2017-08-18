@@ -18,7 +18,7 @@ function PostContent({ creationTime, message, mediaItems }) {
         <div className="time">{creationTime}</div>
         <div className="description">{message}</div>
         <div className="mediaContent">
-          <Preview item={item} />
+          <Preview item={item} toggled={true} />
         </div>
       </div>
     </Wrapper>

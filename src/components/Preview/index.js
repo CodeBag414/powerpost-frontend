@@ -82,8 +82,9 @@ class Preview extends React.Component {
   constructor(props) {
     super(props);
 
+    const toggled = this.props.toggled || false;
     this.state = {
-      toggled: false,
+      toggled: toggled,
     };
 
     this.toggleBlog = this.toggleBlog.bind(this);
@@ -94,7 +95,7 @@ class Preview extends React.Component {
   }
 
   render() {
-    const { item } = this.props;
+    const { item, toggled } = this.props;
 
     const type = item.type;
 
@@ -155,7 +156,7 @@ class Preview extends React.Component {
             <Image src={image} />
             <LinkTitle>{item.properties.title}</LinkTitle>
             <LinkDescription>{item.properties.caption}</LinkDescription>
-            <Button onClick={this.toggleBlog}>Toggle Blog</Button>
+            {!toggled && <Button onClick={this.toggleBlog}>Toggle Blog</Button> }
             <BlogContainer toggled={this.state.toggled}>
               {renderHTML(htmlDecode(item.properties.html || ' '))}
             </BlogContainer>

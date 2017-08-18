@@ -244,7 +244,7 @@ class TopNav extends Component {
                 <span>{this.props.userAccount.title}</span>
               </BrandItemLink>
             }
-            {this.props.userAccount.subaccounts.length > 0 && this.props.userAccount.subaccounts.map((brand, i) =>
+            {this.props.userAccount.subaccounts.length > 0 && this.props.userAccount.subaccounts.sort((a,b) => a.title.localeCompare(b.title)).map((brand, i) =>
               <SubBrandItemLink key={i} to={`/account/${brand.account_id}`} isActive={brand.account_id === accountId}>
                 <BrandIcon thumbnail={brand.properties && brand.properties.thumb_url ? brand.properties.thumb_url : null} color={brand.properties && brand.properties.color ? brand.properties.color : '#E52466'} />
                 <span>{brand.title}</span>
@@ -252,7 +252,7 @@ class TopNav extends Component {
             )}
             {
               (this.props.sharedAccounts.length > 0 &&
-                this.props.sharedAccounts.map((brand, index) => (
+                this.props.sharedAccounts.sort((a, b) => a.title.localeCompare(b.title)).map((brand, index) => (
                   <div>
                     <BrandItemLink
                       key={index}
@@ -265,7 +265,7 @@ class TopNav extends Component {
                       />
                       <span>{brand.title}</span>
                     </BrandItemLink>
-                    {brand.subaccounts.length > 0 && brand.subaccounts.map((subbrand, i) =>
+                    {brand.subaccounts.length > 0 && brand.subaccounts.sort((a, b) => a.title.localeCompare(b.title)).map((subbrand, i) =>
                       <SubBrandItemLink
                         key={i}
                         to={`/account/${subbrand.account_id}`}
