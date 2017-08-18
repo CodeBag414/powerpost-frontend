@@ -306,7 +306,7 @@ class Content extends Component {
   }
 
   openAddBlog = () => {
-    this.setState({ blogItem: null });
+    this.setState({ blogItem: {} });
     const { pathname } = this.props.location;
     const { hash } = this.props.location;
     this.props.pushToRoute(`${pathname}${hash}#blog-editor`);

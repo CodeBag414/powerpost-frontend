@@ -13,7 +13,7 @@ const Wrapper = styled.div`
     padding: 0 20px 0 0;
     display: flex;
     height: 100%;
-    .main {
+    .main-div {
       flex: 2;
       .note-editor.note-frame.panel.panel-default {
         border: none;

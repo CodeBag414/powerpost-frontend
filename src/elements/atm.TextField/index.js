@@ -23,6 +23,7 @@ const TextField = (props) => {
           placeholder={props.hintText}
           onBlur={props.onBlur}
           onChange={props.onChange}
+          placeholder={props.placeholder}
         />
         { props.iconClass && <i className={props.iconClass} /> }
       </div>
@@ -48,6 +49,7 @@ TextField.propTypes = {
   htmlFor: PropTypes.any,
   maxLength: PropTypes.number,
   disabled: PropTypes.bool,
+  placeholder: PropTypes.string,
 };
 
 export default TextField;

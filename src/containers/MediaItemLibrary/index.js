@@ -181,7 +181,7 @@ class Library extends React.Component {
 
   openAddBlog() {
     const { pathname } = this.props.location;
-    this.setState({ blogItem: null });
+    this.setState({ blogItem: {} });
     this.props.pushToRoute(`${pathname}#blog-editor`);
   }
 
