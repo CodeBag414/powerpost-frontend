@@ -15,6 +15,7 @@ import Button from 'elements/atm.Button';
 import TextArea from 'elements/atm.TextArea';
 import PPTextField from 'elements/atm.TextField';
 import SimpleButton from 'elements/atm.SimpleButton';
+import FullScreenDialog from 'elements/atm.FullScreenDialog';
 
 import theme from 'theme';
 
@@ -154,97 +155,103 @@ class BlogEditor extends Component {
     const { titleValue, descriptionValue, selectedImage, creationTime, content } = this.state;
 
     return (
-      <Wrapper>
-        <GeneralInfo
-          blogName={titleValue || ''}
-          creationTime={creationTime || ''}
-          user={user}
-          onBack={this.onBack}
-          handleInputChange={this.handleInputChange}
-        />
-        <div style={{ padding: '10px' }} >
-          <Button
-            primary
-            label="Add Image"
-            onClick={this.props.openAddFile}
-            style={{ marginLeft: '15px', marginRight: '15px' }}
+      <FullScreenDialog
+        active={true}
+        title="Blog Editor"
+        isContent
+      >
+        <Wrapper>
+          <GeneralInfo
+            blogName={titleValue || ''}
+            creationTime={creationTime || ''}
+            user={user}
+            onBack={this.onBack}
+            handleInputChange={this.handleInputChange}
           />
-          <Button
-            primary
-            label="Embed Link"
-            onClick={this.props.openAddLink}
-          />
-        </div>
-        <div className="content-wrapper">
-          <div className="main">
-            <ReactSummernote
-              value={htmlDecode(content || '')}
-              options={{
-                dialogsInBody: true,
-                height: '70vh',
-                toolbar: [
-                  ['fontname', ['fontname', 'fontsize', 'color']],
-                  ['font', ['bold', 'italic', 'underline']],
-                  ['para', ['ul', 'ol', 'paragraph']],
-                  ['insert', ['link']],
-                  ['view', ['fullscreen', 'codeview']],
-                ],
-                fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Merriweather'],
-              }}
-              onChange={this.onChange}
+          <div style={{ padding: '10px' }} >
+            <Button
+              primary
+              label="Add Image"
+              onClick={this.props.openAddFile}
+              style={{ marginLeft: '15px', marginRight: '15px' }}
+            />
+            <Button
+              primary
+              label="Embed Link"
+              onClick={this.props.openAddLink}
             />
           </div>
-          <div className="right-pane">
-            <div className="button-wrapper">
-              {/* <Button
-                label="Create a Post"
-                onClick={this.createPost}
-                style={{ float: 'left', marginTop: '30px', marginLeft: '10px' }}
-              />*/}
-              <Button
-                primary
-                label={selectedItem === null ? 'Save Blog' : 'Update Blog'}
-                onClick={selectedItem === null ? this.onSaveBlog : this.onUpdateBlog}
-                style={{ float: 'left', marginTop: '30px', marginLeft: '10px' }}
+          <div className="content-wrapper">
+            <div className="main">
+              <ReactSummernote
+                value={htmlDecode(content || '')}
+                options={{
+                  dialogsInBody: true,
+                  height: '70vh',
+                  toolbar: [
+                    ['fontname', ['fontname', 'fontsize', 'color']],
+                    ['font', ['bold', 'italic', 'underline']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['link']],
+                    ['view', ['fullscreen', 'codeview']],
+                  ],
+                  fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Merriweather'],
+                }}
+                onChange={this.onChange}
               />
             </div>
-            <TextArea
-              floatingLabelText="Description"
-              rows={5}
-              value={descriptionValue || ''}
-              onChange={(e) => this.handleInputChange('descriptionValue', e.target.value)}
-            />
-            <div className="image-wrapper">
-              {selectedImage && selectedImage.url &&
-                <div className="header">
-                  <p>Cover Image</p>
-                  <SimpleButton
-                    style={{ fontSize: '13px' }}
-                    color={theme.textColor}
-                    onClick={this.removeCoverImage}
-                    noBorder
-                  >
-                    Remove
-                  </SimpleButton>
-                </div>
-              }
-              {selectedImage && selectedImage.url &&
-                <div className="cover-image">
-                  <LargeImageWrapper src={selectedImage.url} />
-                </div>
-              }
-              <SimpleButton
-                style={{ fontSize: '13px' }}
-                color={theme.textColor}
-                onClick={this.openFilePicker}
-                noBorder
-              >
-                Upload New Cover Image
-              </SimpleButton>
+            <div className="right-pane">
+              <div className="button-wrapper">
+                {/* <Button
+                  label="Create a Post"
+                  onClick={this.createPost}
+                  style={{ float: 'left', marginTop: '30px', marginLeft: '10px' }}
+                />*/}
+                <Button
+                  primary
+                  label={selectedItem === null ? 'Save Blog' : 'Update Blog'}
+                  onClick={selectedItem === null ? this.onSaveBlog : this.onUpdateBlog}
+                  style={{ float: 'left', marginTop: '30px', marginLeft: '10px' }}
+                />
+              </div>
+              <TextArea
+                floatingLabelText="Description"
+                rows={5}
+                value={descriptionValue || ''}
+                onChange={(e) => this.handleInputChange('descriptionValue', e.target.value)}
+              />
+              <div className="image-wrapper">
+                {selectedImage && selectedImage.url &&
+                  <div className="header">
+                    <p>Cover Image</p>
+                    <SimpleButton
+                      style={{ fontSize: '13px' }}
+                      color={theme.textColor}
+                      onClick={this.removeCoverImage}
+                      noBorder
+                    >
+                      Remove
+                    </SimpleButton>
+                  </div>
+                }
+                {selectedImage && selectedImage.url &&
+                  <div className="cover-image">
+                    <LargeImageWrapper src={selectedImage.url} />
+                  </div>
+                }
+                <SimpleButton
+                  style={{ fontSize: '13px' }}
+                  color={theme.textColor}
+                  onClick={this.openFilePicker}
+                  noBorder
+                >
+                  Upload New Cover Image
+                </SimpleButton>
+              </div>
             </div>
           </div>
-        </div>
-      </Wrapper>
+        </Wrapper>
+      </FullScreenDialog>
     );
   }
 }

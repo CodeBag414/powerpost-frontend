@@ -236,7 +236,7 @@ class PostSetBox extends Component {
               time={sortBy.value}
             />
           </div>
-          <div className="post-editor-container" style={{ zIndex: 1000000 }}>
+          <div className="post-editor-container">
             { postsetId ? <PostEditor id={postsetId} accountId={accountId} modal={false} /> : null}
           </div>
           {loading ? <Loading opacity={0.5} showIndicator={false} /> : null}
