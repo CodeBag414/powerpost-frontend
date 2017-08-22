@@ -258,6 +258,7 @@ class PostEditor extends Component {
       deleteComment,
       comments,
       activeBrand,
+      loadPostSet,
     } = this.props;
 
     if (postSet.get('isFetching') || postSet.get('details').isEmpty()) {
