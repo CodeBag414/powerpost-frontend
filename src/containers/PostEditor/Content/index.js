@@ -16,6 +16,7 @@ import LinkDialog from 'containers/MediaItemLibrary/LinkDialog';
 import ImageEditor from 'containers/MediaItemLibrary/ImageEditor';
 import BlogEditor from 'containers/MediaItemLibrary/BlogEditor';
 import PostPreview from 'containers/PostEditor/PostPreview';
+import EmbedDialog from 'containers/MediaItemLibrary/EmbedDialog';
 
 import {
   setProcessing,
@@ -118,6 +119,7 @@ class Content extends Component {
       videoEditor: false,
       linkEditor: false,
       linkDialog: false,
+      embedDialog: false,
       mediaItem: {},
       item: mediaItems[0] || {},
       urls: [],
@@ -248,9 +250,14 @@ class Content extends Component {
     this.setState({ linkDialog: true });
   }
 
+  openEmbedDialog = () => {
+    this.setState({ embedDialog: true });
+  }
+
   closeAllDialog = () => {
     this.setState({
       linkDialog: false,
+      embedDialog: false,
       linkEditor: false,
       videoEditor: false,
       imageEditor: false,
@@ -461,16 +468,17 @@ class Content extends Component {
       this.setState({ addLinkValueError: 'A link URL is required' });
       return;
     }
+    this.setState({ addLinkValue: '', linkDialog: false, searchDialog: false, rssFeedDialog: false, linkEditor: true });
+    this.props.fetchUrlData(this.state.addLinkValue);
+  }
 
-    const hash = this.props.location.hash;
-    if (hash.endsWith('#blog-editor')) {
-      this.setState({ addLinkValue: '', linkDialog: false });
-      this.props.getEmbedData(this.state.addLinkValue);
-    } else {
-      console.log('open link editor');
-      this.setState({ addLinkValue: '', linkDialog: false, searchDialog: false, rssFeedDialog: false, linkEditor: true });
-      this.props.fetchUrlData(this.state.addLinkValue);
+  handleEmbedSubmit = () => {
+    if (this.state.addLinkValue === '') {
+      this.setState({ addLinkValueError: 'A link URL is required' });
+      return;
     }
+    this.setState({ addLinkValue: '', embedDialog: false });
+    this.props.getEmbedData(this.state.addLinkValue);
   }
 
   handleImageEditorSave = (imageItem) => {
@@ -648,6 +656,7 @@ class Content extends Component {
         }
         <LinkEditor actions={actions} closeAllDialog={this.closeAllDialog} handleLinkEditorSave={this.handleLinkEditorSave} linkEditorDialog={this.state.linkEditor} urlContent={this.props.urlContent} filePickerKey={this.props.filePickerKey} linkItem={this.state.mediaItem} />
         <ImageEditor actions={actions} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleImageEditorSave} isOpen={this.state.imageEditor} filePickerKey={this.props.filePickerKey} imageItem={this.state.mediaItem} />
+        <EmbedDialog actions={actions} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} embedDialog={this.state.embedDialog} handleAddLinkValue={this.handleAddLinkValue} handleSubmit={this.handleEmbedSubmit} value={this.state.addLinkValue} error={this.state.addLinkValueError} />
         <LinkDialog actions={actions} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue} handleSubmit={this.handleAddLinkSubmit} urlValue={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
         <VideoEditor actions={actions} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleVideoEditorSave} isOpen={this.state.videoEditor} filePickerKey={this.props.filePickerKey} videoItem={this.state.mediaItem} />
         <FileEditor actions={actions} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave} isOpen={this.state.fileEditor} filePickerKey={this.props.filePickerKey} fileItem={this.state.mediaItem} />
@@ -660,7 +669,7 @@ class Content extends Component {
             onUpdate={this.updateBlogPost}
             selectedItem={this.state.blogItem}
             openAddFile={this.openFilePicker}
-            openAddLink={this.openLinkDialog}
+            openAddLink={this.openEmbedDialog}
             openBlogEditor={this.openBlogEditor}
             goBack={this.props.goBack}
             pushToRoute={this.props.pushToRoute}
