@@ -57,6 +57,7 @@ MessageToolbar.propTypes = {
   openFilePicker: PropTypes.func,
   openLinkDialog: PropTypes.func,
   openMediaLibrary: PropTypes.func,
+  openAddBlog: PropTypes.func,
   urls: PropTypes.array,
   shortenUrl: PropTypes.func,
   convertUrl: PropTypes.func,

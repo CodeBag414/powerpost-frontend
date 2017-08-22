@@ -6,10 +6,6 @@ import _ from 'lodash';
 import { makeSelectUser } from 'containers/App/selectors';
 
 import {
-  fetchPostSetRequest,
-} from 'containers/App/actions';
-
-import {
   UPDATE_POST_SET_REQUEST,
 } from 'containers/App/constants';
 
@@ -103,7 +99,8 @@ export function* getEmbed(action) {
     const embedData = result.data.url_data[0];
     yield put({ type: GET_EMBED_DATA_SUCCESS, embedData });
   } else {
-    yield put({ type: MEDIA_ERROR, error: 'Error getting embed content' });
+    console.log('Error getting embed content');
+    // yield put({ type: MEDIA_ERROR, error: 'Error getting embed content' }); // FIXME: <-- ???
   }
 }
 
@@ -120,7 +117,7 @@ export function* getLinkData(action) {
   if (result.data.result === 'success') {
     const urlData = {
       ...result.data.preview,
-      short_url: result.data.preview.url,
+      short_url: result.data.short_url,
     };
 
     yield put({ type: FETCH_URL_CONTENT_SUCCESS, urlData });
@@ -293,7 +290,7 @@ export function* pollData(action) {
 
 export function* updateMediaItem(action) {
   const { ...item } = action.mediaItem;
-  const inBlog = action.inBlog;
+  // const inBlog = action.inBlog;
   const data = {
     payload: item,
   };
