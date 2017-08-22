@@ -214,6 +214,14 @@ class AddConnectionDialog extends React.Component {
         sub: true,
         url: this.props.socialUrls ? this.props.socialUrls.google : '',
       },
+      {
+        name: 'Instagram Account',
+        icon: 'fa fa-instagram',
+        text: 'Log into your Instagram account to start sharing content',
+        channel: 'instagram',
+        sub: false,
+        url: this.props.socialUrls ? this.props.socialUrls.instagram : '',
+      },
     ];
     const len = ((this.props.subChannel && Object.getOwnPropertyNames(this.props.subChannel)) || []).length;
     if (len !== 0) {
