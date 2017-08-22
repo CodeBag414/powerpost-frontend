@@ -3,10 +3,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import moment from 'moment';
-import Dropdown from 'elements/atm.Dropdown';
+
 import PostEditor from 'containers/PostEditor';
 import Loading from 'components/Loading';
 import DateRangePicker from 'components/DateRangePicker';
+import Dropdown from 'elements/atm.Dropdown';
+
 import ErrorWrapper from '../ErrorWrapper';
 import Wrapper from './Wrapper';
 import PostSetList from './PostSetList';
@@ -117,6 +119,14 @@ class PostSetBox extends Component {
     }).filter((postSet) => postSet);
   }
 
+  loadPostSet = (v) => {
+    if (v === false) {
+      setTimeout(() => this.setState({ isLoadingPostSet: false }), 1000);
+    } else {
+      this.setState({ isLoadingPostSet: true });
+    }
+  }
+
   toggleSearch = () => {
     this.setState({
       searchVisible: !this.state.searchVisible,
@@ -134,6 +144,7 @@ class PostSetBox extends Component {
       startDate,
       endDate,
       searchVisible,
+      isLoadingPostSet,
     } = this.state;
     const statuses = [
       { status: 3, statusColor: '#ABE66A', name: 'Ready' },
@@ -224,6 +235,8 @@ class PostSetBox extends Component {
     if (!generatedPostSets || generatedPostSets.isEmpty()) {
       return noPostsWrapper;
     }
+
+
     return (
       <Wrapper>
         {heading}
@@ -234,10 +247,19 @@ class PostSetBox extends Component {
               currentPostSetIndex={currentPostSetIndex}
               handleSelectPostSet={this.handleSelectPostSet}
               time={sortBy.value}
+              isLoadingPostSet={isLoadingPostSet}
             />
           </div>
           <div className="post-editor-container">
-            { postsetId ? <PostEditor id={postsetId} accountId={accountId} modal={false} /> : null}
+            {isLoadingPostSet && <Loading opacity={0.5} showIndicator zIndex={100000} />}
+            { postsetId ?
+              <PostEditor
+                id={postsetId}
+                accountId={accountId}
+                modal={false}
+                loadPostSet={this.loadPostSet}
+              />
+            : null}
           </div>
           {loading ? <Loading opacity={0.5} showIndicator={false} /> : null}
         </div>

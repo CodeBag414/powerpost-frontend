@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export default styled.div`
   position: absolute;
-  z-index: 10000;
+  z-index: ${({ zIndex }) => zIndex};
   background-color: ${({ opacity }) => `rgba(255, 255, 255, ${opacity})`};
   height: 100%;
   width: 100%;
