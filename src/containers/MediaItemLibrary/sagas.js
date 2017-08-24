@@ -130,7 +130,7 @@ export function* getEmbed(action) {
   const data = {
     payload: {
       url: action.url,
-    }
+    },
   };
 
   const params = serialize(data);
@@ -449,7 +449,7 @@ export function* replicatePostSetSaga() {
     }
 
     if (data) {
-      toastr.success('Success', 'Postset has been added to the stream.');
+      toastr.success('Success', 'This post has been added to drafts. You can edit it now or close it and edit later.');
       yield put(replicatePostSetSuccess(data.post_set));
       yield put(push({
         pathname: prevUrl,
