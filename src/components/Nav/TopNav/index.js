@@ -244,7 +244,7 @@ class TopNav extends Component {
                 <span>{this.props.userAccount.title}</span>
               </BrandItemLink>
             }
-            {this.props.userAccount.subaccounts.length > 0 && this.props.userAccount.subaccounts.sort((a,b) => a.title.localeCompare(b.title)).map((brand, i) =>
+            {this.props.userAccount.subaccounts.length > 0 && this.props.userAccount.subaccounts.sort((a, b) => a.title.localeCompare(b.title)).map((brand, i) =>
               <SubBrandItemLink key={i} to={`/account/${brand.account_id}`} isActive={brand.account_id === accountId}>
                 <BrandIcon thumbnail={brand.properties && brand.properties.thumb_url ? brand.properties.thumb_url : null} color={brand.properties && brand.properties.color ? brand.properties.color : '#E52466'} />
                 <span>{brand.title}</span>

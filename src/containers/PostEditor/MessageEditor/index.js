@@ -186,6 +186,7 @@ MessageEditor.propTypes = {
   permissionClasses: PropTypes.object,
   isMentionsInput: PropTypes.bool,
   availableFBChannel: PropTypes.string,
+  openAddBlog: PropTypes.func,
 };
 
 export default MessageEditor;

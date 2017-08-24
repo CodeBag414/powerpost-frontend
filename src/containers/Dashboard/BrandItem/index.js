@@ -88,7 +88,7 @@ const BrandItem = (props) => {
       { brand.subaccounts && brand.subaccounts.length > 0 && <p style={{ marginLeft: '40px', fontWeight: '700' }}>Sub-Brands</p> }
       { brand.subaccounts && brand.subaccounts.length > 0 &&
         brand.subaccounts
-        .sort((a, b) => a.title.toUpperCase() >= b.title.toUpperCase())
+        .sort((a, b) => a.title.localeCompare(b.title))
         .map((subbrand, i) => <SubBrandItem brand={subbrand} key={i} role={role} />)}
     </Wrapper>
   );

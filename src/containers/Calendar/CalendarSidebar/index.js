@@ -96,7 +96,7 @@ class CalendarSidebar extends React.Component {
             className={`pp-checkbox ${permissionClasses.Idea}`}
           />
         </div>
-        <div className="cal-sidebar-unscheduled">
+        {/* <div className="cal-sidebar-unscheduled">
           {
             postSets.map((postSet) =>
               <UnscheduledPostSet
@@ -107,7 +107,7 @@ class CalendarSidebar extends React.Component {
               />
             )
           }
-        </div>
+        </div> */}
       </Wrapper>
     );
   }

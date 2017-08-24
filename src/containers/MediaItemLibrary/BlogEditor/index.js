@@ -15,6 +15,7 @@ import Button from 'elements/atm.Button';
 import TextArea from 'elements/atm.TextArea';
 import PPTextField from 'elements/atm.TextField';
 import SimpleButton from 'elements/atm.SimpleButton';
+import FullScreenDialog from 'elements/atm.FullScreenDialog';
 
 import theme from 'theme';
 
@@ -40,19 +41,18 @@ class BlogEditor extends Component {
     super(props);
 
     const selectedItem = props.selectedItem;
-
     this.state = {
-      titleValue: selectedItem === null ? '' : selectedItem.properties.title,
-      descriptionValue: selectedItem === null ? '' : selectedItem.properties.caption,
-      selectedImage: selectedItem === null ?
-      {}
-      :
+      titleValue: selectedItem.properties ? selectedItem.properties.title : '',
+      descriptionValue: selectedItem.properties ? selectedItem.properties.caption : '',
+      selectedImage: selectedItem.properties ?
         {
           key: selectedItem.properties.thumb_key,
           url: selectedItem.properties.thumb_url,
-        },
-      creationTime: selectedItem === null ? 0 : selectedItem.creation_time,
-      content: selectedItem === null ? '' : selectedItem.properties.html,
+        }
+      :
+        {},
+      creationTime: selectedItem.properties ? selectedItem.creation_time : 0,
+      content: selectedItem.properties ? selectedItem.properties.html : '',
     };
   }
 
@@ -66,9 +66,10 @@ class BlogEditor extends Component {
     const iframe = document.createElement('iframe');
     const container = document.createElement('div');
     const maxWidth = embedData.media.width;
+    const maxHeight = embedData.media.height;
     container.style.cssText = 'position:relative;width:100%;max-width:' + maxWidth + 'px;height:0;padding-bottom: 51%;';
     iframe.src = embedData.iframe_src;
-    iframe.style.cssText = 'position:absolute;width:100%;max-width:' + maxWidth + 'px;height:100%;left:0;top:0;';
+    iframe.style.cssText = 'position:absolute;width:100%;max-width:' + maxWidth + 'px;max-height:' + maxHeight + 'px;height:100%;left:0;top:0;';
     container.appendChild(iframe);
     ReactSummernote.insertNode(container);
   }
@@ -154,6 +155,11 @@ class BlogEditor extends Component {
     const { titleValue, descriptionValue, selectedImage, creationTime, content } = this.state;
 
     return (
+      <FullScreenDialog
+        active={true}
+        title="Blog Editor"
+        isContent
+      >
       <Wrapper>
         <GeneralInfo
           blogName={titleValue || ''}
@@ -161,22 +167,25 @@ class BlogEditor extends Component {
           user={user}
           onBack={this.onBack}
           handleInputChange={this.handleInputChange}
+          onUpdateBlog={this.onUpdateBlog}
+          onSaveBlog={this.onSaveBlog}
+          selectedItem={selectedItem}
         />
-        <div style={{ padding: '10px' }} >
-          <Button
-            primary
-            label="Add Image"
-            onClick={this.props.openAddFile}
-            style={{ marginLeft: '15px', marginRight: '15px' }}
-          />
-          <Button
-            primary
-            label="Embed Link"
-            onClick={this.props.openAddLink}
-          />
-        </div>
         <div className="content-wrapper">
-          <div className="main">
+          <div className="main-div">
+            <div style={{ padding: '10px', textAlign: 'right' }} >
+              <Button
+                secondary
+                label="Add Image"
+                onClick={this.props.openAddFile}
+                style={{ marginLeft: '15px', marginRight: '15px', color: '#333' }}
+              />
+              <Button
+                secondary
+                label="Embed Link"
+                onClick={this.props.openAddLink}
+              />
+            </div>
             <ReactSummernote
               value={htmlDecode(content || '')}
               options={{
@@ -195,19 +204,6 @@ class BlogEditor extends Component {
             />
           </div>
           <div className="right-pane">
-            <div className="button-wrapper">
-              {/* <Button
-                label="Create a Post"
-                onClick={this.createPost}
-                style={{ float: 'left', marginTop: '30px', marginLeft: '10px' }}
-              />*/}
-              <Button
-                primary
-                label={selectedItem === null ? 'Save Blog' : 'Update Blog'}
-                onClick={selectedItem === null ? this.onSaveBlog : this.onUpdateBlog}
-                style={{ float: 'left', marginTop: '30px', marginLeft: '10px' }}
-              />
-            </div>
             <TextArea
               floatingLabelText="Description"
               rows={5}
@@ -243,8 +239,9 @@ class BlogEditor extends Component {
               </SimpleButton>
             </div>
           </div>
-        </div>
-      </Wrapper>
+          </div>
+        </Wrapper>
+      </FullScreenDialog>
     );
   }
 }

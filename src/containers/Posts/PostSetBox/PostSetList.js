@@ -17,6 +17,7 @@ const PostSetList = ({
   streamName,
   handleSelectPostSet,
   time,
+  isLoadingPostSet,
 }) => (
   <Wrapper>
     {
@@ -33,7 +34,7 @@ const PostSetList = ({
             : ((p.get('status') === '3' && 'Post When Ready') || 'Unscheduled')
           }
           type={p.get('post_type')}
-          onClick={() => handleSelectPostSet(index)}
+          onClick={() => isLoadingPostSet ? null : handleSelectPostSet(index)}
         />
       ))
     }
@@ -46,6 +47,7 @@ PostSetList.propTypes = {
   streamName: PropTypes.string,
   handleSelectPostSet: PropTypes.func,
   time: PropTypes.string,
+  isLoadingPostSet: PropTypes.func,
 };
 
 export default PostSetList;

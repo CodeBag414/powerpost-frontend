@@ -11,6 +11,7 @@ import {
   UPDATE_POST_REQUEST,
   UPDATE_POST_SUCCESS,
   UPDATE_POST_FAILURE,
+  CREATE_POST_SET_SUCCESS,
 } from 'containers/App/constants';
 
 import {
@@ -291,6 +292,8 @@ function boardReducer(state = initialState, action) {
         .setIn(['post', 'error'], fromJS(action.payload));
     case SET_WORDPRESS_POST_REQUEST:
       return state.setIn(['post', 'data'], action.payload);
+    case CREATE_POST_SET_SUCCESS:
+      return state.setIn(['post', 'data'], fromJS({}));
     case FETCH_FACEBOOK_ENTITIES_SUCCESS:
       return state.set('facebookEntities', fromJS(action.entities));
     default: return state;

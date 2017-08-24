@@ -24,12 +24,12 @@ const makeSelectUserAccount = () => createSelector(
 
 const makeSelectSharedAccounts = () => createSelector(
     selectAuth,
-    (auth) => auth.get('sharedAccounts')
+    (auth) => auth.get('sharedAccounts').sort((a,b) => a.title.localeCompare(b.title))
 );
 
 const makeSelectSubAccounts = () => createSelector(
     selectAuth,
-    (auth) => auth.get('subAccounts')
+    (auth) => auth.get('subAccounts').sort((a,b) => a.title.localeCompare(b.title))
 );
 
 const makeSelectUserAvatar = () => createSelector(

@@ -112,6 +112,7 @@ class PostEditor extends Component {
     comments: ImmutablePropTypes.list,
     activeBrand: PropTypes.object,
     setProcessing: PropTypes.func.isRequired,
+    loadPostSet: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -133,9 +134,13 @@ class PostEditor extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { postSet, connections } = nextProps;
+    const { postSet, connections, loadPostSet } = nextProps;
 
     if (this.props.postSet !== postSet) {
+      if (!postSet.get('isFetching')) {
+        loadPostSet(false);
+      }
+
       const titleText = postSet.getIn(['details', 'title']);
       this.setState({ postTitle: titleText || 'Untitled Post' });
     }
@@ -182,6 +187,7 @@ class PostEditor extends Component {
   }
 
   initialize = (props = this.props) => {
+    props.loadPostSet(true);
     const { accountId, id } = props;
     props.getComments(id);
     props.getAccountTags(accountId);
@@ -209,8 +215,9 @@ class PostEditor extends Component {
   }
 
   handleTitleBlur = (e) => {
-    const { updatePostSet, postSet } = this.props;
+    const { updatePostSet, loadPostSet, postSet } = this.props;
     const titleText = e.target.textContent;
+    loadPostSet(true);
     updatePostSet({
       ...postSet.get('details').toJS(),
       id: postSet.getIn(['details', 'post_set_id']),
@@ -251,9 +258,11 @@ class PostEditor extends Component {
       deleteComment,
       comments,
       activeBrand,
+      loadPostSet,
     } = this.props;
 
     if (postSet.get('isFetching') || postSet.get('details').isEmpty()) {
+      loadPostSet(true);
       return (
         <Wrapper modal={modal}>
           <Loading />

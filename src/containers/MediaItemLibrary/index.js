@@ -38,6 +38,7 @@ import {
 import Wrapper from './Wrapper';
 import BlogEditor from './BlogEditor';
 import LinkDialog from './LinkDialog';
+import EmbedDialog from './EmbedDialog';
 import LinkEditor from './LinkEditor';
 import ImageEditor from './ImageEditor';
 import VideoEditor from './VideoEditor';
@@ -136,6 +137,7 @@ class Library extends React.Component {
       imageEditorDialog: false,
       videoEditorDialog: false,
       fileEditorDialog: false,
+      embedDialog: false,
       imageItem: {},
       linkItem: {},
       videoItem: {},
@@ -179,9 +181,13 @@ class Library extends React.Component {
     this.setState({ linkDialog: true });
   }
 
+  openAddEmbed = () => {
+    this.setState({ embedDialog: true });
+  }
+
   openAddBlog() {
     const { pathname } = this.props.location;
-    this.setState({ blogItem: null });
+    this.setState({ blogItem: {} });
     this.props.pushToRoute(`${pathname}#blog-editor`);
   }
 
@@ -245,13 +251,10 @@ class Library extends React.Component {
     filepicker.pickAndStore(filePickerOptions, filePickerStoreOptions, this.handleOpenAddFile, onFail);
   }
 
-  openEmbedLink() {
-
-  }
-
   closeAllDialog() {
     this.setState({
       linkDialog: false,
+      embedDialog: false,
       linkEditorDialog: false,
       videoEditorDialog: false,
       imageEditorDialog: false,
@@ -416,14 +419,17 @@ class Library extends React.Component {
       this.setState({ addLinkValueError: 'A link URL is required' });
       return;
     }
-    const hash = this.props.location.hash;
-    if (hash === '#blog-editor') {
-      this.setState({ addLinkValue: '', linkDialog: false });
-      this.props.getEmbedData(this.state.addLinkValue);
-    } else {
-      this.setState({ addLinkValue: '', linkDialog: false, searchDialog: false, rssFeedDialog: false, linkEditorDialog: true });
-      this.props.fetchUrlData(this.state.addLinkValue);
+    this.setState({ addLinkValue: '', linkDialog: false, searchDialog: false, rssFeedDialog: false, linkEditorDialog: true });
+    this.props.fetchUrlData(this.state.addLinkValue);
+  }
+
+  handleEmbedSubmit = () => {
+    if (this.state.addLinkValue === '') {
+      this.setState({ addLinkValueError: 'A link URL is required' });
+      return;
     }
+    this.setState({ addLinkValue: '', embedDialog: false });
+    this.props.getEmbedData(this.state.addLinkValue);
   }
 
   handleOpenAddFile(mediaItem) {
@@ -540,6 +546,7 @@ class Library extends React.Component {
         </ContentWrapper>
         <LinkEditor actions={actions} permissionClasses={permissionClasses} closeAllDialog={this.closeAllDialog} handleLinkEditorSave={this.handleLinkEditorSave} mediaLibraryContext linkEditorDialog={this.state.linkEditorDialog} urlContent={this.props.urlContent} filePickerKey={this.props.filePickerKey} linkItem={this.state.linkItem} />
         <ImageEditor actions={actions} permissionClasses={permissionClasses} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleImageEditorSave} isOpen={this.state.imageEditorDialog} filePickerKey={this.props.filePickerKey} imageItem={this.state.imageItem} />
+        <EmbedDialog actions={actions} permissionClasses={permissionClasses} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} embedDialog={this.state.embedDialog} handleAddLinkValue={this.handleAddLinkValue} handleSubmit={this.handleEmbedSubmit} value={this.state.addLinkValue} error={this.state.addLinkValueError} />
         <LinkDialog actions={actions} permissionClasses={permissionClasses} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} linkDialog={this.state.linkDialog} handleAddLinkValue={this.handleAddLinkValue} handleSubmit={this.handleAddLinkSubmit} value={this.state.addLinkValue} errorText={this.state.addLinkValueError} />
         <VideoEditor actions={actions} permissionClasses={permissionClasses} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleVideoEditorSave} isOpen={this.state.videoEditorDialog} filePickerKey={this.props.filePickerKey} videoItem={this.state.videoItem} />
         <FileEditor actions={actions} permissionClasses={permissionClasses} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave} isOpen={this.state.fileEditorDialog} filePickerKey={this.props.filePickerKey} fileItem={this.state.fileItem} />
@@ -552,7 +559,7 @@ class Library extends React.Component {
             selectedItem={this.state.blogItem}
             filePickerKey={this.props.filePickerKey}
             openAddFile={this.openAddFile}
-            openAddLink={this.openAddLink}
+            openAddLink={this.openAddEmbed}
             openBlogEditor={this.openBlogEditor}
             embedData={this.props.embedData}
             getEmbedData={this.props.getEmbedData}

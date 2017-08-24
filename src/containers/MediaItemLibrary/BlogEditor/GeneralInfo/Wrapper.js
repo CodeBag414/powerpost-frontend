@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  padding: 20px 40px;
+  padding: 10px 40px;
   border-bottom: 1px solid #DBDFE0;
   display: flex;
   justify-content: space-between;

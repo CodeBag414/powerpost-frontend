@@ -176,7 +176,14 @@ class Main extends React.Component {
           {this.props.children}
         </div>
         <div className={styles.postEditor}>
-          { postsetId ? <PostEditor id={postsetId} accountId={params.account_id} /> : null}
+          { postsetId ?
+            <PostEditor
+              id={postsetId}
+              accountId={params.account_id}
+              loadPostSet={() => {}}
+            />
+           :
+           null}
         </div>
       </div>
     );

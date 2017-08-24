@@ -1,0 +1,17 @@
+.minor-tab-bar {
+  background-color: #F9F9F9;
+  color: #8E8E8E;
+  display: flex;
+  font-size: 11px;
+  justify-content: space-between;
+  padding: 17px 27px;
+  .tab-item {
+    cursor: pointer;
+    padding: 0 3px 3px 3px;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.5s;
+    &.active {
+      border-color: #E81D64;
+    }
+  }
+}

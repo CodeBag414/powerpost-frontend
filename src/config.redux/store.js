@@ -26,9 +26,12 @@ export default function configureStore(initialState = {}, history) {
   // Create store with middleware
   const middlewares = [
     sagaMiddleware,
-    logger,
     routerMiddleware(history),
   ];
+
+  if (process.env.NODE_ENV !== 'production') {
+    middlewares.push(logger);
+  }
 
   const enhancers = [
     applyMiddleware(...middlewares),
