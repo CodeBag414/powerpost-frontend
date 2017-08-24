@@ -112,13 +112,14 @@ class PostEditor extends Component {
     comments: ImmutablePropTypes.list,
     activeBrand: PropTypes.object,
     setProcessing: PropTypes.func.isRequired,
-    loadPostSet: PropTypes.func.isRequired,
+    loadPostSet: PropTypes.func,
   };
 
   static defaultProps = {
     modal: true,
     accountId: '',
     goBack: () => {},
+    loadPostSet: () => {},
   };
 
   state = {
@@ -187,8 +188,8 @@ class PostEditor extends Component {
   }
 
   initialize = (props = this.props) => {
-    props.loadPostSet(true);
     const { accountId, id } = props;
+    props.loadPostSet(true);
     props.getComments(id);
     props.getAccountTags(accountId);
     props.fetchPostSet({

@@ -152,6 +152,7 @@ class Main extends React.Component {
     const permissionClasses = getClassesByPage(activeBrand.user_access.permissions, 'mainNav');
 
     const postsetId = hash.startsWith('#postset') ? hash.split('-')[1] : 0;
+
     return (
       <div className={postsetId ? styles.modalOpen : ''}>
         <ProcessingIndicator isProcessing={this.props.isProcessing} />
@@ -180,7 +181,6 @@ class Main extends React.Component {
             <PostEditor
               id={postsetId}
               accountId={params.account_id}
-              loadPostSet={() => {}}
             />
            :
            null}
