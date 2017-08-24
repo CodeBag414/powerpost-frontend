@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
+import { withRouter } from 'react-router';
 
 import ErrorWrapper from '../ErrorWrapper';
 
@@ -18,6 +19,7 @@ class PostSetBox extends Component {
     fetchPostSet: PropTypes.func,
     handlePostSet: PropTypes.func,
     permissionClasses: PropTypes.object,
+    location: PropTypes.object,
   }
 
   state = {
@@ -25,8 +27,15 @@ class PostSetBox extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (this.props.location !== nextProps.location) {
+      if (nextProps.postSets) {
+        nextProps.fetchPostSet(
+          { id: nextProps.postSets.get(this.state.currentPostSetIndex).get('post_set_id') }
+        );
+      }
+    }
     if (this.props.fetchingPostSets && !nextProps.fetchingPostSets && !nextProps.postSets.isEmpty()) {
-      this.handleSelectPostSet(0, nextProps);
+      this.handleSelectPostSet(this.state.currentPostSetIndex, nextProps);
     }
   }
 
@@ -77,4 +86,4 @@ class PostSetBox extends Component {
   }
 }
 
-export default PostSetBox;
+export default withRouter(PostSetBox);
