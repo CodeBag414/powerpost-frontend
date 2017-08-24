@@ -133,6 +133,7 @@ class BlogEditor extends Component {
     const filePickerOptions = {
       buttonText: 'Choose',
       container: 'modal',
+      mimetype: 'image/*',
       multiple: false,
       maxFiles: 1,
       imageQuality: 80,
