@@ -267,7 +267,6 @@ class PowerStreamLayout extends Component {
             <PostEditor
               id={postsetId}
               accountId={accountId}
-              loadPostSet={() => {}}
             />
           }
           { postSets.get('isFetching') && <Loading /> }
