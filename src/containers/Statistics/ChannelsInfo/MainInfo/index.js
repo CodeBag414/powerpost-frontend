@@ -212,6 +212,38 @@ const rules = {
       descriptionKey: 'title',
     },
   },
+  instagram: {
+    posts: {
+      infoMonth: 'analytics.posts_by_month',
+      infoWeek: 'analytics.posts_by_weeks_ago',
+      content: 'Posts',
+      totalKey: 'post_count',
+      topByEngagementKey: 'top_posts_by_engagement',
+    },
+    likes: {
+      infoMonth: 'analytics.posts_by_month',
+      infoWeek: 'analytics.posts_by_weeks_ago',
+      content: 'Likes',
+      totalKey: 'likes',
+      topByEngagementKey: 'top_posts_by_engagement',
+    },
+    comments: {
+      infoMonth: 'analytics.posts_by_month',
+      infoWeek: 'analytics.posts_by_weeks_ago',
+      content: 'Comments',
+      totalKey: 'comments',
+      topByEngagementKey: 'top_posts_by_engagement',
+    },
+    infos: {
+      items: [
+        { label: 'Likes', valueKey: 'likes.count' },
+        { label: 'Comments', valueKey: 'comments.count' },
+      ],
+      imageUrlKey: 'images.thumbnail.url',
+      createTimeKey: 'created_time',
+      descriptionKey: 'caption',
+    },
+  },
 };
 
 class MainInfo extends React.Component {
@@ -303,9 +335,11 @@ class MainInfo extends React.Component {
     const { activeChannel } = this.props;
     const rule = this.getRule();
     const { infoMonth, items, imageUrlKey, createTimeKey, descriptionKey } = this.getInfos();
+    const channel = activeChannel.get('connection').get('channel');
     const itemInfo = activeChannel.getIn((infoMonth || rule.infoMonth) ? (infoMonth || rule.infoMonth).split('.') : []) || Map();
     const keys = Object.keys(itemInfo.toJS());
     const last = keys[0];
+
     if (last !== null) {
       const topItems = itemInfo.getIn([last, rule.topByEngagementKey]) || [];
       TopItemsList = topItems.map((topItem, index) =>
@@ -321,6 +355,7 @@ class MainInfo extends React.Component {
           imageUrlKey={imageUrlKey}
           createTimeKey={createTimeKey}
           descriptionKey={descriptionKey}
+          channel={channel}
         />
       );
     }

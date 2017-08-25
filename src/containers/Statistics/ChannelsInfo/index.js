@@ -28,6 +28,7 @@ const engagementTabsList = {
   pinterest: ['pins', 're-pins', 'likes', 'comments'],
   linkedin: ['posts', 'likes', 'comments'],
   google: ['posts', 'replies', 'plusoners'],
+  instagram: ['posts', 'likes', 'comments'],
 };
 
 class ChannelsInfo extends Component {
@@ -98,6 +99,11 @@ class ChannelsInfo extends Component {
         { info: 'analytics.posts_by_month', key: 'post_count', label: 'Posts' },
         { info: 'analytics.posts_by_month', key: 'replies', label: 'Replies' },
         { info: 'analytics.posts_by_month', key: 'plusoners', label: 'Plusoners' },
+      ],
+      instagram: [
+        { info: 'analytics.posts_by_month', key: 'post_count', label: 'Posts' },
+        { info: 'analytics.posts_by_month', key: 'likes', label: 'Likes' },
+        { info: 'analytics.posts_by_month', key: 'comments', label: 'Comments' },
       ],
     }[channel];
     return rules.map((rule) => {
