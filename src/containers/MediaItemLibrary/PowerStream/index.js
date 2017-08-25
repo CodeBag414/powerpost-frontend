@@ -4,6 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { UserCanSharedStreams } from 'config.routes/UserRoutePermissions';
 
 import {
   makeSelectCurrentAccount,
@@ -42,4 +43,4 @@ const mapStateToProps = createStructuredSelector({
   userAccount: makeSelectCurrentAccount(),
 });
 
-export default connect(mapStateToProps)(PowerStreamContainer);
+export default UserCanSharedStreams(connect(mapStateToProps)(PowerStreamContainer));

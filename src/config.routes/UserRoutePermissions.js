@@ -18,9 +18,42 @@ export const UserCanTeam = UserAuthWrapper({
   redirectAction: routerActions.push,
   authenticatingSelector: (state) => { const main = state.get('main'); return main.get('isFetchingAccount'); },
   LoadingComponent: Loading,
-  predicate: (auth) => auth.getIn(['activeBrand', 'account_access', 'permissions']).indexOf('team') > -1 && !auth.get('fetchingError'),
+  predicate: (auth) => auth.getIn(['activeBrand', 'user_access', 'permissions']).indexOf('team') > -1,
   failureRedirectPath: '/forbidden',
   wrapperDisplayName: 'UserCanTeam',
+  allowRedirectBack: false,
+});
+
+export const UserCanPosts = UserAuthWrapper({
+  authSelector: (state) => state.get('main'),
+  redirectAction: routerActions.push,
+  authenticatingSelector: (state) => { const main = state.get('main'); return main.get('isFetchingAccount'); },
+  LoadingComponent: Loading,
+  predicate: (auth) => auth.getIn(['activeBrand', 'user_access', 'permissions']).indexOf('posts') > -1 && auth.getIn(['activeBrand', 'account_access', 'permissions']).indexOf('posts') > -1 && !auth.get('fetchingError'),
+  failureRedirectPath: '/forbidden',
+  wrapperDisplayName: 'UserCanPosts',
+  allowRedirectBack: false,
+});
+
+export const UserCanSocialFeeds = UserAuthWrapper({
+  authSelector: (state) => state.get('main'),
+  redirectAction: routerActions.push,
+  authenticatingSelector: (state) => { const main = state.get('main'); return main.get('isFetchingAccount'); },
+  LoadingComponent: Loading,
+  predicate: (auth) => auth.getIn(['activeBrand', 'user_access', 'permissions']).indexOf('social_feeds') > -1 && auth.getIn(['activeBrand', 'account_access', 'permissions']).indexOf('social_feeds') > -1 && !auth.get('fetchingError'),
+  failureRedirectPath: '/forbidden',
+  wrapperDisplayName: 'UserCanSocialFeeds',
+  allowRedirectBack: false,
+});
+
+export const UserCanSharedStreams = UserAuthWrapper({
+  authSelector: (state) => state.get('main'),
+  redirectAction: routerActions.push,
+  authenticatingSelector: (state) => { const main = state.get('main'); return main.get('isFetchingAccount'); },
+  LoadingComponent: Loading,
+  predicate: (auth) => auth.getIn(['activeBrand', 'user_access', 'permissions']).indexOf('shared_streams') > -1 && auth.getIn(['activeBrand', 'account_access', 'permissions']).indexOf('shared_streams') > -1 && !auth.get('fetchingError'),
+  failureRedirectPath: '/forbidden',
+  wrapperDisplayName: 'UserCanSharedStreams',
   allowRedirectBack: false,
 });
 
@@ -57,6 +90,17 @@ export const UserCanBoard = UserAuthWrapper({
   allowRedirectBack: false,
 });
 
+export const UserCanLibrary = UserAuthWrapper({
+  authSelector: (state) => state.get('main'),
+  redirectAction: routerActions.push,
+  authenticatingSelector: (state) => { const main = state.get('main'); return main.get('isFetchingAccount'); },
+  LoadingComponent: Loading,
+  predicate: (auth) => auth.getIn(['activeBrand', 'user_access', 'permissions']).indexOf('content_library') > -1 && auth.getIn(['activeBrand', 'account_access', 'permissions']).indexOf('content_library') > -1 && !auth.get('fetchingError'),
+  failureRedirectPath: '/forbidden',
+  wrapperDisplayName: 'UserCanLibrary',
+  allowRedirectBack: false,
+});
+
 export const UserCanConnections = UserAuthWrapper({
   authSelector: (state) => state.get('main'),
   redirectAction: routerActions.push,
@@ -90,6 +134,16 @@ export const UserCanPostSet = UserAuthWrapper({
   allowRedirectBack: false,
 });
 
+export const UserCanCalendar = UserAuthWrapper({
+  authSelector: (state) => state.get('main'),
+  redirectAction: routerActions.push,
+  authenticatingSelector: (state) => { const main = state.get('main'); return main.get('isFetchingAccount'); },
+  LoadingComponent: Loading,
+  predicate: (auth) => auth.getIn(['activeBrand', 'user_access', 'permissions']).indexOf('calendar') > -1 && auth.getIn(['activeBrand', 'account_access', 'permissions']).indexOf('calendar') > -1 && !auth.get('fetchingError'),
+  failureRedirectPath: '/forbidden',
+  wrapperDisplayName: 'UserCanCalendar',
+  allowRedirectBack: false,
+});
 export const UserCanPostEdit = UserAuthWrapper({
   authSelector: (state) => state.get('main'),
   redirectAction: routerActions.push,

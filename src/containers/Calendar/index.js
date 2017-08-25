@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import moment from 'moment';
+import { UserCanCalendar } from 'config.routes/UserRoutePermissions';
 
 import { getClassesByPage } from 'utils/permissionClass';
 
@@ -254,4 +255,4 @@ const mapStateToProps = createStructuredSelector({
   currentAccount: makeSelectCurrentAccount(),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Calendar);
+export default UserCanCalendar(connect(mapStateToProps, mapDispatchToProps)(Calendar));

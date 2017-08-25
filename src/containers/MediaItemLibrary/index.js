@@ -12,6 +12,7 @@ import { createStructuredSelector } from 'reselect';
 import { routerActions } from 'react-router-redux';
 import DropdownMenu from 'react-dd-menu';
 import ReactSummernote from 'react-summernote';
+import { UserCanLibrary } from 'config.routes/UserRoutePermissions';
 
 import {
   createPostSetRequest,
@@ -640,4 +641,4 @@ Library.propTypes = {
   }),
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Library);
+export default UserCanLibrary(connect(mapStateToProps, mapDispatchToProps)(Library));
