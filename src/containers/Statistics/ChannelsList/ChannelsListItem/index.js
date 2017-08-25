@@ -1,8 +1,9 @@
-import React, { PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import Wrapper from './Wrapper';
 
-class ChannelsListItem extends React.Component {
+class ChannelsListItem extends Component {
   static propTypes = {
     connection: PropTypes.shape({
       type: PropTypes.string,

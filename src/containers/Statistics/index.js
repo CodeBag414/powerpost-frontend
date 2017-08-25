@@ -4,7 +4,8 @@
  * i.e. Facebook, LinkedIn, Twitter, Pinterest
  */
 
-import React, { PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -30,7 +31,7 @@ import {
   makeSelectAccountId,
 } from './selectors';
 
-class Statistics extends React.Component {
+class Statistics extends Component {
 
   static propTypes = {
     connections: PropTypes.arrayOf(

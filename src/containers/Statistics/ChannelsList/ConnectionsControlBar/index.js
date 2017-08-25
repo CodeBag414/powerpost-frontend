@@ -1,10 +1,11 @@
-import React, { PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import PPButtonInput from 'elements/atm.ButtonInput';
 import Wrapper from './Wrapper';
 
-class ConnectionsControlBar extends React.Component {
+class ConnectionsControlBar extends Component {
   constructor(props) {
     super(props);
     this.setChannelFilter = this.setChannelFilter.bind(this);
