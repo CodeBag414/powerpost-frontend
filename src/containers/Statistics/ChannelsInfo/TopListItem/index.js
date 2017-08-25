@@ -1,4 +1,6 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import moment from 'moment';
 import { getFormattedDate, getCurrentMonth } from 'utils/timeUtils';
 
 import ListWrapper from '../Wrapper/ListWrapper';
@@ -14,6 +16,7 @@ class TopListItem extends React.Component {
     imageUrlKey: PropTypes.string,
     createTimeKey: PropTypes.string,
     descriptionKey: PropTypes.string,
+    channel: PropTypes.string,
     infos: PropTypes.arrayOf(
       PropTypes.shape({
         label: PropTypes.string,
@@ -23,14 +26,15 @@ class TopListItem extends React.Component {
   };
 
   renderItem() {
-    const { topItem, imageUrlKey, createTimeKey, descriptionKey } = this.props;
+    const { topItem, imageUrlKey, createTimeKey, descriptionKey, channel } = this.props;
     return (
       <ContentWrapper>
         <ImgWrapper>
           <img src={topItem.getIn(imageUrlKey.split('.'))} role="presentation" />
         </ImgWrapper>
         <TxtWrapper>
-          <p><b>{getFormattedDate(topItem.getIn(createTimeKey.split('.')))}</b></p>
+          <p><b>{channel === 'instagram' ? moment.unix(topItem.getIn(createTimeKey.split('.'))).format('MMM DD - hh:mm a')
+            : getFormattedDate(topItem.getIn(createTimeKey.split('.')))}</b></p>
           <p className="description">{topItem.getIn(descriptionKey.split('.'))}</p>
         </TxtWrapper>
       </ContentWrapper>
