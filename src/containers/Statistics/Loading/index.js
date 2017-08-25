@@ -1,10 +1,11 @@
-import React, { PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Loading from 'react-loading';
 
 import Wrapper from './Wrapper';
 import Progress from './Progress';
 
-class ChannelLoading extends React.Component {
+class ChannelLoading extends Component {
 
   static propTypes = {
     channel: PropTypes.shape({

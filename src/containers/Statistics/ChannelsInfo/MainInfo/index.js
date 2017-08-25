@@ -179,6 +179,39 @@ const rules = {
       descriptionKey: 'updateContent.companyStatusUpdate.share.comment',
     },
   },
+  google: {
+    posts: {
+      infoMonth: 'analytics.posts_by_month',
+      infoWeek: 'analytics.posts_by_weeks_ago',
+      content: 'Posts',
+      totalKey: 'post_count',
+      topByEngagementKey: 'top_posts_by_engagement',
+    },
+    replies: {
+      infoMonth: 'analytics.posts_by_month',
+      infoWeek: 'analytics.posts_by_weeks_ago',
+      content: 'Replies',
+      totalKey: 'replies',
+      topByEngagementKey: 'top_posts_by_engagement',
+    },
+    plusoners: {
+      infoMonth: 'analytics.posts_by_month',
+      infoWeek: 'analytics.posts_by_weeks_ago',
+      content: 'Plusoners',
+      totalKey: 'liplusonerskes',
+      topByEngagementKey: 'top_posts_by_engagement',
+    },
+    infos: {
+      items: [
+        { label: 'Replies', valueKey: 'replies' },
+        { label: 'Plusoners', valueKey: 'plusoners' },
+        { label: 'Resharers', valueKey: 'resharers' },
+      ],
+      imageUrlKey: 'actor.image',
+      createTimeKey: 'created_at',
+      descriptionKey: 'title',
+    },
+  },
 };
 
 class MainInfo extends React.Component {

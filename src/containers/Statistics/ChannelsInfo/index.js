@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Link } from 'react-router';
@@ -16,18 +17,20 @@ import {
   fetchCurrentChannelSuccess,
 } from './actions';
 import MainInfo from './MainInfo';
-import ChannelLoading from '../Loading';
 import SubWrapper from './SubWrapper';
 import Wrapper from './MainWrapper';
+
+import ChannelLoading from '../Loading';
 
 const engagementTabsList = {
   twitter: ['tweets', 'retweets', 'favorites'],
   facebook: ['posts', 'fans', 'impressions', 'likes', 'comments'],
   pinterest: ['pins', 're-pins', 'likes', 'comments'],
   linkedin: ['posts', 'likes', 'comments'],
+  google: ['posts', 'replies', 'plusoners'],
 };
 
-class ChannelsInfo extends React.Component {
+class ChannelsInfo extends Component {
   static propTypes = {
     activeChannel: PropTypes.any,
     connections: PropTypes.arrayOf(
@@ -90,6 +93,11 @@ class ChannelsInfo extends React.Component {
       ],
       facebook: [
         { info: 'analytics.extended.page_fans_by_month', label: 'Fans' },
+      ],
+      google: [
+        { info: 'analytics.posts_by_month', key: 'post_count', label: 'Posts' },
+        { info: 'analytics.posts_by_month', key: 'replies', label: 'Replies' },
+        { info: 'analytics.posts_by_month', key: 'plusoners', label: 'Plusoners' },
       ],
     }[channel];
     return rules.map((rule) => {
