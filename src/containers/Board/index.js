@@ -12,6 +12,8 @@ import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { getClassesByPage } from 'utils/permissionClass';
 import Loading from 'components/Loading';
+import { UserCanBoard } from 'config.routes/UserRoutePermissions';
+
 import PostSetsGroup from './PostSetsGroup';
 import {
   deletePostSetRequest,
@@ -200,4 +202,4 @@ const mapStateToProps = createStructuredSelector({
   activeBrand: makeSelectCurrentAccount(),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Board);
+export default UserCanBoard(connect(mapStateToProps, mapDispatchToProps)(Board));

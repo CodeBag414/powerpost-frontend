@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import styled from 'styled-components';
-
+import { UserCanSocialFeeds } from 'config.routes/UserRoutePermissions';
 import withReactRouter from 'elements/hoc.withReactRouter';
 import PPMenuItem from 'elements/atm.MenuItem';
 
@@ -99,4 +99,4 @@ const mapStateToProps = createStructuredSelector({
   connections: makeSelectAccountConnections(),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SocialFeeds);
+export default UserCanSocialFeeds(connect(mapStateToProps, mapDispatchToProps)(SocialFeeds));

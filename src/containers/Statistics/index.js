@@ -9,6 +9,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { browserHistory } from 'react-router';
+import { UserCanStatistics } from 'config.routes/UserRoutePermissions';
 
 import {
     makeSelectAccountConnections,
@@ -155,4 +156,4 @@ const mapStateToProps = createStructuredSelector({
   accountId: makeSelectAccountId(),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Statistics);
+export default UserCanStatistics(connect(mapStateToProps, mapDispatchToProps)(Statistics));

@@ -7,6 +7,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import TabLink from 'elements/atm.TabLink';
+import { UserCanSettings } from 'config.routes/UserRoutePermissions';
+
 import styles from './styles.scss';
 
 const Settings = ({ params, children }) => (
@@ -28,4 +30,4 @@ Settings.propTypes = {
   children: PropTypes.node,
 };
 
-export default Settings;
+export default UserCanSettings(Settings);

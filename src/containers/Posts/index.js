@@ -4,6 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { UserCanPosts } from 'config.routes/UserRoutePermissions';
 
 import {
   makeSelectUserAccount,
@@ -46,4 +47,4 @@ const mapStateToProps = createStructuredSelector({
   activeBrand: makeSelectCurrentAccount(),
 });
 
-export default connect(mapStateToProps)(PostsContainer);
+export default UserCanPosts(connect(mapStateToProps)(PostsContainer));

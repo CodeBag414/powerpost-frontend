@@ -8,7 +8,7 @@ import PPTextField from 'elements/atm.TextField';
 import FontIcon from 'elements/atm.FontIcon';
 import Button from 'elements/atm.Button';
 import SimpleButton from 'elements/atm.SimpleButton';
-
+import Loading from 'components/Loading';
 import theme from 'theme';
 
 import Wrapper from './Wrapper';
@@ -174,7 +174,6 @@ class LinkEditor extends Component {
       selectedImageIndex: -1,
       url: '',
     });
-    console.log(linkItem);
     this.props.handleLinkEditorSave(linkItem, create);
   }
 
@@ -232,6 +231,7 @@ class LinkEditor extends Component {
               <Button onClick={() => this.prepareLinkItem(doNotCreate)} style={{ marginBottom: '5px' }} primary>Save</Button>
             </div>
           </FooterWrapper>
+          {!urlContent.url ? <Loading opacity={0.5} showIndicator={urlContent} /> : null}
         </Wrapper>
       </PPDialog>
     );
