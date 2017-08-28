@@ -20,7 +20,8 @@ import auth from 'utils/auth';
 
 // import sanitize css
 // import 'sanitize.css/sanitize.css';
-
+import './lib/rc-time-picker/style.css';
+import './lib/react-datepicker/style.css';
 import './lib/react-toggle/styles.css';
 import './lib/react-bootstrap-daterangepicker/styles.css';
 import './lib/react-redux-toastr/src/styles/index.scss';
