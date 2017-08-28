@@ -8,9 +8,10 @@ const Wrapper = styled.div`
     .first {
       flex: 2;
       margin-right: 8px;
+      position: relative;
     }
     .second {
-      flex: 1;
+      flex: 2;
       margin-right: 8px;
     }
     .action {
@@ -35,6 +36,20 @@ const Wrapper = styled.div`
       }
       .btn-close-schedule {
         cursor: pointer;
+      }
+      .react-datepicker-popper {
+        transform-origin: left top;
+        transform: scale(1.2) !important;
+        will-change: inherit !important;
+        top: 40px !important;
+      }
+      .react-datepicker-wrapper input {
+        border: 1px solid #CFD8DC;
+        border-radius: 4px;
+        font-size: 13px;
+        line-height: 14px;
+        padding: 9px 12px;
+        color: #616669;
       }
     }
   }
