@@ -135,7 +135,9 @@ class PostEditor extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { postSet, connections, loadPostSet } = nextProps;
+    const { postSet, connections, loadPostSet, activeBrand } = nextProps;
+    const { permissions } = activeBrand.user_access;
+    const permissionClasses = getClassesByPage(permissions, 'postEditor');
 
     if (this.props.postSet !== postSet) {
       if (!postSet.get('isFetching')) {
@@ -148,6 +150,10 @@ class PostEditor extends Component {
 
     if (connections && this.props.connections !== connections) {
       this.setAvailableFBChannel(connections);
+    }
+
+    if (permissionClasses.contentTab) {
+      this.setState({ selectedTabIndex: 1 });
     }
   }
 
