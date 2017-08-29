@@ -28,6 +28,7 @@ const Wrapper = styled.div`
     padding: 0 40px;
     display: flex;
     overflow-y: auto;
+    min-height: 300px;
   }
   .left-box {
     flex: 5;
