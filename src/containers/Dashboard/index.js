@@ -74,7 +74,7 @@ const Dashboard = (props) => {
                   }
                   { brands.length > 0 &&
                     brands
-                    .sort((a, b) => a.title.toUpperCase() >= b.title.toUpperCase())
+                    .sort((a, b) => a.title.localeCompare(b.title))
                     .map((brand, index) => <BrandItem brand={brand} key={index} />) }
                 </div>
               </div>
