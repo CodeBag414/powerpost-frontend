@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import DatePicker from 'react-datepicker';
-import TimePicker from 'rc-time-picker';
+import DatePicker from 'react-toolbox/lib/date_picker';
+import TimePicker from 'react-toolbox/lib/time_picker';
 import Wrapper from './Wrapper';
 
 class SchedulesBlock extends Component {
@@ -57,19 +57,13 @@ class SchedulesBlock extends Component {
               <div className="first">
                 <DatePicker
                   minDate={minDate}
-                  selected={moment(scheduleTime)}
+                  value={new Date(scheduleTime)}
                   onChange={(date) => this.changeDate(index, date)}
                   inputFormat={(date) => moment(date).format('MMMM D, YYYY')}
                 />
               </div>
               <div className="second">
-                <TimePicker
-                  showSecond={false}
-                  defaultValue={moment(scheduleTime)}
-                  onChange={(time) => this.changeTime(index, time)}
-                  use12Hours
-                  format="h:mm a"
-                />
+                <TimePicker format="ampm" value={new Date(scheduleTime)} onChange={(time) => this.changeTime(index, time)} />
               </div>
               <div className="action">
                 {
