@@ -4,7 +4,7 @@ const permissionDetails = {
     title: ['post_edit', 'disabled'],
     contentTab: ['post_edit', 'hidden'],
     assignedTo: ['post_review', 'hidden'],
-    statusChangerAll: ['post_edit', 'hidden'],
+    statusChangerAll: ['post_status_change', 'hidden'],
     statusChangerReviewReady: ['post_review', 'hidden'],
     message: ['post_edit', 'disabled'],
     addContentControl: ['post_edit', 'hidden'],

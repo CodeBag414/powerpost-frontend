@@ -136,11 +136,14 @@ export function* getEmbed(action) {
   const params = serialize(data);
 
   const result = yield call(getData, `/media_api/url_content?${params}`);
-  if (result.data.result === 'success') {
+  if (result.data.result === 'success' && result.data.url_data[0].iframe_src) {
     const embedData = result.data.url_data[0];
     yield put({ type: GET_EMBED_DATA_SUCCESS, embedData });
   } else {
     yield put({ type: MEDIA_ERROR, error: 'Error getting embed content' });
+    if (!result.data.url_data[0].iframe_src) {
+      toastr.error('Error!', 'URL is not an embeddable media type.');
+    }
   }
 }
 
