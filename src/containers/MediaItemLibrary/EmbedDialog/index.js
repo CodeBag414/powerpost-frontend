@@ -34,65 +34,67 @@ const DescProviders = styled.p`
 `;
 
 const DescLogos = styled.img`
+  height: 22px;
 `;
 
-function EmbedDialog(props) {
-  return (
-    <PPDialog
-      active={props.embedDialog}
-      onEscKeyDown={props.closeAllDialog}
-      onOverlayClick={props.closeAllDialog}
-    >
-      <Wrapper>
-        <div className="header-info">
-          <h3><span><i className="fa fa-link" />{}</span>Embed Content</h3>
-          <button onClick={props.closeAllDialog}><FontIcon value="clear" /></button>
-        </div>
-        <div className="info-wrapper">
-          <p>Insert a link to the media you would like to embed.</p>
-          <TextField
-            type="text"
-            floatingLabelText="URL"
-            value={props.urlValue}
-            onChange={props.handleAddLinkValue}
-          />
-          <div className="button-wrapper">
-            <Button onClick={props.handleSubmit} primary>Embed</Button>
+class EmbedDialog extends React.Component {
+
+  render() {
+    return (
+      <PPDialog
+        active={this.props.embedDialog}
+        onEscKeyDown={this.props.closeAllDialog}
+        onOverlayClick={this.props.closeAllDialog}
+      >
+        <Wrapper>
+          <div className="header-info">
+            <h3><span><i className="fa fa-link" />{}</span>Embed Content</h3>
+            <button onClick={this.props.closeAllDialog}><FontIcon value="clear" /></button>
           </div>
-          <Desc>
-            <div style={{ clear: 'both', height: '50px' }}>
-              <DescTitle>Video</DescTitle>
-              <DescDesc>
-                <p>Embed full videos anywhere. Let your users on your site watch content from over 50 providers</p>
-                <DescProviders>Providers include:</DescProviders>
-                <DescLogos src={VideoProviders} />
-              </DescDesc>
+          <div className="info-wrapper">
+            <p>Insert a link to the media you would like to embed.</p>
+            <TextField
+              type="text"
+              name="linkValue"
+              floatingLabelText="URL"
+              value={this.props.urlValue}
+              onChange={this.props.handleAddLinkValue}
+            />
+            <div className="button-wrapper">
+              <Button onClick={this.props.handleSubmit} primary>Embed</Button>
             </div>
-          </Desc>
-          <Desc>
-            <div style={{ clear: 'both', height: '50px' }}>
-              <DescTitle>Images</DescTitle>
-              <DescDesc>
-                <p>A picture is worth a thousand words. Don't just tell users what you are talking about; show them.</p>
-                <DescProviders>Providers include:</DescProviders>
-                <DescLogos src={ImageProviders} />
-              </DescDesc>
-            </div>
-          </Desc>
-          <Desc>
-            <div style={{ clear: 'both', height: '50px' }}>
-              <DescTitle>Rich Media</DescTitle>
-              <DescDesc>
-                <p>Want to visualize a Foursquare checkin or embed PDF's? Embedly has got you covered.</p>
-                <DescProviders>Providers include:</DescProviders>
-                <DescLogos src={RichMediaProviders} />
-              </DescDesc>
-            </div>
-          </Desc>
-        </div>
-      </Wrapper>
-    </PPDialog>
-  );
+            <Desc>
+              <div style={{ clear: 'both', height: '50px' }}>
+                <DescTitle>Video</DescTitle>
+                <DescDesc>
+                  <DescProviders>Providers include:</DescProviders>
+                  <DescLogos src={VideoProviders} />
+                </DescDesc>
+              </div>
+            </Desc>
+            <Desc>
+              <div style={{ clear: 'both', height: '50px' }}>
+                <DescTitle>Images</DescTitle>
+                <DescDesc>
+                  <DescProviders>Providers include:</DescProviders>
+                  <DescLogos src={ImageProviders} />
+                </DescDesc>
+              </div>
+            </Desc>
+            <Desc>
+              <div style={{ clear: 'both', height: '50px' }}>
+                <DescTitle>Rich Media</DescTitle>
+                <DescDesc>
+                  <DescProviders>Providers include:</DescProviders>
+                  <DescLogos src={RichMediaProviders} />
+                </DescDesc>
+              </div>
+            </Desc>
+          </div>
+        </Wrapper>
+      </PPDialog>
+    );
+  }
 }
 
 EmbedDialog.propTypes = {

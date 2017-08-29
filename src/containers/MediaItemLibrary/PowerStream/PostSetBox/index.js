@@ -28,7 +28,7 @@ class PostSetBox extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.location !== nextProps.location) {
-      if (nextProps.postSets) {
+      if (!nextProps.postSets.isEmpty()) {
         nextProps.fetchPostSet(
           { id: nextProps.postSets.get(this.state.currentPostSetIndex).get('post_set_id') }
         );

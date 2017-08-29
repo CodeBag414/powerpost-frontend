@@ -63,15 +63,17 @@ class BlogEditor extends Component {
   }
 
   injectEmbed = (embedData) => {
-    const iframe = document.createElement('iframe');
-    const container = document.createElement('div');
-    const maxWidth = embedData.media.width;
-    const maxHeight = embedData.media.height;
-    container.style.cssText = 'position:relative;width:100%;max-width:' + maxWidth + 'px;height:0;padding-bottom: 51%;';
-    iframe.src = embedData.iframe_src;
-    iframe.style.cssText = 'position:absolute;width:100%;max-width:' + maxWidth + 'px;max-height:' + maxHeight + 'px;height:100%;left:0;top:0;';
-    container.appendChild(iframe);
-    ReactSummernote.insertNode(container);
+    if( embedData.iframe_src) {
+      const iframe = document.createElement('iframe');
+      const container = document.createElement('div');
+      const maxWidth = embedData.media.width;
+      const maxHeight = embedData.media.height;
+      container.style.cssText = 'position:relative;width:100%;max-width:' + maxWidth + 'px;height:0;padding-bottom: 51%;';
+      iframe.src = embedData.iframe_src;
+      iframe.style.cssText = 'position:absolute;width:100%;max-width:' + maxWidth + 'px;max-height:' + maxHeight + 'px;height:100%;left:0;top:0;';
+      container.appendChild(iframe);
+      ReactSummernote.insertNode(container);
+    }
   }
 
   onBack = () => {

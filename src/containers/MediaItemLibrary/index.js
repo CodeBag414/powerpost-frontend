@@ -296,7 +296,7 @@ class Library extends React.Component {
     } else if (action === 'create') {
       this.props.createMediaItem(item);
     }
-    const hash = this.props.location.hash
+    const hash = this.props.location.hash;
     if (hash === '#blog-editor') {
       const video = document.createElement('video');
       video.src = item.properties.url;
