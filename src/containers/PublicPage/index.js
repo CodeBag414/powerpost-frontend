@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import moment from 'moment';
+import Helmet from "react-helmet";
 
 import { fetchPostSetRequest } from './actions';
 import { selectPostSet } from './selectors';
@@ -70,8 +71,28 @@ class PublicPage extends Component {
       accountDescription, creationTime, message,
       mediaItems,
     } = this.state;
+    let seoImage = ''
+    if(mediaItems.length !== 0) {
+      console.log('in media item lenght');
+      const seoItems = mediaItems.toJS();
+      if (seoItems[0] && seoItems[0].properties) {
+        console.log('in properties');
+        seoImage = seoItems[0].properties.thumb_url || seoItems[0].properties.picture || '';
+      }
+    }
     return (
       <Wrapper>
+        <Helmet
+          title={title}
+          meta={[
+            { name: 'description', content: message },
+            { name: 'og:title', content: title },
+            { name: 'og:url', content: `https://app.powerpost.digital${this.props.location.pathname}` },
+            { name: 'og:image', content: seoImage },
+            { name: 'og:description', content: message },
+            { name: 'og:site_name', content: 'Powerpost Digital' },
+          ]}
+        />
         <div className="header"><a href="https://www.powerpost.digital"><img role="presentation" src={logoImg} /></a></div>
         <div className="container" style={{ marginTop: '60px' }}>
           <div className="row">

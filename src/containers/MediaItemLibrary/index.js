@@ -342,7 +342,7 @@ class Library extends React.Component {
     const picture = linkItem.picture || linkItem.properties.picture;
     this.props.setProcessing(true);
     if (picture && picture !== 'remove') {
-      filepicker.storeUrl(`https://process.filestackapi.com/${this.props.filePickerKey}/${picture}`, (Blob) => {
+      filepicker.storeUrl(`https://process.filestackapi.com/${this.props.filePickerKey}/resize=width:750,fit:clip/${picture}`, (Blob) => {
         if (action === 'update') {
           linkItem.properties.picture = Blob.url;
           linkItem.properties.picture_key = Blob.key;
