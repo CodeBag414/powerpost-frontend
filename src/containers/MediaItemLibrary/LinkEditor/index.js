@@ -38,7 +38,7 @@ class LinkEditor extends Component {
     let selectedImageIndex = -1;
 
     if (urlContent.image) {
-      selectedImage = urlContent.image;
+      selectedImage = urlContent.image || '';
       selectedImageIndex = 0;
     }
 
@@ -92,7 +92,7 @@ class LinkEditor extends Component {
         this.setState({ url: nextProps.urlContent.url });
       }
       if (nextProps.urlContent.image) {
-        this.setState({ selectedImage: { url: nextProps.urlContent.image }, selectedImageIndex: 0 });
+        this.setState({ selectedImage: { url: nextProps.urlContent.image || '' }, selectedImageIndex: 0 });
       }
     }
   }
@@ -133,10 +133,8 @@ class LinkEditor extends Component {
       imageUrl = this.state.selectedImage.url;
     }
     if (this.state.selectedImage === 'remove') {
-      console.log('in remove');
       imageUrl = 'remove';
     }
-    console.log(imageUrl);
     let createPost = false;
     if (create) {
       createPost = true;
@@ -179,7 +177,7 @@ class LinkEditor extends Component {
 
   render() {
     const { urlContent, linkEditorDialog, closeAllDialog, mediaLibraryContext } = this.props;
-    const { url, titleValue, descriptionValue, selectedImage, selectedImageIndex } = this.state;
+    const { url, titleValue, descriptionValue, selectedImage } = this.state;
     const create = true;
     const doNotCreate = false;
 

@@ -275,7 +275,9 @@ class Content extends Component {
     this.props.setProcessing(true);
     const { action, ...linkItem } = item;
     filepicker.setKey(filePickerKey);
-    const picture = linkItem && (linkItem.picture || linkItem.properties.picture);
+
+    const picture = linkItem && (linkItem.picture || (linkItem.properties && linkItem.properties.picture) || '');
+
     if (picture) {
       filepicker.storeUrl(`https://process.filestackapi.com/${filePickerKey}/${picture}`, (Blob) => {
         if (action === 'update') {

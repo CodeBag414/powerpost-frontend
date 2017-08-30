@@ -251,7 +251,7 @@
     "react-dom": "15.4.1",
     "react-draft-wysiwyg": "^1.9.4",
     "react-drag-and-drop": "^2.4.0",
-    "react-helmet": "3.2.2",
+    "react-helmet": "^3.2.2",
     "react-immutable-proptypes": "^2.1.0",
     "react-intl": "2.1.5",
     "react-linkify": "^0.2.0",
