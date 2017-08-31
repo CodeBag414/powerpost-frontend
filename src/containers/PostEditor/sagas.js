@@ -115,6 +115,7 @@ export function* getLinkData(action) {
     const urlData = {
       ...result.data.preview,
       short_url: result.data.short_url,
+      original_url: result.data.payload.url,
     };
 
     yield put({ type: FETCH_URL_CONTENT_SUCCESS, urlData });
