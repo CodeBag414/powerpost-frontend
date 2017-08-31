@@ -104,6 +104,7 @@ class Content extends Component {
     const mediaItems = !props.postSet.get('data').isEmpty() ? props.postSet.getIn(['data', 'media_items']).toJS() : [];
     const hasWordPressPost = !props.postSet.get('data').isEmpty() && getHasWordPressPost(props.postSet);
     const characterLimit = this.calculateCharacterLimit(message, mediaItems[0] || [], false);
+
     this.state = {
       channelIndex: -1,
       characterLimit,

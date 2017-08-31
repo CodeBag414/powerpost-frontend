@@ -18,7 +18,7 @@ function MultiLineInput({ disabled, highlightFocus, name, placeholder, message, 
         name={name}
         value={message}
         onChange={handleMessageChange}
-        onBlur={onBlur}
+        onBlur={() => onBlur()}
         theme={theme}
       />
     </Wrapper>
