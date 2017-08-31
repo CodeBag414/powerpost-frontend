@@ -5,15 +5,20 @@
 // Sagas help us gather all our side effects (network requests in this case) in one place
 /* eslint-disable camelcase */
 
-import { takeLatest, delay } from 'redux-saga';
-import { take, call, put, race, select, fork } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
+import { take, call, put, race, select } from 'redux-saga/effects';
 import { browserHistory } from 'react-router';
 import { toastr } from 'lib/react-redux-toastr';
-import { getData, postData, putData, patchData, serialize } from 'utils/request';
+import { getData, postData } from 'utils/request';
 import auth from 'utils/auth';
 import { set } from 'utils/localStorage';
-import { makeSelectCurrentAccount } from 'containers/Main/selectors';
-import { makeSelectUser } from './selectors';
+
+/* Import all sub-sagas here */
+import postSetSagas from './postSetSagas';
+import postSagas from './postSagas';
+import mediaItemsSagas from './mediaItemsSagas';
+
+import { makeSelectUser } from '../selectors';
 
 import {
   SENDING_REQUEST,
@@ -38,23 +43,7 @@ import {
   INVITE_EMAIL_TO_GROUP,
   ADD_USER_TO_GROUP,
   REMOVE_USER_FROM_GROUP,
-  FETCH_POST_SETS_REQUEST,
-  DELETE_POST_SET_REQUEST,
-  DELETE_POST_SET_SUCCESS,
-  CHANGE_POST_SET_REQUEST,
-  CHANGE_POST_SET_STATUS,
-  CHANGE_POST_SET_SORT_ORDER_REQUEST,
-  CHANGE_POST_SET_SORT_ORDER_SUCCESS,
-  SAVE_POST_SET_SORT_ORDER_REQUEST,
-  SAVE_POST_SET_SORT_ORDER_SUCCESS,
-  FETCH_POST_SET_REQUEST,
-  UPDATE_POST_SET_REQUEST,
-  FETCH_POSTS,
-  UPDATE_POST_REQUEST,
-  UPDATE_BUNCH_POST_REQUEST,
-  CREATE_POST_SET_REQUEST,
-  FETCH_MEDIA_ITEMS_REQUEST,
-} from './constants';
+} from '../constants';
 
 import {
   createPaymentSourceSuccess,
@@ -77,19 +66,7 @@ import {
   addUserToGroupError,
   removeUserFromGroupSuccess,
   removeUserFromGroupError,
-  fetchPostSetRequest,
-  fetchPostSetSuccess,
-  fetchPostSetError,
-  updatePostSetSuccess,
-  updatePostSetError,
-  updateBunchPostSuccess,
-  setPosts,
-  createPostSetSuccess,
-  fetchMediaItemsSuccess,
-  fetchMediaItemsFailure,
-  fetchPostSetsSuccess,
-  fetchPostSetsFailure,
-} from './actions';
+} from '../actions';
 
 /**
  * Effect to handle authorization
@@ -307,7 +284,7 @@ export function* userExistsFlow() {
   for (;;) {
     yield take(CHECK_USER_OBJECT);
     const user = yield select(makeSelectUser());
-    if (!user.user_id) {
+    if (!user || !user.user_id) {
       const currentUser = yield call(auth.getCurrentUser);
       yield put({ type: SET_USER, user: currentUser });
     }
@@ -530,289 +507,20 @@ export function* removeUserFromGroupFlow() {
   }
 }
 
-export function* fetchPostSetsWorker({ accountId, filter, endPoint = 'post_sets' }) {
-  const data = {
-    payload: filter,
-  };
-  const params = serialize(data);
-  const currentAccount = yield select(makeSelectCurrentAccount());
-  let id = currentAccount.account_id;
-  if (accountId) {
-    id = accountId;
-  }
-  const requestUrl = `/post_api/${endPoint}/${id}?${params}`;
-  const response = yield call(getData, requestUrl);
-  if (response.data.status === 'success') {
-    // const postSets = response.data.post_sets;
-    // yield put({ type: SET_POST_SETS, postSets });
-    yield put(fetchPostSetsSuccess(response.data));
-  } else {
-    yield put(fetchPostSetsFailure(response.data));
-    // console.log(result);
-  }
+// Little helper function to abstract going to different pages
+export function* forwardTo(location) {
+  yield call(browserHistory.push, location);
 }
 
-export function* deletePostSetRequest(payload) {
-  const requestData = {
-    payload: {
-      status: '0',
-    },
-  };
-  const requestUrl = `/post_api/post_set/${payload.id}?`;
-  try {
-    const response = yield call(patchData, requestUrl, requestData);
-    const { data } = response;
-    if (data.status === 'success') {
-      yield put({ type: DELETE_POST_SET_SUCCESS, id: payload.id });
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-export function* changePostSetRequest(payload) {
-  const requestData = {
-    payload: {
-      status: payload.status,
-    },
-  };
-  const requestUrl = `/post_api/post_set/${payload.id}?`;
-  try {
-    const response = yield call(patchData, requestUrl, requestData);
-    const { data } = response;
-    if (data.status === 'success') {
-      yield put({ type: CHANGE_POST_SET_STATUS, id: payload.id, status: payload.status });
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-export function* changePostSetSortOrderRequest(payload) {
-  const requestUrl = `/post_api/sort_order_after/${payload.id}/${payload.afterId}?`;
-  const requestData = {
-    payload: {
-      post_set_id: payload.id,
-      sort_order_after_id: payload.afterId,
-    },
-  };
-  try {
-    const response = yield call(putData, requestUrl, requestData);
-    const { data } = response;
-    if (data.status === 'success') {
-      yield put({ type: CHANGE_POST_SET_SORT_ORDER_SUCCESS, id: payload.id, sort_order: data.post_set.sort_order });
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-export function* savePostSetSortOrderRequest(payload) {
-  const requestUrl = `/post_api/sort_order/${payload.id}/${payload.sortOrder}?`;
-  const requestData = {
-    payload: {
-      post_set_id: payload.id,
-      sort_order: payload.sortOrder,
-    },
-  };
-  try {
-    const response = yield call(putData, requestUrl, requestData);
-    const { data } = response;
-    if (data.status === 'success') {
-      yield put({ type: SAVE_POST_SET_SORT_ORDER_SUCCESS, id: payload.id, sort_order: data.post_set.sort_order });
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-export function* fetchPostSetWorker({ payload, section }) {
-  try {
-    const response = yield call(getData, `/post_api/post_set/${payload.id}`);
-    const { data } = response;
-    if (data.status === 'success') {
-      yield put(fetchPostSetSuccess(data.post_set, section));
-    } else {
-      throw data.message;
-    }
-  } catch (error) {
-    yield put(fetchPostSetError(error, section));
-  }
-}
-
-export function* updatePostSetWorker(action) {
-  const { payload, section } = action;
-  /* Modify post type correctly */
-  if (payload.post_type === 'document') payload.post_type = 'file';
-
-  try {
-    const response = yield call(putData, `/post_api/post_set/${payload.id}`, { payload });
-    const { data } = response;
-    if (data.status === 'success') {
-      yield put(updatePostSetSuccess(data.post_set, section));
-    } else {
-      throw data.message;
-    }
-  } catch (error) {
-    yield put(updatePostSetError(error, section));
-  }
-}
-
-export function* fetchPostSetsSaga() {
-  yield takeLatest(FETCH_POST_SETS_REQUEST, fetchPostSetsWorker);
-}
-
-export function* deletePostSet() {
-  yield takeLatest(DELETE_POST_SET_REQUEST, deletePostSetRequest);
-}
-
-export function* changePostSetStatus() {
-  yield takeLatest(CHANGE_POST_SET_REQUEST, changePostSetRequest);
-}
-
-export function* changePostSetSortOrderSaga() {
-  yield takeLatest(CHANGE_POST_SET_SORT_ORDER_REQUEST, changePostSetSortOrderRequest);
-}
-
-export function* savePostSetSortOrderSaga() {
-  yield takeLatest(SAVE_POST_SET_SORT_ORDER_REQUEST, savePostSetSortOrderRequest);
-}
-
-export function* fetchPostSetSaga() {
-  yield takeLatest(FETCH_POST_SET_REQUEST, fetchPostSetWorker);
-}
-
-export function* updatePostSetSaga() {
-  yield takeLatest(UPDATE_POST_SET_REQUEST, updatePostSetWorker);
-}
-
-function* fetchPostsWorker({ accountId }) {
-  const data = {
-    payload: {
-      sort_by: 'creation_time',
-      limit: 500,
-    },
-  };
-  const params = serialize(data);
-
-  const requestUrl = `/post_api/posts/${accountId}?${params}`;
-
-  const response = yield call(getData, requestUrl);
-  if (response.data.status === 'success') {
-    const posts = response.data.posts;
-    yield put(setPosts(posts));
-  } else {
-    console.log(response);
-  }
-}
-
-function* updatePostRequestWorker({ post, section }) {
-  const requestUrl = `/post_api/post/${post.post_id}`;
-  const requestData = {
-    payload: {
-      ...post,
-    },
-  };
-
-  const response = yield call(putData, requestUrl, requestData);
-  if (response.data.result === 'success') {
-    yield put({ type: 'UPDATE_POST_SUCCESS', post: response.data.post });
-    yield put(fetchPostSetRequest({ id: response.data.post.post_set_id }, section));
-  } else {
-    console.log(response);
-    yield put({ type: 'UPDATE_POST_FAILURE', payload: response.data });
-  }
-}
-
-/* Independent update post function to update a single post (for Bunch post updating) */
-function* updatePost(post) {
-  const requestUrl = `/post_api/post/${post.post_id}`;
-  const requestData = {
-    payload: {
-      ...post,
-    },
-  };
-
-  const response = yield call(putData, requestUrl, requestData);
-  if (response.data.result === 'success') {
-    yield put({ type: 'UPDATE_POST_SUCCESS', post: response.data.post });
-  } else {
-    console.log(response);
-  }
-}
-
-function* updateBunchPosts(posts) {
-  for (let i = 0; i < posts.length; i += 1) {
-    const post = posts[i];
-    yield fork(updatePost, post);
-  }
-}
-
-function* updateBunchPostRequestWorker({ posts, postSet }) {
-  yield call(updateBunchPosts, posts);
-  yield put(updateBunchPostSuccess(posts, postSet));
-}
-
-export function* fetchPostsSaga() {
-  yield takeLatest(FETCH_POSTS, fetchPostsWorker);
-}
-
-export function* updatePostSaga() {
-  yield takeLatest(UPDATE_POST_REQUEST, updatePostRequestWorker);
-}
-
-export function* updateBunchPostSaga() {
-  yield takeLatest(UPDATE_BUNCH_POST_REQUEST, updateBunchPostRequestWorker);
-}
-
-function* createPostSetWorker({ postSet, edit }) {
-  const requestUrl = '/post_api/post_set';
-  const requestData = {
-    payload: {
-      ...postSet,
-    },
-  };
-  const response = yield call(postData, requestUrl, requestData);
-  if (response.data.status === 'success') {
-    yield put(createPostSetSuccess(response.data.post_set, edit));
-  } else {
-    console.log(response);
-  }
-}
-
-export function* createPostSetSaga() {
-  yield takeLatest(CREATE_POST_SET_REQUEST, createPostSetWorker);
-}
-
-export function* fetchMediaItemsWorker(action) {
-  const accountId = action.accountId;
-
-  const data = {
-    payload: {
-      account_id: accountId,
-    } };
-
-  const params = serialize(data);
-  const collections = yield call(getData, `/media_api/collections?${params}`);
-  const activeCollection = collections.data.collections[0];
-
-  const mediaItems = yield call(getData, `/media_api/collection/${activeCollection.collection_id}`);
-  if (!mediaItems.data.error) {
-    yield put(fetchMediaItemsSuccess(mediaItems));
-  } else {
-    yield put(fetchMediaItemsFailure(mediaItems.data.error));
-  }
-}
-
-export function* fetchMediaItemsSaga() {
-  yield takeLatest(FETCH_MEDIA_ITEMS_REQUEST, fetchMediaItemsWorker);
-}
 
 // The root saga is what we actually send to Redux's middleware. In here we fork
 // each saga so that they are all "active" and listening.
 // Sagas are fired once at the start of an app and can be thought of as processes running
 // in the background, watching actions dispatched to the store.
 export default [
+  ...postSetSagas,
+  ...postSagas,
+  ...mediaItemsSagas,
   loginFlow,
   logoutFlow,
   registerFlow,
@@ -829,21 +537,4 @@ export default [
   inviteEmailToGroupFlow,
   addUserToGroupFlow,
   removeUserFromGroupFlow,
-  fetchPostSetsSaga,
-  deletePostSet,
-  changePostSetStatus,
-  fetchPostSetSaga,
-  updatePostSetSaga,
-  fetchPostsSaga,
-  updatePostSaga,
-  updateBunchPostSaga,
-  createPostSetSaga,
-  fetchMediaItemsSaga,
-  changePostSetSortOrderSaga,
-  savePostSetSortOrderSaga,
 ];
-
-// Little helper function to abstract going to different pages
-export function* forwardTo(location) {
-  yield call(browserHistory.push, location);
-}

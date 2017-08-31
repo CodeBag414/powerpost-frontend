@@ -60,7 +60,7 @@ class ChannelsPreview extends Component {
         />
         <SmoothCollapse expanded={isExpanded}>
           <div style={{ paddingBottom: '16px', paddingTop: '10px' }}>
-            {buildChannelList(connections, postSet.getIn(['details', 'posts']))}
+            {buildChannelList(connections, postSet.getIn(['data', 'posts']))}
           </div>
         </SmoothCollapse>
         <div style={{ marginTop: '-16px' }} />

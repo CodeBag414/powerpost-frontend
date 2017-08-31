@@ -35,7 +35,7 @@ function GeneralInfo({
     browserHistory.push(location.pathname);
   };
 
-  const postSetObject = postSet.get('details').toJS();
+  const postSetObject = postSet.get('data').toJS();
   if (!postSetObject.post_set_id) return null;
   const userName = postSetObject.user_id === user.user_id ? user.display_name : postSetObject.user.display_name;
   const creationTime = moment.unix(postSetObject.creation_time).format('M/DD/YYYY hh:mma');
@@ -56,9 +56,9 @@ function GeneralInfo({
       </div>
       <InnerWrapper>
         <UserAssignment
-          isFetching={groupUsers.isFetching || postSet.get('isFetching')}
-          postSet={postSet.get('details').toJS()}
-          assignee={postSet.getIn(['details', 'user_assignments', 0])}
+          isFetching={groupUsers.isFetching || postSet.get('requesting')}
+          postSet={postSet.get('data').toJS()}
+          assignee={postSet.getIn(['data', 'user_assignments', 0])}
           users={groupUsers.details ? groupUsers.details.groups_users : []}
           updatePostSet={updatePostSet}
           className={permissionClasses.assignedTo}

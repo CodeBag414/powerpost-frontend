@@ -13,12 +13,12 @@ class DeletePostSetDialog extends Component {
     handleDialogToggle: PropTypes.func,
     message: PropTypes.string,
     title: PropTypes.string,
-  }
+  };
 
   static defaultProps = {
     message: 'Are you sure? You will not be able to recover this Post Set and all of its posts.',
     title: 'Delete Post Set',
-  }
+  };
 
   delete = (e) => {
     e.preventDefault();

@@ -1,13 +1,13 @@
 import { fromJS } from 'immutable';
 
 import {
-  FETCH_POST_SET_REQUEST,
-  FETCH_POST_SET_SUCCESS,
-  FETCH_POST_SET_ERROR,
+  FETCH_PUBLIC_POST_SET_REQUEST,
+  FETCH_PUBLIC_POST_SET_SUCCESS,
+  FETCH_PUBLIC_POST_SET_ERROR,
 } from './constants';
 
 const initialState = fromJS({
-  postSet: {
+  publicPostSet: {
     isFetching: false,
     error: null,
     details: {},
@@ -16,23 +16,23 @@ const initialState = fromJS({
 
 function publicPageReducer(state = initialState, action) {
   switch (action.type) {
-    case FETCH_POST_SET_REQUEST:
+    case FETCH_PUBLIC_POST_SET_REQUEST:
       return state
-        .set('postSet', fromJS({
+        .set('publicPostSet', fromJS({
           isFetching: true,
           error: null,
           details: {},
         }));
-    case FETCH_POST_SET_SUCCESS:
+    case FETCH_PUBLIC_POST_SET_SUCCESS:
       return state
-        .set('postSet', fromJS({
+        .set('publicPostSet', fromJS({
           isFetching: false,
           error: null,
           details: action.payload,
         }));
-    case FETCH_POST_SET_ERROR:
+    case FETCH_PUBLIC_POST_SET_ERROR:
       return state
-        .set('postSet', fromJS({
+        .set('publicPostSet', fromJS({
           isFetching: false,
           error: action.payload,
           details: {},

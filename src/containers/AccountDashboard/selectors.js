@@ -7,12 +7,6 @@ const selectStatusCount = () => createSelector(
   (accountDashboard) => accountDashboard.get('statusCount')
 );
 
-const selectPostSets = () => createSelector(
-  selectAccountDashboard,
-  (accountDashboard) => accountDashboard.get('postSets')
-);
-
 export {
   selectStatusCount,
-  selectPostSets,
 };

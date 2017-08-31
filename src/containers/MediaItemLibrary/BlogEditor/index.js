@@ -57,7 +57,7 @@ class BlogEditor extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.embedData.url) {
+    if (nextProps.embedData.url) {
       this.injectEmbed(nextProps.embedData);
     }
   }

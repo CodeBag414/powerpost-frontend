@@ -20,7 +20,7 @@ class SharedStream extends Component {
   constructor(props) {
     super(props);
 
-    const sharedStreamEnabled = props.postSet.getIn(['details', 'stream_ids']).includes(props.accountStreamId);
+    const sharedStreamEnabled = props.postSet.getIn(['data', 'stream_ids']).includes(props.accountStreamId);
 
     this.state = {
       sharedStreamEnabled,
@@ -29,8 +29,8 @@ class SharedStream extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.postSet.getIn(['details', 'post_set_id']) !== this.props.postSet.getIn(['details', 'post_set_id'])) {
-      const sharedStreamEnabled = nextProps.postSet.getIn(['details', 'stream_ids']).includes(nextProps.accountStreamId);
+    if (nextProps.postSet.getIn(['data', 'post_set_id']) !== this.props.postSet.getIn(['data', 'post_set_id'])) {
+      const sharedStreamEnabled = nextProps.postSet.getIn(['data', 'stream_ids']).includes(nextProps.accountStreamId);
       this.setState({
         sharedStreamEnabled,
         isExpanded: sharedStreamEnabled,
@@ -45,8 +45,8 @@ class SharedStream extends Component {
   toggleSharedStream = () => {
     const { accountStreamId, postSet, updatePostSet } = this.props;
     const { sharedStreamEnabled } = this.state;
-    const postDetails = postSet.get('details').toJS();
-    const streamIds = postSet.getIn(['details', 'stream_ids']).toJS();
+    const postDetails = postSet.get('data').toJS();
+    const streamIds = postSet.getIn(['data', 'stream_ids']).toJS();
     let newStreamIds;
 
     this.setState({

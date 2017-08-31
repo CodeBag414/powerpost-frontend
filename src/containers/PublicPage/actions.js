@@ -1,26 +1,26 @@
 import {
-  FETCH_POST_SET_REQUEST,
-  FETCH_POST_SET_SUCCESS,
-  FETCH_POST_SET_ERROR,
+  FETCH_PUBLIC_POST_SET_REQUEST,
+  FETCH_PUBLIC_POST_SET_SUCCESS,
+  FETCH_PUBLIC_POST_SET_ERROR,
 } from './constants';
 
-export function fetchPostSetRequest(payload) {
+export function fetchPublicPostSetRequest(payload) {
   return {
-    type: FETCH_POST_SET_REQUEST,
+    type: FETCH_PUBLIC_POST_SET_REQUEST,
     payload,
   };
 }
 
-export function fetchPostSetSuccess(payload) {
+export function fetchPublicPostSetSuccess(payload) {
   return {
-    type: FETCH_POST_SET_SUCCESS,
+    type: FETCH_PUBLIC_POST_SET_SUCCESS,
     payload,
   };
 }
 
-export function fetchPostSetError(payload) {
+export function fetchPublicPostSetError(payload) {
   return {
-    type: FETCH_POST_SET_ERROR,
+    type: FETCH_PUBLIC_POST_SET_ERROR,
     payload,
   };
 }

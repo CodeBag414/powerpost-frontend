@@ -12,11 +12,11 @@ class PostSetBox extends Component {
   static propTypes = {
     postSets: ImmutablePropTypes.list,
     createPostSet: PropTypes.func,
-  }
+  };
 
   state = {
     currentPostSetIndex: 0,
-  }
+  };
 
   handleSelectPostSet = (index) => {
     this.setState({
@@ -24,7 +24,7 @@ class PostSetBox extends Component {
     });
   }
 
-  addPostsIdea = (postSet, edit) => {
+  addPostsIdea = (postSet, editing) => {
     const { createPostSet } = this.props;
     const postSetJS = postSet.toJS();
     const newPostSet = {
@@ -37,7 +37,7 @@ class PostSetBox extends Component {
     delete newPostSet.creation_time;
     delete newPostSet.sort_order;
     delete newPostSet.post_type;
-    createPostSet(newPostSet, edit);
+    createPostSet(newPostSet, editing);
   }
 
   render() {

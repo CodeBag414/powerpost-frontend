@@ -1,32 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { fromJS } from 'immutable';
+import ImmutablePropTypes from 'react-immutable-proptypes';
+
 import PPDialog from 'elements/atm.Dialog';
 import PPButton from 'elements/atm.Button';
-import { fromJS } from 'immutable';
-import { createStructuredSelector } from 'reselect';
-import ImmutablePropTypes from 'react-immutable-proptypes';
-import {
-  makeSelectAccountConnections,
-} from 'containers/Main/selectors';
-import {
-  selectPostSet,
-} from 'containers/PostEditor/selectors';
-import {
-  submitPostsRequest,
-} from 'containers/PostEditor/actions';
+
+import Wrapper from './Wrapper';
 import ChannelsBlock from './ChannelsBlock';
 import SchedulesBlock from './SchedulesBlock';
-import Wrapper from './Wrapper';
 
 class AddChannelSlotDialog extends Component {
-
   static propTypes = {
     active: PropTypes.bool,
     handleDialogToggle: PropTypes.func,
     mediaItems: PropTypes.object,
     postSet: ImmutablePropTypes.map,
-    submitPosts: PropTypes.func,
+    createBunchPosts: PropTypes.func,
   };
 
   state = {
@@ -82,12 +72,12 @@ class AddChannelSlotDialog extends Component {
     }
   }
 
-  submitPosts = () => {
+  createBunchPosts = () => {
     const { channels, isPostUponReady, scheduleTimes } = this.state;
-    const { submitPosts, postSet, handleDialogToggle } = this.props;
+    const { createBunchPosts, postSet, handleDialogToggle } = this.props;
     const posts = [];
-    const globalMessage = postSet.getIn(['details', 'message']);
-    const channelMessages = postSet.getIn(['details', 'properties']).toJS();
+    const globalMessage = postSet.getIn(['data', 'message']);
+    const channelMessages = postSet.getIn(['data', 'properties']).toJS();
     channels.forEach((channel) => {
       if (!channel.checked) return;
       const channelName = `message_${channel.connection.get('channel')}`;
@@ -98,7 +88,7 @@ class AddChannelSlotDialog extends Component {
           connection_id: channel.connection.get('connection_id'),
           status: '5',
           schedule_time: 0,
-          post_set_id: postSet.getIn(['details', 'post_set_id']),
+          post_set_id: postSet.getIn(['data', 'post_set_id']),
           message: channelMessage || globalMessage,
         });
       } else {
@@ -107,13 +97,13 @@ class AddChannelSlotDialog extends Component {
             connection_id: channel.connection.get('connection_id'),
             status: '1',
             schedule_time: scheduleTime / 1000,
-            post_set_id: postSet.getIn(['details', 'post_set_id']),
+            post_set_id: postSet.getIn(['data', 'post_set_id']),
             message: channelMessage || globalMessage,
           });
         });
       }
     });
-    submitPosts(posts);
+    createBunchPosts(posts);
     handleDialogToggle(false);
   }
 
@@ -167,7 +157,7 @@ class AddChannelSlotDialog extends Component {
             <PPButton
               label="Schedule Selected Channels"
               className="schedule-selected-channels"
-              onClick={this.submitPosts}
+              onClick={this.createBunchPosts}
               primary
             />
           </div>
@@ -177,15 +167,4 @@ class AddChannelSlotDialog extends Component {
   }
 }
 
-export function mapDispatchToProps(dispatch) {
-  return {
-    submitPosts: (posts) => dispatch(submitPostsRequest(posts)),
-  };
-}
-
-const mapStateToProps = createStructuredSelector({
-  connections: makeSelectAccountConnections(),
-  postSet: selectPostSet(),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(AddChannelSlotDialog);
+export default AddChannelSlotDialog;

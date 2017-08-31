@@ -1,9 +1,18 @@
 /*
  * The reducer takes care of state changes in our app through actions
  */
-import { fromJS } from 'immutable';
+import { Map, fromJS } from 'immutable';
 import { find, remove } from 'lodash';
 import auth from 'utils/auth';
+import reduceReducers from 'reduce-reducers';
+
+/* import sub-reducers here */
+import postSetsReducer from './postSetsReducer';
+import postSetReducer from './postSetReducer';
+import postSetsBySTReducer from './postSetsBySTReducer';
+import postsReducer from './postsReducer';
+import postReducer from './postReducer';
+import mediaItemsReducer from './mediaItemsReducer';
 
 import {
   SET_AUTH,
@@ -12,7 +21,6 @@ import {
   CLEAR_ERROR,
   SET_ROLES,
   SET_USER,
-  // CHECK_USER_OBJECT,
   CLEAR_USER,
   CREATE_PAYMENT_SOURCE,
   CREATE_PAYMENT_SOURCE_SUCCESS,
@@ -41,24 +49,7 @@ import {
   REMOVE_USER_FROM_GROUP,
   REMOVE_USER_FROM_GROUP_SUCCESS,
   REMOVE_USER_FROM_GROUP_ERROR,
-  SET_POST_SETS,
-  DELETE_POST_SET_SUCCESS,
-  CHANGE_POST_SET_STATUS,
-  UPDATE_BUNCH_POST_REQUEST,
-  UPDATE_BUNCH_POST_SUCCESS,
-  FETCH_POSTS,
-  SET_POSTS,
-  // UPDATE_POST_SUCCESS,
-  UPDATE_POST_SET_SUCCESS,
-  CREATE_POST_SET_SUCCESS,
-  FETCH_MEDIA_ITEMS_SUCCESS,
-  FETCH_MEDIA_ITEMS_ERROR,
-  CHANGE_POST_SET_SORT_ORDER_SUCCESS,
-  SAVE_POST_SET_SORT_ORDER_SUCCESS,
-  FETCH_POST_SETS_REQUEST,
-  FETCH_POST_SETS_SUCCESS,
-  FETCH_POST_SETS_FAILURE,
-} from './constants';
+} from '../constants';
 
 // The initial application state
 const initialState = fromJS({
@@ -84,7 +75,7 @@ const initialState = fromJS({
     data: {},
     action: null,
   },
-  mediaItmes: [],
+  mediaItems: [],
 });
 
 // Takes care of changing the application state
@@ -94,10 +85,10 @@ function globalReducer(state = initialState, action) {
       return state.set('loggedIn', action.newAuthState);
     case SET_USER:
       return state
-      .set('user', action.user.user)
-      .set('sharedAccounts', action.user.shared_accounts)
-      .set('userAccount', action.user.user_own_account)
-      .set('subAccounts', action.user.subaccounts);
+        .set('user', action.user.user)
+        .set('sharedAccounts', action.user.shared_accounts)
+        .set('userAccount', action.user.user_own_account)
+        .set('subAccounts', action.user.subaccounts);
     case SET_ROLES:
       return state.set('roles', action.roles);
     case SENDING_REQUEST:
@@ -108,10 +99,10 @@ function globalReducer(state = initialState, action) {
       return state.set('error', '');
     case CLEAR_USER:
       return state
-      .set('user', {})
-      .set('sharedAccounts', [])
-      .set('userAccount', {})
-      .set('subAccounts', []);
+        .set('user', {})
+        .set('sharedAccounts', [])
+        .set('userAccount', {})
+        .set('subAccounts', []);
     case CREATE_PAYMENT_SOURCE:
       return state
         .set('creatingPaymentSource', {
@@ -208,48 +199,6 @@ function globalReducer(state = initialState, action) {
           details: null,
           error: action.payload,
         });
-    case FETCH_POST_SETS_REQUEST:
-      return state
-        .setIn(['postSets', 'requesting'], true)
-        .updateIn(['postSets'], (postSets) =>
-          postSets.get('action') === action.action
-            ? postSets
-            : postSets.set('action', action.action).set('data', null));
-    case FETCH_POST_SETS_SUCCESS:
-      return state.set('postSets', fromJS({
-        action: state.getIn(['postSets', 'action']),
-        requesting: false,
-        error: null,
-        data: action.postSets,
-      }));
-    case FETCH_POST_SETS_FAILURE:
-      return state.set('postSets', fromJS({
-        action: state.getIn(['postSets', 'action']),
-        requesting: false,
-        error: action.error,
-        data: null,
-      }));
-    case UPDATE_BUNCH_POST_REQUEST:
-      return state
-        .setIn(['postSets', 'requesting'], true);
-    case UPDATE_BUNCH_POST_SUCCESS:
-      return state
-        .updateIn(['postSets', 'data', 'scheduled_post_sets'], (postSets) => {
-          const index = postSets.findIndex((item) =>
-            (item.get('schedule_time') === action.postSet.schedule_time) && item.get('post_set_id') === action.postSet.post_set_id);
-          return postSets.set(
-            index,
-            fromJS({
-              ...action.postSet,
-              posts: action.posts,
-              schedule_time: action.posts[0].schedule_time,
-              status: (action.posts && action.posts.length && action.posts.every((post) => post.status === 0))
-                ? '0'
-                : action.postSet.status,
-            }),
-          );
-        })
-        .setIn(['postSets', 'requesting'], false);
     case FETCH_GROUP_USERS:
       return state
         .set('groupUsers', {
@@ -326,91 +275,40 @@ function globalReducer(state = initialState, action) {
       return state
         .set('groupUsers', { ...groupUsers });
     }
-    case SET_POST_SETS:
-      return state
-        .set('postSets', action.postSets);
-    case DELETE_POST_SET_SUCCESS: {
-      return state
-        .updateIn(
-          ['postSets', 'data', 'unscheduled_post_sets'],
-          (postSets) => postSets && postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
-        )
-        .updateIn(
-          ['postSets', 'data', 'scheduled_post_sets'],
-          (postSets) => postSets && postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
-        )
-        .updateIn(
-          ['postSets', 'data', 'post_when_ready_post_sets'],
-          (postSets) => postSets && postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
-        )
-        .updateIn(
-          ['postSets', 'data', 'post_sets'],
-          (postSets) => postSets && postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
-        );
-    }
-    case CHANGE_POST_SET_STATUS:
-      return state
-        .updateIn(['postSets', 'data', 'post_sets'], (postSets = fromJS([])) => postSets.map((postSet) =>
-          postSet.get('post_set_id') !== action.id ? postSet : postSet.set('status', action.status)
-        ));
-    case CHANGE_POST_SET_SORT_ORDER_SUCCESS:
-    case SAVE_POST_SET_SORT_ORDER_SUCCESS:
-      return state
-        .updateIn(['postSets', 'data', 'post_sets'], (postSets = fromJS([])) => postSets.map((postSet) =>
-          postSet.get('post_set_id') !== action.id ? postSet : postSet.set('sort_order', action.sort_order)
-        ).sort((a, b) => b.get('sort_order') - a.get('sort_order')));
-    case FETCH_POSTS:
-      return state.set('posts', []);
-    case SET_POSTS:
-      return state.set('posts', action.posts);
-    case UPDATE_POST_SET_SUCCESS:
-      return state
-        .updateIn(
-          ['postSets', 'data', 'unscheduled_post_sets'],
-          (postSets) => postSets && postSets.map((postSet) => postSet.get('post_set_id') === action.payload.post_set_id ? fromJS(action.payload) : postSet)
-        )
-        .updateIn(
-          ['postSets', 'data', 'scheduled_post_sets'],
-          (postSets) => postSets && postSets.map((postSet) =>
-            (postSet.get('post_set_id') === action.payload.post_set_id) ?
-              fromJS({
-                ...postSet.toJS(),
-                ...action.payload,
-              })
-            : postSet)
-        )
-        .updateIn(
-          ['postSets', 'data', 'post_when_ready_post_sets'],
-          (postSets) => postSets && postSets.map((postSet) => postSet.get('post_set_id') === action.payload.post_set_id ? fromJS(action.payload) : postSet)
-        )
-        .updateIn(
-          ['postSets', 'data', 'post_sets'],
-          (postSets) => postSets && postSets.map((postSet) => postSet.get('post_set_id') === action.payload.post_set_id ? fromJS(action.payload) : postSet)
-        );
-    // case UPDATE_POST_SET_SUCCESS: {
-    //   // TODO: Do this for unscheduled_post_sets, post_when_ready_post_sets and state.get('postSets')
-    //   const scheduledPostSets = state.getIn(['postSetsByST', 'data', 'scheduled_post_sets']);
-    //   const index = scheduledPostSets.findIndex((postSet) => postSet.get('post_set_id') === action.payload.post_set_id);
-    //   return (index > -1) ?
-    //     state.updateIn(['postSetsByST', 'data', 'scheduled_post_sets', index], (postSet) => (fromJS({
-    //       ...action.payload,
-    //       schedule_time: postSet.get('schedule_time'),
-    //     })))
-    //     : state;
-    // }
-    case CREATE_POST_SET_SUCCESS:
-      return state.set('post_set', {
-        ...action.postSet,
-        createSuccess: true,
-      }).set('post_edit', action.edit);
-    case FETCH_MEDIA_ITEMS_SUCCESS:
-      return state.set('mediaItems', fromJS(action.mediaItems.data.collection.media_items.filter((t) => t.status !== '0')));
-    case FETCH_MEDIA_ITEMS_ERROR:
-      return state
-        .set('error', action.mediaItems.data.message);
     default:
       return state;
   }
 }
 
-export default globalReducer;
+function combineReducers(reducers) {
+  const reducerKeys = Object.keys(reducers);
+
+  return function combination(state = Map(), action) {
+    return state
+      .withMutations((temporaryState) => {
+        reducerKeys.forEach((reducerName) => {
+          const reducer = reducers[reducerName];
+          const currentDomainState = temporaryState.get(reducerName);
+          const nextDomainState = reducer(currentDomainState, action);
+
+          if (nextDomainState === undefined) {
+            throw new Error(`Reducer "${reducerName}" returned undefined when handling "${action.type}" action. To ignore an action, you must explicitly return the previous state.`);
+          }
+
+          temporaryState.set(reducerName, nextDomainState);
+        });
+      });
+  };
+}
+
+export default reduceReducers(
+  globalReducer,
+  combineReducers({
+    postSets: postSetsReducer,
+    postSetsByST: postSetsBySTReducer,
+    postSet: postSetReducer,
+    posts: postsReducer,
+    post: postReducer,
+    mediaItems: mediaItemsReducer,
+  }),
+);

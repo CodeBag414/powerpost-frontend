@@ -53,7 +53,7 @@ export class WordpressSettings extends Component {
     super(props);
 
     this.state = {
-      title: props.postSet.getIn(['details', 'title']),
+      title: props.postSet.getIn(['data', 'title']),
       destination: defaultDestinationOption,
       slug: '',
       description: '',
@@ -78,7 +78,7 @@ export class WordpressSettings extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.postSet.getIn(['details', 'post_set_id']) !== nextProps.postSet.getIn(['details', 'post_set_id'])) {
+    if (this.props.postSet.getIn(['data', 'post_set_id']) !== nextProps.postSet.getIn(['data', 'post_set_id'])) {
       this.setupWordPressPost(nextProps);
     }
 
@@ -127,7 +127,7 @@ export class WordpressSettings extends Component {
   }
 
   setupWordPressPost(props = this.props) {
-    const wordpressPost = props.postSet.getIn(['details', 'posts']).find((post) => {
+    const wordpressPost = props.postSet.getIn(['data', 'posts']).find((post) => {
       if (post.get('status') === '0') return false;
       if (post.get('connection_channel') === 'wordpress') return true;
       return false;
@@ -200,11 +200,11 @@ export class WordpressSettings extends Component {
 
     if (post.get('data').isEmpty()) {
       createPost({
-        post_set_id: postSet.getIn(['details', 'post_set_id']),
+        post_set_id: postSet.getIn(['data', 'post_set_id']),
         connection_id: option.value,
         status: 1,
         schedule_time: new Date().getTime() / 1000,
-        message: postSet.getIn(['details', 'message']),
+        message: postSet.getIn(['data', 'message']),
       });
     } else {
       const data = post.get('data').toJS();

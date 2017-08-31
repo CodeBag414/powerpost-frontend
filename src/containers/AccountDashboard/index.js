@@ -1,9 +1,6 @@
-/*
+/**
  * Account Dashboard
- *
- *
  */
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
@@ -14,18 +11,22 @@ import moment from 'moment';
 
 import {
   fetchMediaItems,
+  fetchPostSetsRequest,
   fetchPostSetsBySTRequest,
 } from 'containers/App/actions';
-import { makeSelectPostSets, makeSelectMediaItems } from 'containers/App/selectors';
+import {
+  makeSelectPostSets,
+  makeSelectPostSetsByST,
+  makeSelectMediaItems,
+} from 'containers/App/selectors';
+
 import { makeSelectCurrentAccount } from 'containers/Main/selectors';
 
 import {
   fetchStatusCountRequest,
-  fetchPostSetsRequest,
 } from './actions';
 import {
   selectStatusCount,
-  selectPostSets,
 } from './selectors';
 
 import Wrapper from './Wrapper';
@@ -39,7 +40,6 @@ import Posts from './Posts';
 import ContentHub from './ContentHub';
 
 class AccountDashboard extends Component {
-
   state = {
     accountId: this.props.params.account_id,
     upcomingPosts: List(),
@@ -55,18 +55,20 @@ class AccountDashboard extends Component {
   };
 
   componentDidMount() {
-    this.props.getMediaItems(this.props.params.account_id);
-    this.props.fetchPostSets(this.props.params.account_id);
-    this.props.fetchPostSetsByST(this.props.params.account_id);
-    this.props.fetchStatusCount(this.props.params.account_id);
+    const accountId = this.props.params.account_id;
+    this.props.getMediaItems(accountId);
+    this.props.fetchPostSets(accountId, { statuses: [2, 5] });
+    this.props.fetchPostSetsByST(accountId);
+    this.props.fetchStatusCount(accountId);
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.state.accountId !== nextProps.params.account_id) {
-      this.setState({ accountId: nextProps.params.account_id }, () => {
-        this.props.getMediaItems(nextProps.params.account_id);
-        this.props.fetchPostSetsByST(nextProps.params.account_id);
-        this.props.fetchStatusCount(nextProps.params.account_id);
+      const accountId = nextProps.params.account_id;
+      this.setState({ accountId }, () => {
+        this.props.getMediaItems(accountId);
+        this.props.fetchPostSetsByST(accountId);
+        this.props.fetchStatusCount(accountId);
       });
     }
 
@@ -173,8 +175,8 @@ class AccountDashboard extends Component {
 
 AccountDashboard.propTypes = {
   getMediaItems: PropTypes.func,
-  fetchPostSetsByST: PropTypes.func,
   fetchPostSets: PropTypes.func,
+  fetchPostSetsByST: PropTypes.func,
   fetchStatusCount: PropTypes.func,
   params: PropTypes.object,
   mediaItems: ImmutablePropTypes.list,
@@ -192,10 +194,10 @@ const mapDispatchToProps = (dispatch) => ({
 
 const mapStateToProps = createStructuredSelector({
   account: makeSelectCurrentAccount(),
-  postSetsByST: makeSelectPostSets(),
+  postSets: makeSelectPostSets(),
+  postSetsByST: makeSelectPostSetsByST(),
   mediaItems: makeSelectMediaItems(),
   statusCount: selectStatusCount(),
-  postSets: selectPostSets(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AccountDashboard);

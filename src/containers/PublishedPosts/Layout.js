@@ -1,17 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import {
-  fetchPostSetsRequest,
-  createPostSetRequest,
-} from 'containers/App/actions';
-import {
-  makeSelectPostSets,
-  makeSelectPostSet,
-} from 'containers/App/selectors';
 import Loading from 'components/Loading';
 
 import ErrorWrapper from './ErrorWrapper';
@@ -84,16 +74,4 @@ class PublishedPostsLayout extends Component {
   }
 }
 
-const mapStateToProps = createStructuredSelector({
-  postSets: makeSelectPostSets(),
-  postSet: makeSelectPostSet(),
-});
-
-const mapDispatchToProps = (dispatch) => (
-  {
-    createPostSet: () => dispatch(createPostSetRequest()),
-    fetchPostSets: () => dispatch(fetchPostSetsRequest()),
-  }
-);
-
-export default connect(mapStateToProps, mapDispatchToProps)(PublishedPostsLayout);
+export default PublishedPostsLayout;

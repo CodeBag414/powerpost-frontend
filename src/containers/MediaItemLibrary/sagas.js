@@ -1,6 +1,6 @@
 import { takeLatest, takeEvery } from 'redux-saga';
 import { take, call, put, cancel, select, fork } from 'redux-saga/effects';
-import { LOCATION_CHANGE, push } from 'react-router-redux';
+import { LOCATION_CHANGE } from 'react-router-redux';
 import { toastr } from 'lib/react-redux-toastr';
 
 import {
@@ -11,13 +11,12 @@ import {
 } from 'utils/request';
 
 import {
-  setProcessing,
-} from 'containers/Main/actions';
-
-import {
   createPostSetRequest,
 } from 'containers/App/actions';
 
+import {
+  setProcessing,
+} from 'containers/Main/actions';
 import {
   makeSelectCurrentAccount,
 } from 'containers/Main/selectors';
@@ -52,7 +51,6 @@ import {
   UPDATE_MEDIA_ITEM_SUCCESS,
   FETCH_STREAM_POST_SETS_REQUEST,
   INVITE_EMAIL_TO_STREAM_REQUEST,
-  REPLICATE_POST_SET_REQUEST,
   CREATE_BLOG_ITEM_REQUEST,
   CLEAR_RSS_ITEMS,
 } from './constants';
@@ -62,8 +60,6 @@ import {
   fetchStreamPostSetsFailure,
   inviteEmailToStreamSuccess,
   inviteEmailToStreamFailure,
-  replicatePostSetSuccess,
-  replicatePostSetFailure,
   createBlogItemSuccess,
   createBlogItemFailure,
 } from './actions';
@@ -434,35 +430,6 @@ export function* inviteEmailToStreamSaga() {
   }
 }
 
-export function* replicatePostSetSaga() {
-  for (;;) {
-    const { prevUrl, payload } = yield take(REPLICATE_POST_SET_REQUEST);
-
-    let data;
-
-    try {
-      const response = yield call(postData, '/post_api/replicate', { payload });
-      if (response.data.result !== 'success') {
-        throw Error('Status Wrong!');
-      }
-      data = response.data;
-    } catch (error) {
-      yield put(replicatePostSetFailure(error));
-      toastr.error(error.message || 'Can not copy the postset');
-    }
-
-    if (data) {
-      toastr.success('Success', 'This post has been added to drafts. You can edit it now or close it and edit later.');
-      yield put(replicatePostSetSuccess(data.post_set));
-      yield put(push({
-        pathname: prevUrl,
-        hash: `#postset-${data.post_set.post_set_id}`,
-        state: { prevUrl: window.location.href },
-      }));
-    }
-  }
-}
-
 export function* createBlogItemSaga(action) {
   const activeCollection = yield select(makeSelectActiveCollection());
   const data = {
@@ -498,9 +465,8 @@ export function* mediaItemSaga() {
   const watcherK = yield fork(errorWatcher);
   const watcherL = yield fork(fetchStreamPostSetsWatcher);
   const watcherM = yield fork(inviteEmailToStreamSaga);
-  const watcherN = yield fork(replicatePostSetSaga);
-  const watcherO = yield fork(createBlogItemWatcher);
-  const watcherP = yield fork(getEmbedData);
+  const watcherN = yield fork(createBlogItemWatcher);
+  const watcherO = yield fork(getEmbedData);
 
   yield take(LOCATION_CHANGE);
   yield cancel(watcherB);
@@ -517,7 +483,6 @@ export function* mediaItemSaga() {
   yield cancel(watcherM);
   yield cancel(watcherN);
   yield cancel(watcherO);
-  yield cancel(watcherP);
 }
 
 export default [

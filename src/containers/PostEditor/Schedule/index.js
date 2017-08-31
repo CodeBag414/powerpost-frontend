@@ -2,15 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import PPButton from 'elements/atm.Button';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
 import { fromJS } from 'immutable';
-
-import {
-  makeSelectConnections,
-} from 'containers/Main/selectors';
-
-import { selectNewMediaItem } from 'containers/PostEditor/selectors';
 
 import NoContent from './NoContent';
 import TimeSlots from './TimeSlots';
@@ -20,13 +12,15 @@ import PostDetails from './PostDetails';
 
 class Schedule extends Component {
   static propTypes = {
+    accountConnections: PropTypes.array,
     connections: PropTypes.array,
-    postSet: ImmutablePropTypes.map,
-    posts: PropTypes.array,
     newMediaItem: ImmutablePropTypes.map,
-    updatePost: PropTypes.func,
     permissionClasses: PropTypes.object,
     availableFBChannel: PropTypes.string,
+    postSet: ImmutablePropTypes.map,
+    posts: PropTypes.array,
+    createBunchPosts: PropTypes.func,
+    updatePost: PropTypes.func,
   };
 
   constructor(props) {
@@ -60,10 +54,10 @@ class Schedule extends Component {
           )[0];
           channelName = `message_${connection.channel}`;
         }
-        const channelMessages = postSet.getIn(['details', 'properties']).toJS();
+        const channelMessages = postSet.getIn(['data', 'properties']).toJS();
         channelMessage = channelMessages[channelName];
       }
-      postMessage = channelMessage || postSet.getIn(['details', 'message']);
+      postMessage = channelMessage || postSet.getIn(['data', 'message']);
     }
     return postMessage;
   }
@@ -93,7 +87,7 @@ class Schedule extends Component {
       ...currentPost,
       schedule_time: newDate,
     };
-    updatePost(newPost, 'bunch_post');
+    updatePost(newPost);
   }
 
   handleMessageChange = (value) => {
@@ -113,7 +107,7 @@ class Schedule extends Component {
         edited: true,
       },
     };
-    updatePost(newPost, 'bunch_post');
+    updatePost(newPost);
   }
 
   handleRemoveSlot = (postToDelete) => {
@@ -122,18 +116,18 @@ class Schedule extends Component {
       ...postToDelete,
       status: '0',
     };
-    updatePost(newPost, 'bunch_post');
+    updatePost(newPost);
   }
 
   render() {
-    const { postSet, connections, posts, newMediaItem, permissionClasses, availableFBChannel } = this.props;
+    const { postSet, accountConnections, connections, posts, newMediaItem, permissionClasses, availableFBChannel, createBunchPosts } = this.props;
     const { isDialogShown, currentPost, postMessage, postTime } = this.state;
     const hasContent = posts && posts.length;
     const connection = connections && connections.filter((item) =>
       currentPost && item.connection_id === currentPost.connection_id,
     )[0];
-    const isBunchPosting = postSet.get('bunch_post_fetching');
-    const currentMediaItems = (newMediaItem.type) ? [newMediaItem] : postSet.getIn(['details', 'media_items']).toJS();
+    const requesting = postSet.get('requesting');
+    const currentMediaItems = (newMediaItem.type) ? [newMediaItem] : postSet.getIn(['data', 'media_items']).toJS();
 
     return (
       <Wrapper>
@@ -189,22 +183,16 @@ class Schedule extends Component {
         </div>
         <AddChannelSlotDialog
           active={isDialogShown}
+          connections={accountConnections}
           handleDialogToggle={this.handleDialogToggle}
           mediaItems={currentMediaItems}
+          postSet={postSet}
+          createBunchPosts={createBunchPosts}
         />
-        {isBunchPosting && <div className="overlay" />}
+        {requesting && <div className="overlay" />}
       </Wrapper>
     );
   }
 }
 
-function mapDispatchToProps() {
-  return {};
-}
-
-const mapStateToProps = createStructuredSelector({
-  connections: makeSelectConnections(),
-  newMediaItem: selectNewMediaItem(),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Schedule);
+export default Schedule;

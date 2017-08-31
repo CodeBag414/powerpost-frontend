@@ -203,7 +203,7 @@ function buildPostPreview(postData, postMessage, postTime, connection, type, med
         content: post.get('message'),
         updated: new Date(),
       };
-      return <GooglePlusBlock post={postToPreview} connection={connection} isPreview />
+      return <GooglePlusBlock post={postToPreview} connection={connection} isPreview />;
     }
     default:
       return null;

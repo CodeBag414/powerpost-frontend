@@ -1,22 +1,14 @@
-/*
+/**
  * The reducer takes care of state changes in our app through actions
  */
 import { fromJS } from 'immutable';
-
-import {
-  FETCH_POST_SET_REQUEST,
-  FETCH_POST_SET_SUCCESS,
-  FETCH_POST_SET_ERROR,
-  UPDATE_POST_SET_REQUEST,
-  UPDATE_POST_SET_SUCCESS,
-  UPDATE_POST_SET_ERROR,
-} from 'containers/App/constants';
 
 import {
   FETCH_COLLECTIONS,
   FETCH_COLLECTIONS_SUCCESS,
   FETCH_MEDIA_ITEMS_SUCCESS,
   FETCH_MEDIA_ITEMS_ERROR,
+  UPDATE_POST_SET_SUCCESS,
   MEDIA_ERROR,
   FETCH_URL_CONTENT_SUCCESS,
   CLEAR_URL_CONTENT,
@@ -39,9 +31,6 @@ import {
   INVITE_EMAIL_TO_STREAM_REQUEST,
   INVITE_EMAIL_TO_STREAM_SUCCESS,
   INVITE_EMAIL_TO_STREAM_FAILURE,
-  REPLICATE_POST_SET_REQUEST,
-  REPLICATE_POST_SET_SUCCESS,
-  REPLICATE_POST_SET_FAILURE,
   CREATE_BLOG_ITEM_SUCCESS,
   CLEAR_RSS_ITEMS,
   GET_EMBED_DATA_SUCCESS,
@@ -163,43 +152,6 @@ function mediaLibraryReducer(state = initialState, action) {
     case SET_ACTIVE_MEDIA_ITEM_ID:
       return state
         .set('activeMediaItemId', action.id);
-    case FETCH_STREAM_POST_SETS_REQUEST:
-      return state
-        .setIn(['postSets', 'isFetching'], true)
-        .setIn(['postSets', 'error'], '');
-    case FETCH_STREAM_POST_SETS_SUCCESS:
-      return state
-        .setIn(['postSets', 'isFetching'], false)
-        .setIn(['postSets', 'data'], fromJS(action.payload));
-    case FETCH_STREAM_POST_SETS_FAILURE:
-      return state
-        .setIn(['postSets', 'isFetching'], false)
-        .setIn(['postSets', 'error'], 'Fetching Stream Failure');
-    case FETCH_POST_SET_REQUEST:
-      return state
-        .setIn(['postSet', 'processing'], true);
-    case FETCH_POST_SET_SUCCESS:
-      return state
-        .setIn(['postSet', 'processing'], false)
-        .setIn(['postSet', 'data'], fromJS(action.payload));
-    case FETCH_POST_SET_ERROR:
-      return state
-        .setIn(['postSet', 'processing'], false)
-        .setIn(['postSet', 'error'], action.payload);
-    case UPDATE_POST_SET_REQUEST:
-      return state
-        .setIn(['postSet', 'processing'], true);
-    case UPDATE_POST_SET_SUCCESS:
-      return state
-        .setIn(['postSet', 'processing'], false)
-        .setIn(['postSet', 'data'], fromJS(action.payload))
-        .updateIn(['postSets', 'data'], (postSets) =>
-          postSets.filter((p) => p.get('post_set_id') !== action.payload.post_set_id)
-        );
-    case UPDATE_POST_SET_ERROR:
-      return state
-        .setIn(['postSet', 'processing'], false)
-        .setIn(['postSet', 'error'], action.payload);
     case INVITE_EMAIL_TO_STREAM_REQUEST:
       return state
         .setIn(['emailInvited', 'processing'], true);
@@ -211,17 +163,28 @@ function mediaLibraryReducer(state = initialState, action) {
       return state
         .setIn(['emailInvited', 'processing'], false)
         .setIn(['emailInvited', 'error'], action.payload);
-    case REPLICATE_POST_SET_REQUEST:
-      return state.setIn(['postSets', 'isFetching'], true);
-    case REPLICATE_POST_SET_SUCCESS:
-      return state
-        .setIn(['postSets', 'isFetching'], false)
-        .updateIn(['postSets', 'data'], (postSets) => postSets.push(fromJS(action.payload)));
-    case REPLICATE_POST_SET_FAILURE:
-      return state.setIn(['postSets', 'isFetching'], false);
     case CREATE_BLOG_ITEM_SUCCESS:
       return state
         .update('mediaItems', (mediaItems) => mediaItems.concat(action.payload.media_items));
+
+    case FETCH_STREAM_POST_SETS_REQUEST:
+      return state
+        .setIn(['postSets', 'requesting'], true)
+        .setIn(['postSets', 'error'], '');
+    case FETCH_STREAM_POST_SETS_SUCCESS:
+      return state
+        .setIn(['postSets', 'requesting'], false)
+        .setIn(['postSets', 'data'], fromJS(action.payload));
+    case FETCH_STREAM_POST_SETS_FAILURE:
+      return state
+        .setIn(['postSets', 'requesting'], false)
+        .setIn(['postSets', 'error'], 'Fetching Stream Failure');
+    // This is needed to update stream post sets in this component's own reducer
+    case UPDATE_POST_SET_SUCCESS:
+      return state
+        .updateIn(['postSets', 'data'], (postSets) =>
+          postSets.filter((p) => p.get('post_set_id') !== action.postSet.post_set_id)
+        );
     default:
       return state;
   }

@@ -26,7 +26,6 @@ function getStatusText(postSet) {
 }
 
 class PopupMenu extends Component {
-
   static propTypes = {
     postSet: PropTypes.object,
     currentAccount: PropTypes.object,

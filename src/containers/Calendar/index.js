@@ -2,17 +2,17 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import moment from 'moment';
-import { UserCanCalendar } from 'config.routes/UserRoutePermissions';
 
+import { UserCanCalendar } from 'config.routes/UserRoutePermissions';
 import { getClassesByPage } from 'utils/permissionClass';
 
 import {
   deletePostSetRequest,
   fetchPostSetsBySTRequest,
-  updateBunchPostRequest,
+  updateBunchPostsRequest,
 } from 'containers/App/actions';
 import {
-  makeSelectPostSets,
+  makeSelectPostSetsByST,
 } from 'containers/App/selectors';
 
 import {
@@ -27,16 +27,14 @@ import Wrapper from './Wrapper';
 import CalendarSidebar from './CalendarSidebar';
 import CalendarView from './CalendarView';
 
-
 /**
  * Calendar component for posts
  */
 class Calendar extends React.Component {
-
   static propTypes = {
     location: PropTypes.object,
     fetchPostSetsByST: PropTypes.func,
-    updateBunchPost: PropTypes.func,
+    updateBunchPosts: PropTypes.func,
     deletePostSet: PropTypes.func,
     postSetsByST: PropTypes.any,
     currentAccount: PropTypes.object,
@@ -77,7 +75,7 @@ class Calendar extends React.Component {
   }
 
   onDeletePostSet = () => {
-    const { deletePostSet, updateBunchPost } = this.props;
+    const { deletePostSet, updateBunchPosts } = this.props;
     const { postSetToDelete } = this.state;
 
     let id = null;
@@ -89,7 +87,7 @@ class Calendar extends React.Component {
         ...post,
         status: 0,
       }));
-      updateBunchPost(postsToDelete, postSetToDelete);
+      updateBunchPosts(postsToDelete, postSetToDelete);
     }
 
     if (id) {
@@ -150,7 +148,7 @@ class Calendar extends React.Component {
 
   handleMoveEvent = ({ event, start }) => {
     const { postSet } = event;
-    const { updateBunchPost } = this.props;
+    const { updateBunchPosts } = this.props;
     const scheduleTime = moment(start).format('X');
     /* eslint-disable no-alert */
     if (moment().diff(moment.unix(postSet.schedule_time)) > 0) { // If the dragged post is in the past
@@ -165,7 +163,7 @@ class Calendar extends React.Component {
       schedule_time: scheduleTime,
     }));
 
-    updateBunchPost(postsToUpdate, postSet);
+    updateBunchPosts(postsToUpdate, postSet);
   }
 
   handleDeleteEvent = (postSet) => {
@@ -241,18 +239,16 @@ class Calendar extends React.Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => (
-  {
-    fetchPostSetsByST: (accountId, payload) => dispatch(fetchPostSetsBySTRequest(accountId, payload)),
-    updateBunchPost: (posts, postSet) => dispatch(updateBunchPostRequest(posts, postSet)),
-    deletePostSet: (id) => dispatch(deletePostSetRequest(id)),
-  }
-);
-
 const mapStateToProps = createStructuredSelector({
-  postSetsByST: makeSelectPostSets(),
+  postSetsByST: makeSelectPostSetsByST(),
   connections: makeSelectConnections(),
   currentAccount: makeSelectCurrentAccount(),
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchPostSetsByST: (accountId, payload) => dispatch(fetchPostSetsBySTRequest(accountId, payload)),
+  updateBunchPosts: (posts, postSet) => dispatch(updateBunchPostsRequest(posts, postSet)),
+  deletePostSet: (id) => dispatch(deletePostSetRequest(id)),
 });
 
 export default UserCanCalendar(connect(mapStateToProps, mapDispatchToProps)(Calendar));

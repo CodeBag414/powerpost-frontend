@@ -19,7 +19,6 @@ import BodyWrapper from './BodyWrapper';
 import FooterWrapper from './FooterWrapper';
 
 class LinkEditor extends Component {
-
   static propTypes = {
     urlContent: PropTypes.shape(),
     linkItem: PropTypes.shape(),
@@ -27,7 +26,7 @@ class LinkEditor extends Component {
     linkEditorDialog: PropTypes.func,
     closeAllDialog: PropTypes.func,
     handleLinkEditorSave: PropTypes.func,
-  }
+  };
 
   constructor(props) {
     super(props);

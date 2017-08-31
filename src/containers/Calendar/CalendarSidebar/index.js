@@ -3,17 +3,19 @@ import React, { PropTypes } from 'react';
 import Checkbox from 'elements/atm.Checkbox';
 
 import Wrapper from './Wrapper';
-import UnscheduledPostSet from './UnscheduledPostSet';
+
+// TODO: Uncomment commented lines below to unhide the unscheduled posts list
+
+// import UnscheduledPostSet from './UnscheduledPostSet';
 
 class CalendarSidebar extends React.Component {
-
   static propTypes = {
-    postSets: PropTypes.array,
-    currentAccount: PropTypes.object,
+    // postSets: PropTypes.array,
+    // currentAccount: PropTypes.object,
     query: PropTypes.string,
     onSearch: PropTypes.func,
     onToggleFilter: PropTypes.func,
-    onDelete: PropTypes.func,
+    // onDelete: PropTypes.func,
     permissionClasses: PropTypes.object,
   };
 
@@ -48,7 +50,8 @@ class CalendarSidebar extends React.Component {
 
   render() {
     const { showReady, showReview, showDraft, showIdea } = this.state;
-    const { postSets, currentAccount, query, onSearch, onDelete, permissionClasses } = this.props;
+    // const { postSets, currentAccount, query, onSearch, onDelete, permissionClasses } = this.props;
+    const { query, onSearch, permissionClasses } = this.props;
     return (
       <Wrapper>
         <div className="cal-sidebar-search">

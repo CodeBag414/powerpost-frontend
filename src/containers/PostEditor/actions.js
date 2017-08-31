@@ -1,4 +1,11 @@
 import {
+  CREATE_MEDIA_ITEM,
+  UPDATE_MEDIA_ITEM,
+  REMOVE_MEDIA_ITEM,
+  SET_MEDIA_ITEM,
+} from 'containers/App/constants';
+
+import {
   POST_COMMENT_REQUEST,
   ADD_COMMENT,
   FETCH_COMMENTS_REQUEST,
@@ -7,24 +14,14 @@ import {
   DELETE_COMMENT,
   FETCH_ACCOUNT_TAGS_REQUEST,
   SET_ACCOUNT_TAGS,
-  SUBMIT_BUNCH_POSTS_REQUEST,
-  CREATE_MEDIA_ITEM,
-  UPDATE_MEDIA_ITEM,
-  REMOVE_MEDIA_ITEM,
   FETCH_URL_CONTENT,
   CLEAR_URL_CONTENT,
   GET_MEDIA_ITEM,
-  SET_MEDIA_ITEM,
   FETCH_COLLECTIONS,
   SET_VISIBILITY_FILTER,
   FETCH_WORDPRESS_GUI_REQUEST,
   FETCH_WORDPRESS_GUI_SUCCESS,
   FETCH_WORDPRESS_GUI_FAILURE,
-  CLEAR_POST,
-  CREATE_POST_REQUEST,
-  CREATE_POST_SUCCESS,
-  CREATE_POST_FAILURE,
-  SET_WORDPRESS_POST_REQUEST,
   CLEAR_MEDIA_ITEM,
   FETCH_FACEBOOK_ENTITIES,
   FETCH_FACEBOOK_ENTITIES_SUCCESS,
@@ -101,10 +98,6 @@ export function setAccountTags(accountTags) {
   return { type: SET_ACCOUNT_TAGS, accountTags };
 }
 
-export function submitPostsRequest(posts) {
-  return { type: SUBMIT_BUNCH_POSTS_REQUEST, posts };
-}
-
 export function removeMediaItem() {
   return { type: REMOVE_MEDIA_ITEM };
 }
@@ -175,38 +168,6 @@ export function fetchWordpressGUISuccess(payload) {
 export function fetchWordpressGUIFailure(payload) {
   return {
     type: FETCH_WORDPRESS_GUI_FAILURE,
-    payload,
-  };
-}
-
-export function clearPost() {
-  return {
-    type: CLEAR_POST,
-  };
-}
-
-export function createPostRequest(payload) {
-  return {
-    type: CREATE_POST_REQUEST,
-    payload,
-  };
-}
-export function createPostSuccess(payload) {
-  return {
-    type: CREATE_POST_SUCCESS,
-    payload,
-  };
-}
-export function createPostFailure(payload) {
-  return {
-    type: CREATE_POST_FAILURE,
-    payload,
-  };
-}
-
-export function setWordpressPostRequest(payload) {
-  return {
-    type: SET_WORDPRESS_POST_REQUEST,
     payload,
   };
 }

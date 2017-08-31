@@ -8,27 +8,38 @@ import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { routerActions } from 'react-router-redux';
 import { withRouter } from 'react-router';
+
 import { getClassesByPage } from 'utils/permissionClass';
+
+import Button from 'elements/atm.Button';
+import DeletePostSetDialog from 'components/DeletePostSetDialog';
+import Loading from 'components/Loading';
+
 import {
-  deletePostSetRequest,
   fetchGroupUsers,
   fetchPostSetRequest,
   updatePostSetRequest,
+  deletePostSetRequest,
+  createPostRequest,
   updatePostRequest,
+  createBunchPostsRequest,
+  setPost,
+  clearPost,
 } from 'containers/App/actions';
-
-import {
-  setProcessing,
-} from 'containers/Main/actions';
-
 import {
   makeSelectUser,
   selectGroupUsers,
   makeSelectUserAccount,
   makeSelectFilePickerKey,
+  makeSelectPostSet,
+  makeSelectPost,
 } from 'containers/App/selectors';
 
 import {
+  setProcessing,
+} from 'containers/Main/actions';
+import {
+  makeSelectAccountConnections,
   makeSelectConnections,
   makeSelectCurrentAccount,
 } from 'containers/Main/selectors';
@@ -37,28 +48,18 @@ import {
   fetchComments,
   fetchAccountTags,
   fetchWordpressGUIRequest,
-  clearPost,
-  createPostRequest,
   fetchCollections,
-  createMediaItem,
-  clearMediaItem,
-  setWordpressPostRequest,
-  getMediaItem,
   postCommentRequest,
   deleteCommentRequest,
-} from 'containers/PostEditor/actions';
-
+  createMediaItem,
+  clearMediaItem,
+  getMediaItem,
+} from './actions';
 import {
-  selectPostSet,
   selectWordpressGUI,
-  selectPost,
   selectNewMediaItem,
   makeSelectComments,
-} from 'containers/PostEditor/selectors';
-
-import Button from 'elements/atm.Button';
-import DeletePostSetDialog from 'components/DeletePostSetDialog';
-import Loading from 'components/Loading';
+} from './selectors';
 
 import Wrapper from './Wrapper';
 import GeneralInfo from './GeneralInfo';
@@ -77,19 +78,13 @@ import TabWrapper from './TabWrapper';
 
 class PostEditor extends Component {
   static propTypes = {
-    // getComments: PropTypes.func,
-    // getAccountTags: PropTypes.func,
-    // fetchPostSet: PropTypes.func,
-    // fetchGroupUsers: PropTypes.func,
+    getComments: PropTypes.func,
+    getAccountTags: PropTypes.func,
+    fetchGroupUsers: PropTypes.func,
     accountId: PropTypes.string,
+    accountConnections: PropTypes.array,
     connections: PropTypes.array,
-    clearMediaItem: PropTypes.func,
-    clearPost: PropTypes.func,
-    createMediaItem: PropTypes.func,
-    createPost: PropTypes.func,
-    setWordpressPost: PropTypes.func,
-    deletePostSet: PropTypes.func.isRequired,
-    // fetchCollections: PropTypes.func,
+    fetchCollections: PropTypes.func,
     fetchWordpressGUI: PropTypes.func,
     filePickerKey: PropTypes.string,
     goBack: PropTypes.func,
@@ -97,13 +92,7 @@ class PostEditor extends Component {
     id: PropTypes.string,
     location: PropTypes.object,
     modal: PropTypes.bool,
-    newMediaItem: ImmutablePropTypes.map,
     params: PropTypes.object,
-    post: ImmutablePropTypes.map,
-    postSet: ImmutablePropTypes.map,
-    updatePost: PropTypes.func,
-    updatePostSet: PropTypes.func,
-    getMediaItem: PropTypes.func,
     user: PropTypes.shape(),
     userAccount: PropTypes.object,
     wordpressGUI: ImmutablePropTypes.map,
@@ -112,7 +101,21 @@ class PostEditor extends Component {
     comments: ImmutablePropTypes.list,
     activeBrand: PropTypes.object,
     setProcessing: PropTypes.func.isRequired,
+    postSet: ImmutablePropTypes.map,
+    post: ImmutablePropTypes.map,
+    fetchPostSet: PropTypes.func,
+    updatePostSet: PropTypes.func,
+    deletePostSet: PropTypes.func.isRequired,
+    createBunchPosts: PropTypes.func,
+    createPost: PropTypes.func,
+    updatePost: PropTypes.func,
+    clearPost: PropTypes.func,
+    setWordpressPost: PropTypes.func,
     loadPostSet: PropTypes.func,
+    newMediaItem: ImmutablePropTypes.map,
+    getMediaItem: PropTypes.func,
+    createMediaItem: PropTypes.func,
+    clearMediaItem: PropTypes.func,
   };
 
   static defaultProps = {
@@ -140,11 +143,11 @@ class PostEditor extends Component {
     const permissionClasses = getClassesByPage(permissions, 'postEditor');
 
     if (this.props.postSet !== postSet) {
-      if (!postSet.get('isFetching')) {
+      if (!postSet.get('requesting')) {
         loadPostSet(false);
       }
 
-      const titleText = postSet.getIn(['details', 'title']);
+      const titleText = postSet.getIn(['data', 'title']);
       this.setState({ postTitle: titleText || 'Untitled Post' });
     }
 
@@ -159,7 +162,7 @@ class PostEditor extends Component {
 
   shouldComponentUpdate(nextProps) {
     const { postSet } = nextProps;
-    return !postSet.get('isFetching');
+    return !postSet.get('requesting');
   }
 
   componentWillUpdate(nextProps) {
@@ -174,7 +177,7 @@ class PostEditor extends Component {
 
   onDeletePostSet = () => {
     const { postSet, deletePostSet, goBack, location } = this.props;
-    const id = postSet.getIn(['details', 'post_set_id']);
+    const id = postSet.getIn(['data', 'post_set_id']);
     deletePostSet(id);
 
     if (location && !location.pathname.endsWith('/posts')) {
@@ -195,15 +198,15 @@ class PostEditor extends Component {
 
   initialize = (props = this.props) => {
     const { accountId, id } = props;
-    props.loadPostSet(true);
-    props.getComments(id);
-    props.getAccountTags(accountId);
-    props.fetchPostSet({
+    this.props.loadPostSet(true);
+    this.props.getComments(id);
+    this.props.getAccountTags(accountId);
+    this.props.fetchPostSet({
       id,
     });
     const payload = { accountId };
-    props.fetchGroupUsers(payload);
-    props.fetchCollections(accountId);
+    this.props.fetchGroupUsers(payload);
+    this.props.fetchCollections(accountId);
 
     if (props.connections) {
       this.setAvailableFBChannel(props.connections);
@@ -226,8 +229,8 @@ class PostEditor extends Component {
     const titleText = e.target.textContent;
     loadPostSet(true);
     updatePostSet({
-      ...postSet.get('details').toJS(),
-      id: postSet.getIn(['details', 'post_set_id']),
+      ...postSet.get('data').toJS(),
+      id: postSet.getIn(['data', 'post_set_id']),
       title: titleText,
     });
     if (titleText === '') {
@@ -245,6 +248,7 @@ class PostEditor extends Component {
     const {
       filePickerKey,
       accountId,
+      accountConnections,
       connections,
       groupUsers,
       id,
@@ -266,9 +270,10 @@ class PostEditor extends Component {
       comments,
       activeBrand,
       loadPostSet,
+      createBunchPosts,
     } = this.props;
 
-    if (postSet.get('isFetching') || postSet.get('details').isEmpty()) {
+    if (postSet.get('requesting') || !postSet.get('data')) {
       loadPostSet(true);
       return (
         <Wrapper modal={modal}>
@@ -278,7 +283,7 @@ class PostEditor extends Component {
     }
 
     const { postTitle, selectedTabIndex, showDeletePopup } = this.state;
-    const postsArray = postSet.getIn(['details', 'posts']);
+    const postsArray = postSet.getIn(['data', 'posts']);
     let posts;
     if (postsArray) {
       // Sort posts & calculate total timeslots
@@ -289,24 +294,41 @@ class PostEditor extends Component {
         const timeB = postB.schedule_time;
         return (timeA > timeB);
       });
-      // postsArray.map((postItem) => {
-      //   const connection = connections && connections.filter((item) =>
-      //     item.connection_id === postItem.get('connection_id'),
-      //   )[0];
-      //   if (postItem.get('status') !== '0' && connection && connection.channel !== 'wordpress') {
-      //     if (!posts[postItem.get('connection_id')]) posts[postItem.get('connection_id')] = [];
-      //     posts[postItem.get('connection_id')].push(postItem);
-      //     totalTimeslots += 1;
-      //   }
-      //   return true;
-      // });
     }
 
     const { permissions } = activeBrand.user_access;
     const permissionClasses = getClassesByPage(permissions, 'postEditor');
     const tabs = [
-      { name: 'Content', component: <Content postSet={postSet} permissionClasses={permissionClasses} accountId={this.props.accountId} id={this.props.id} location={this.props.location} params={this.props.params} availableFBChannel={this.availableFBChannel} /> },
-      { name: 'Schedule', component: <Schedule postSet={postSet} permissionClasses={permissionClasses} posts={posts} updatePost={updatePost} availableFBChannel={this.availableFBChannel} />, count: posts ? posts.length : 0 },
+      {
+        name: 'Content',
+        component:
+          <Content
+            accountId={this.props.accountId}
+            availableFBChannel={this.availableFBChannel}
+            id={this.props.id}
+            location={this.props.location}
+            params={this.props.params}
+            permissionClasses={permissionClasses}
+            postSet={postSet}
+            updatePostSet={updatePostSet}
+          />,
+      },
+      {
+        name: 'Schedule',
+        component:
+          <Schedule
+            accountConnections={accountConnections}
+            availableFBChannel={this.availableFBChannel}
+            connections={connections}
+            newMediaItem={newMediaItem}
+            permissionClasses={permissionClasses}
+            posts={posts}
+            postSet={postSet}
+            createBunchPosts={createBunchPosts}
+            updatePost={updatePost}
+          />,
+        count: posts ? posts.length : 0,
+      },
     ];
 
     const generalInfo = (
@@ -373,7 +395,7 @@ class PostEditor extends Component {
             <Sidebar expanded={this.state.sidebarExpanded}>
               <Tags
                 updatePostSet={updatePostSet}
-                postSet={postSet.get('details')}
+                postSet={postSet.get('data')}
                 permissionClasses={permissionClasses}
               />
               <ChannelsPreview
@@ -422,42 +444,48 @@ class PostEditor extends Component {
   }
 }
 
-export function mapDispatchToProps(dispatch) {
-  return {
-    deletePostSet: (id) => dispatch(deletePostSetRequest(id)),
-    getAccountTags: (accountId) => dispatch(fetchAccountTags(accountId)),
-    getComments: (postSetId) => dispatch(fetchComments(postSetId)),
-    fetchPostSet: (payload) => dispatch(fetchPostSetRequest(payload)),
-    fetchGroupUsers: (payload) => dispatch(fetchGroupUsers(payload)),
-    updatePostSet: (payload) => dispatch(updatePostSetRequest(payload)),
-    updatePost: (payload) => dispatch(updatePostRequest(payload)),
-    fetchWordpressGUI: (payload) => dispatch(fetchWordpressGUIRequest(payload)),
-    clearPost: () => dispatch(clearPost()),
-    createPost: (payload) => dispatch(createPostRequest(payload)),
-    goBack: () => dispatch(routerActions.goBack()),
-    fetchCollections: (accountId) => dispatch(fetchCollections(accountId)),
-    createMediaItem: (mediaItem) => dispatch(createMediaItem(mediaItem)),
-    clearMediaItem: () => dispatch(clearMediaItem()),
-    setWordpressPost: (payload) => dispatch(setWordpressPostRequest(payload)),
-    getMediaItem: (mediaItemId) => dispatch(getMediaItem(mediaItemId)),
-    postComment: (postSetId, text) => dispatch(postCommentRequest({ postSetId, text })),
-    deleteComment: (commentId) => dispatch(deleteCommentRequest(commentId)),
-    setProcessing: (processing) => dispatch(setProcessing(processing)),
-  };
-}
-
 const mapStateToProps = createStructuredSelector({
   user: makeSelectUser(),
-  postSet: selectPostSet(),
   groupUsers: selectGroupUsers(),
   userAccount: makeSelectUserAccount(),
   activeBrand: makeSelectCurrentAccount(),
+  accountConnections: makeSelectAccountConnections(),
   connections: makeSelectConnections(),
   wordpressGUI: selectWordpressGUI(),
-  post: selectPost(),
   filePickerKey: makeSelectFilePickerKey(),
-  newMediaItem: selectNewMediaItem(),
   comments: makeSelectComments(),
+  postSet: makeSelectPostSet(),
+  post: makeSelectPost(),
+  newMediaItem: selectNewMediaItem(),
 });
+
+function mapDispatchToProps(dispatch) {
+  return {
+    getAccountTags: (accountId) => dispatch(fetchAccountTags(accountId)),
+    getComments: (postSetId) => dispatch(fetchComments(postSetId)),
+    fetchGroupUsers: (payload) => dispatch(fetchGroupUsers(payload)),
+    fetchWordpressGUI: (payload) => dispatch(fetchWordpressGUIRequest(payload)),
+    goBack: () => dispatch(routerActions.goBack()),
+    fetchCollections: (accountId) => dispatch(fetchCollections(accountId)),
+    postComment: (postSetId, text) => dispatch(postCommentRequest({ postSetId, text })),
+    deleteComment: (commentId) => dispatch(deleteCommentRequest(commentId)),
+    setProcessing: (processing) => dispatch(setProcessing(processing)),
+    /* Post set */
+    fetchPostSet: (payload) => dispatch(fetchPostSetRequest(payload)),
+    updatePostSet: (payload) => dispatch(updatePostSetRequest(payload)),
+    deletePostSet: (id) => dispatch(deletePostSetRequest(id)),
+    /* Posts */
+    createBunchPosts: (posts) => dispatch(createBunchPostsRequest(posts)),
+    /* Post */
+    createPost: (payload) => dispatch(createPostRequest(payload)),
+    updatePost: (payload) => dispatch(updatePostRequest(payload)),
+    clearPost: () => dispatch(clearPost()),
+    setWordpressPost: (post) => dispatch(setPost(post)),
+    /* Media item */
+    getMediaItem: (mediaItemId) => dispatch(getMediaItem(mediaItemId)),
+    createMediaItem: (mediaItem) => dispatch(createMediaItem(mediaItem)),
+    clearMediaItem: () => dispatch(clearMediaItem()),
+  };
+}
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostEditor));

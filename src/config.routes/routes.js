@@ -750,7 +750,7 @@ export function createRoutes(store, auth) {
         });
 
         importModules.catch(errorLoading);
-      }
+      },
     },
   ];
 

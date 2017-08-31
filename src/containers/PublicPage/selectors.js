@@ -2,11 +2,11 @@ import { createSelector } from 'reselect';
 
 const selectPublicPageSelector = (state) => state.get('publicPage');
 
-const selectPostSet = () => createSelector(
+const selectPublicPostSet = () => createSelector(
   selectPublicPageSelector,
-  (publicPage) => publicPage.get('postSet'),
+  (publicPage) => publicPage.get('publicPostSet'),
 );
 
 export {
-  selectPostSet,
+  selectPublicPostSet,
 };

@@ -36,6 +36,7 @@ const filterByOptions = [
 class PostSetBox extends Component {
   static propTypes = {
     postSets: ImmutablePropTypes.map,
+    postSetsByST: ImmutablePropTypes.map,
     accountId: PropTypes.string,
     fetchPostSets: PropTypes.func,
     fetchPostSetsByST: PropTypes.func,
@@ -147,7 +148,7 @@ class PostSetBox extends Component {
   }
 
   render() {
-    let { postSets } = this.props;
+    const { postSets, postSetsByST } = this.props;
     const { accountId, permissionClasses } = this.props;
     const {
       currentPostSetIndex,
@@ -216,41 +217,51 @@ class PostSetBox extends Component {
         </ErrorWrapper>
       </Wrapper>
     );
-    let loading = false;
-    if (postSets.get('requesting')) {
-      loading = true;
-    }
-    if (loading && !postSets.get('data')) {
+
+    // the status constant that indicates it is currently showing postSetsByST
+    const showingST = (sortBy.value === 'schedule_time');
+    const loading =
+      (showingST && postSetsByST.get('requesting')) ||
+      (!showingST && postSets.get('requesting'));
+
+    if (
+      loading &&
+      ((!showingST && !postSets.get('data')) || (showingST && !postSetsByST.get('data')))
+    ) {
       return loadingWrapper;
     }
-    if (sortBy.value === 'schedule_time') {
-      const postSetsByScheduleTime = postSets.get('data');
-      if (!postSetsByScheduleTime.get('post_when_ready_post_sets')) {
+
+    let postSetsToShow;
+    if (showingST) {
+      const postSetsBySTData = postSetsByST.get('data');
+      if (!postSetsBySTData.get('post_when_ready_post_sets')) {
         return loadingWrapper;
       }
-      if (postSetsByScheduleTime.get(scheduleFilterBy)) {
-        postSets = postSetsByScheduleTime.get(scheduleFilterBy);
+      if (postSetsBySTData.get(scheduleFilterBy)) {
+        postSetsToShow = postSetsBySTData.get(scheduleFilterBy);
       } else {
-        postSets = postSetsByScheduleTime.get('post_when_ready_post_sets')
-          .concat(postSetsByScheduleTime.get('scheduled_post_sets'))
-          .concat(postSetsByScheduleTime.get('unscheduled_post_sets'));
+        postSetsToShow = postSetsBySTData.get('post_when_ready_post_sets')
+          .concat(postSetsBySTData.get('scheduled_post_sets'))
+          .concat(postSetsBySTData.get('unscheduled_post_sets'));
       }
     } else {
-      postSets = postSets.getIn(['data', 'post_sets']);
+      postSetsToShow = postSets.getIn(['data', 'post_sets']);
     }
-    if (sortBy.value !== 'schedule_time' && (!postSets || postSets.isEmpty())) {
+
+    if (!showingST && (!postSetsToShow || postSetsToShow.isEmpty())) {
       return noPostsWrapper;
     }
-    const filteredPostSets = this.filterPostSets(postSets);
+    const filteredPostSets = this.filterPostSets(postSetsToShow);
     const generatedPostSets = filteredPostSets
       .filter((postSet) => parseInt(postSet.get('status'), 10) === parseInt(currentPostStatus, 10))
       .sort((a, b) => b.get(sortBy.value, 0) - a.get(sortBy.value, 0));
+
     const postsetId = generatedPostSets.getIn([currentPostSetIndex, 'post_set_id']);
     statuses.forEach((status, index) =>
       (statuses[index].size = filteredPostSets.filter((postSet) =>
         parseInt(postSet.get('status'), 10) === parseInt(status.status, 10)).size
       ));
-    if (sortBy.value !== 'schedule_time' && (!generatedPostSets || generatedPostSets.isEmpty())) {
+    if (!showingST && (!generatedPostSets || generatedPostSets.isEmpty())) {
       return noPostsWrapper;
     }
 
@@ -259,13 +270,13 @@ class PostSetBox extends Component {
         {heading}
         <div className="posts-content">
           <div className="post-list-container">
-            { sortBy.value === 'schedule_time' && (
+            {showingST &&
               <MinorTabbar
                 tabs={filterByOptions}
                 onChange={this.onChangeScheduledPostFilter}
                 currentTab={scheduleFilterBy}
               />
-            ) }
+            }
             <PostSetList
               postSets={generatedPostSets}
               currentPostSetIndex={currentPostSetIndex}
@@ -276,7 +287,7 @@ class PostSetBox extends Component {
           </div>
           <div className="post-editor-container">
             {isLoadingPostSet && <Loading opacity={0.5} showIndicator zIndex={100000} />}
-            { postsetId ?
+            {postsetId ?
               <PostEditor
                 id={postsetId}
                 accountId={accountId}

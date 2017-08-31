@@ -1,9 +1,6 @@
-/*
+/**
  * Library View
- *
- *
  */
-
 import React, { PropTypes } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
@@ -12,7 +9,9 @@ import { createStructuredSelector } from 'reselect';
 import { routerActions } from 'react-router-redux';
 import DropdownMenu from 'react-dd-menu';
 import ReactSummernote from 'react-summernote';
+
 import { UserCanLibrary } from 'config.routes/UserRoutePermissions';
+import { getClassesByPage } from 'utils/permissionClass';
 
 import {
   createPostSetRequest,
@@ -25,7 +24,6 @@ import Button from 'elements/atm.Button';
 import MenuItem from 'elements/atm.MenuItem';
 import Menu from 'elements/atm.Menu';
 import withReactRouter from 'elements/hoc.withReactRouter';
-import { getClassesByPage } from 'utils/permissionClass';
 
 import {
   setProcessing,
@@ -127,6 +125,35 @@ const SidebarWrapper = styled.div`
 const ReactRouterMenuItem = withReactRouter(MenuItem);
 
 class Library extends React.Component {
+  static propTypes = {
+    children: PropTypes.node,
+    getMediaItems: PropTypes.func,
+    getFeeds: PropTypes.func,
+    params: PropTypes.any,
+    fetchUrlData: PropTypes.func,
+    filePickerKey: PropTypes.string,
+    clearUrlContent: PropTypes.func,
+    setProcessing: PropTypes.func,
+    createMediaItem: PropTypes.func,
+    updateMediaItem: PropTypes.func,
+    createPostSet: PropTypes.func,
+    createBlogItem: PropTypes.func,
+    isProcessing: PropTypes.func,
+    urlContent: PropTypes.string,
+    activeBrand: PropTypes.object,
+    activeCollection: PropTypes.shape({
+      collection_id: PropTypes.string,
+    }),
+    location: PropTypes.shape({
+      pathname: PropTypes.string,
+      hash: PropTypes.string,
+    }),
+    pushToRoute: PropTypes.func,
+    getEmbedData: PropTypes.func,
+    embedData: PropTypes.object,
+    goBack: PropTypes.func,
+  };
+
   constructor(props) {
     super(props);
 
@@ -169,11 +196,11 @@ class Library extends React.Component {
     // If Blog post is created or updated successfully, then the modal view for blog editor will be hidden
 
     if (this.props.isProcessing !== nextProps.isProcessing) {
-      if(!nextProps.isProcessing && nextProps.location.hash.startsWith('#blog-editor')) {
+      if (!nextProps.isProcessing && nextProps.location.hash.startsWith('#blog-editor')) {
         // do nothing
       } else if (!nextProps.isProcessing && !nextProps.location.hash.startsWith('#postset')) {
-        //this.props.pushToRoute(this.props.location.pathname);
-        //console.log('change route');
+        // this.props.pushToRoute(this.props.location.pathname);
+        // console.log('change route');
       }
     }
   }
@@ -229,7 +256,7 @@ class Library extends React.Component {
     const hash = this.props.location.hash;
     let mimetypes;
     if (hash === '#blog-editor') {
-      mimetypes = { mimetype: 'image/*' }
+      mimetypes = { mimetype: 'image/*' };
     }
     const filePickerOptions = {
       buttonText: 'Upload',
@@ -533,7 +560,8 @@ class Library extends React.Component {
         </SidebarWrapper>
         <ContentWrapper>
           {React.cloneElement(this.props.children,
-            { ...this.props,
+            {
+              ...this.props,
               createPostSet: this.createPostSet,
               openImageEditor: this.openImageEditor,
               openLinkEditor: this.openLinkEditor,
@@ -541,7 +569,7 @@ class Library extends React.Component {
               openFileEditor: this.openFileEditor,
               openBlogEditor: this.openBlogEditor,
               handleAddLinkValueFromDialog: this.handleAddLinkValueFromDialog,
-              permissionClasses: permissionClasses,
+              permissionClasses,
             }
           )}
         </ContentWrapper>
@@ -552,22 +580,23 @@ class Library extends React.Component {
         <VideoEditor actions={actions} permissionClasses={permissionClasses} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleVideoEditorSave} isOpen={this.state.videoEditorDialog} filePickerKey={this.props.filePickerKey} videoItem={this.state.videoItem} />
         <FileEditor actions={actions} permissionClasses={permissionClasses} setProcessing={this.props.setProcessing} closeAllDialog={this.closeAllDialog} handleSave={this.handleFileEditorSave} isOpen={this.state.fileEditorDialog} filePickerKey={this.props.filePickerKey} fileItem={this.state.fileItem} />
         <div className="post-editor">
-          { blogEditor ? <BlogEditor
-            filePickerKey={this.props.filePickerKey}
-            location={this.props.location}
-            onCreate={this.createBlogPost}
-            onUpdate={this.updateBlogPost}
-            selectedItem={this.state.blogItem}
-            filePickerKey={this.props.filePickerKey}
-            openAddFile={this.openAddFile}
-            openAddLink={this.openAddEmbed}
-            openBlogEditor={this.openBlogEditor}
-            embedData={this.props.embedData}
-            getEmbedData={this.props.getEmbedData}
-            goBack={this.props.goBack}
-            pushToRoute={this.props.pushToRoute}
-            handleAddLinkValueFromDialog={this.handleAddLinkValueFromDialog}
-          /> : null }
+          {blogEditor ?
+            <BlogEditor
+              filePickerKey={this.props.filePickerKey}
+              location={this.props.location}
+              onCreate={this.createBlogPost}
+              onUpdate={this.updateBlogPost}
+              selectedItem={this.state.blogItem}
+              openAddFile={this.openAddFile}
+              openAddLink={this.openAddEmbed}
+              openBlogEditor={this.openBlogEditor}
+              embedData={this.props.embedData}
+              getEmbedData={this.props.getEmbedData}
+              goBack={this.props.goBack}
+              pushToRoute={this.props.pushToRoute}
+              handleAddLinkValueFromDialog={this.handleAddLinkValueFromDialog}
+            /> : null
+          }
         </div>
       </Wrapper>
     );
@@ -616,29 +645,5 @@ const mapStateToProps = createStructuredSelector({
   activeBrand: makeSelectCurrentAccount(),
   embedData: makeSelectEmbedData(),
 });
-
-Library.propTypes = {
-  children: PropTypes.node,
-  getMediaItems: PropTypes.func,
-  getFeeds: PropTypes.func,
-  params: PropTypes.any,
-  fetchUrlData: PropTypes.func,
-  filePickerKey: PropTypes.string,
-  clearUrlContent: PropTypes.func,
-  setProcessing: PropTypes.func,
-  createMediaItem: PropTypes.func,
-  updateMediaItem: PropTypes.func,
-  createPostSet: PropTypes.func,
-  createBlogItem: PropTypes.func,
-  isProcessing: PropTypes.func,
-  urlContent: PropTypes.string,
-  activeBrand: PropTypes.object,
-  activeCollection: PropTypes.shape({
-    collection_id: PropTypes.string,
-  }),
-  location: PropTypes.shape({
-    pathname: PropTypes.string,
-  }),
-};
 
 export default UserCanLibrary(connect(mapStateToProps, mapDispatchToProps)(Library));

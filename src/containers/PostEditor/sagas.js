@@ -1,13 +1,24 @@
 import { takeLatest, takeEvery } from 'redux-saga';
-import { take, call, put, cancel, select, fork } from 'redux-saga/effects';
+import { take, call, put, cancel, select } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import moment from 'moment';
 import _ from 'lodash';
 import { makeSelectUser } from 'containers/App/selectors';
 
 import {
-  UPDATE_POST_SET_REQUEST,
+  FETCH_MEDIA_ITEMS_SUCCESS,
+  CREATE_MEDIA_ITEM,
+  CREATE_MEDIA_ITEM_SUCCESS,
+  CREATE_MEDIA_ITEM_ERROR,
+  UPDATE_MEDIA_ITEM,
+  UPDATE_MEDIA_ITEM_SUCCESS,
+  VIDEO_PROCESSING,
+  VIDEO_PROCESSING_DONE,
 } from 'containers/App/constants';
+
+import {
+  updatePostSetRequest,
+} from 'containers/App/actions';
 
 import {
   getData,
@@ -36,15 +47,6 @@ import {
   DELETE_COMMENT,
   FETCH_ACCOUNT_TAGS_REQUEST,
   SET_ACCOUNT_TAGS,
-  SUBMIT_BUNCH_POSTS_REQUEST,
-  SUBMIT_BUNCH_POSTS_SUCCESS,
-  ADD_POST_TO_POSTSET,
-  VIDEO_PROCESSING,
-  CREATE_MEDIA_ITEM,
-  CREATE_MEDIA_ITEM_SUCCESS,
-  CREATE_MEDIA_ITEM_ERROR,
-  UPDATE_MEDIA_ITEM,
-  UPDATE_MEDIA_ITEM_SUCCESS,
   FETCH_URL_CONTENT,
   FETCH_URL_CONTENT_SUCCESS,
   POST_EDITOR_ERROR,
@@ -53,12 +55,9 @@ import {
   FETCH_COLLECTIONS,
   FETCH_COLLECTIONS_SUCCESS,
   FETCH_MEDIA_ITEMS_ERROR,
-  FETCH_MEDIA_ITEMS_SUCCESS,
   PROCESS_ITEM,
   PROCESS_ITEM_SUCCESS,
   FETCH_WORDPRESS_GUI_REQUEST,
-  CREATE_POST_REQUEST,
-  VIDEO_PROCESSING_DONE,
   FETCH_FACEBOOK_ENTITIES,
   GET_EMBED_DATA,
   GET_EMBED_DATA_SUCCESS,
@@ -67,8 +66,6 @@ import {
 import {
   fetchWordpressGUISuccess,
   fetchWordpressGUIFailure,
-  createPostSuccess,
-  createPostFailure,
   fetchFacebookEntitiesSuccess,
   createBlogItemFailure,
 } from './actions';
@@ -168,33 +165,6 @@ export function* postCommentRequest(payload) {
   }
 }
 
-export function* submitPost(post) {
-  const requestUrl = '/post_api/post';
-  const requestData = {
-    payload: post,
-  };
-  try {
-    const response = yield call(postData, requestUrl, requestData);
-    const { data } = response;
-    if (data.result === 'success') {
-      yield put({ type: ADD_POST_TO_POSTSET, post: data.post });
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-function* submitAllPosts(posts) {
-  for (let i = 0; i < posts.length; i += 1) {
-    yield fork(submitPost, posts[i]);
-  }
-}
-
-function* submitBunchPosts({ posts }) {
-  yield call(submitAllPosts, posts);
-  yield put({ type: SUBMIT_BUNCH_POSTS_SUCCESS });
-}
-
 export function* deleteCommentRequest(payload) {
   const requestUrl = `/post_api/comment/${payload.commentId}`;
   try {
@@ -259,10 +229,10 @@ export function* createMediaItem(action) {
       /* Update post set in the backend */
       const postSet = yield select(selectPostSet());
       const payload = {
-        ...postSet.get('details').toJS(),
-        id: postSet.getIn(['details', 'post_set_id']),
+        ...postSet.get('data').toJS(),
+        id: postSet.getIn(['data', 'post_set_id']),
       };
-      yield put({ type: UPDATE_POST_SET_REQUEST, payload });
+      yield put(updatePostSetRequest(payload));
     } else {
       yield put({ type: CREATE_MEDIA_ITEM_ERROR });
     }
@@ -307,7 +277,7 @@ export function* updateMediaItem(action) {
       ...postSet.get('details').toJS(),
       id: postSet.getIn(['details', 'post_set_id']),
     };
-    yield put({ type: UPDATE_POST_SET_REQUEST, payload });
+    yield put(updatePostSetRequest(payload));
   }
 }
 
@@ -355,7 +325,7 @@ export function* createBlogItemSaga(action) {
       id: postSet.getIn(['details', 'post_set_id']),
     };
 
-    yield put({ type: UPDATE_POST_SET_REQUEST, payload });
+    yield put(updatePostSetRequest(payload));
   } else {
     yield put(createBlogItemFailure(results.data.message));
   }
@@ -378,31 +348,6 @@ export function* fetchWordpressGUIWorker({ payload }) {
   if (data) {
     yield put(fetchWordpressGUISuccess(data));
   }
-}
-
-function* createPostWorker({ payload }) {
-  let data;
-
-  try {
-    const response = yield call(postData, '/post_api/post', { payload });
-    if (response.data.result !== 'success') {
-      throw Error('Status Wrong!');
-    }
-    data = response.data;
-  } catch (error) {
-    yield put(createPostFailure(error));
-  }
-
-  if (data) {
-    yield put(createPostSuccess(data.post));
-    // yield put(fetchPostSetRequest({ id: data.post.post_set_id }));
-  }
-}
-
-export function* createPostSaga() {
-  const watcher = yield takeLatest(CREATE_POST_REQUEST, createPostWorker);
-  yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
 }
 
 export function* fetchComments() {
@@ -431,12 +376,6 @@ export function* deleteComment() {
 
 export function* fetchAccountTags() {
   const watcher = yield takeLatest(FETCH_ACCOUNT_TAGS_REQUEST, getAccountTags);
-  yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
-}
-
-export function* submitBunchPostsRequest() {
-  const watcher = yield takeLatest(SUBMIT_BUNCH_POSTS_REQUEST, submitBunchPosts);
   yield take(LOCATION_CHANGE);
   yield cancel(watcher);
 }
@@ -521,14 +460,12 @@ export default [
   postComment,
   deleteComment,
   fetchAccountTags,
-  submitBunchPostsRequest,
   collectionData,
   mediaItem,
   updateMedia,
   linkData,
   getItem,
   fetchWordpressGUISaga,
-  createPostSaga,
   watchPollData,
   fetchFacebookEntitiesSaga,
   getEmbedData,

@@ -33,7 +33,7 @@ function PostDetails({
   const minDate = new Date();
   minDate.setDate(minDate.getDate() - 1);
   const { type, mediaItem } = getMediaTypeAndItem(newMediaItem, postSet);
-  const postSetId = postSet.getIn(['details', 'post_set_id']);
+  const postSetId = postSet.getIn(['data', 'post_set_id']);
 
   const characterCount = 140 - (postMessage ? postMessage.length : 0);
   const status = post.get('status');

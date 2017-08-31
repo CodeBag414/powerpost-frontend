@@ -18,24 +18,25 @@ import { getClassesByPage } from 'utils/permissionClass';
 import cookie from 'react-cookie';
 
 import { UserIsAuthenticated } from 'config.routes/UserIsAuthenticated';
-import { makeSelectUser,
-         makeSelectUserAccount,
-         makeSelectSharedAccounts,
-         makeSelectUserAvatar,
-         makeSelectPostSet,
-         makeSelectPostSetEdit,
+
+import {
+  checkUser,
+  logout,
+  createPostSetRequest,
+} from 'containers/App/actions';
+import {
+  makeSelectUser,
+  makeSelectUserAccount,
+  makeSelectSharedAccounts,
+  makeSelectUserAvatar,
+  makeSelectPostSet,
 } from 'containers/App/selectors';
 
-import { checkUser,
-         logout,
-         createPostSetRequest,
-} from 'containers/App/actions';
-
-import { toggleMenu,
-         fetchCurrentAccount,
-         fetchConnections,
+import {
+  toggleMenu,
+  fetchCurrentAccount,
+  fetchConnections,
 } from './actions';
-
 import {
   makeSelectAccountBrands,
   makeSelectMenuCollapsed,
@@ -44,10 +45,10 @@ import {
   makeSelectUserPermissions,
   makeSelectIsProcessing,
 } from './selectors';
+
 import styles from './styles.scss';
 
 class Main extends React.Component {
-
   static propTypes = {
     params: PropTypes.shape(),
     user: PropTypes.shape(),
@@ -98,10 +99,15 @@ class Main extends React.Component {
       this.props.fetchAccount(nextProps.params.account_id);
       this.props.fetchConnections(nextProps.params.account_id);
     }
+
     const { postSet } = nextProps;
-    if (postSet && postSet.createSuccess && (!this.props.postSet || this.props.postSet.post_set_id !== postSet.post_set_id)) {
-      if (nextProps.postSetEdit) {
-        browserHistory.push(`${this.props.location.pathname}#postset-${postSet.post_set_id}`);
+    if (
+      postSet &&
+      postSet.get('success') &&
+      (!this.props.postSet || this.props.postSet.getIn(['data', 'post_set_id']) !== postSet.getIn(['data', 'post_set_id']))
+    ) {
+      if (postSet.get('editing')) {
+        browserHistory.push(`${this.props.location.pathname}#postset-${postSet.getIn(['data', 'post_set_id'])}`);
       } else {
         toastr.success('Success', 'The Post is created successfully!');
       }
@@ -216,8 +222,8 @@ const mapStateToProps = () => {
   const selectAccountPermissions = makeSelectAccountPermissions();
   const selectUserPermissions = makeSelectUserPermissions();
   const selectPostSet = makeSelectPostSet();
-  const selectPostSetEdit = makeSelectPostSetEdit();
   const selectIsProcessing = makeSelectIsProcessing();
+
   return (state, ownProps) => ({
     user: selectUser(state),
     menuCollapsed: selectMenuCollapsed(state),
@@ -230,7 +236,6 @@ const mapStateToProps = () => {
     userPermissions: selectUserPermissions(state),
     isProcessing: selectIsProcessing(state),
     postSet: selectPostSet(state),
-    postSetEdit: selectPostSetEdit(state),
     location: ownProps.location,
   });
 };

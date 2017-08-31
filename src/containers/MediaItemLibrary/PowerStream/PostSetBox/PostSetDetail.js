@@ -49,12 +49,10 @@ const PostSetDetail = ({
   permissionClasses,
   handlePostSet,
 }) => {
-  let item;
-  if (mediaItems.length === 0) {
-    item = { type: 'empty' };
-  } else {
-    item = mediaItems.toJS()[0];
-  }
+  if (!postSet) return null;
+
+  const item = mediaItems.size ? mediaItems.toJS()[0] : { type: 'empty' };
+
   return (
     <Wrapper>
       <Content>

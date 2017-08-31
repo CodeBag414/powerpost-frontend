@@ -23,10 +23,6 @@ import {
 } from 'containers/Main/actions';
 
 import {
-  updatePostSetRequest,
-} from 'containers/App/actions';
-
-import {
   makeSelectFilePickerKey,
 } from 'containers/App/selectors';
 
@@ -61,7 +57,7 @@ import MessageEditorWrapper from './MessageEditorWrapper';
 import { CHANNELS } from './constants';
 
 function getHasWordPressPost(postSet) {
-  postSet.getIn(['details', 'posts']).some((post) => {
+  postSet.getIn(['data', 'posts']).some((post) => {
     if (post.get('status') === '0') return false;
     if (post.get('connection_channel') === 'wordpress') return true;
     return false;
@@ -69,7 +65,6 @@ function getHasWordPressPost(postSet) {
 }
 
 class Content extends Component {
-
   static propTypes = {
     pending: PropTypes.bool,
     postSet: PropTypes.object,
@@ -105,9 +100,9 @@ class Content extends Component {
 
   constructor(props) {
     super(props);
-    const message = !props.postSet.get('details').isEmpty() ? props.postSet.getIn(['details', 'message']) : '';
-    const mediaItems = !props.postSet.get('details').isEmpty() ? props.postSet.getIn(['details', 'media_items']).toJS() : [];
-    const hasWordPressPost = !props.postSet.get('details').isEmpty() && getHasWordPressPost(props.postSet);
+    const message = !props.postSet.get('data').isEmpty() ? props.postSet.getIn(['data', 'message']) : '';
+    const mediaItems = !props.postSet.get('data').isEmpty() ? props.postSet.getIn(['data', 'media_items']).toJS() : [];
+    const hasWordPressPost = !props.postSet.get('data').isEmpty() && getHasWordPressPost(props.postSet);
     const characterLimit = this.calculateCharacterLimit(message, mediaItems[0] || [], false);
     this.state = {
       channelIndex: -1,
@@ -148,11 +143,11 @@ class Content extends Component {
       }
     }
 
-    const newMessage = postSet.getIn(['details', 'message']);
-    let newMediaItem = postSet.getIn(['details', 'media_items']) || fromJS([]);
+    const newMessage = postSet.getIn(['data', 'message']);
+    let newMediaItem = postSet.getIn(['data', 'media_items']) || fromJS([]);
 
     newMediaItem = newMediaItem.toJS();
-    if (this.props.postSet.get('details').isEmpty() || this.props.postSet.getIn(['details', 'post_set_id']) !== postSet.getIn(['details', 'post_set_id'])) {
+    if (this.props.postSet.get('data').isEmpty() || this.props.postSet.getIn(['data', 'post_set_id']) !== postSet.getIn(['data', 'post_set_id'])) {
       this.setState({ message: newMessage || '' });
       this.linkifyMessage(newMessage);
     }
@@ -199,7 +194,7 @@ class Content extends Component {
   handleMessageBlur = (event, message = this.state.message) => {
     const { channelIndex } = this.state;
     const { updatePostSet, postSet } = this.props;
-    const postSetDetails = postSet.get('details').toJS();
+    const postSetDetails = postSet.get('data').toJS();
 
     if (channelIndex > -1) {
       const channelMessages = postSetDetails.properties;
@@ -549,10 +544,10 @@ class Content extends Component {
 
     const { message } = this.state;
     const { postSet } = this.props;
-    const globalMessage = this.state.channelIndex === -1 ? message : postSet.getIn(['details', 'message']);
+    const globalMessage = this.state.channelIndex === -1 ? message : postSet.getIn(['data', 'message']);
 
     if (channelIndex > -1) {
-      const channelMessages = postSet.getIn(['details', 'properties']).toJS();
+      const channelMessages = postSet.getIn(['data', 'properties']).toJS();
       const channelName = CHANNELS[channelIndex].name;
       this.setState({
         message: channelMessages[channelName] || globalMessage,
@@ -651,7 +646,7 @@ class Content extends Component {
             mediaItem={mediaItem}
             post={previewPostData}
             postMessage={message}
-            postSetId={postSet.getIn(['details', 'post_set_id'])}
+            postSetId={postSet.getIn(['data', 'post_set_id'])}
             postTime={previewPostTime}
             type={type}
           />
@@ -686,7 +681,6 @@ class Content extends Component {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    updatePostSet: (payload) => dispatch(updatePostSetRequest(payload)),
     createMediaItem: (mediaItem) => dispatch(createMediaItem(mediaItem)),
     updateMediaItem: (mediaItem) => dispatch(updateMediaItem(mediaItem)),
     removeMediaItem: () => dispatch(removeMediaItem()),

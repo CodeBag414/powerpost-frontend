@@ -20,9 +20,6 @@ import {
   INVITE_EMAIL_TO_STREAM_REQUEST,
   INVITE_EMAIL_TO_STREAM_SUCCESS,
   INVITE_EMAIL_TO_STREAM_FAILURE,
-  REPLICATE_POST_SET_REQUEST,
-  REPLICATE_POST_SET_SUCCESS,
-  REPLICATE_POST_SET_FAILURE,
   CREATE_BLOG_ITEM_REQUEST,
   CREATE_BLOG_ITEM_SUCCESS,
   CREATE_BLOG_ITEM_FAILURE,
@@ -186,28 +183,6 @@ export function inviteEmailToStreamSuccess(payload) {
 export function inviteEmailToStreamFailure(payload) {
   return {
     type: INVITE_EMAIL_TO_STREAM_FAILURE,
-    payload,
-  };
-}
-
-export function replicatePostSetRequest(prevUrl, payload) {
-  return {
-    type: REPLICATE_POST_SET_REQUEST,
-    prevUrl,
-    payload,
-  };
-}
-
-export function replicatePostSetSuccess(payload) {
-  return {
-    type: REPLICATE_POST_SET_SUCCESS,
-    payload,
-  };
-}
-
-export function replicatePostSetFailure(payload) {
-  return {
-    type: REPLICATE_POST_SET_FAILURE,
     payload,
   };
 }

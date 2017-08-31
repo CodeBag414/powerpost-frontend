@@ -39,11 +39,6 @@ const makeSelectUrlContent = () => createSelector(
   (postSetEditor) => postSetEditor.get('urlContent')
 );
 
-const selectPostSet = () => createSelector(
-  selectPostSetEditor,
-  (postSetEditor) => postSetEditor.get('postSet')
-);
-
 const makeSelectActiveCollection = () => createSelector(
    selectPostSetEditor,
     (postSetEditor) => postSetEditor.get('activeCollection')
@@ -52,11 +47,6 @@ const makeSelectActiveCollection = () => createSelector(
 const makeSelectAccountTags = () => createSelector(
   selectPostSetEditor,
   (postSetEditor) => postSetEditor.get('accountTags'),
-);
-
-const makeSelectMediaItem = () => createSelector(
-  selectPostSetEditor,
-  (postSetEditor) => postSetEditor.getIn(['postSet', 'details', 'media_items']),
 );
 
 const makeSelectMediaItems = () => createSelector(
@@ -90,11 +80,6 @@ const selectWordpressGUI = () => createSelector(
   (postSetEditor) => postSetEditor.get('wordpressGUI'),
 );
 
-const selectPost = () => createSelector(
-  selectPostSetEditor,
-  (postSetEditor) => postSetEditor.get('post'),
-);
-
 const selectNewMediaItem = () => createSelector(
   selectPostSetEditor,
   (postSetEditor) => postSetEditor.get('newMediaItem'),
@@ -110,15 +95,12 @@ export {
   makeSelectAccountTags,
   makeSelectInProgress,
   makeSelectActiveCollection,
-  selectPostSet,
   makeSelectUrlContent,
-  makeSelectMediaItem,
   makeSelectMediaItems,
   makeSelectIsProcessing,
   makeSelectFilter,
   makeSelectVisibleMediaItems,
   selectWordpressGUI,
-  selectPost,
   selectNewMediaItem,
   selectFacebookEntities,
   makeSelectEmbedData,

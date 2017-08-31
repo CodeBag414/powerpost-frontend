@@ -27,7 +27,7 @@ class StatusChooser extends React.Component {
     super(props);
 
     const { postSet } = props;
-    const statusValue = postSet.getIn(['details', 'status']);
+    const statusValue = postSet.getIn(['data', 'status']);
     const status = statusOptions.filter((option) =>
       option.value === statusValue
     )[0];
@@ -38,9 +38,9 @@ class StatusChooser extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { postSet } = this.props;
-    if (!postSet.isEmpty() && nextProps.postSet.getIn(['details', 'status']) !== postSet.getIn(['details', 'status'])) {
+    if (!postSet.isEmpty() && nextProps.postSet.getIn(['data', 'status']) !== postSet.getIn(['data', 'status'])) {
       this.updateStatus(nextProps);
-      if (postSet.getIn(['details', 'status']) && postSet.getIn(['details', 'post_set_id']) === nextProps.postSet.getIn(['details', 'post_set_id'])) {
+      if (postSet.getIn(['data', 'status']) && postSet.getIn(['data', 'post_set_id']) === nextProps.postSet.getIn(['data', 'post_set_id'])) {
         this.showSuccessGrowl(nextProps);
       }
     }
@@ -48,7 +48,7 @@ class StatusChooser extends React.Component {
 
   getGrowlType = (postSet) => {
     if (!postSet || postSet.isEmpty()) return false; // No posts
-    const posts = postSet.getIn(['details', 'posts']);
+    const posts = postSet.getIn(['data', 'posts']);
     let hasScheduledPost = false;
     let hasPostUponReadyPost = false;
     posts.map((post) => {
@@ -64,7 +64,7 @@ class StatusChooser extends React.Component {
     });
 
     const { userAccount } = this.props;
-    const streamIds = postSet.getIn(['details', 'stream_ids']);
+    const streamIds = postSet.getIn(['data', 'stream_ids']);
     const accountStreamId = userAccount.account_streams[0].stream_id;
     const index = streamIds.findIndex((id) => id === accountStreamId);
     const streamEnabled = index > -1;
@@ -78,7 +78,7 @@ class StatusChooser extends React.Component {
   }
 
   showSuccessGrowl = ({ postSet }) => {
-    if (!postSet || postSet.isEmpty() || postSet.getIn(['details', 'status']) !== '3') return;
+    if (!postSet || postSet.isEmpty() || postSet.getIn(['data', 'status']) !== '3') return;
     const growlType = this.getGrowlType(postSet);
 
     if (growlType) {
@@ -96,7 +96,7 @@ class StatusChooser extends React.Component {
 
   updateStatus = ({ postSet }) => {
     if (!postSet || postSet.isEmpty()) return;
-    const statusValue = postSet.getIn(['details', 'status']);
+    const statusValue = postSet.getIn(['data', 'status']);
     const status = statusOptions.filter((option) =>
       option.value === statusValue
     )[0];
@@ -114,8 +114,8 @@ class StatusChooser extends React.Component {
       }
     }
     const newPostSet = {
-      ...postSet.get('details').toJS(),
-      id: postSet.getIn(['details', 'post_set_id']),
+      ...postSet.get('data').toJS(),
+      id: postSet.getIn(['data', 'post_set_id']),
       status: option.value,
     };
     updatePostSet(newPostSet);

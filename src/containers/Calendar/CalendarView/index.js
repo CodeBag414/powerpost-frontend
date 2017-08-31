@@ -22,7 +22,6 @@ const formats = {
 };
 
 class CalendarView extends React.Component {
-
   static propTypes = {
     postSets: PropTypes.array,
     currentAccount: PropTypes.object,

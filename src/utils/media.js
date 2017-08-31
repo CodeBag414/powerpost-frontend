@@ -1,5 +1,5 @@
 export function getMediaTypeAndItem(newMediaItem, postSet) {
-  const mediaItems = postSet.getIn(['details', 'media_items']).toJS();
+  const mediaItems = postSet.getIn(['data', 'media_items']).toJS();
   let mediaItem = {};
   let type;
 

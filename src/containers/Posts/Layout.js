@@ -12,7 +12,7 @@ import {
 
 import {
   makeSelectPostSets,
-  makeSelectPostSet,
+  makeSelectPostSetsByST,
 } from 'containers/App/selectors';
 
 import ErrorWrapper from './ErrorWrapper';
@@ -22,20 +22,21 @@ import PostSetBox from './PostSetBox';
 class PostsLayout extends Component {
   static propTypes = {
     postSets: ImmutablePropTypes.map,
+    postSetsByST: ImmutablePropTypes.map,
     fetchPostSets: PropTypes.func,
     fetchPostSetsByST: PropTypes.func,
-    // postSet: ImmutablePropTypes.map,
     accountId: PropTypes.string,
     activeBrand: PropTypes.object,
     location: PropTypes.object,
-  }
+  };
 
   state = {
     error: '',
     shareDialogVisible: false,
-  }
+  };
 
   componentWillMount() {
+    this.props.fetchPostSets();
     this.props.fetchPostSetsByST();
   }
 
@@ -51,6 +52,7 @@ class PostsLayout extends Component {
   render() {
     const {
       postSets,
+      postSetsByST,
       accountId,
       fetchPostSets,
       fetchPostSetsByST,
@@ -78,6 +80,7 @@ class PostsLayout extends Component {
       <Wrapper>
         <PostSetBox
           postSets={postSets}
+          postSetsByST={postSetsByST}
           accountId={accountId}
           fetchPostSets={fetchPostSets}
           fetchPostSetsByST={fetchPostSetsByST}
@@ -91,7 +94,7 @@ class PostsLayout extends Component {
 
 const mapStateToProps = createStructuredSelector({
   postSets: makeSelectPostSets(),
-  postSet: makeSelectPostSet(),
+  postSetsByST: makeSelectPostSetsByST(),
 });
 
 const mapDispatchToProps = (dispatch) => (

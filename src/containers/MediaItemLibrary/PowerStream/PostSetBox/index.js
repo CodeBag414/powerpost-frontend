@@ -20,11 +20,11 @@ class PostSetBox extends Component {
     handlePostSet: PropTypes.func,
     permissionClasses: PropTypes.object,
     location: PropTypes.object,
-  }
+  };
 
   state = {
     currentPostSetIndex: 0,
-  }
+  };
 
   componentWillReceiveProps(nextProps) {
     if (this.props.location !== nextProps.location) {
@@ -76,7 +76,7 @@ class PostSetBox extends Component {
         <PostSetDetail
           owned={owned}
           mediaItems={mediaItems}
-          postSet={postSet.get('processing') ?
+          postSet={postSet.get('requesting') ?
             postSets.get(currentPostSetIndex) : postSet.get('data')}
           handlePostSet={handlePostSet}
           permissionClasses={permissionClasses}

@@ -91,7 +91,6 @@ class CopyPostDropDown extends Component {
   }
 }
 
-
 const PostSetDetail = ({
   postSet,
   addPostsIdea,

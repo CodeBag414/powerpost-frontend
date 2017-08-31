@@ -8,22 +8,25 @@ import { find, filter } from 'lodash';
 import styled from 'styled-components';
 
 import { getClassesByPage } from 'utils/permissionClass';
-import Loading from 'components/Loading';
+
 import CloseableDialog from 'elements/atm.CloseableDialog';
 import MenuItem from 'elements/atm.MenuItem';
 import Menu from 'elements/atm.Menu';
 import withReactRouter from 'elements/hoc.withReactRouter';
+import Loading from 'components/Loading';
+import PostEditor from 'containers/PostEditor';
 
 import {
   fetchPostSetRequest,
   updatePostSetRequest,
 } from 'containers/App/actions';
+import {
+  makeSelectPostSet,
+} from 'containers/App/selectors';
 
 import {
   makeSelectCurrentAccount,
 } from 'containers/Main/selectors';
-
-import PostEditor from 'containers/PostEditor';
 
 import {
   fetchStreamPostSetsRequest,
@@ -31,9 +34,8 @@ import {
   replicatePostSetRequest,
 } from '../actions';
 import {
-  makeSelectPostSets,
-  makeSelectPostSet,
   makeSelectEmailInvited,
+  makeSelectPostSets, // stream post sets
 } from '../selectors';
 
 import styles from './styles.scss';
@@ -247,7 +249,7 @@ class PowerStreamLayout extends Component {
             postSets={postSets.get('data').sortBy((ps) => -ps.get('creation_time'))
               .filter((p) => p.get('status') === '3')}
             streamName={streamName}
-            fetchingPostSets={postSets.get('isFetching')}
+            fetchingPostSets={postSets.get('requesting')}
             fetchPostSet={this.props.fetchPostSet}
             handlePostSet={this.handlePostSet}
             permissionClasses={permissionClasses}
@@ -269,7 +271,7 @@ class PowerStreamLayout extends Component {
               accountId={accountId}
             />
           }
-          { postSets.get('isFetching') && <Loading /> }
+          {postSets.get('requesting') && <Loading />}
         </ContentWrapper>
       </Wrapper>
     );

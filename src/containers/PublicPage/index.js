@@ -5,13 +5,12 @@ import { createStructuredSelector } from 'reselect';
 import moment from 'moment';
 import Helmet from "react-helmet";
 
-import { fetchPostSetRequest } from './actions';
-import { selectPostSet } from './selectors';
+import { fetchPublicPostSetRequest } from './actions';
+import { selectPublicPostSet } from './selectors';
 
 import Wrapper from './Wrapper';
 import SocialInfo from './SocialInfo';
 import PostContent from './PostContent';
-import SocialTabs from './SocialTabs';
 
 const logoImg = require('../../assets/images/logo1.png');
 
@@ -43,8 +42,8 @@ class PublicPage extends Component {
     const script = document.createElement('script');
 
     script.type = 'text/javascript';
-    script.async= true;
-    script.innerHTML = `drift.on('ready', function(api) { api.widget.hide(); });`;
+    script.async = true;
+    script.innerHTML = 'drift.on(\'ready\', function(api) { api.widget.hide(); });';
     this.instance.appendChild(script);
   }
 
@@ -96,18 +95,18 @@ class PublicPage extends Component {
         <div className="header"><a href="https://www.powerpost.digital"><img role="presentation" src={logoImg} /></a></div>
         <div className="container" style={{ marginTop: '60px' }}>
           <div className="row">
-          <SocialInfo
-            url={thumbUrl}
-            websiteUrl={websiteUrl}
-            title={title}
-            color={accountColor}
-            description={accountDescription}
-          />
-          <PostContent
-            creationTime={creationTime}
-            message={message}
-            mediaItems={mediaItems}
-          />
+            <SocialInfo
+              url={thumbUrl}
+              websiteUrl={websiteUrl}
+              title={title}
+              color={accountColor}
+              description={accountDescription}
+            />
+            <PostContent
+              creationTime={creationTime}
+              message={message}
+              mediaItems={mediaItems}
+            />
           </div>
         </div>
         <div ref={(el) => (this.instance = el)} />
@@ -118,12 +117,12 @@ class PublicPage extends Component {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    fetchPostSet: (payload) => dispatch(fetchPostSetRequest(payload)),
+    fetchPostSet: (payload) => dispatch(fetchPublicPostSetRequest(payload)),
   };
 }
 
 const mapStateToProps = createStructuredSelector({
-  postSet: selectPostSet(),
+  postSet: selectPublicPostSet(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PublicPage);
