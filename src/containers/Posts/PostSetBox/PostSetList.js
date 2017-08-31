@@ -31,7 +31,7 @@ const PostSetList = ({
           message={p.get('message')}
           date={p.get(time)
             ? moment(p.get(time) * 1000).format('MMM DD')
-            : ((p.get('status') === '3' && 'Post When Ready') || 'Unscheduled')
+            : ((parseInt(p.getIn(['posts', 0, 'schedule_time'], 1), 10) && 'Unscheduled') || 'Post When Ready')
           }
           type={p.get('post_type')}
           onClick={() => isLoadingPostSet ? null : handleSelectPostSet(index)}

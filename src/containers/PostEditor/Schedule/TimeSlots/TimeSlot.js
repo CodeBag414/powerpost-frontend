@@ -60,7 +60,7 @@ class TimeSlot extends Component {
           <div className="connection-name">{connection.display_name}</div>
         </div>
         <div className="date-time">
-          {post.status !== '5' && post.schedule_time ?
+          {post.status !== '5' && parseInt(post.schedule_time, 10) ?
             <div>
               <div className="date-row">{moment.unix(post.schedule_time).format('MMM D')}</div>
               <div className="time-row">{moment.unix(post.schedule_time).format('ddd, hh:mm')}</div>
