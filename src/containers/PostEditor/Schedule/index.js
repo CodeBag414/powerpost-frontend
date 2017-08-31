@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import PPButton from 'elements/atm.Button';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { fromJS } from 'immutable';
+
+import { getConnectionForPost } from 'utils/connections';
+
+import PPButton from 'elements/atm.Button';
 
 import NoContent from './NoContent';
 import TimeSlots from './TimeSlots';
@@ -123,9 +126,7 @@ class Schedule extends Component {
     const { postSet, accountConnections, connections, posts, newMediaItem, permissionClasses, availableFBChannel, createBunchPosts } = this.props;
     const { isDialogShown, currentPost, postMessage, postTime } = this.state;
     const hasContent = posts && posts.length;
-    const connection = connections && connections.filter((item) =>
-      currentPost && item.connection_id === currentPost.connection_id,
-    )[0];
+    const connection = getConnectionForPost(connections, currentPost);
     const requesting = postSet.get('requesting');
     const currentMediaItems = (newMediaItem.type) ? [newMediaItem] : postSet.getIn(['data', 'media_items']).toJS();
 

@@ -10,6 +10,7 @@ import { routerActions } from 'react-router-redux';
 import { withRouter } from 'react-router';
 
 import { getClassesByPage } from 'utils/permissionClass';
+import { getConnectionForPost } from 'utils/connections';
 
 import Button from 'elements/atm.Button';
 import DeletePostSetDialog from 'components/DeletePostSetDialog';
@@ -287,9 +288,14 @@ class PostEditor extends Component {
     let posts;
     if (postsArray) {
       // Sort posts & calculate total timeslots
-      posts = postsArray.toJS().filter((postItem) =>
-        postItem.status !== '0' && postItem.connection_channel !== 'wordpress'
-      ).sort((postA, postB) => {
+      posts = postsArray.toJS().filter((postItem) => {
+        if (postItem.status === '0') return false;
+        if (postItem.connection_channel) {
+          return postItem.connection_channel !== 'wordpress';
+        }
+        const connection = getConnectionForPost(connections, postItem);
+        return connection.channel !== 'wordpress';
+      }).sort((postA, postB) => {
         const timeA = postA.schedule_time;
         const timeB = postB.schedule_time;
         return (timeA > timeB);

@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { differenceWith, isEqual } from 'lodash';
 
+import { getConnectionForPost } from 'utils/connections';
+
 import Wrapper from './Wrapper';
 import TimeSlot from './TimeSlot';
 
@@ -45,10 +47,7 @@ class TimeSlots extends React.Component {
       <Wrapper>
         {
           posts.map((post) => {
-            const connection = connections && connections.filter((item) =>
-              item.connection_id === post.connection_id,
-            )[0];
-
+            const connection = getConnectionForPost(connections, post);
             if (!connection || connection.channel === 'wordpress') return null;
 
             return (<TimeSlot
