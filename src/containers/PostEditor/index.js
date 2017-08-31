@@ -156,7 +156,7 @@ class PostEditor extends Component {
     }
 
     if (permissionClasses.contentTab) {
-      this.setState({ selectedTabIndex: 1 });
+      this.setState({ selectedTabIndex: 1, sidebarExpanded: false });
     }
   }
 
