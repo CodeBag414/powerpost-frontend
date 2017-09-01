@@ -104,6 +104,7 @@ class Content extends Component {
     const mediaItems = !props.postSet.get('data').isEmpty() ? props.postSet.getIn(['data', 'media_items']).toJS() : [];
     const hasWordPressPost = !props.postSet.get('data').isEmpty() && getHasWordPressPost(props.postSet);
     const characterLimit = this.calculateCharacterLimit(message, mediaItems[0] || [], false);
+
     this.state = {
       channelIndex: -1,
       characterLimit,
@@ -133,7 +134,7 @@ class Content extends Component {
     if (urlContent !== this.props.urlContent) {
       for (let i = 0; i < messageUrls.length; i += 1) {
         const url = messageUrls[i];
-        if (urlContent.providerUrl === url.href) {
+        if (urlContent.original_url === url.href) {
           const newMessage = message.replace(url.value, urlContent.short_url);
           this.setState({ message: newMessage });
           this.handleMessageChange(newMessage);
