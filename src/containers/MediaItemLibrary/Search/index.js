@@ -79,8 +79,10 @@ class Search extends Component {
 
   searchWeb() {
     const query = this.state.searchValue;
-    this.props.searchWeb(query);
-    this.setState({ isLoading: true });
+    if(this.state.searchValue) {
+      this.props.searchWeb(query);
+      this.setState({ isLoading: true });
+    }
   }
 
   render() {

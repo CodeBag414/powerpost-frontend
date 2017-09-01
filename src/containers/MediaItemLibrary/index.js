@@ -5,6 +5,7 @@ import React, { PropTypes } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import filepicker from 'filepicker-js';
+import filestack from 'filestack-js';
 import { createStructuredSelector } from 'reselect';
 import { routerActions } from 'react-router-redux';
 import DropdownMenu from 'react-dd-menu';
@@ -365,11 +366,12 @@ class Library extends React.Component {
   handleLinkEditorSave = (item) => {
     this.closeAllDialog();
     const { action, ...linkItem } = item;
-    filepicker.setKey(this.props.filePickerKey);
+    const filepicker = filestack.init(this.props.filePickerKey);
     const picture = linkItem.picture || linkItem.properties.picture;
     this.props.setProcessing(true);
     if (picture && picture !== 'remove') {
-      filepicker.storeUrl(`https://process.filestackapi.com/${this.props.filePickerKey}/resize=width:750,fit:clip/${picture}`, (Blob) => {
+      filepicker.storeURL(`${picture}`)
+      .then((Blob) => {
         if (action === 'update') {
           linkItem.properties.picture = Blob.url;
           linkItem.properties.picture_key = Blob.key;
@@ -377,9 +379,8 @@ class Library extends React.Component {
           linkItem.picture = Blob.url;
           linkItem.picture_key = Blob.key;
         }
-        filepicker.storeUrl(
-          `https://process.filestackapi.com/${this.props.filePickerKey}/resize=width:300,height:300,fit:clip/${picture}`,
-          (blob) => {
+        filepicker.storeURL(`${picture}`)
+        .then((blob) => {
             linkItem.collection_id = this.props.activeCollection.collection_id;
             linkItem.mediaItemType = 'link';
             if (action === 'create') {

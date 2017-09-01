@@ -228,7 +228,7 @@ class LinkEditor extends Component {
               <Button onClick={() => this.prepareLinkItem(doNotCreate)} style={{ marginBottom: '5px' }} primary>Save</Button>
             </div>
           </FooterWrapper>
-          {!urlContent.url ? <Loading opacity={0.5} showIndicator={urlContent} /> : null}
+          {!urlContent.url && !this.props.linkItem.properties ? <Loading opacity={0.5} showIndicator={urlContent} /> : null}
         </Wrapper>
       </PPDialog>
     );
