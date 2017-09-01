@@ -7,7 +7,9 @@ import { routerActions } from 'react-router-redux';
 import filepicker from 'filepicker-js';
 import * as linkify from 'linkifyjs';
 import ReactSummernote from 'react-summernote';
+
 import { getMediaTypeAndItem } from 'utils/media';
+import { getHasWordPressPost } from 'utils/postSet';
 
 import LinkEditor from 'containers/MediaItemLibrary/LinkEditor';
 import FileEditor from 'containers/MediaItemLibrary/FileEditor';
@@ -55,14 +57,6 @@ import ChannelsRow from './ChannelsRow';
 import MessageEditorWrapper from './MessageEditorWrapper';
 
 import { CHANNELS } from './constants';
-
-function getHasWordPressPost(postSet) {
-  postSet.getIn(['data', 'posts']).some((post) => {
-    if (post.get('status') === '0') return false;
-    if (post.get('connection_channel') === 'wordpress') return true;
-    return false;
-  });
-}
 
 class Content extends Component {
   static propTypes = {
@@ -129,7 +123,7 @@ class Content extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { postSet, urlContent } = nextProps;
-    const { messageUrls, message } = this.state;
+    const { messageUrls, message, channelIndex } = this.state;
 
     if (urlContent !== this.props.urlContent) {
       for (let i = 0; i < messageUrls.length; i += 1) {
@@ -144,29 +138,37 @@ class Content extends Component {
       }
     }
 
-    const newMessage = postSet.getIn(['data', 'message']);
-    let newMediaItem = postSet.getIn(['data', 'media_items']) || fromJS([]);
+    if (postSet !== this.props.postSet) {
+      let newMediaItem = postSet.getIn(['data', 'media_items']) || fromJS([]);
+      newMediaItem = newMediaItem.toJS();
+      if (newMediaItem[0]) {
+        this.setState({
+          item: newMediaItem[0],
+        });
+      }
+      if (newMediaItem.length === 0 && this.state.item.media_item_id) {
+        this.setState({ item: {} });
+      }
 
-    newMediaItem = newMediaItem.toJS();
-    if (this.props.postSet.get('data').isEmpty() || this.props.postSet.getIn(['data', 'post_set_id']) !== postSet.getIn(['data', 'post_set_id'])) {
-      this.setState({ message: newMessage || '' });
-      this.linkifyMessage(newMessage);
-    }
-    if (newMediaItem[0]) {
-      this.setState({
-        item: newMediaItem[0],
-      });
-    }
-    if (newMediaItem.length === 0 && this.state.item.media_item_id) {
-      this.setState({ item: {} });
-    }
+      const hasWordPressPost = getHasWordPressPost(postSet);
+      this.setState({ hasWordPressPost });
 
-    const hasWordPressPost = getHasWordPressPost(postSet);
-
-    this.setState({
-      characterLimit: this.calculateCharacterLimit(newMessage, newMediaItem[0], hasWordPressPost),
-      hasWordPressPost,
-    });
+      const newMessage = postSet.getIn(['data', 'message']);
+      if (channelIndex === -1) { // Global message
+        this.setState({
+          message: newMessage,
+          characterLimit: this.calculateCharacterLimit(newMessage, newMediaItem[0], hasWordPressPost),
+        });
+      } else { // Twitter
+        const channelMessages = postSet.getIn(['data', 'properties']);
+        const channelName = CHANNELS[channelIndex].name;
+        const channelMessage = channelMessages.get(channelName) || newMessage;
+        this.setState({
+          message: channelMessage,
+          characterLimit: this.calculateCharacterLimit(channelMessage, newMediaItem[0], hasWordPressPost),
+        });
+      }
+    }
   }
 
   calculateCharacterLimit = (message = this.state.message, item = this.state.item, hasWordPressPost = this.state.hasWordPressPost) => {
@@ -550,12 +552,15 @@ class Content extends Component {
     if (channelIndex > -1) {
       const channelMessages = postSet.getIn(['data', 'properties']).toJS();
       const channelName = CHANNELS[channelIndex].name;
+      const channelMessage = channelMessages[channelName] || globalMessage;
       this.setState({
-        message: channelMessages[channelName] || globalMessage,
+        message: channelMessage,
+        characterLimit: this.calculateCharacterLimit(channelMessage),
       });
     } else {
       this.setState({
         message: globalMessage,
+        characterLimit: this.calculateCharacterLimit(globalMessage),
       });
     }
     this.setState({ channelIndex });
