@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+
 import DatePicker from 'react-toolbox/lib/date_picker';
 import TimePicker from 'react-toolbox/lib/time_picker';
+
 import Wrapper from './Wrapper';
 
 class SchedulesBlock extends Component {
-
   static propTypes = {
     scheduleTimes: PropTypes.array,
     onChangeScheduleTimes: PropTypes.func,
@@ -14,7 +15,8 @@ class SchedulesBlock extends Component {
 
   removeSchedule = (index) => {
     const { scheduleTimes, onChangeScheduleTimes } = this.props;
-    const newScheduleTimes = scheduleTimes.splice(index, index + 1);
+    const newScheduleTimes = scheduleTimes.slice();
+    newScheduleTimes.splice(index, 1);
     onChangeScheduleTimes(newScheduleTimes);
   }
 
