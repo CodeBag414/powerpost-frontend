@@ -7,13 +7,16 @@ import {
   makeSelectAccountConnections,
 } from 'containers/Main/selectors';
 
+import {
+  setConnectionsList,
+} from 'containers/Main/actions';
+
 import AddConnectionDialog from './AddConnectionDialog';
 import ConnectionsControlBar from './ConnectionsControlBar';
 import ConnectionsList from './ConnectionsList';
 import {
   setChannelFilter,
   setChannelType,
-  setConnectionsList,
   toggleDialog,
   getSocialUrl,
   removeConnection,

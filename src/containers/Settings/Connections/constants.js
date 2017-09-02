@@ -1,6 +1,5 @@
 export const SET_CHANNEL_FILTER = 'Settings/Connections/SET_CHANNEL_FILTER';
 export const SET_CHANNEL_TYPE = 'Settings/Connections/SET_CHANNEL_TYPE';
-export const SET_CONNECTIONS_LIST = 'Settings/Connections/SET_CONNECTIONS_LIST';
 export const TOGGLE_ADD_CONNECTION_DIALOG = 'Settings/Connections/TOGGLE_ADD_CONNECTION_DIALOG';
 export const FETCH_SOCIAL_URL = 'Settings/Connections/FETCH_SOCIAL_URL';
 export const CONNECTION_CALLBACK = 'Settings/Connections/CONNECTION_CALLBACK';

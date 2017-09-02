@@ -42,17 +42,17 @@ class BlogEditor extends Component {
 
     const selectedItem = props.selectedItem;
     this.state = {
-      titleValue: selectedItem.properties ? selectedItem.properties.title : '',
-      descriptionValue: selectedItem.properties ? selectedItem.properties.caption : '',
-      selectedImage: selectedItem.properties ?
+      titleValue: selectedItem && selectedItem.properties ? selectedItem.properties.title : '',
+      descriptionValue: selectedItem && selectedItem.properties ? selectedItem.properties.caption : '',
+      selectedImage: selectedItem && selectedItem.properties ?
         {
           key: selectedItem.properties.thumb_key,
           url: selectedItem.properties.thumb_url,
         }
       :
         {},
-      creationTime: selectedItem.properties ? selectedItem.creation_time : 0,
-      content: selectedItem.properties ? selectedItem.properties.html : '',
+      creationTime: selectedItem && selectedItem.properties ? selectedItem.creation_time : 0,
+      content: selectedItem && selectedItem.properties ? selectedItem.properties.html : '',
     };
   }
 

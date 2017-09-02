@@ -12,6 +12,7 @@ import {
     FETCH_CONNECTIONS,
     SET_CONNECTIONS,
     SET_PROCESSING,
+    SET_CONNECTIONS_LIST,
 } from './constants';
 
 export function fetchCurrentAccount(accountId) {
@@ -21,6 +22,12 @@ export function fetchCurrentAccount(accountId) {
   };
 }
 
+export function setConnectionsList(connections) {
+  return {
+    type: SET_CONNECTIONS_LIST,
+    connections,
+  }
+}
 export function toggleMenu(collapsed) {
   cookie.save('is_menu_open', collapsed, { path: '/' });
 
