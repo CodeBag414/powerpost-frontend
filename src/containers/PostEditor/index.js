@@ -178,7 +178,7 @@ class PostEditor extends Component {
     const id = postSet.getIn(['data', 'post_set_id']);
     deletePostSet(id);
 
-    if (location && !location.pathname.endsWith('/posts')) {
+    if (location && (location.hash || !location.pathname.endsWith('/posts'))) {
       browserHistory.push(location.pathname);
     }
   }
