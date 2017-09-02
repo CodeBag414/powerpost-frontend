@@ -19,11 +19,7 @@ const initialState = fromJS({
 function postSetsBySTReducer(state = initialState, action) {
   switch (action.type) {
     case FETCH_POST_SETS_BY_ST_REQUEST:
-      return fromJS({
-        requesting: true,
-        error: null,
-        data: null,
-      });
+      return state.set('requesting', true);
     case FETCH_POST_SETS_BY_ST_SUCCESS:
       return fromJS({
         requesting: false,
@@ -60,15 +56,15 @@ function postSetsBySTReducer(state = initialState, action) {
       return state
         .updateIn(
           ['data', 'unscheduled_post_sets'],
-          (postSets) => postSets && postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
+          (postSets) => postSets && postSets.filter((postSet) => postSet.get('post_set_id') !== action.id),
         )
         .updateIn(
           ['data', 'scheduled_post_sets'],
-          (postSets) => postSets && postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
+          (postSets) => postSets && postSets.filter((postSet) => postSet.get('post_set_id') !== action.id),
         )
         .updateIn(
           ['data', 'post_when_ready_post_sets'],
-          (postSets) => postSets && postSets.filter((postSet) => postSet.get('post_set_id') !== action.id)
+          (postSets) => postSets && postSets.filter((postSet) => postSet.get('post_set_id') !== action.id),
         );
     case UPDATE_BUNCH_POSTS_REQUEST:
       return state
