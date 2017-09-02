@@ -1,6 +1,7 @@
 import { takeLatest } from 'redux-saga';
 import { call, put, select } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
+import { filter } from 'lodash';
 
 import { toastr } from 'lib/react-redux-toastr';
 import { getData, postData, putData, patchData, serialize } from 'utils/request';
@@ -12,6 +13,7 @@ import {
   FETCH_POST_SET_REQUEST,
   CREATE_POST_SET_REQUEST,
   UPDATE_POST_SET_REQUEST,
+  REMOVE_POST_SET_FROM_STREAM_REQUEST,
   DELETE_POST_SET_REQUEST,
   CHANGE_POST_SET_STATUS_REQUEST,
   CHANGE_POST_SET_SORT_ORDER_REQUEST,
@@ -30,6 +32,8 @@ import {
   createPostSetFailure,
   updatePostSetSuccess,
   updatePostSetFailure,
+  removePostSetFromStreamSuccess,
+  removePostSetFromStreamFailure,
   deletePostSetSuccess,
   deletePostSetFailure,
   changePostSetStatusSuccess,
@@ -117,27 +121,6 @@ function* createPostSetWorker({ postSet, editing }) {
   }
 }
 
-function* deletePostSetWorker(payload) {
-  const requestData = {
-    payload: {
-      status: '0',
-    },
-  };
-  const requestUrl = `/post_api/post_set/${payload.id}?`;
-  try {
-    const response = yield call(patchData, requestUrl, requestData);
-    const { data } = response;
-    if (data.status === 'success') {
-      yield put(deletePostSetSuccess(payload.id));
-    } else {
-      yield put(deletePostSetFailure(data));
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-
 function* updatePostSetWorker(action) {
   const { payload } = action;
   /* Modify post type correctly */
@@ -148,11 +131,47 @@ function* updatePostSetWorker(action) {
     const { data } = response;
     if (data.status === 'success') {
       yield put(updatePostSetSuccess(data.post_set));
-    } else {
-      throw data.message;
+      return { updatedPostSetId: data.post_set.post_set_id };
     }
+    throw data.message;
   } catch (error) {
     yield put(updatePostSetFailure(error));
+    return { error };
+  }
+}
+
+function* removePostSetFromStreamWorker({ postSet, streamId }) {
+  const payload = {
+    ...postSet,
+    id: postSet.post_set_id,
+    stream_ids: filter(postSet.stream_ids || [], (id) => id !== streamId),
+  };
+  const { updatedPostSetId, error } = yield call(updatePostSetWorker, { payload });
+
+  if (updatedPostSetId) {
+    yield put(removePostSetFromStreamSuccess(updatedPostSetId));
+  } else {
+    yield put(removePostSetFromStreamFailure(error));
+  }
+}
+
+function* deletePostSetWorker({ id }) {
+  const requestData = {
+    payload: {
+      status: '0',
+    },
+  };
+  const requestUrl = `/post_api/post_set/${id}?`;
+  try {
+    const response = yield call(patchData, requestUrl, requestData);
+    const { data } = response;
+    if (data.status === 'success') {
+      yield put(deletePostSetSuccess(id));
+    } else {
+      yield put(deletePostSetFailure(data));
+    }
+  } catch (error) {
+    console.log(error);
   }
 }
 
@@ -263,12 +282,16 @@ function* createPostSetSaga() {
   yield takeLatest(CREATE_POST_SET_REQUEST, createPostSetWorker);
 }
 
-function* deletePostSetSaga() {
-  yield takeLatest(DELETE_POST_SET_REQUEST, deletePostSetWorker);
-}
-
 function* updatePostSetSaga() {
   yield takeLatest(UPDATE_POST_SET_REQUEST, updatePostSetWorker);
+}
+
+function* removePostSetFromStreamSaga() {
+  yield takeLatest(REMOVE_POST_SET_FROM_STREAM_REQUEST, removePostSetFromStreamWorker);
+}
+
+function* deletePostSetSaga() {
+  yield takeLatest(DELETE_POST_SET_REQUEST, deletePostSetWorker);
 }
 
 function* changePostSetStatusSaga() {
@@ -297,6 +320,7 @@ export default [
   createPostSetSaga,
   deletePostSetSaga,
   updatePostSetSaga,
+  removePostSetFromStreamSaga,
   changePostSetStatusSaga,
   changePostSetSortOrderSaga,
   savePostSetSortOrderSaga,

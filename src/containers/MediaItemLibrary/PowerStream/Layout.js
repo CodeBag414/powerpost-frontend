@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { browserHistory } from 'react-router';
-import { find, filter } from 'lodash';
+import { find } from 'lodash';
 import styled from 'styled-components';
 
 import { getClassesByPage } from 'utils/permissionClass';
@@ -17,10 +17,13 @@ import Loading from 'components/Loading';
 import PostEditor from 'containers/PostEditor';
 
 import {
+  fetchPostSetsRequest,
   fetchPostSetRequest,
-  updatePostSetRequest,
+  removePostSetFromStreamRequest,
+  replicatePostSetRequest,
 } from 'containers/App/actions';
 import {
+  makeSelectPostSets,
   makeSelectPostSet,
 } from 'containers/App/selectors';
 
@@ -29,13 +32,10 @@ import {
 } from 'containers/Main/selectors';
 
 import {
-  fetchStreamPostSetsRequest,
   inviteEmailToStreamRequest,
-  replicatePostSetRequest,
 } from '../actions';
 import {
   makeSelectEmailInvited,
-  makeSelectPostSets, // stream post sets
 } from '../selectors';
 
 import styles from './styles.scss';
@@ -74,18 +74,18 @@ class PowerStreamLayout extends Component {
     postSets: ImmutablePropTypes.map,
     postSet: ImmutablePropTypes.map,
     emailInvited: ImmutablePropTypes.map,
-    fetchStreamPostSets: PropTypes.func,  // eslint-disable-line
+    fetchPostSets: PropTypes.func,  // eslint-disable-line
     fetchPostSet: PropTypes.func,
-    updatePostSet: PropTypes.func,
+    removePostSetFromStream: PropTypes.func,
     inviteEmailToStream: PropTypes.func,
     replicatePostSet: PropTypes.func,
     activeBrand: PropTypes.object,
-  }
+  };
 
   state = {
     error: '',
     shareDialogVisible: false,
-  }
+  };
 
   componentWillMount() {
     this.changeStreamLink(this.props);
@@ -114,7 +114,7 @@ class PowerStreamLayout extends Component {
     }
   }
 
-  changeStreamLink({ hash, userAccount, accountId, streamCategory, streamId, fetchStreamPostSets }) {
+  changeStreamLink({ hash, userAccount, accountId, streamCategory, streamId, fetchPostSets }) {
     let newStreamId = streamId;
 
     if (!streamId) {
@@ -137,20 +137,13 @@ class PowerStreamLayout extends Component {
       browserHistory.push(`/account/${accountId}/shared_streams/${streamCategory}/${newStreamId}${hash}`);
     }
 
-    fetchStreamPostSets(newStreamId, {
-      query_by: 'stream_id',
-    });
+    fetchPostSets(newStreamId, { query_by: 'stream_id' });
   }
 
   handlePostSet = (removing, postSet) => {
-    const { updatePostSet, replicatePostSet, streamId, accountId, streamCategory } = this.props;
-    const postSetObj = postSet.toJS();
+    const { removePostSetFromStream, replicatePostSet, streamId, accountId, streamCategory } = this.props;
     if (removing) {
-      updatePostSet({
-        ...postSetObj,
-        id: postSet.get('post_set_id'),
-        stream_ids: filter(postSetObj.stream_ids || [], (id) => id !== streamId),
-      }, 'powerstream');
+      removePostSetFromStream(postSet.toJS(), streamId);
     } else {
       replicatePostSet(
         `/account/${accountId}/shared_streams/${streamCategory}/${streamId}`,
@@ -229,6 +222,12 @@ class PowerStreamLayout extends Component {
 
     const postsetId = hash.startsWith('#postset') ? hash.split('-')[1] : null;
 
+    const sortedPostSets =
+      postSets.getIn(['data', 'post_sets']) &&
+      postSets.getIn(['data', 'post_sets'])
+        .sortBy((ps) => -ps.get('creation_time'))
+        .filter((p) => p.get('status') === '3');
+
     return (
       <Wrapper>
         <SidebarWrapper>
@@ -246,8 +245,7 @@ class PowerStreamLayout extends Component {
           <PostSetBox
             owned={owned}
             postSet={postSet}
-            postSets={postSets.get('data').sortBy((ps) => -ps.get('creation_time'))
-              .filter((p) => p.get('status') === '3')}
+            postSets={sortedPostSets}
             streamName={streamName}
             fetchingPostSets={postSets.get('requesting')}
             fetchPostSet={this.props.fetchPostSet}
@@ -286,9 +284,9 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = {
+  fetchPostSets: fetchPostSetsRequest,
   fetchPostSet: fetchPostSetRequest,
-  fetchStreamPostSets: fetchStreamPostSetsRequest,
-  updatePostSet: updatePostSetRequest,
+  removePostSetFromStream: removePostSetFromStreamRequest,
   inviteEmailToStream: inviteEmailToStreamRequest,
   replicatePostSet: replicatePostSetRequest,
 };

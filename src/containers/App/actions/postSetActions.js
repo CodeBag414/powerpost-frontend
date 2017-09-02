@@ -14,6 +14,9 @@ import {
   UPDATE_POST_SET_REQUEST,
   UPDATE_POST_SET_SUCCESS,
   UPDATE_POST_SET_FAILURE,
+  REMOVE_POST_SET_FROM_STREAM_REQUEST,
+  REMOVE_POST_SET_FROM_STREAM_SUCCESS,
+  REMOVE_POST_SET_FROM_STREAM_FAILURE,
   CREATE_POST_SET_REQUEST,
   CREATE_POST_SET_SUCCESS,
   CREATE_POST_SET_FAILURE,
@@ -113,22 +116,24 @@ export function createPostSetFailure(error) {
 }
 
 export function updatePostSetRequest(payload) {
-  return {
-    type: UPDATE_POST_SET_REQUEST,
-    payload,
-  };
+  return { type: UPDATE_POST_SET_REQUEST, payload };
 }
 export function updatePostSetSuccess(postSet) {
-  return {
-    type: UPDATE_POST_SET_SUCCESS,
-    postSet,
-  };
+  return { type: UPDATE_POST_SET_SUCCESS, postSet };
 }
 export function updatePostSetFailure(error) {
-  return {
-    type: UPDATE_POST_SET_FAILURE,
-    error,
-  };
+  return { type: UPDATE_POST_SET_FAILURE, error };
+}
+
+export function removePostSetFromStreamRequest(postSet, streamId) {
+  return { type: REMOVE_POST_SET_FROM_STREAM_REQUEST, postSet, streamId };
+}
+export function removePostSetFromStreamSuccess(id) {
+  console.log('hhhhh');
+  return { type: REMOVE_POST_SET_FROM_STREAM_SUCCESS, id };
+}
+export function removePostSetFromStreamFailure(error) {
+  return { type: REMOVE_POST_SET_FROM_STREAM_FAILURE, error };
 }
 
 export function deletePostSetRequest(id) {
