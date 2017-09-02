@@ -6,8 +6,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import { routerActions } from 'react-router-redux';
-import { withRouter } from 'react-router';
+import { withRouter, browserHistory } from 'react-router';
 
 import { getClassesByPage } from 'utils/permissionClass';
 import { getConnectionForPost } from 'utils/connections';
@@ -88,7 +87,6 @@ class PostEditor extends Component {
     fetchCollections: PropTypes.func,
     fetchWordpressGUI: PropTypes.func,
     filePickerKey: PropTypes.string,
-    goBack: PropTypes.func,
     groupUsers: PropTypes.object,
     id: PropTypes.string,
     location: PropTypes.object,
@@ -122,7 +120,6 @@ class PostEditor extends Component {
   static defaultProps = {
     modal: true,
     accountId: '',
-    goBack: () => {},
     loadPostSet: () => {},
   };
 
@@ -177,12 +174,12 @@ class PostEditor extends Component {
   }
 
   onDeletePostSet = () => {
-    const { postSet, deletePostSet, goBack, location } = this.props;
+    const { postSet, deletePostSet, location } = this.props;
     const id = postSet.getIn(['data', 'post_set_id']);
     deletePostSet(id);
 
     if (location && !location.pathname.endsWith('/posts')) {
-      goBack();
+      browserHistory.push(location.pathname);
     }
   }
 
@@ -265,7 +262,6 @@ class PostEditor extends Component {
       fetchWordpressGUI,
       wordpressGUI,
       post,
-      goBack,
       postComment,
       deleteComment,
       comments,
@@ -348,7 +344,6 @@ class PostEditor extends Component {
         handleTitleFocus={this.handleTitleFocus}
         handleTitleKeyDown={this.handleTitleKeyDown}
         modal={modal}
-        goBack={goBack}
         updatePostSet={updatePostSet}
         userAccount={userAccount}
         groupUsers={groupUsers}
@@ -471,7 +466,6 @@ function mapDispatchToProps(dispatch) {
     getComments: (postSetId) => dispatch(fetchComments(postSetId)),
     fetchGroupUsers: (payload) => dispatch(fetchGroupUsers(payload)),
     fetchWordpressGUI: (payload) => dispatch(fetchWordpressGUIRequest(payload)),
-    goBack: () => dispatch(routerActions.goBack()),
     fetchCollections: (accountId) => dispatch(fetchCollections(accountId)),
     postComment: (postSetId, text) => dispatch(postCommentRequest({ postSetId, text })),
     deleteComment: (commentId) => dispatch(deleteCommentRequest(commentId)),
