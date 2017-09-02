@@ -11,63 +11,63 @@ import {
 const selectLibrary = (state) => state.get('library');
 
 const makeSelectActiveCollection = () => createSelector(
-   selectLibrary,
-    (library) => library.get('activeCollection')
+  selectLibrary,
+  (library) => library.get('activeCollection'),
 );
 
 const makeSelectUrlContent = () => createSelector(
   selectLibrary,
-  (library) => library.get('urlContent')
+  (library) => library.get('urlContent'),
 );
 
 const makeSelectEmbedData = () => createSelector(
   selectLibrary,
-  (library) => library.get('embedData')
+  (library) => library.get('embedData'),
 );
 
 const makeSelectMediaItems = () => createSelector(
   [selectLibrary],
-  (library) => library.get('mediaItems')
+  (library) => library.get('mediaItems'),
 );
 
 const makeSelectProcessingItem = () => createSelector(
   [selectLibrary],
-  (library) => library.get('processingItem')
+  (library) => library.get('processingItem'),
 );
 
 const makeSelectSearchResults = () => createSelector(
   selectLibrary,
-  (library) => library.get('searchResults')
+  (library) => library.get('searchResults'),
 );
 
 const makeSelectFeeds = () => createSelector(
   selectLibrary,
-  (library) => library.get('feeds')
+  (library) => library.get('feeds'),
 );
 
 const makeSelectRSSItems = () => createSelector(
   selectLibrary,
-  (library) => library.get('rssItems')
+  (library) => library.get('rssItems'),
 );
 
 const makeSelectFilter = () => createSelector(
   [selectLibrary],
-  (library) => library.get('filter')
+  (library) => library.get('filter'),
 );
 
 const makeSelectSearchFilter = () => createSelector(
   [selectLibrary],
-  (library) => library.get('searchFilter')
+  (library) => library.get('searchFilter'),
 );
 
 const makeSelectSortOrder = () => createSelector(
   [selectLibrary],
-  (library) => library.get('sort')
+  (library) => library.get('sort'),
 );
 
 const makeSelectActiveMediaItemId = () => createSelector(
   [selectLibrary],
-  (library) => library.get('activeMediaItemId')
+  (library) => library.get('activeMediaItemId'),
 );
 
 const makeSelectActiveMediaItem = () => createSelector(
@@ -122,24 +122,14 @@ const makeSelectVisibleMediaItemsWithSearch = () => createSelector(
     return mediaItems;
   });
 
-const makeSelectPostSets = () => createSelector(
-   selectLibrary,
-    (library) => library.get('postSets')
-);
-
-const makeSelectPostSet = () => createSelector(
-   selectLibrary,
-    (library) => library.get('postSet')
-);
-
 const makeSelectEmailInvited = () => createSelector(
    selectLibrary,
-    (library) => library.get('emailInvited')
+    (library) => library.get('emailInvited'),
 );
 
 const makeSelectIsFetching = () => createSelector(
   selectLibrary,
-  (library) => library.get('isFetching')
+  (library) => library.get('isFetching'),
 );
 
 export {
@@ -154,8 +144,6 @@ export {
     makeSelectVisibleMediaItemsWithSearch,
     makeSelectProcessingItem,
     makeSelectActiveMediaItem,
-    makeSelectPostSets,
-    makeSelectPostSet,
     makeSelectEmailInvited,
     makeSelectIsFetching,
     makeSelectEmbedData,

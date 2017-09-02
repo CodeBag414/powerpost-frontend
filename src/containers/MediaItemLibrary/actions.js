@@ -14,9 +14,6 @@ import {
   UPDATE_MEDIA_ITEM,
   SET_SORT_ORDER,
   SET_ACTIVE_MEDIA_ITEM_ID,
-  FETCH_STREAM_POST_SETS_REQUEST,
-  FETCH_STREAM_POST_SETS_SUCCESS,
-  FETCH_STREAM_POST_SETS_FAILURE,
   INVITE_EMAIL_TO_STREAM_REQUEST,
   INVITE_EMAIL_TO_STREAM_SUCCESS,
   INVITE_EMAIL_TO_STREAM_FAILURE,
@@ -141,28 +138,6 @@ export function setActiveMediaItemId(id) {
   return {
     type: SET_ACTIVE_MEDIA_ITEM_ID,
     id,
-  };
-}
-
-export function fetchStreamPostSetsRequest(id, payload) {
-  return {
-    type: FETCH_STREAM_POST_SETS_REQUEST,
-    id,
-    payload,
-  };
-}
-
-export function fetchStreamPostSetsSuccess(payload) {
-  return {
-    type: FETCH_STREAM_POST_SETS_SUCCESS,
-    payload,
-  };
-}
-
-export function fetchStreamPostSetsFailure(payload) {
-  return {
-    type: FETCH_STREAM_POST_SETS_FAILURE,
-    payload,
   };
 }
 

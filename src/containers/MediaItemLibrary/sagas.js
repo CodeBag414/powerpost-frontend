@@ -49,15 +49,12 @@ import {
   DELETE_MEDIA_ITEM_SUCCESS,
   UPDATE_MEDIA_ITEM,
   UPDATE_MEDIA_ITEM_SUCCESS,
-  FETCH_STREAM_POST_SETS_REQUEST,
   INVITE_EMAIL_TO_STREAM_REQUEST,
   CREATE_BLOG_ITEM_REQUEST,
   CLEAR_RSS_ITEMS,
 } from './constants';
 
 import {
-  fetchStreamPostSetsSuccess,
-  fetchStreamPostSetsFailure,
   inviteEmailToStreamSuccess,
   inviteEmailToStreamFailure,
   createBlogItemSuccess,
@@ -385,27 +382,6 @@ export function* errorWatcher() {
   yield takeLatest(MEDIA_ERROR, showError);
 }
 
-export function* fetchStreamPostSetsWorker({ id, payload }) {
-  try {
-    const params = serialize({ payload });
-    const requestUrl = `/post_api/post_sets/${id}?${params}`;
-    const { data } = yield call(getData, requestUrl);
-
-    if (data.status === 'success') {
-      const postSets = data.post_sets;
-      yield put(fetchStreamPostSetsSuccess(postSets));
-    } else {
-      throw data.message;
-    }
-  } catch (error) {
-    yield put(fetchStreamPostSetsFailure(error));
-  }
-}
-
-export function* fetchStreamPostSetsWatcher() {
-  yield takeLatest(FETCH_STREAM_POST_SETS_REQUEST, fetchStreamPostSetsWorker);
-}
-
 export function* inviteEmailToStreamSaga() {
   for (;;) {
     const { payload } = yield take(INVITE_EMAIL_TO_STREAM_REQUEST);
@@ -463,7 +439,6 @@ export function* mediaItemSaga() {
   const watcherI = yield fork(watchPollData);
   const watcherJ = yield fork(updateMedia);
   const watcherK = yield fork(errorWatcher);
-  const watcherL = yield fork(fetchStreamPostSetsWatcher);
   const watcherM = yield fork(inviteEmailToStreamSaga);
   const watcherN = yield fork(createBlogItemWatcher);
   const watcherO = yield fork(getEmbedData);
@@ -479,7 +454,6 @@ export function* mediaItemSaga() {
   yield cancel(watcherI);
   yield cancel(watcherJ);
   yield cancel(watcherK);
-  yield cancel(watcherL);
   yield cancel(watcherM);
   yield cancel(watcherN);
   yield cancel(watcherO);

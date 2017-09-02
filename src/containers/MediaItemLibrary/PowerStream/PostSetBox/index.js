@@ -55,7 +55,7 @@ class PostSetBox extends Component {
     const { currentPostSetIndex } = this.state;
     const mediaItems = postSet.getIn(['data', 'media_items']) || [];
 
-    if (postSets.isEmpty()) {
+    if (!postSets || postSets.isEmpty()) {
       return (
         <Wrapper>
           <ErrorWrapper>

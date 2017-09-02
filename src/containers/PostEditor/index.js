@@ -290,7 +290,7 @@ class PostEditor extends Component {
           return postItem.connection_channel !== 'wordpress';
         }
         const connection = getConnectionForPost(connections, postItem);
-        return connection.channel !== 'wordpress';
+        return connection && connection.channel !== 'wordpress';
       }).sort((postA, postB) => {
         const timeA = postA.schedule_time;
         const timeB = postB.schedule_time;

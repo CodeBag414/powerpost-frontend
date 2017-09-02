@@ -8,7 +8,6 @@ import {
   FETCH_COLLECTIONS_SUCCESS,
   FETCH_MEDIA_ITEMS_SUCCESS,
   FETCH_MEDIA_ITEMS_ERROR,
-  UPDATE_POST_SET_SUCCESS,
   MEDIA_ERROR,
   FETCH_URL_CONTENT_SUCCESS,
   CLEAR_URL_CONTENT,
@@ -25,9 +24,6 @@ import {
   UPDATE_MEDIA_ITEM_SUCCESS,
   CREATE_RSS_FEED_SUCCESS,
   SET_ACTIVE_MEDIA_ITEM_ID,
-  FETCH_STREAM_POST_SETS_REQUEST,
-  FETCH_STREAM_POST_SETS_SUCCESS,
-  FETCH_STREAM_POST_SETS_FAILURE,
   INVITE_EMAIL_TO_STREAM_REQUEST,
   INVITE_EMAIL_TO_STREAM_SUCCESS,
   INVITE_EMAIL_TO_STREAM_FAILURE,
@@ -65,22 +61,11 @@ const initialState = fromJS({
     parent_collection_id: false,
   },
   mediaItems: [],
-  postSets: {
-    isFetching: false,
-    data: [],
-    error: '',
-  },
-  postSet: {
-    processing: false,
-    data: {},
-    error: null,
-  },
   emailInvited: {
     processing: false,
     data: {},
     error: null,
   },
-  postSetReplicationProcessing: false,
 });
 
 // Takes care of changing the application state
@@ -166,25 +151,6 @@ function mediaLibraryReducer(state = initialState, action) {
     case CREATE_BLOG_ITEM_SUCCESS:
       return state
         .update('mediaItems', (mediaItems) => mediaItems.concat(action.payload.media_items));
-
-    case FETCH_STREAM_POST_SETS_REQUEST:
-      return state
-        .setIn(['postSets', 'requesting'], true)
-        .setIn(['postSets', 'error'], '');
-    case FETCH_STREAM_POST_SETS_SUCCESS:
-      return state
-        .setIn(['postSets', 'requesting'], false)
-        .setIn(['postSets', 'data'], fromJS(action.payload));
-    case FETCH_STREAM_POST_SETS_FAILURE:
-      return state
-        .setIn(['postSets', 'requesting'], false)
-        .setIn(['postSets', 'error'], 'Fetching Stream Failure');
-    // This is needed to update stream post sets in this component's own reducer
-    case UPDATE_POST_SET_SUCCESS:
-      return state
-        .updateIn(['postSets', 'data'], (postSets) =>
-          postSets.filter((p) => p.get('post_set_id') !== action.postSet.post_set_id)
-        );
     default:
       return state;
   }
