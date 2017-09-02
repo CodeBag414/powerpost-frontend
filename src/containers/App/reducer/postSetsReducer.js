@@ -9,6 +9,7 @@ import {
   /* Post set */
   DELETE_POST_SET_SUCCESS,
   UPDATE_POST_SET_SUCCESS,
+  UPDATE_POST_SET_FAILURE,
   REMOVE_POST_SET_FROM_STREAM_SUCCESS,
   CHANGE_POST_SET_STATUS_SUCCESS,
   CHANGE_POST_SET_SORT_ORDER_SUCCESS,
@@ -49,6 +50,8 @@ function postSetsReducer(state = initialState, action) {
           ['data', 'post_sets'],
           (postSets) => postSets && postSets.map((postSet) => postSet.get('post_set_id') === action.postSet.post_set_id ? fromJS(action.postSet) : postSet),
         );
+    case UPDATE_POST_SET_FAILURE:
+      console.log('Update post set error! ', action.error);
     case REMOVE_POST_SET_FROM_STREAM_SUCCESS:
       return state
         .updateIn(

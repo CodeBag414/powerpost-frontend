@@ -45,7 +45,7 @@ class SharedStream extends Component {
   toggleSharedStream = () => {
     const { accountStreamId, postSet, updatePostSet } = this.props;
     const { sharedStreamEnabled } = this.state;
-    const postDetails = postSet.get('data').toJS();
+    const postSetDetails = postSet.get('data').toJS();
     const streamIds = postSet.getIn(['data', 'stream_ids']).toJS();
     let newStreamIds;
 
@@ -60,8 +60,8 @@ class SharedStream extends Component {
     }
 
     updatePostSet({
-      ...postDetails,
-      id: postDetails.post_set_id,
+      ...postSetDetails,
+      id: postSetDetails.post_set_id,
       stream_ids: newStreamIds,
     });
   }
