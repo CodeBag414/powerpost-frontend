@@ -29,8 +29,6 @@ function PostDetails({
   availableFBChannel,
   updateScheduleTime,
 }) {
-  const minDate = new Date();
-  minDate.setDate(minDate.getDate() - 1);
   const { type, mediaItem } = getMediaTypeAndItem(newMediaItem, postSet);
   const postSetId = postSet.getIn(['data', 'post_set_id']);
 

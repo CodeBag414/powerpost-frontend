@@ -24,7 +24,7 @@ class DateTimePicker extends Component {
   render() {
     const { initialValue } = this.state;
     return (
-      <DatePickerWrapper {...this.props} defaultValue={initialValue} />
+      <DatePickerWrapper {...this.props} defaultValue={initialValue} min={initialValue} />
     );
   }
 }

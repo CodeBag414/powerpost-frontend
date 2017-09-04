@@ -45,8 +45,7 @@ class SchedulesBlock extends Component {
 
   render() {
     const { scheduleTimes } = this.props;
-    const minDate = new Date();
-    minDate.setDate(minDate.getDate() - 1);
+
     return (
       <Wrapper>
         <div className="controls-wrapper">
