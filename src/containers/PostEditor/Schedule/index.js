@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { fromJS } from 'immutable';
 import moment from 'moment';
-import { debounce } from 'lodash';
 
 import { getConnectionForPost } from 'utils/connections';
 
@@ -80,8 +79,7 @@ class Schedule extends Component {
   }
 
   handleDateChange = (type, e) => {
-    const { updatePost } = this.props;
-    const { currentPost, postTime } = this.state;
+    const { postTime } = this.state;
 
     let newDate = 0;
     if (type === 'date') {
@@ -96,12 +94,6 @@ class Schedule extends Component {
     this.setState({
       postTime: newDate / 1000,
     });
-
-    const newPost = {
-      ...currentPost,
-      schedule_time: newDate / 1000,
-    };
-    updatePost(newPost);
   }
 
   handleMessageChange = (value) => {
@@ -129,6 +121,17 @@ class Schedule extends Component {
     const newPost = {
       ...postToDelete,
       status: '0',
+    };
+    updatePost(newPost);
+  }
+
+  updateScheduleTime = () => {
+    const { updatePost } = this.props;
+    const { currentPost, postTime } = this.state;
+
+    const newPost = {
+      ...currentPost,
+      schedule_time: postTime,
     };
     updatePost(newPost);
   }
@@ -189,6 +192,7 @@ class Schedule extends Component {
                 newMediaItem={newMediaItem.toJS()}
                 permissionClasses={permissionClasses}
                 availableFBChannel={availableFBChannel}
+                updateScheduleTime={this.updateScheduleTime}
               />
             }
           </div>

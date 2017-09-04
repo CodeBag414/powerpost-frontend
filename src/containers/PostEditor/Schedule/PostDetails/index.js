@@ -27,6 +27,7 @@ function PostDetails({
   postTime,
   permissionClasses,
   availableFBChannel,
+  updateScheduleTime,
 }) {
   const minDate = new Date();
   minDate.setDate(minDate.getDate() - 1);
@@ -77,6 +78,7 @@ function PostDetails({
                 <div className={`date-picker ${disableClass}`}>
                   <DateTimePicker
                     type="date"
+                    onBlur={updateScheduleTime}
                     onChange={(e) => handleDateChange('date', e)}
                     value={moment.unix(postTime).format('YYYY-MM-DD')}
                   />
@@ -84,6 +86,7 @@ function PostDetails({
                 <div className={`time-picker ${disableClass}`}>
                   <DateTimePicker
                     type="time"
+                    onBlur={updateScheduleTime}
                     onChange={(e) => handleDateChange('time', e)}
                     value={moment.unix(postTime).format('HH:mm')}
                   />
@@ -123,6 +126,7 @@ PostDetails.propTypes = {
   handleMessageBlur: PropTypes.func,
   handleMessageChange: PropTypes.func,
   handleRemoveSlot: PropTypes.func,
+  updateScheduleTime: PropTypes.func,
   newMediaItem: PropTypes.object,
   post: ImmutablePropTypes.map,
   postMessage: PropTypes.string,
