@@ -7,11 +7,11 @@ import DatePickerWrapper from './DatePickerWrapper';
 class DateTimePicker extends Component {
   static propTypes = {
     type: PropTypes.string.isRequired,
-  }
+  };
 
   state = {
     initialValue: '',
-  }
+  };
 
   componentWillMount() {
     if (this.props.type === 'date') {
