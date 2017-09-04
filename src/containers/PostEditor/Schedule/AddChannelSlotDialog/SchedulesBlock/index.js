@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
-import DatePicker from 'react-toolbox/lib/date_picker';
-import TimePicker from 'react-toolbox/lib/time_picker';
+import DateTimePicker from 'components/DateTimePicker';
 
 import Wrapper from './Wrapper';
 
@@ -27,19 +26,19 @@ class SchedulesBlock extends Component {
     onChangeScheduleTimes(newScheduleTimes);
   }
 
-  changeDate = (index, date) => {
+  changeDate = (index, e) => {
     const { scheduleTimes, onChangeScheduleTimes } = this.props;
     const newScheduleTimes = scheduleTimes.slice();
-    newScheduleTimes[index] = new Date(date).getTime();
+    newScheduleTimes[index] = moment(`${e.target.value} ${moment(newScheduleTimes[index]).format('HH:mm')}`).valueOf();
     onChangeScheduleTimes(newScheduleTimes);
   }
 
-  changeTime = (index, time) => {
+  changeTime = (index, e) => {
     const { scheduleTimes, onChangeScheduleTimes } = this.props;
     const newScheduleTimes = scheduleTimes.slice();
-    const newTime = new Date(time);
+    const newTime = moment(e.target.value, 'HH:mm');
     const newDateTime = new Date(newScheduleTimes[index]);
-    newDateTime.setHours(newTime.getHours(), newTime.getMinutes(), newTime.getSeconds());
+    newDateTime.setHours(newTime.get('hour'), newTime.get('minute'));
     newScheduleTimes[index] = newDateTime.getTime();
     onChangeScheduleTimes(newScheduleTimes);
   }
@@ -57,15 +56,18 @@ class SchedulesBlock extends Component {
           scheduleTimes.map((scheduleTime, index) =>
             <div className="controls-wrapper date-time-picker" key={index}>
               <div className="first">
-                <DatePicker
-                  minDate={minDate}
-                  value={new Date(scheduleTime)}
-                  onChange={(date) => this.changeDate(index, date)}
-                  inputFormat={(date) => moment(date).format('MMMM D, YYYY')}
+                <DateTimePicker
+                  type="date"
+                  onChange={(e) => this.changeDate(index, e)}
+                  value={moment(scheduleTime).format('YYYY-MM-DD')}
                 />
               </div>
               <div className="second">
-                <TimePicker format="ampm" value={new Date(scheduleTime)} onChange={(time) => this.changeTime(index, time)} />
+                <DateTimePicker
+                  type="time"
+                  onChange={(e) => this.changeTime(index, e)}
+                  value={moment(scheduleTime).format('HH:mm')}
+                />
               </div>
               <div className="action">
                 {

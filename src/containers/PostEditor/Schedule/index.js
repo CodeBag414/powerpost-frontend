@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { fromJS } from 'immutable';
+import moment from 'moment';
+import { debounce } from 'lodash';
 
 import { getConnectionForPost } from 'utils/connections';
 
@@ -77,18 +79,27 @@ class Schedule extends Component {
     });
   }
 
-  handleDateChange = (date) => {
+  handleDateChange = (type, e) => {
     const { updatePost } = this.props;
-    const { currentPost } = this.state;
+    const { currentPost, postTime } = this.state;
 
-    const newDate = new Date(date).getTime() / 1000;
+    let newDate = 0;
+    if (type === 'date') {
+      newDate = moment(`${e.target.value} ${moment.unix(postTime).format('HH:mm')}`).valueOf();
+    } else {
+      const newTime = moment(e.target.value, 'HH:mm');
+      const newDateTime = new Date(postTime * 1000);
+      newDateTime.setHours(newTime.get('hour'), newTime.get('minute'));
+      newDate = newDateTime.getTime();
+    }
+
     this.setState({
-      postTime: newDate,
+      postTime: newDate / 1000,
     });
 
     const newPost = {
       ...currentPost,
-      schedule_time: newDate,
+      schedule_time: newDate / 1000,
     };
     updatePost(newPost);
   }
