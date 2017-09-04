@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
-import DatePicker from 'react-toolbox/lib/date_picker';
-import TimePicker from 'react-toolbox/lib/time_picker';
-
 import DateTimePicker from 'components/DateTimePicker';
 
 import Wrapper from './Wrapper';
@@ -66,7 +63,6 @@ class SchedulesBlock extends Component {
                 />
               </div>
               <div className="second">
-                {/* <TimePicker format="ampm" value={new Date(scheduleTime)} onChange={(time) => this.changeTime(index, time)} /> */}
                 <DateTimePicker
                   type="time"
                   onChange={(e) => this.changeTime(index, e)}

@@ -5,9 +5,7 @@ import moment from 'moment';
 
 import { getMediaTypeAndItem } from 'utils/media';
 
-import DatePicker from 'elements/atm.DatePicker';
-import TimePicker from 'elements/atm.TimePicker';
-
+import DateTimePicker from 'components/DateTimePicker';
 import MultiLineInput from 'components/MultiLineInput';
 import MultiLineInputMentions from 'components/MultiLineInputMentions';
 
@@ -77,10 +75,20 @@ function PostDetails({
             status !== '5' ?
               <div className="date-pickers">
                 <div className={`date-picker ${disableClass}`}>
-                  <DatePicker minDate={minDate} value={moment.unix(postTime).toDate()} onChange={handleDateChange} />
+                  <DateTimePicker
+                    type="date"
+                    onChange={(e) => handleDateChange('date', e)}
+                    value={moment.unix(postTime).format('YYYY-MM-DD')}
+                  />
+                  {/* <DatePicker minDate={minDate} value={moment.unix(postTime).toDate()} onChange={handleDateChange} /> */}
                 </div>
                 <div className={`time-picker ${disableClass}`}>
-                  <TimePicker format="ampm" value={moment.unix(postTime).toDate()} onChange={handleDateChange} />
+                  <DateTimePicker
+                    type="time"
+                    onChange={(e) => handleDateChange('time', e)}
+                    value={moment.unix(postTime).format('HH:mm')}
+                  />
+                  {/* <TimePicker format="ampm" value={moment.unix(postTime).toDate()} onChange={handleDateChange} /> */}
                 </div>
               </div>
             :
