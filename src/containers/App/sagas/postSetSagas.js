@@ -47,7 +47,7 @@ import {
 /** Workers **/
 
 /* Post sets */
-function* fetchPostSetsWorker({ accountId, filter }) {
+function* fetchPostSetsWorker({ accountId, filter: filterOptions }) {
   let id;
   if (accountId) {
     id = accountId;
@@ -56,7 +56,7 @@ function* fetchPostSetsWorker({ accountId, filter }) {
     id = currentAccount.account_id;
   }
   const data = {
-    payload: filter,
+    payload: filterOptions,
   };
   const params = serialize(data);
   const requestUrl = `/post_api/post_sets/${id}?${params}`;
@@ -69,7 +69,7 @@ function* fetchPostSetsWorker({ accountId, filter }) {
 }
 
 /* Post sets by ST */
-function* fetchPostSetsBySTWorker({ accountId, filter }) {
+function* fetchPostSetsBySTWorker({ accountId, filter: filterOptions }) {
   let id;
   if (accountId) {
     id = accountId;
@@ -78,7 +78,7 @@ function* fetchPostSetsBySTWorker({ accountId, filter }) {
     id = currentAccount.account_id;
   }
   const data = {
-    payload: filter,
+    payload: filterOptions,
   };
   const params = serialize(data);
   const requestUrl = `/post_api/post_sets_by_schedule_time/${id}?${params}`;

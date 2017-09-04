@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import FullScreenDialog from 'elements/atm.FullScreenDialog';
 import MediaItem from 'containers/MediaItemLibrary/MediaContainer/MediaItem';
-import styled from 'styled-components';
 
 import {
   SHOW_ALL,
@@ -15,12 +15,7 @@ import {
 
 import Wrapper from './Wrapper';
 import FilterLink from './FilterLink';
-
-const BackButton = styled.div`
-  position: absolute;
-  top: 30px;
-  padding: 20px;
-`;
+import BackButton from './BackButton';
 
 const MediaLibraryDialog = ({ isOpen, closeAllDialog, addToPost, mediaItems, actions, filter }) => (
   <FullScreenDialog

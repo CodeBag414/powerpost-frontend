@@ -2,6 +2,8 @@ import { fromJS } from 'immutable';
 import _ from 'lodash';
 
 import {
+  FETCH_MEDIA_ITEMS_SUCCESS,
+  FETCH_MEDIA_ITEMS_FAILURE,
   CREATE_MEDIA_ITEM_SUCCESS,
   CREATE_MEDIA_ITEM_ERROR,
   VIDEO_PROCESSING_DONE,
@@ -18,8 +20,6 @@ import {
   FETCH_ACCOUNT_TAGS_REQUEST,
   SET_ACCOUNT_TAGS,
   FETCH_COLLECTIONS_SUCCESS,
-  FETCH_MEDIA_ITEMS_ERROR,
-  FETCH_MEDIA_ITEMS_SUCCESS,
   FETCH_URL_CONTENT_SUCCESS,
   PROCESS_ITEM,
   PROCESS_ITEM_SUCCESS,
@@ -139,7 +139,7 @@ function boardReducer(state = initialState, action) {
     case FETCH_MEDIA_ITEMS_SUCCESS:
       return state
         .set('mediaItems', _.get(action, 'mediaItems.data.collection.media_items', []).filter((t) => t.status !== '0'));
-    case FETCH_MEDIA_ITEMS_ERROR:
+    case FETCH_MEDIA_ITEMS_FAILURE:
       return state
         .set('error', action.mediaItems.data.message);
     case PROCESS_ITEM:

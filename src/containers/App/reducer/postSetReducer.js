@@ -31,7 +31,7 @@ function postSetReducer(state = initialState, action) {
   switch (action.type) {
     /* Post set */
     case FETCH_POST_SET_REQUEST:
-      return initialState;
+      return state.set('requesting', true);
     case FETCH_POST_SET_SUCCESS:
       return state
         .set('data', fromJS(action.postSet))

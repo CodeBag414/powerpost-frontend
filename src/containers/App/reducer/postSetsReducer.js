@@ -50,7 +50,6 @@ function postSetsReducer(state = initialState, action) {
           (postSets) => postSets && postSets.map((postSet) => postSet.get('post_set_id') === action.postSet.post_set_id ? fromJS(action.postSet) : postSet),
         );
     case REMOVE_POST_SET_FROM_STREAM_SUCCESS:
-      console.log('acion id', action.id);
       return state
         .updateIn(
           ['data', 'post_sets'],

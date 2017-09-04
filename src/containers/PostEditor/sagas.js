@@ -7,6 +7,7 @@ import { makeSelectUser } from 'containers/App/selectors';
 
 import {
   FETCH_MEDIA_ITEMS_SUCCESS,
+  FETCH_MEDIA_ITEMS_FAILURE,
   CREATE_MEDIA_ITEM,
   CREATE_MEDIA_ITEM_SUCCESS,
   CREATE_MEDIA_ITEM_ERROR,
@@ -54,7 +55,6 @@ import {
   GET_MEDIA_ITEM_SUCCESS,
   FETCH_COLLECTIONS,
   FETCH_COLLECTIONS_SUCCESS,
-  FETCH_MEDIA_ITEMS_ERROR,
   PROCESS_ITEM,
   PROCESS_ITEM_SUCCESS,
   FETCH_WORDPRESS_GUI_REQUEST,
@@ -301,7 +301,7 @@ export function* getCollections(action) {
   if (!mediaItems.data.error) {
     yield put({ type: FETCH_MEDIA_ITEMS_SUCCESS, mediaItems });
   } else {
-    yield put({ type: FETCH_MEDIA_ITEMS_ERROR, mediaItems });
+    yield put({ type: FETCH_MEDIA_ITEMS_FAILURE, mediaItems });
   }
 }
 
