@@ -23,12 +23,12 @@ class TimeSlot extends Component {
     handleRemoveSlot: PropTypes.func,
     permissionClasses: PropTypes.object,
     post: ImmutablePropTypes.map,
-  }
+  };
 
   state = {
     popoverVisible: false,
     deleteDialogVisible: false,
-  }
+  };
 
   handleClickOutside() {
     this.setState({ popoverVisible: false });
@@ -51,7 +51,6 @@ class TimeSlot extends Component {
         className={classnames('slot-timestamp', { active: isEqual(currentPost, post) })}
         onClick={() => handleClickTimestamp(post)}
       >
-        {/* TODO: More button here */}
         <div className="connection-info">
           <div className="channel-icon-row">
             <SocialIcon icon={connection.channel_icon} />

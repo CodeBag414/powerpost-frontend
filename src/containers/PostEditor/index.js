@@ -286,9 +286,6 @@ class PostEditor extends Component {
       // Sort posts & calculate total timeslots
       posts = postsArray.toJS().filter((postItem) => {
         if (postItem.status === '0') return false;
-        if (postItem.connection_channel) {
-          return postItem.connection_channel !== 'wordpress';
-        }
         const connection = getConnectionForPost(connections, postItem);
         return connection && connection.channel !== 'wordpress';
       }).sort((postA, postB) => {
