@@ -80,7 +80,6 @@ function PostDetails({
                     onChange={(e) => handleDateChange('date', e)}
                     value={moment.unix(postTime).format('YYYY-MM-DD')}
                   />
-                  {/* <DatePicker minDate={minDate} value={moment.unix(postTime).toDate()} onChange={handleDateChange} /> */}
                 </div>
                 <div className={`time-picker ${disableClass}`}>
                   <DateTimePicker
@@ -88,7 +87,6 @@ function PostDetails({
                     onChange={(e) => handleDateChange('time', e)}
                     value={moment.unix(postTime).format('HH:mm')}
                   />
-                  {/* <TimePicker format="ampm" value={moment.unix(postTime).toDate()} onChange={handleDateChange} /> */}
                 </div>
               </div>
             :
