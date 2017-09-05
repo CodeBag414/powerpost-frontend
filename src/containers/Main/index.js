@@ -18,6 +18,7 @@ import { getClassesByPage } from 'utils/permissionClass';
 import cookie from 'react-cookie';
 
 import { UserIsAuthenticated } from 'config.routes/UserIsAuthenticated';
+import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 
 import {
   checkUser,
@@ -240,4 +241,4 @@ const mapStateToProps = () => {
   });
 };
 
-export default UserIsAuthenticated(connect(mapStateToProps, mapDispatchToProps)(Main));
+export default UserIsAuthenticated(UserCanAccount(connect(mapStateToProps, mapDispatchToProps)(Main)));

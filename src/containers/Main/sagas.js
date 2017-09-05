@@ -32,7 +32,7 @@ export function* getAccount(action) {
   yield put({ type: IS_LOADING_ACCOUNT });
   try {
     const account = yield call(getData, requestURL);
-    if (account.data.error) {
+    if (account.data.result === 'error') {
       yield put({ type: FETCH_ACCOUNT_ERROR, account });
     } else {
       yield put({ type: FETCH_ACCOUNT_SUCCESS, account });
