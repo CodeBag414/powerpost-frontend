@@ -347,6 +347,7 @@ class PostEditor extends Component {
         permissionClasses={permissionClasses}
       />
     );
+
     return (
       <Wrapper modal={modal}>
         { generalInfo }
@@ -419,7 +420,7 @@ class PostEditor extends Component {
                 setProcessing={this.props.setProcessing}
               />
               <SharedStream
-                accountStreamId={userAccount.account_streams[0].stream_id}
+                accountStreamId={activeBrand.account_streams[0].stream_id}
                 postSet={postSet}
                 updatePostSet={updatePostSet}
                 permissionClasses={permissionClasses}
