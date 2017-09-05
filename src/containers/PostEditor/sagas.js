@@ -39,6 +39,10 @@ import {
 } from './selectors';
 
 import {
+  makeSelectPostSet,
+} from 'containers/App/selectors';
+
+import {
   CREATE_BLOG_ITEM_REQUEST,
   POST_COMMENT_REQUEST,
   ADD_COMMENT,
@@ -228,7 +232,7 @@ export function* createMediaItem(action) {
       yield put({ type: PROCESS_ITEM_SUCCESS });
 
       /* Update post set in the backend */
-      const postSet = yield select(selectPostSet());
+      const postSet = yield select(makeSelectPostSet());
       const payload = {
         ...postSet.get('data').toJS(),
         id: postSet.getIn(['data', 'post_set_id']),
@@ -273,7 +277,7 @@ export function* updateMediaItem(action) {
     yield put({ type: UPDATE_MEDIA_ITEM_SUCCESS, mediaItems });
 
     /* Update post set in the backend */
-    const postSet = yield select(selectPostSet());
+    const postSet = yield select(makeSelectPostSet());
     const payload = {
       ...postSet.get('details').toJS(),
       id: postSet.getIn(['details', 'post_set_id']),
@@ -320,7 +324,7 @@ export function* createBlogItemSaga(action) {
     const mediaItems = results.data.media_items;
     yield put({ type: CREATE_MEDIA_ITEM_SUCCESS, mediaItems });
 
-    const postSet = yield select(selectPostSet());
+    const postSet = yield select(makeSelectPostSet());
     const payload = {
       ...postSet.get('details').toJS(),
       id: postSet.getIn(['details', 'post_set_id']),
