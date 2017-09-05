@@ -86,7 +86,7 @@ function dashboardReducer(state = initialState, action) {
     case FETCH_ACCOUNT_ERROR:
       return state
             .set('isFetchingAccount', false)
-            .set('fetchingError', action.account.data.error);
+            .set('fetchingError', action.account.data.message);
     case TOGGLE_MENU:
       return state
             .set('menuCollapsed', action.collapsed);

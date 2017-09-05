@@ -10,6 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
+import { routerActions } from 'react-router-redux';
 import { toastr } from 'lib/react-redux-toastr';
 import Nav from 'components/Nav';
 import PostEditor from 'containers/PostEditor';
@@ -38,6 +39,7 @@ import {
   fetchCurrentAccount,
   fetchConnections,
 } from './actions';
+
 import {
   makeSelectAccountBrands,
   makeSelectMenuCollapsed,
@@ -45,6 +47,7 @@ import {
   makeSelectAccountPermissions,
   makeSelectUserPermissions,
   makeSelectIsProcessing,
+  makeSelectFetchingError,
 } from './selectors';
 
 import styles from './styles.scss';
@@ -113,9 +116,15 @@ class Main extends React.Component {
         toastr.success('Success', 'The Post is created successfully!');
       }
     }
-
     if (this.props.location.pathname === '/user/settings') {
       this.props.toggleMenuCollapse(true);
+    }
+    if (nextProps.location.pathname === '/forbidden' && this.props.location.pathname !== '/forbidden') {
+      this.props.fetchAccount(nextProps.params.account_id);
+    }
+
+    if (!this.props.fetchingError && nextProps.fetchingError && this.props.location.pathname !== '/forbidden') {
+      this.props.pushToRoute('/forbidden')
     }
   }
 
@@ -180,7 +189,7 @@ class Main extends React.Component {
           permissionClasses={permissionClasses}
           routes={routes}
         />
-        <div id="main-panel" className={[viewContentStyle, styles.viewContent].join(' ')}>
+        <div id="main-panel" className={[viewContentStyle, styles.viewContent].join(' ')} location={location}>
           {this.props.children}
         </div>
         <div className={styles.postEditor}>
@@ -209,6 +218,7 @@ export function mapDispatchToProps(dispatch) {
     fetchAccount: (accountId) => dispatch(fetchCurrentAccount(accountId)),
     createPostSet: (postSet) => dispatch(createPostSetRequest(postSet)),
     fetchConnections: (accountId) => dispatch(fetchConnections(accountId)),
+    pushToRoute: (route) => dispatch(routerActions.push(route)),
   };
 }
 
@@ -224,6 +234,7 @@ const mapStateToProps = () => {
   const selectUserPermissions = makeSelectUserPermissions();
   const selectPostSet = makeSelectPostSet();
   const selectIsProcessing = makeSelectIsProcessing();
+  const selectFetchingError = makeSelectFetchingError();
 
   return (state, ownProps) => ({
     user: selectUser(state),
@@ -238,7 +249,8 @@ const mapStateToProps = () => {
     isProcessing: selectIsProcessing(state),
     postSet: selectPostSet(state),
     location: ownProps.location,
+    fetchingError: selectFetchingError(state),
   });
 };
 
-export default UserIsAuthenticated(UserCanAccount(connect(mapStateToProps, mapDispatchToProps)(Main)));
+export default UserIsAuthenticated(connect(mapStateToProps, mapDispatchToProps)(Main));

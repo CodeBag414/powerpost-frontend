@@ -47,6 +47,11 @@ const makeSelectIsProcessing = () => createSelector(
   (dashboard) => dashboard.get('isProcessing'),
 );
 
+const makeSelectFetchingError = () => createSelector(
+  selectDashboard,
+  (dashboard) => dashboard.get('fetchingError'),
+);
+
 export {
   makeSelectMenuCollapsed,
   makeSelectCurrentAccount,
@@ -56,4 +61,5 @@ export {
   makeSelectUserPermissions,
   makeSelectConnections,
   makeSelectIsProcessing,
+  makeSelectFetchingError,
 };
